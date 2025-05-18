@@ -1858,8 +1858,12 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
 				flag->GetValue(&type);
 				if(type == "chop") {
-					flag->GetAttribute("day", &town->town_chop_time);
-					flag->GetAttribute("event", &town->town_chop_key);
+					if(flag->HasAttribute("day")){
+						flag->GetAttribute("day", &town->town_chop_time);
+					}
+					if(flag->HasAttribute("event")){
+						flag->GetAttribute("event", &town->town_chop_key);
+					}
 					flag->GetAttribute("kills", &town->max_num_monst);
 				} else if(type == "hidden") {
 					flag->GetText(&val);

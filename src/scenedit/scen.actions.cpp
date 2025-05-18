@@ -71,6 +71,7 @@ std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons[10][6];
 short current_rs_top = 0;
+extern short right_button_hovered;
 
 ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
@@ -128,6 +129,7 @@ void init_screen_locs() {
 static cursor_type get_edit_cursor() {
 	switch(overall_mode) {
 		case MODE_INTRO_SCREEN: case MODE_MAIN_SCREEN: case MODE_EDIT_TYPES:
+		case MODE_EDIT_SPECIALS:
 			
 		case MODE_PLACE_CREATURE: case MODE_PLACE_ITEM: case MODE_PLACE_SPECIAL:
 			
@@ -186,8 +188,17 @@ void update_mouse_spot(location the_point) {
 	rectangle terrain_rect = ::terrain_rect;
 	terrain_rect.inset(8,8);
 	terrain_rect.right -= 4;
-	if(overall_mode >= MODE_MAIN_SCREEN)
+	if(overall_mode >= MODE_MAIN_SCREEN){
 		set_cursor(sword_curs);
+
+		// Mouse over right-side buttons: highlight which is selected, because accidental misclicks are common
+		right_button_hovered = -1;
+		for(int i = 0; i < NRSONPAGE; i++){
+			if(the_point.in(right_buttons[i])){
+				right_button_hovered = i;
+			}
+		}
+	}
 	else if(terrain_rect.contains(the_point)) {
 		set_cursor(get_edit_cursor());
 		if(cur_viewing_mode == 0) {
@@ -225,7 +236,7 @@ static bool handle_lb_action(location the_point) {
 			sf::sleep(time_in_ticks(10));
 			draw_lb_slot(i,0);
 			mainPtr().display();
-			if(overall_mode == MODE_INTRO_SCREEN || overall_mode == MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
+			if(overall_mode >= MODE_MAIN_SCREEN) {
 				switch(left_button_status[i].action) {
 					case LB_NO_ACTION:
 						break;
@@ -280,6 +291,9 @@ static bool handle_lb_action(location the_point) {
 						spot_hit = pick_out(cur_out, scenario);
 						if(spot_hit != cur_out) {
 							set_current_out(spot_hit, false);
+							if(overall_mode == MODE_EDIT_SPECIALS){
+								start_special_editing(1, false);
+							}
 						}
 						break;
 					case LB_EDIT_OUT:
@@ -292,6 +306,9 @@ static bool handle_lb_action(location the_point) {
 							cur_town = x;
 							town = scenario.towns[cur_town];
 							set_up_main_screen();
+							if(overall_mode == MODE_EDIT_SPECIALS){
+								start_special_editing(2, false);
+							}
 						}
 						break;
 					case LB_EDIT_TOWN:
@@ -1157,6 +1174,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_INTRO_SCREEN:
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
+			case MODE_EDIT_SPECIALS:
 				break; // Nothing to do here, of course.
 			case MODE_COPY_CREATURE:
 				for(short x = 0; x < town->creatures.size(); x++)
@@ -1620,7 +1638,7 @@ void handle_action(location the_point,sf::Event /*event*/) {
 	if(handle_lb_action(the_point))
 		return;
 	
-	if(overall_mode == MODE_MAIN_SCREEN && handle_rb_action(the_point, option_hit))
+	if(overall_mode >= MODE_MAIN_SCREEN && overall_mode != MODE_EDIT_TYPES && handle_rb_action(the_point, option_hit))
 		return;
 		
 	update_mouse_spot(the_point);
@@ -2491,7 +2509,8 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
-	overall_mode = MODE_MAIN_SCREEN;
+	if(overall_mode < MODE_MAIN_SCREEN)
+		overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();
 	shut_down_menus(4);
@@ -2740,35 +2759,35 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		std::ostringstream str;
 		switch(mode) {
 			case 0:
-				str << i << " - " << scenario.spec_strs[i].substr(0,30);
+				str << i << " - " << scenario.spec_strs[i];
 				set_rb(i,RB_SCEN_STR, i,str.str());
 				break;
 			case 1:
-				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
+				str << i << " - " << current_terrain->spec_strs[i];
 				set_rb(i,RB_OUT_STR, i,str.str());
 				break;
 			case 2:
-				str << i << " - " << town->spec_strs[i].substr(0,30);
+				str << i << " - " << town->spec_strs[i];
 				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:
-				str << i << " - " << scenario.journal_strs[i].substr(0,30);
+				str << i << " - " << scenario.journal_strs[i];
 				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
-				str << i << " - " << current_terrain->sign_locs[i].text.substr(0,30);
+				str << i << " - " << current_terrain->sign_locs[i];
 				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
-				str << i << " - " << town->sign_locs[i].text.substr(0,30);
+				str << i << " - " << town->sign_locs[i].text;
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
-				str << i << " - " << current_terrain->area_desc[i].descr.substr(0,30);
+				str << i << " - " << current_terrain->area_desc[i];
 				set_rb(i,RB_OUT_RECT, i,str.str());
 				break;
 			case 7:
-				str << i << " - " << town->area_desc[i].descr.substr(0,30);
+				str << i << " - " << town->area_desc[i].descr;
 				set_rb(i,RB_TOWN_RECT, i,str.str());
 				break;
 		}
@@ -2811,6 +2830,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
 	}
+	overall_mode = MODE_EDIT_SPECIALS;
 	
 	for(size_t i = 0; i < num_specs; i++) {
 		std::ostringstream strb;

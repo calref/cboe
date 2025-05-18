@@ -84,6 +84,7 @@ cScenario::cScenario() {
 cScenario::cScenario(const cScenario& other)
 	: difficulty(other.difficulty)
 	, intro_pic(other.intro_pic)
+	, feature_flags(other.feature_flags)
 	, default_ground(other.default_ground)
 	, bg_out(other.bg_out)
 	, bg_fight(other.bg_fight)
@@ -131,11 +132,16 @@ cScenario::cScenario(const cScenario& other)
 	contact_info[0] = other.contact_info[0];
 	contact_info[1] = other.contact_info[1];
 	// Copy towns and sectors
-	for(size_t i = 0; i < towns.size(); i++)
+	for(size_t i = 0; i < towns.size(); i++){
 		towns[i] = new cTown(*other.towns[i]);
-	for(size_t i = 0; i < outdoors.width(); i++)
-		for(size_t j = 0; j < outdoors.height(); j++)
+		towns[i]->reattach(*this);
+	}
+	for(size_t i = 0; i < outdoors.width(); i++){
+		for(size_t j = 0; j < outdoors.height(); j++){
 			outdoors[i][j] = new cOutdoors(*other.outdoors[i][j]);
+			outdoors[i][j]->reattach(*this);
+		}
+	}
 }
 
 cScenario::cScenario(cScenario&& other) {
@@ -151,6 +157,7 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	using std::swap;
 	swap(lhs.difficulty, rhs.difficulty);
 	swap(lhs.intro_pic, rhs.intro_pic);
+	swap(lhs.feature_flags, rhs.feature_flags);
 	swap(lhs.default_ground, rhs.default_ground);
 	swap(lhs.bg_out, rhs.bg_out);
 	swap(lhs.bg_fight, rhs.bg_fight);
@@ -194,7 +201,23 @@ void swap(cScenario& lhs, cScenario& rhs) {
 	swap(lhs.is_legacy, rhs.is_legacy);
 	swap(lhs.scen_file, rhs.scen_file);
 	swap(lhs.outdoors, rhs.outdoors);
+	for(size_t i = 0; i < lhs.outdoors.width(); i++){
+		for(size_t j = 0; j < lhs.outdoors.height(); j++){
+			lhs.outdoors[i][j]->reattach(lhs);
+		}
+	}
+	for(size_t i = 0; i < rhs.outdoors.width(); i++){
+		for(size_t j = 0; j < rhs.outdoors.height(); j++){
+			rhs.outdoors[i][j]->reattach(rhs);
+		}
+	}
 	swap(lhs.towns, rhs.towns);
+	for(size_t i = 0; i < lhs.towns.size(); ++i){
+		lhs.towns[i]->reattach(lhs);
+	}
+	for(size_t i = 0; i < rhs.towns.size(); ++i){
+		rhs.towns[i]->reattach(rhs);
+	}
 	swap(lhs.evt_names, rhs.evt_names);
 	swap(lhs.ic_names, rhs.ic_names);
 	swap(lhs.itf_names, rhs.itf_names);
@@ -210,6 +233,8 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 
 void cScenario::import_legacy(legacy::scenario_data_type& old){
 	is_legacy = true;
+	// TODO eventually the absence of feature flags here will replace is_legacy altogether
+	feature_flags = {};
 	difficulty = old.difficulty;
 	intro_pic = old.intro_pic;
 	default_ground = old.default_ground * 2;
@@ -546,8 +571,9 @@ void cScenario::writeTo(cTagFile& file) const {
 	for(int i = 0; i < towns.size(); i++) {
 		if(towns[i]->item_taken.any())
 			page["ITEMTAKEN"] << i << towns[i]->item_taken;
-		if(!towns[i]->door_unlocked.empty())
-			page["DOORUNLOCKED"] << i << towns[i]->door_unlocked;
+		for(location door : towns[i]->door_unlocked){
+			page["DOORUNLOCKED"] << i << door.x << door.y;
+		}
 		if(towns[i]->can_find)
 			page["TOWNVISIBLE"] << i;
 		else page["TOWNHIDDEN"] << i;
@@ -562,8 +588,13 @@ void cScenario::readFrom(const cTagFile& file){
 	std::vector<size_t> visible, hidden, slaughter;
 	auto& page = file[0];
 	page["ITEMTAKEN"].extractSparse(taken);
-	if(page.contains("DOORUNLOCKED"))
-		page["DOORUNLOCKED"].extractSparse(unlocked);
+	if(page.contains("DOORUNLOCKED")){
+		short town;
+		location door;
+		while(page["DOORUNLOCKED"] >> town >> door.x >> door.y){
+			unlocked[town].push_back(door);
+		}
+	}
 	page["TOWNVISIBLE"].extract(visible);
 	page["TOWNHIDDEN"].extract(hidden);
 	page["TOWNSLAUGHTER"].extractSparse(slaughter);

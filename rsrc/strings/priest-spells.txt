@@ -38,7 +38,7 @@ This spell purifies the recipient. The beneficiary is completely unwebbed, and a
 When cast, for a short time everyone in the party can walk across lava with no damage. The duration increases slowly with the level of the caster.
 Much like Bless, but affects everyone.
 Works like the Heal spell, but gives much more bang for the spell points.
-This spell returns a body to life. You need Resurrection Balm to cast this. There is a small chance (decreasing with level) that it turns the body to dust. A dusted character can only be raised with a Resurrect spell. Raising a PC reduces their stats.
+This spell returns a body to life. <You need Resurrection Balm to cast this. >There is a small chance (decreasing with level) that it turns the body to dust. A dusted character can only be raised with a Resurrect spell. Raising a PC reduces their stats.
 The first 'area of affect' offensive priest spell. It chars all beings adjacent to the space you target. The damage done increases with level.
 This spell hides all PCs (like a sanctuary spell). As before, the effect for a PC is voided when that PC attacks.
 This powerful spell summons four spirits, and a magical being to lead them. They then fight on the side of the caster for a little while.
@@ -54,7 +54,7 @@ A very unusual and effective spell for a party on the defensive. The caster is s
 This spell afflicts everyone within eight spaces with an effective but slow-acting disease.
 When cast, the party receives a powerful healing (increasing with level of the caster) and has poison cured as well.
 Demons are resistant to most magic. This spell gives them a blow which usually does a lot of damage. The chance of success increases with the level of the caster.
-Like raise dead, but much more effective, and works on even a dusted character. It also has a smaller chance of lowering the character's stats. It still requires Resurrection Balm to cast.
+Like raise dead, but much more effective, and works on even a dusted character. It also has a smaller chance of lowering the character's stats.< It still requires Resurrection Balm to cast.>
 The most powerful offensive priest spell. It delivers a stunning blow of force to all beings within two spaces of the targeted space.
 This spell temporarily makes the caster an invulnerable, incredibly powerful avatar of the gods.
 This spell creates a wall of the most damaging (and long lasting) of the magic walls. Rotate the wall by hitting space.

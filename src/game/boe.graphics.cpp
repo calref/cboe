@@ -85,8 +85,6 @@ rectangle		menuBarRect;
 Region originalGrayRgn, newGrayRgn, underBarRgn;
 sf::View mainView;
 
-long anim_ticks = 0;
-
 extern enum_map(eGuiArea, rectangle) win_to_rects;
 
 // 0 - title  1 - button  2 - credits  3 - base button
@@ -693,7 +691,7 @@ std::pair<std::string, std::string> text_bar_text() {
 			hint_out << hint_prefix << ": ";
 			if(current_pc.last_cast[type] != eSpell::NONE){
 				const cSpell& spell = (*current_pc.last_cast[type]);
-				if(pc_can_cast_spell(current_pc,type) && spell.cost <= current_pc.get_magic()) {
+				if(pc_can_cast_spell(current_pc,type) == CAST_OK && spell.cost <= current_pc.get_magic()) {
 					hint_out << "Recast " << spell.name();
 				}else{
 					hint_out << "Cannot recast";
@@ -934,8 +932,6 @@ void draw_terrain(short mode) {
 			if(fog_lifted) can_draw = true;
 			
 			if((can_draw != 0) && (overall_mode != MODE_RESTING)) { // if can see, not a pit, and not resting
-				if(is_combat()) anim_ticks = 0;
-				
 				eTrimType trim = univ.scenario.ter_types[spec_terrain].trim_type;
 				
 				// Finally, draw this terrain spot
@@ -1754,30 +1750,13 @@ void redraw_partial_terrain(rectangle redraw_rect) {
 	
 }
 
-/*
-void HideShowMenuBar( ) {
-	GDHandle	mainScreen;
-	
-	// store current gray region that displays
-	// menu bar and the current height of the menu bar
-	originalGrayRgn 	= LMGetGrayRgn();
-	menuBarHeight	= LMGetMBarHeight();
-	
-	// calculate the rect of the menu bar to test
-	// if mouse down is in if desired
-	mainScreen 			= GetMainDevice();
-	menuBarRect 			= (**mainScreen).gdRect;
-	menuBarRect.bottom 	= menuBarHeight;
-	
-	HideMenuBar();
-	
-	while( !Button() );
-	
-	ShowMenuBar();
-	
-	// restore the original gray region to
-	// make the menu bar visible
-	LMSetGrayRgn( originalGrayRgn );
+void debug_show_texture(const sf::Texture& texture, float seconds, std::string label) {
+	sf::RenderWindow debug_window;
+	debug_window.create(sf::VideoMode(texture.getSize().x, texture.getSize().y, 32), label);
+	debug_window.setVisible(true);
+	makeFrontWindow(debug_window);
+	rect_draw_some_item(texture, rectangle(texture), debug_window, rectangle(texture));
+	debug_window.display();
+	sf::sleep(sf::seconds(seconds));
+	debug_window.setVisible(false);
 }
-
-*/

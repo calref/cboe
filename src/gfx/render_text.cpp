@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <set>
+#include <boost/algorithm/string/replace.hpp>
 #include "fileio/resmgr/res_font.hpp"
 #include "gfx/render_shapes.hpp"
 #include <utility>
@@ -223,6 +224,27 @@ void draw_scale_aware_text(sf::RenderTarget& dest_window, sf::Text str_to_draw) 
 	}
 }
 
+std::string truncate_with_ellipsis(std::string str, const TextStyle& style, int width) {
+	size_t length = string_length(str, style);
+	if(length > width){
+		size_t ellipsis_length = string_length("...", style);
+
+		size_t need_to_clip = length - width + ellipsis_length;
+		int clip_idx = str.size() - 1;
+		// clip_idx should never reach 0
+		for(; clip_idx >= 0; --clip_idx){
+			size_t clip_length = string_length(str.substr(clip_idx), style);
+			if(clip_length >= need_to_clip) break;
+		}
+		str = str.substr(0, clip_idx) + "...";
+	}
+	return str;
+}
+
+std::map<std::string, std::string> substitutions = {
+	{"–", "--"}
+};
+
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
 	short line_height = options.style.lineHeight;
@@ -234,6 +256,9 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	// TODO: Why the heck are we drawing a whole line higher than requested!?
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
+	for(auto it : substitutions){
+		boost::replace_all(str, it.first, it.second);
+	}
 	str_to_draw.setString(str);
 	short total_width = str_to_draw.getLocalBounds().width;
 
@@ -262,19 +287,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	}
 
 	if(mode == eTextMode::ELLIPSIS){
-		size_t length = string_length(str, options.style);
-		if(length > dest_rect.width()){
-			size_t ellipsis_length = string_length("...", options.style);
-
-			size_t need_to_clip = length - dest_rect.width() + ellipsis_length;
-			int clip_idx = str.size() - 1;
-			// clip_idx should never reach 0
-			for(; clip_idx >= 0; --clip_idx){
-				size_t clip_length = string_length(str.substr(clip_idx), options.style);
-				if(clip_length >= need_to_clip) break;
-			}
-			str = str.substr(0, clip_idx) + "...";
-		}
+		str = truncate_with_ellipsis(str, options.style, dest_rect.width());
 		mode = eTextMode::LEFT_TOP;
 	}
 	if(mode == eTextMode::WRAP){

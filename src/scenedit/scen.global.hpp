@@ -77,6 +77,7 @@ enum eScenMode {
 	MODE_MAIN_SCREEN = 60,
 	MODE_INTRO_SCREEN = 61,
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
+	MODE_EDIT_SPECIALS = 63, // editing a LIST of specials, not to be confused with MODE_EDIT_SPECIAL singular
 };
 
 enum eDrawMode {

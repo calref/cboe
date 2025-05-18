@@ -2,7 +2,7 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog escbtn='leave' defbtn='pull'>
-	<pict type='dlog' num='9' top='9' left='8'/>
+	<pict type='dlog' num='9' top='8' left='8'/>
 	<button name='leave' type='regular' top='46' left='176'>Leave</button>
 	<button name='pull' type='regular' top='46' left='244'>Pull</button>
 	<text top='4' left='50' width='253' height='43'>There is a stout wooden lever protruding from the ground here. Pull it?</text>

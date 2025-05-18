@@ -249,6 +249,7 @@ struct xp_dlog_state {
 	std::map<eSkill,short> skills;
 	int who, mode;
 	int hp, sp, g, skp;
+	int start_skp;
 };
 
 static void do_xp_keep(xp_dlog_state& save) {
@@ -272,18 +273,28 @@ static void do_xp_keep(xp_dlog_state& save) {
 	}
 }
 
+static int get_skill_max(eSkill skill) {
+	switch(skill){
+		case eSkill::MAX_HP:
+			return 250;
+		case eSkill::MAX_SP:
+			return 150;
+		default:
+			return skill_max[skill];
+	}
+}
+
 static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 	unsigned int min_level, max_level, cur_level, orig_level, cost, g_cost;
+	max_level = get_skill_max(skill);
 	if(skill == eSkill::MAX_HP) {
 		min_level = 6;
-		max_level = 250;
 		cur_level = save.hp;
 		orig_level = univ.party[save.who].max_health;
 		cost = 1;
 		g_cost = 10;
 	} else if(skill == eSkill::MAX_SP) {
 		min_level = 0;
-		max_level = 150;
 		cur_level = save.sp;
 		orig_level = univ.party[save.who].max_sp;
 		cost = 1;
@@ -292,7 +303,6 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 		if(skill == eSkill::STRENGTH || skill == eSkill::DEXTERITY || skill == eSkill::INTELLIGENCE)
 			min_level = 1;
 		else min_level = 0;
-		max_level = skill_max[skill];
 		cur_level = save.skills[skill];
 		orig_level = univ.party[save.who].skills[skill];
 		cost = skill_cost[skill];
@@ -316,15 +326,52 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 }
 
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
-	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
+	auto add_cost_to_label = [&me, save](std::string skill, int skp, int gold, bool max) {
+		cControl& label = me[skill + "-label"];
+		// If cost is already there, start over
+		if(label.getText().find('(') != std::string::npos){
+			label.setText(label.getText().substr(0, label.getText().find('(') - 1));
+		}
+		if(max){
+			label.appendText (" (MAX)");
+		}else if(save.mode < 2){
+			label.appendText(" (");
+			label.appendText(std::to_string(skp) + " pt");
+			if(skp != 1){
+				label.appendText("s");
+			}
+			label.appendText(".");
+			if(save.mode == 1){
+				label.appendText("/" + std::to_string(gold) + "gp");
+			}
+			label.appendText(")");
+		}
+	};
+
+	add_cost_to_label("hp", 1, 10, univ.party[save.who].max_health == get_skill_max(eSkill::MAX_HP));
+	add_cost_to_label("sp", 1, 15, univ.party[save.who].max_sp == get_skill_max(eSkill::MAX_SP));
 	for(short i = 0; i <= 20; i++) {
 		eSkill skill = eSkill(i);
+		std::string id = boost::lexical_cast<std::string>(skill);
 		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
-		if(can_change_skill(skill, save, true))
+		// White means it can't change.
+		cur.setColour(me.getDefTextClr());
+		me[id + "-m"].hide();
+		// Red means it can be changed, but only down
+		if(can_change_skill(skill, save, false)){
+			me[id + "-m"].show();
 			cur.setColour(Colours::RED);
-		else cur.setColour(me.getDefTextClr());
-		if(i < 19)
+		}
+		// Green means it can still be bumped up!
+		me[id + "-p"].hide();
+		if(can_change_skill(skill, save, true)){
+			me[id + "-p"].show();
+			cur.setColour(Colours::LIGHT_GREEN);
+		}
+		if(i < 19){
 			cur.setTextToNum(save.skills[skill]);
+			add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill], save.skills[skill] == get_skill_max(skill));
+		}
 		else cur.setTextToNum(skill == eSkill::MAX_HP ? save.hp : save.sp);
 	}
 }
@@ -355,6 +402,20 @@ static void do_xp_draw(cDialog& me,xp_dlog_state& save) {
 	update_gold_skills(me, save);
 }
 
+static bool confirm_switch_pc(cDialog& me, xp_dlog_state& save) {
+	cChoiceDlog dlog("confirm-spend-xp", {"keep","revert","cancel"}, &me);
+	dlog->getControl("keep-msg").replaceText("{{PC}}", univ.party[save.who].name);
+	std::string choice = dlog.show();
+	if(choice == "keep"){
+		do_xp_keep(save);
+		return true;
+	}else if(choice == "revert"){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_state& save) {
 	if(item_hit == "cancel") {
 		// TODO: Um, I'm pretty sure this can never happen.
@@ -369,25 +430,21 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(true);
 		me.toast(true);
 	} else if(item_hit == "left") {
-		// TODO: Try not forcing a commit when using the arrows?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 0) ? 5 : save.who - 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	} else if(item_hit == "right") {
-		// TODO: If they don't work in mode 0, why are they visible?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 5) ? 0 : save.who + 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	}
 	return true;
 }
@@ -408,7 +465,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				}
 			} else play_sound(1);
 		} else if(item_hit[3] == 'p') {
-			if(can_change_skill(eSkill::MAX_SP, save, true)) {
+			if(can_change_skill(eSkill::MAX_HP, save, true)) {
 				save.hp += 2;
 				if(save.mode < 2) {
 					save.skp -= 1;
@@ -420,7 +477,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 10)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
@@ -455,7 +512,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 15)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
@@ -531,28 +588,16 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	
 	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
 
-	auto add_cost_to_label = [&xpDlog, mode](std::string skill, int skp, int gold) {
-		if(mode < 2){
-			cControl& label = xpDlog[skill + "-label"];
-			label.appendText(" (");
-			label.appendText(std::to_string(skp) + " pt");
-			if(skp != 1){
-				label.appendText("s");
-			}
-			label.appendText(".");
-			if(mode == 1){
-				label.appendText("/" + std::to_string(gold) + "gp");
-			}
-			label.appendText(")");
-		}
-	};
+	// Making new PC, you can't switch to train other PCs
+	if(mode == 0){
+		xpDlog["left"].hide();
+		xpDlog["right"].hide();
+	}
 
 	const int LABEL_OFFSET_COL1 = 85;
 	const int LABEL_OFFSET_COL2 = 74;
 	xpDlog.addLabelFor("hp","Health",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("hp", 1, 10);
 	xpDlog.addLabelFor("sp","Spell Pts.",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("sp", 1, 15);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
 	static const std::string minus = "-m", plus = "-p";
 	for(int i = 54; i < 73; i++) {
@@ -560,11 +605,11 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 		eSkill skill = eSkill(i - 54);
 		std::string id = boost::lexical_cast<std::string>(skill);
 		xpDlog.addLabelFor(id,get_str("skills",1 + 2 * (i - 54)),LABEL_LEFT,(i < 63) ? LABEL_OFFSET_COL1 : LABEL_OFFSET_COL2,true);
-		add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill]);
 		xpDlog[id + minus].attachClickHandler(spend_xp_filter);
 		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
 	do_xp_draw(xpDlog,save);
+	save.start_skp = save.skp;
 	
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});

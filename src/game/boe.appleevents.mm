@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <iostream>
 #include "fileio/fileio.hpp"
+#include "gfx/gfxsheets.hpp"
 #include "boe.global.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "replay.hpp"
@@ -24,6 +25,7 @@ extern void queue_fake_event(const sf::Event&);
 extern bool ae_loading, All_Done, party_in_memory, finished_init;
 extern eGameMode overall_mode;
 extern cUniverse univ;
+extern cCustomGraphics& spec_scen_g;
 
 typedef NSAppleEventDescriptor AEDescr;
 
@@ -59,7 +61,7 @@ void set_up_apple_events() {
 		return FALSE;
 	}
 
-	if(!load_party(fileName, univ))
+	if(!load_party(fileName, univ, spec_scen_g))
 		return FALSE;
 	
 	if(!finished_init) {
