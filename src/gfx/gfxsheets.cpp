@@ -49,7 +49,9 @@ size_t cCustomGraphics::count(bool party) {
 	else if(party && party_sheet == nullptr) return 0;
 	else if(is_old || party) {
 		rectangle bounds(party ? *party_sheet : *sheets[0]);
+		// Current party sheet has less than one row of space
 		if(bounds.width() < 280) return bounds.width() / 28;
+		// Current party sheet has at least one row
 		return 10 * bounds.height() / 36;
 	} else {
 		size_t count = 100 * (numSheets - 1);
@@ -74,44 +76,45 @@ void cCustomGraphics::copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlot
 		party_sheet.reset(new sf::Texture(sheet));
 		numSheets = 1;
 	}
-	// Check if a texture exists to hold the needed slots
+	// Check if the texture can hold the needed slots
 	size_t havePics = count(true);
 	if(havePics < dest + numSlots) {
 		// Count how many rows need to be in the new texture
 		int addRows = 1;
 		while(havePics + 10 * addRows < dest + numSlots)
 			addRows++;
-		// Create the new texture
+		// Create a new temporary texture to extend the current sheet
 		sf::RenderTexture temp;
 		temp.create(280, party_sheet->getSize().y + 36 * addRows);
 		temp.clear(sf::Color::Transparent);
+		// Draw the current sheet's existing pixels onto the new texture
 		rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
+		temp.display();
+		// Commit the extended texture
 		party_sheet.reset(new sf::Texture(temp.getTexture()));
 	}
-	std::shared_ptr<const sf::Texture> from_sheet;
-	std::shared_ptr<const sf::Texture> to_sheet;
-	std::shared_ptr<const sf::Texture> last_src = nullptr;
+
+	// Create a new temporary texture for modifying the party sheet
 	sf::RenderTexture temp;
+	temp.create(party_sheet->getSize().x, party_sheet->getSize().y);
+	// Draw what already exists onto it
+	rect_draw_some_item(*party_sheet, rectangle(*party_sheet), temp, rectangle(*party_sheet));
+
+	std::shared_ptr<const sf::Texture> from_sheet;
 	rectangle from_rect, to_rect;
 	for(size_t i = 0; i < numSlots; i++) {
 		// Find the custom graphic sheet and source rectangle from the scenario
 		graf_pos_ref(from_sheet, from_rect) = find_graphic(src + i);
-		// Find an export sheet and destination rectangle in the party's stored graphics
+		// Find destination rectangle in the party's sheet
+		std::shared_ptr<const sf::Texture> to_sheet; // this will just be party_sheet
 		graf_pos_ref(to_sheet, to_rect) = find_graphic(dest + i, true);
-		if(to_sheet != last_src) {
-			// Moved to the next sheet, commit the previous one
-			if(last_src) last_src.reset(new sf::Texture(temp.getTexture()));
-			last_src = to_sheet;
-			// Make a temporary render texture
-			temp.create(to_sheet->getSize().x, to_sheet->getSize().y);
-			// Draw the existing stored graphics onto the temporary texture
-			rect_draw_some_item(*to_sheet, rectangle(*to_sheet), temp, rectangle(*to_sheet));
-		}
-		// Draw the graphic that needs to be stored onto the temporary texture
+		// Draw the new graphic that needs to be stored onto the temporary texture
 		rect_draw_some_item(*from_sheet, from_rect, temp, to_rect);
 	}
 	// Commit the temporary texture to the export sheet
-	last_src.reset(new sf::Texture(temp.getTexture()));
+	temp.display();
+	party_sheet.reset(new sf::Texture(temp.getTexture()));
+	// debug_show_texture(*party_sheet);
 }
 
 extern std::string scenario_temp_dir_name;
