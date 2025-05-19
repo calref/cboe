@@ -894,8 +894,7 @@ extern std::set<eDirection> no_move_from_west;
 extern std::set<eDirection> no_move_from_south;
 extern std::set<eDirection> no_move_from_east;
 
-//mode; // 1 - town 2 - combat
-bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
+static bool monst_check_one_special_terrain(location where_check,short mode,short which_monst) {
 	ter_num_t ter = 0;
 	short r1,guts = 0;
 	bool can_enter = true,mage = false;
@@ -966,6 +965,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4) {
+			// Monster breaks the barrier
 			// TODO: Are these barrier sounds right?
 			play_sound(60);
 			which_m->spell_note(49);
@@ -981,6 +981,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if(univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
 		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4
 			&& (!univ.town->strong_barriers)) {
+			// Monster breaks the barrier
 			play_sound(60);
 			which_m->spell_note(49);
 			univ.town.set_force_barr(where_check.x,where_check.y,false);
@@ -1075,6 +1076,17 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	
 	return can_enter;
+}
+
+//mode; // 1 - town 2 - combat
+bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
+	cCreature* which_m = &univ.town.monst[which_monst];
+	for(int x = where_check.x; x < where_check.x + which_m->x_width; ++x){
+		for(int y = where_check.y; y < where_check.y + which_m->y_width; ++y){
+			if(!monst_check_one_special_terrain({x, y}, mode, which_monst)) return false;
+		}
+	}
+	return true;
 }
 
 void record_monst(cCreature* which_m, bool forced) {
