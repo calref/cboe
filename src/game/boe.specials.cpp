@@ -1827,8 +1827,6 @@ void push_things() {
 			}
 		}
 	}
-	// TODO I think items pushed onto barrels or crates would become contained in them. This doesn't make much sense,
-	// but could be used for interesting automation like Factorio...
 	// Push items
 	for(short i = 0; i < univ.town.items.size(); i++){
 		if(univ.town.items[i].variety != eItemType::NO_ITEM){
@@ -1839,7 +1837,6 @@ void push_things() {
 	// Push party in peace mode
 	if(is_town()) {
 		if(check_push(univ.party.town_loc)){
-			// TODO: Will this push you into a placed forcecage or barrier? Should it?
 			ASB("You get pushed.");
 			center = univ.party.town_loc;
 			update_explored(center);
