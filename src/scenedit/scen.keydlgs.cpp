@@ -568,7 +568,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed", "+4"};
 			break;
 		case STRT_DIR:
-			strings = {"North", "Northease", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
+			strings = {"North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
 			break;
 		case STRT_QUEST_STATUS:
 			strings = {"Available", "Started", "Completed", "Failed"};
