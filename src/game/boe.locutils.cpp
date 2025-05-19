@@ -327,18 +327,18 @@ bool monst_can_be_there(location loc,short m_num) {
 	location destination;
 	
 	// First clear monst away so it doesn't block itself
-	univ.town.monst[m_num].cur_loc.x += 100;
+	univ.town.monst[m_num].cur_loc.x += univ.town->max_dim;
 	
 	for(short i = 0; i < univ.town.monst[m_num].x_width; i++)
 		for(short j = 0; j < univ.town.monst[m_num].y_width; j++) {
 			destination.x = loc.x + i; destination.y = loc.y + j;
 			if((is_blocked(destination))
 				|| (loc_off_act_area(destination))) {
-				univ.town.monst[m_num].cur_loc.x -= 100;
+				univ.town.monst[m_num].cur_loc.x -= univ.town->max_dim;
 				return false;
 			}
 		}
-	univ.town.monst[m_num].cur_loc.x -= 100;
+	univ.town.monst[m_num].cur_loc.x -= univ.town->max_dim;
 	return true;
 }
 
