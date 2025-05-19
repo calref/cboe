@@ -2869,6 +2869,7 @@ static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
 void edit_scen_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-details"));
 	info_dlg["okay"].attachClickHandler(save_scen_details);
+	info_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &info_dlg, false));
 	
 	put_scen_details_in_dlog(info_dlg);
 	
