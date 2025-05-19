@@ -1725,10 +1725,10 @@ void push_things() {
 				}
 			}
 			if(l != univ.town.monst[i].cur_loc) {
-				univ.town.monst[i].cur_loc = l;
 				if((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
 					(point_onscreen(center,l)))
 					redraw = true;
+				univ.town.monst[i].cur_loc = l;
 			}
 		}
 	for(short i = 0; i < univ.town.items.size(); i++)
@@ -1744,10 +1744,10 @@ void push_things() {
 				}
 			}
 			if(l != univ.town.items[i].item_loc) {
-				univ.town.items[i].item_loc = l;
 				if((point_onscreen(center,univ.town.items[i].item_loc)) ||
 					(point_onscreen(center,l)))
 					redraw = true;
+				univ.town.items[i].item_loc = l;
 			}
 		}
 	
