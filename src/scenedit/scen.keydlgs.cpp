@@ -841,6 +841,11 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 		case eSpecType::ONCE_DIALOG:
 			once_dialog(univ, special, cur_type, &me);
 			break;
+		case eSpecType::TITLED_MSG:
+			univ.get_str(title, cur_type, special.m3);
+			pic_type = ePicType(special.pictype);
+			pic = special.pic;
+			BOOST_FALLTHROUGH;
 		default:{
 			std::string str1;
 			std::string str2;
