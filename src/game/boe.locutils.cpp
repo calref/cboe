@@ -554,19 +554,18 @@ location push_loc(location from_where,location to_where) {
 	loc_to_try = to_where;
 	loc_to_try.x = loc_to_try.x + (to_where.x - from_where.x);
 	loc_to_try.y = loc_to_try.y + (to_where.y - from_where.y);
-	if((univ.town->terrain(loc_to_try.x,loc_to_try.y) == 90) ||
-		((univ.town->terrain(loc_to_try.x,loc_to_try.y) >= 50)&& (univ.town->terrain(loc_to_try.x,loc_to_try.y) <= 64))
-		|| (univ.town->terrain(loc_to_try.x,loc_to_try.y) == 71)
-		|| ((univ.town->terrain(loc_to_try.x,loc_to_try.y) >= 74)&& (univ.town->terrain(loc_to_try.x,loc_to_try.y) <= 78))
-		) {
+	ter_num_t ter = univ.town->terrain(loc_to_try.x,loc_to_try.y);
+	// Pit or water
+	if((ter == 90) || (univ.scenario.ter_types[ter].boat_over)) {
 		// Destroy crate
 		loc_to_try.x = 0;
 		return loc_to_try;
 	}
 	if(sight_obscurity(loc_to_try.x,loc_to_try.y) > 0 ||
-	   univ.scenario.ter_types[univ.town->terrain(loc_to_try.x,loc_to_try.y)].blockage != eTerObstruct::CLEAR ||
+	   univ.scenario.ter_types[ter].blockage != eTerObstruct::CLEAR ||
 	   (loc_off_act_area(loc_to_try)) ||
 	   univ.target_there(loc_to_try))
+	   // Switch places with the thing pushing
 		return from_where;
 	else return loc_to_try;
 }
