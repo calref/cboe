@@ -1717,30 +1717,98 @@ void push_things() {
 		return;
 	
 	auto check_push = [&redraw](location& l, short x_width = 1, short y_width = 1) -> bool {
-		location start_l = l;
-		for(int x = start_l.x; x < start_l.x + x_width; ++x){
-			for(int y = start_l.y; y < start_l.y + y_width; ++y){
+		// Approximate the aggregate force of multiple conveyor belts a big monster could be pushed by,
+		// but never double-push in one cardinal direction.
+		bool up = false;
+		bool down = false;
+		bool left = false;
+		bool right = false;
+		for(int x = l.x; x < l.x + x_width; ++x){
+			for(int y = l.y; y < l.y + y_width; ++y){
 				ter_num_t ter = univ.town->terrain(x,y);
 				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
 					switch(univ.scenario.ter_types[ter].flag1){
-						case DIR_N: l.y--; break;
-						case DIR_E: l.x++; break;
-						case DIR_S: l.y++; break;
-						case DIR_W: l.x--; break;
+						case DIR_N: up = true; break;
+						case DIR_E: right = true; break;
+						case DIR_S: down = true; break;
+						case DIR_W: left = true; break;
 						// An animated diagonal conveyor terrain might look strange? But if someone wants to try.
 						// Diagonal conveyor support *could* require a scenario feature flag, but having a terrain
-						// with the diagonal direction already indicates a desire for it to work.
-						case DIR_NE: l.x++; l.y--; break;
-						case DIR_SE: l.x++; l.y++; break;
-						case DIR_SW: l.x--; l.y++; break;
-						case DIR_NW: l.x--; l.y--; break;
+						// with the diagonal direction set already indicates a desire for it to work.
+						case DIR_NE: right = true; up = true; break;
+						case DIR_SE: right = true; down = true; break;
+						case DIR_SW: left = true; down = true; break;
+						case DIR_NW: left = true; up = true; break;
 					}
 				}
 			}
 		}
+		location start_l = l;
+		location check_l = l;
+		// These may cancel each other out
+		if(up) --check_l.y;
+		if(down) ++check_l.y;
+		if(left) --check_l.x;
+		if(right) ++check_l.x;
+
+		if(check_l == start_l) return false;
+
+		// Now check for walls
+		if(univ.scenario.get_feature_flag("conveyor-belts") == "V2"){
+			// Don't count the thing as blocking itself (l is a reference to its actual position!)
+			l.x += univ.town->max_dim;
+
+			bool end_position_blocked = false;
+			for(int x = check_l.x; x < check_l.x + x_width; ++x){
+				for(int y = check_l.y; y < check_l.y + y_width; ++y){
+					if(is_blocked({x, y})){
+						end_position_blocked = true;
+						break;
+					}
+				}
+			}
+
+			if(end_position_blocked){
+				// If one and only one component of a diagonal push can be completed, then do that
+				int blocked_vertical = false;
+				int blocked_horizontal = false;
+
+				for(int x = start_l.x; x < start_l.x + x_width; ++x){
+					for(int y = check_l.y; y < check_l.y + y_width; ++y){
+						if(is_blocked({x, y})){
+							blocked_vertical = 1;
+							break;
+						}
+					}
+				}
+
+				for(int x = check_l.x; x < check_l.x + x_width; ++x){
+					for(int y = start_l.y; y < start_l.y + y_width; ++y){
+						if(is_blocked({x, y})){
+							blocked_horizontal = 1;
+							break;
+						}
+					}
+				}
+
+				if(blocked_vertical + blocked_horizontal == 1){
+					if(blocked_vertical) check_l.y = start_l.y;
+					else if(blocked_horizontal) check_l.x = start_l.x;
+				}else{
+					check_l = start_l;
+				}
+			}
+		}
+
+		l = check_l;
 		if(l != start_l){
-			if(point_onscreen(center, l) || point_onscreen(center, start_l)){
-				redraw = true;
+			for(int x = min(start_l.x, l.x); x < max(start_l.x, l.x) + x_width; ++x){
+				for(int y = min(start_l.y, l.y); y < max(start_l.y, l.y) + y_width; ++y){
+					if(point_onscreen(center, {x, y})){
+						redraw = true;
+						break;
+					}
+				}
 			}
 			return true;
 		}
