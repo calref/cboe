@@ -22,6 +22,9 @@
 		(When this many monsters are killed, the dungeon will be abandoned)
 	</text>
 	<field name='population' top='219' left='294' width='54' height='16'/>
+	<text name='population-hint' relative='pos neg' rel-anchor='prev' top='4' left='4' width='90'>
+		This town has {{num}} hostile creatures.
+	</text>
 
 	<text top='262' left='50' width='235' height='53'>
 		Town difficulty (0-10):

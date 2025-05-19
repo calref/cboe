@@ -694,6 +694,7 @@ static void put_town_details_in_dlog(cDialog& me) {
 	me["chop"].setTextToNum(town->town_chop_time);
 	me["key"].setTextToNum(town->town_chop_key);
 	me["population"].setTextToNum(town->max_num_monst);
+	me["population-hint"].replaceText("{{num}}", std::to_string(town->count_hostiles()));
 	me["difficulty"].setTextToNum(town->difficulty);
 	cLedGroup& lighting = dynamic_cast<cLedGroup&>(me["lighting"]);
 	switch(town->lighting_type) {
