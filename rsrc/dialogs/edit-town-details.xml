@@ -15,6 +15,7 @@
 
 	<text top='98' left='59' width='261' height='41'>Number of event which prevents town death (if -1 or 0, none) - see chapter in documentation on time for more details.</text>
 	<field name='key' top='101' left='327' width='43' height='16'/>
+	<button name='choose-key' type='regular' relative='pos neg' rel-anchor='prev' top='4' left='4'>Choose</button>
 
 	<text top='216' left='50' width='234' height='42'>
 		Maximum number of monsters:
