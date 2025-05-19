@@ -853,6 +853,7 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 
 			if(str1.empty() && str2.empty()) break;
 
+			// Use dark background that the game uses:
 			short defaultBackground = cDialog::defaultBackground;
 			cDialog::defaultBackground = cDialog::BG_DARK;
 			cStrDlog dlog(str1, str2, title, pic, pic_type, &me);

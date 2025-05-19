@@ -849,7 +849,11 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 			put_monst_info_in_dlog(me,monst,which);
 		}
 	} else if(hit == "preview") {
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog monstInfo(*ResMgr::dialogs.get("monster-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 		monstInfo.attachClickHandlers([](cDialog&,std::string,eKeyMod){return false;}, {"guard","mindless","invuln"});
@@ -1707,7 +1711,13 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "preview") {
 		cItem temp_item = item;
 		temp_item.ident = true;
+
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog itemInfo(*ResMgr::dialogs.get("item-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
+
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 		itemInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &itemInfo, false));
