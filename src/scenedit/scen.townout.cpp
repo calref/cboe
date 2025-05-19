@@ -713,6 +713,7 @@ void edit_town_details() {
 	using namespace std::placeholders;
 	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-details"));
 	town_dlg["okay"].attachClickHandler(save_town_details);
+	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
 	town_dlg["difficulty"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, 0, 10, "The town difficulty", "0 - easiest, 10 - hardest"));
