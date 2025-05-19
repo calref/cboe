@@ -987,6 +987,7 @@ void edit_town_wand() {
 	
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
 	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
 	// There's 16 of them, so this is kinda the easiest way to do it.
