@@ -1701,117 +1701,95 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
-// This is very fragile, and only hands a few cases.
 void push_things() {
 	bool redraw = false;
-	ter_num_t ter;
-	location l;
 	
 	if(is_out()) // TODO: Make these work outdoors
 		return;
 	if(!univ.town.belt_present)
 		return;
 	
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].is_alive()) {
-			l = univ.town.monst[i].cur_loc;
-			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
-				}
-			}
-			if(l != univ.town.monst[i].cur_loc) {
-				if((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
-					(point_onscreen(center,l)))
-					redraw = true;
-				univ.town.monst[i].cur_loc = l;
-			}
-		}
-	for(short i = 0; i < univ.town.items.size(); i++)
-		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
-			l = univ.town.items[i].item_loc;
-			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
-				}
-			}
-			if(l != univ.town.items[i].item_loc) {
-				if((point_onscreen(center,univ.town.items[i].item_loc)) ||
-					(point_onscreen(center,l)))
-					redraw = true;
-				univ.town.items[i].item_loc = l;
-			}
-		}
-	
-	if(is_town()) {
-		ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
-		l = univ.party.town_loc;
-		if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
-			}
-		}
-		if(l != univ.party.town_loc) {
-			// TODO: Will this push you into a placed forcecage or barrier? Should it?
-			ASB("You get pushed.");
-			if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
-				draw_terrain(0);
-			center = l;
-			univ.party.town_loc = l;
-			update_explored(l);
-			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
-			(void) ter; // Though it's never read currently, it at least keeps things consistent
-			draw_map(true);
-			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)) {
-				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
-				ASB("You smash the barrel.");
-			}
-			if(univ.town.is_crate(univ.party.town_loc.x,univ.party.town_loc.y)) {
-				univ.town.set_crate(univ.party.town_loc.x,univ.party.town_loc.y,false);
-				ASB("You smash the crate.");
-			}
-			if(univ.town.is_block(univ.party.town_loc.x,univ.party.town_loc.y)) {
-				ASB("You crash into the block.");
-				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
-			}
-			for(short k = 0; k < univ.town.items.size(); k++)
-				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
-				   && (univ.town.items[k].item_loc == univ.party.town_loc))
-					univ.town.items[k].contained = univ.town.items[k].held = false;
-			redraw = true;
-		}
-	}
-	if(is_combat()) {
-		for(short i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::ALIVE) {
-				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
-				l = univ.party[i].combat_pos;
+	auto check_push = [&redraw](location& l, short x_width = 1, short y_width = 1) -> bool {
+		location start_l = l;
+		for(int x = start_l.x; x < start_l.x + x_width; ++x){
+			for(int y = start_l.y; y < start_l.y + y_width; ++y){
+				ter_num_t ter = univ.town->terrain(x,y);
 				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-					switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
+					// TODO: Implement the other 4 possible directions
+					switch(univ.scenario.ter_types[ter].flag1){
 						case DIR_N: l.y--; break;
 						case DIR_E: l.x++; break;
 						case DIR_S: l.y++; break;
 						case DIR_W: l.x--; break;
 					}
 				}
-				if(l != univ.party[i].combat_pos) {
+			}
+		}
+		if(l != start_l){
+			if(point_onscreen(center, l) || point_onscreen(center, start_l)){
+				redraw = true;
+			}
+			return true;
+		}
+		return false;
+	};
+
+	// TODO monsters could smash crates and barrels, and crash into blocks
+	// Push monsters
+	for(short i = 0; i < univ.town.monst.size(); i++){
+		cCreature& creature = univ.town.monst[i];
+		if(creature.is_alive()) {
+			if(univ.scenario.get_feature_flag("conveyor-belts") == "V2"){
+				check_push(creature.cur_loc, creature.x_width, creature.y_width);
+			}else{
+				check_push(creature.cur_loc);
+			}
+		}
+	}
+	// TODO I think items pushed onto barrels or crates would become contained in them. This doesn't make much sense,
+	// but could be used for interesting automation like Factorio...
+	// Push items
+	for(short i = 0; i < univ.town.items.size(); i++){
+		if(univ.town.items[i].variety != eItemType::NO_ITEM){
+			check_push(univ.town.items[i].item_loc);
+		}
+	}
+	
+	// Push party in peace mode
+	if(is_town()) {
+		if(check_push(univ.party.town_loc)){
+			// TODO: Will this push you into a placed forcecage or barrier? Should it?
+			ASB("You get pushed.");
+			center = univ.party.town_loc;
+			update_explored(center);
+			draw_map(true);
+			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)){
+				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
+				ASB("You smash the barrel.");
+			}
+			if(univ.town.is_crate(univ.party.town_loc.x,univ.party.town_loc.y)){
+				univ.town.set_crate(univ.party.town_loc.x,univ.party.town_loc.y,false);
+				ASB("You smash the crate.");
+			}
+			// You will then share a space with the block, which I think is fine?
+			if(univ.town.is_block(univ.party.town_loc.x,univ.party.town_loc.y)){
+				ASB("You crash into the block.");
+				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
+			}
+			// TODO What is this doing?
+			for(short k = 0; k < univ.town.items.size(); k++)
+				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
+				   && (univ.town.items[k].item_loc == univ.party.town_loc))
+					univ.town.items[k].contained = univ.town.items[k].held = false;
+		}
+	}
+	// Push PCs in combat mode
+	if(is_combat()) {
+		for(short i = 0; i < 6; i++){
+			if(univ.party[i].main_status == eMainStatus::ALIVE){
+				if(check_push(univ.party[i].combat_pos)){
 					ASB("Someone gets pushed.");
-					ter = univ.town->terrain(l.x,l.y);
-					if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
-						draw_terrain(0);
-					univ.party[i].combat_pos = l;
-					update_explored(l);
+					update_explored(univ.party[i].combat_pos);
 					draw_map(true);
 					if(univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						univ.town.set_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
@@ -1821,10 +1799,12 @@ void push_things() {
 						univ.town.set_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the crate.");
 					}
+					// You will then share a space with the block, which I think is fine?
 					if(univ.town.is_block(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						ASB("You crash into the block.");
 						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN);
 					}
+					// TODO What is this doing?
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
@@ -1832,8 +1812,9 @@ void push_things() {
 					redraw = true;
 				}
 			}
+		}
 	}
-	if(redraw) {
+	if(redraw){
 		print_buf();
 		draw_terrain(0);
 	}
