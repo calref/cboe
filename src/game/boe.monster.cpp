@@ -889,6 +889,11 @@ void monst_inflict_fields(short which_monst) {
 	
 }
 
+extern std::set<eDirection> no_move_from_north;
+extern std::set<eDirection> no_move_from_west;
+extern std::set<eDirection> no_move_from_south;
+extern std::set<eDirection> no_move_from_east;
+
 //mode; // 1 - town 2 - combat
 bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
 	ter_num_t ter = 0;
@@ -898,21 +903,21 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
 	cCreature *which_m;
 	eTerSpec ter_abil;
-	unsigned short ter_dir;
+	eDirection ter_dir;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
 	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
 	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_dir = univ.scenario.ter_types[ter].flag1;
+	ter_dir = eDirection(univ.scenario.ter_types[ter].flag1);
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
-			((ter_dir == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_dir == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_dir == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_dir == DIR_W) && (where_check.x > from_loc.x)) ) {
+			(no_move_from_north.count(ter_dir) && (where_check.y > from_loc.y)) ||
+			(no_move_from_east.count(ter_dir) && (where_check.x < from_loc.x)) ||
+			(no_move_from_south.count(ter_dir) && (where_check.y < from_loc.y)) ||
+			(no_move_from_west.count(ter_dir) && (where_check.x > from_loc.x))) {
 			return false;
 		}
 	}

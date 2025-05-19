@@ -140,6 +140,10 @@ bool handle_wandering_specials(short mode) {
 	return true;
 }
 
+std::set<eDirection> no_move_from_north = { DIR_N, DIR_NW, DIR_NE };
+std::set<eDirection> no_move_from_west = { DIR_W, DIR_NW, DIR_SW };
+std::set<eDirection> no_move_from_south = { DIR_S, DIR_SW, DIR_SE };
+std::set<eDirection> no_move_from_east = { DIR_E, DIR_NE, DIR_SE };
 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
@@ -183,11 +187,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
+		eDirection ter_dir = eDirection(ter_flag1);
 		if(
-			((ter_flag1 == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_flag1 == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_flag1 == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_flag1 == DIR_W) && (where_check.x > from_loc.x)) ) {
+			(no_move_from_north.count(ter_dir) && (where_check.y > from_loc.y)) ||
+			(no_move_from_east.count(ter_dir) && (where_check.x < from_loc.x)) ||
+			(no_move_from_south.count(ter_dir) && (where_check.y < from_loc.y)) ||
+			(no_move_from_west.count(ter_dir) && (where_check.x > from_loc.x)) ) {
 			ASB("The moving floor prevents you.");
 			return false;
 		}
@@ -1701,6 +1706,8 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
+// NOTE: conveyors will also PREVENT PCs and monsters from moving ONTO them in an opposing direction.
+// This is handled in check_special_terrain() in this file and monst_check_special_terrain() in boe.monster.cpp
 void push_things() {
 	bool redraw = false;
 	
@@ -1715,12 +1722,18 @@ void push_things() {
 			for(int y = start_l.y; y < start_l.y + y_width; ++y){
 				ter_num_t ter = univ.town->terrain(x,y);
 				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-					// TODO: Implement the other 4 possible directions
 					switch(univ.scenario.ter_types[ter].flag1){
 						case DIR_N: l.y--; break;
 						case DIR_E: l.x++; break;
 						case DIR_S: l.y++; break;
 						case DIR_W: l.x--; break;
+						// An animated diagonal conveyor terrain might look strange? But if someone wants to try.
+						// Diagonal conveyor support *could* require a scenario feature flag, but having a terrain
+						// with the diagonal direction already indicates a desire for it to work.
+						case DIR_NE: l.x++; l.y--; break;
+						case DIR_SE: l.x++; l.y++; break;
+						case DIR_SW: l.x--; l.y++; break;
+						case DIR_NW: l.x--; l.y--; break;
 					}
 				}
 			}
