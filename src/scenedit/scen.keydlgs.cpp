@@ -833,6 +833,10 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 	univ.party.outdoor_corner = cur_out;
 	univ.party.i_w_c = {0, 0};
 
+	std::string title = "";
+	ePicType pic_type = PIC_SCEN;
+	pic_num_t pic = scenario.intro_pic;
+
 	switch(special.type){
 		case eSpecType::ONCE_DIALOG:
 			once_dialog(univ, special, cur_type, &me);
@@ -846,7 +850,9 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 
 			short defaultBackground = cDialog::defaultBackground;
 			cDialog::defaultBackground = cDialog::BG_DARK;
-			cStrDlog(str1, str2, "", scenario.intro_pic, PIC_SCEN, &me).show();
+			cStrDlog dlog(str1, str2, title, pic, pic_type, &me);
+			dlog->getControl("record").show();
+			dlog.show();
 			cDialog::defaultBackground = defaultBackground;
 		}break;
 	}
