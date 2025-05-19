@@ -3160,6 +3160,7 @@ void edit_scenario_events() {
 	evt_dlg["prev"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(0); });
 	evt_dlg["next"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(1); });
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
+	evt_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &evt_dlg, false));
 	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
 		stk.setPage(i / 10);
 		short fieldId = i % 10;
