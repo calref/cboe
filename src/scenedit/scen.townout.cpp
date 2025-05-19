@@ -498,6 +498,7 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 void outdoor_details() {
 	cDialog out_dlg(*ResMgr::dialogs.get("edit-outdoor-details"));
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
+	out_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &out_dlg, false));
 	std::ostringstream str_out;
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
 	out_dlg["loc"].setText(str_out.str());
