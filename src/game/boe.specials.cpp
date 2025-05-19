@@ -1857,7 +1857,7 @@ void push_things() {
 				ASB("You crash into the block.");
 				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
 			}
-			// TODO What is this doing?
+			// If the party smashed a barrel or a crate, drop those items on the floor
 			for(short k = 0; k < univ.town.items.size(); k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 				   && (univ.town.items[k].item_loc == univ.party.town_loc))
@@ -1885,7 +1885,7 @@ void push_things() {
 						ASB("You crash into the block.");
 						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN);
 					}
-					// TODO What is this doing?
+					// If the party smashed a barrel or a crate, drop those items on the floor
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
