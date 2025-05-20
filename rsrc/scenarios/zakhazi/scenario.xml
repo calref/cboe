@@ -9,6 +9,9 @@
         <name>Name not given</name>
         <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
     </author>
+    <feature-flags>
+        <conveyor-belts>V2</conveyor-belts>
+    </feature-flags>
     <text>
         <teaser>Get supplies to a besieged fort, or else.</teaser>
         <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
