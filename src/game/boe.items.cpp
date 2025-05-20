@@ -959,7 +959,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					can_pick = false;
 					break;
 				}
-				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
+				if((overall_mode == MODE_COMBAT) && univ.party[i].is_alive() && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
 					can_pick = false;
 					extra_info = "too far away";
 					break;
@@ -976,6 +976,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						break;
 					case eBuyStatus::DEAD:
 						// Extra info not really needed, and kind of silly to print
+						extra_info = "";
 						can_pick = false;
 						break;
 					default:
