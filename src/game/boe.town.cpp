@@ -1600,3 +1600,44 @@ bool quadrant_legal(short i, short j) {
 		return false;
 	return true;
 }
+
+void push_thing(ePushableThing type, location pusher_loc, location thing_loc) {
+	location to_loc = push_loc(pusher_loc, thing_loc);
+	move_thing(type, thing_loc, to_loc);
+}
+
+void move_thing(ePushableThing type, location from_loc, location to_loc) {
+	// Get the thing out of its spot
+	switch(type){
+		case PUSH_CRATE:
+			univ.town.set_crate(from_loc.x, from_loc.y, false);
+			break;
+		case PUSH_BARREL:
+			univ.town.set_barrel(from_loc.x, from_loc.y, false);
+			break;
+		case PUSH_BLOCK:
+			univ.town.set_block(from_loc.x, from_loc.y, false);
+			break;
+	}
+	// If it wasn't deleted, put it in the new spot
+	if(to_loc.x > 0){
+		switch(type){
+			case PUSH_CRATE:
+				univ.town.set_crate(to_loc.x, to_loc.y, true);
+				break;
+			case PUSH_BARREL:
+				univ.town.set_barrel(to_loc.x, to_loc.y, true);
+				break;
+			case PUSH_BLOCK:
+				univ.town.set_block(to_loc.x, to_loc.y, true);
+				break;
+		}
+	}
+	// Move items inside crate or barrel
+	if(type == PUSH_CRATE || type == PUSH_BARREL){
+		for(short i = 0; i < univ.town.items.size(); i++)
+			if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == from_loc
+				&& univ.town.items[i].contained && univ.town.items[i].held)
+				univ.town.items[i].item_loc = to_loc;
+	}
+}

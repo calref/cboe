@@ -287,32 +287,15 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		}
 		if(univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_crate(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_CRATE, from_loc, where_check);
 		}
 		if(univ.town.is_barrel(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the barrel.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_BARREL, from_loc, where_check);
 		}
 		if(univ.town.is_block(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the stone block.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_block(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_block(to_loc.x,to_loc.y,true);
+			push_thing(PUSH_BLOCK, from_loc, where_check);
 		}
 	}
 	
@@ -1815,7 +1798,6 @@ void push_things() {
 		return false;
 	};
 
-	// TODO monsters could smash crates and barrels, and crash into blocks
 	// Push monsters
 	for(short i = 0; i < univ.town.monst.size(); i++){
 		cCreature& creature = univ.town.monst[i];
@@ -1825,6 +1807,7 @@ void push_things() {
 			}else{
 				check_push(creature.cur_loc);
 			}
+			// Monsters destroy crates/barrels in monst_inflict_fields() in boe.monster.cpp
 		}
 	}
 	// Push items

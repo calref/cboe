@@ -33,3 +33,11 @@ bool is_door(location destination);
 void display_map();
 void check_done();
 bool quadrant_legal(short i, short j) ;
+
+enum ePushableThing {
+	PUSH_CRATE,
+	PUSH_BARREL,
+	PUSH_BLOCK,
+};
+void push_thing(ePushableThing type, location pusher_loc, location thing_loc);
+void move_thing(ePushableThing type, location from_loc, location to_loc);

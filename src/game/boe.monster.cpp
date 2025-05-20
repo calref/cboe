@@ -8,6 +8,7 @@
 #include "boe.monster.hpp"
 #include "boe.combat.hpp"
 #include "boe.text.hpp"
+#include "boe.town.hpp"
 #include "boe.specials.hpp"
 #include "boe.items.hpp"
 #include "sounds.hpp"
@@ -703,8 +704,6 @@ bool try_move(short i,location start,short x,short y) {
 }
 
 bool combat_move_monster(short which,location destination) {
-	
-	
 	if(!monst_can_be_there(destination,which))
 		return false;
 	else if(!monst_check_special_terrain(destination,2,which))
@@ -798,7 +797,7 @@ bool monster_placid(short m_num) {
 }
 
 // This damages a monster by any fields it's in, and destroys any barrels or crates
-// it's stiing on.
+// it's sitting on.
 void monst_inflict_fields(short which_monst) {
 	short r1;
 	location where_check;
@@ -993,29 +992,21 @@ static bool monst_check_one_special_terrain(location where_check,short mode,shor
 		if(monster_placid(which_monst))
 			can_enter = false;
 		else {
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_crate(to_loc.x,to_loc.y, true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_CRATE, from_loc, where_check);
 		}
 	}
 	if(univ.town.is_barrel(where_check.x,where_check.y)) {
 		if(monster_placid(which_monst))
 			can_enter = false;
 		else {
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
-			
+			push_thing(PUSH_BARREL, from_loc, where_check);
+		}
+	}
+	if(univ.town.is_block(where_check.x, where_check.y)){
+		if(monster_placid(which_monst))
+			can_enter = false;
+		else {
+			push_thing(PUSH_BLOCK, from_loc, where_check);
 		}
 	}
 	if(monster_placid(which_monst) && // monsters don't hop into bed when things are calm
