@@ -170,7 +170,7 @@
 	sdf -1, -1
 	msg 30, 31, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-disp-msg = 25
@@ -212,7 +212,7 @@
 	sdf -1, -1
 	msg 35, 36, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-set-sdf = 31
