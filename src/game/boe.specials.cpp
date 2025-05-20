@@ -4191,6 +4191,7 @@ void townmode_spec(const runtime_state& ctx) {
 				else increase_light(-spec.ex2a);
 			}
 			break;
+		// This is for 1 monster only. The name is very confusing! See MAKE_TOWN_HOSTILE for whole town/group attitude changes.
 		case eSpecType::TOWN_SET_ATTITUDE:{
 			int num_monst = univ.town.monst.size();
 			if((spec.ex1a < 0) || (spec.ex1a >= num_monst)){
