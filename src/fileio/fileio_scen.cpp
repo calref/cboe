@@ -99,6 +99,9 @@ fs::path locate_scenario(std::string scen_name, bool allow_unpacked) {
 	fs::path scenPath;
 
 	for(fs::path scenDir : all_scen_dirs()){
+		// Some possible directories, like the Itch client installation folder, might not exist
+		if(!fs::is_directory(scenDir)) continue;
+
 		for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
 			fs::file_status stat = iter->status();
 			std::string fname = iter->path().filename().string().c_str();
