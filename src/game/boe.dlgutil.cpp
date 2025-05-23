@@ -2098,7 +2098,7 @@ class cFilePicker {
 			if(party_idx < parties_needed)
 				populate_slot(slot_idx, save_file_mtimes[party_idx].first, save_file_mtimes[party_idx].second, save_files[party_idx]);
 			else
-				empty_slot(party_idx - start_idx);
+				empty_slot(slot_idx);
 		}
 
 		++pages_populated;
