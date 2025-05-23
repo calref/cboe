@@ -1079,6 +1079,7 @@ void init_boe(int argc, char* argv[]) {
 	init_tiling();
 	init_snd_tool();
 	
+	// see fallback_scale() in winutil.cpp for where the default UI scale is calculated based on screen size
 	adjust_window_mode();
 	init_ui();
 	// If we don't do this now it'll flash white to start with

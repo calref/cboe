@@ -445,6 +445,12 @@ void cDialog::recalcRect(){
 
 	winRect.right *= get_ui_scale();
 	winRect.bottom *= get_ui_scale();
+	// Uncomment if you need to measure any dialogs.
+	/*
+	LOG_VALUE(fname);
+	LOG_VALUE(winRect.right);
+	LOG_VALUE(winRect.bottom);
+	*/
 }
 
 bool cDialog::initCalled = false;
