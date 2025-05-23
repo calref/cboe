@@ -450,7 +450,7 @@ void cDialog::recalcRect(){
 	LOG_VALUE(fname);
 	LOG_VALUE(winRect.right);
 	LOG_VALUE(winRect.bottom);
-	*/
+	//*/
 }
 
 bool cDialog::initCalled = false;
