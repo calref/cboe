@@ -1889,7 +1889,7 @@ class cFilePicker {
 		save_files.resize(save_file_mtimes.size());
 
 		cStack& stk = get_stack();
-		int num_pages = ceil((float)save_file_mtimes.size() / parties_per_page);
+		int num_pages = max(1, ceil((float)save_file_mtimes.size() / parties_per_page));
 		stk.setPageCount(num_pages);
 		// HACK: For some reason which should be fixed, the buttons and labels on subsequent pages
 		// aren't getting text on the static buttons and labels
