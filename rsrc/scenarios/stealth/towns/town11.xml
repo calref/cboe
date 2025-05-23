@@ -10,7 +10,9 @@
     <lighting>lit</lighting>
     <onenter condition="alive">1</onenter>
     <onenter condition="dead">1</onenter>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <wandering>
         <monster>117</monster>
     </wandering>

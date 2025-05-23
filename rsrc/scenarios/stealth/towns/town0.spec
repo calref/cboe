@@ -10,7 +10,7 @@
 	msg 0, -1, -1
 	pic 0, 4
 	ex1 0, -1, -1
-	ex2 -1, -1, -1
+	ex2 1, -1, -1
 	goto -1
 @once-disp-msg = 2
 	sdf 0, 0

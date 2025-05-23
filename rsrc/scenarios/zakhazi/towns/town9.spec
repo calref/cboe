@@ -108,7 +108,7 @@
 	msg -1, -1, -1
 	pic 0, 4
 	ex1 0, -1, -1
-	ex2 -1, -1, -1
+	ex2 1, -1, -1
 	goto -1
 @once-trap = 16
 	sdf 8, 6
@@ -311,14 +311,14 @@
 	msg 40, -1, -1
 	pic 0, 4
 	ex1 0, -1, -1
-	ex2 -1, -1, -1
+	ex2 1, -1, -1
 	goto -1
 @town-attitude = 45
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
 	ex1 0, -1, -1
-	ex2 -1, -1, -1
+	ex2 1, -1, -1
 	goto -1
 @xp = 46
 	sdf -1, -1

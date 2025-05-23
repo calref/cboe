@@ -9,7 +9,9 @@
         <name>Author</name>
         <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
     </author>
-    <feature-flags />
+    <feature-flags>
+        <conveyor-belts>V2</conveyor-belts>
+    </feature-flags>
     <text>
         <teaser>Get supplies to a besieged fort, or else.</teaser>
         <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
@@ -563,8 +565,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>1</last-town>
         <graphics>
             <pic index="0">monster-tall</pic>
             <pic index="8">monster-large</pic>

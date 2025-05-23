@@ -270,7 +270,7 @@
 	pic 0, 4
 	ex1 -1, -1, -1
 	ex2 -1, -1, -1
-	goto -1
+	goto 43
 @disp-msg = 39
 	sdf -1, -1
 	msg 59, 60, -1
@@ -298,4 +298,11 @@
 	pic 0, 4
 	ex1 1, 34, -1
 	ex2 -1, -1, -1
+	goto -1
+@town-visible = 43
+	sdf -1, -1
+	msg -1, -1, -1
+	pic 0, 4
+	ex1 20, -1, -1
+	ex2 0, -1, -1
 	goto -1

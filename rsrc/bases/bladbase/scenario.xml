@@ -554,8 +554,6 @@
     </game>
     <editor>
         <default-ground>2</default-ground>
-        <last-out-section x="0" y="0" />
-        <last-town>0</last-town>
         <item-typeflag id="1">Darts</item-typeflag>
         <item-typeflag id="2">Iron Darts</item-typeflag>
         <item-typeflag id="3">Magic Darts</item-typeflag>

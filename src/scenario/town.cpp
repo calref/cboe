@@ -72,6 +72,8 @@ void cTown::import_legacy(legacy::town_record_type& old){
 		specials[i].import_legacy(old.specials[i]);
 	difficulty = old.difficulty;
 	strong_barriers = defy_scrying = defy_mapping = false;
+
+	// Legacy scenarios store is_hidden in an array on scenario_data_type, so that flag is imported in cScenario::import_legacy()
 }
 
 cTown::cTown(cScenario& scenario, size_t dim) : cArea(dim), scenario(&scenario), lighting(dim, boost::dynamic_bitset<>(dim)) {

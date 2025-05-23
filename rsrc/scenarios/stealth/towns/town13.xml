@@ -8,7 +8,9 @@
     <bounds top="0" left="0" bottom="31" right="31" />
     <difficulty>0</difficulty>
     <lighting>dark</lighting>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>99</type>
         <contained>true</contained>
@@ -87,6 +89,6 @@
         <![CDATA["Leave this mountain range. Go to the east, to where the mountains meet the sea, and walk north along the path between mountains and sea. From there, the way to Stalker will be made clear to you."]]>
     </string>
     <string id="37">
-        <![CDATA["Remember - a great trust is being placed upon you. In the name of justice, to not betray it. That is all." The lights go up again.]]>
+        <![CDATA["Remember - a great trust is being placed upon you. In the name of justice, do not betray it. That is all." The lights go up again.]]>
     </string>
 </town>

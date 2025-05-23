@@ -90,7 +90,9 @@ public:
 	short spec_on_hostile;
 	std::array<cTimer,8> timers;
 	bool strong_barriers, defy_mapping, defy_scrying;
-	bool is_hidden, has_tavern;
+	// Whether the town STARTS OUT hidden.
+	bool is_hidden;
+	bool has_tavern;
 	short difficulty;
 	// Using std::array here so we can have .size()
 	// This'll make the transition smoother once it becomes a vector.
@@ -101,6 +103,8 @@ private:
 	// Persistent data for saved games
 	boost::dynamic_bitset<> item_taken;
 public:
+	std::vector<location> door_unlocked;
+	// Whether the town IS CURRENTLY visible.
 	bool can_find;
 	long m_killed = 0;
 	

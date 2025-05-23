@@ -30,8 +30,8 @@
 	sdf -1, -1
 	msg 9, -1, 0
 	pic 93, 1
-	ex1 3, 5, -1
-	ex2 2, 6, -1
+	ex1 2, 6, -1
+	ex2 3, 5, -1
 	goto -1
 @block-move = 5
 	sdf -1, -1

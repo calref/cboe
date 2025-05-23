@@ -8,7 +8,9 @@
     <bounds top="3" left="0" bottom="44" right="47" />
     <difficulty>4</difficulty>
     <lighting>dark</lighting>
-    <flags />
+    <flags>
+        <chop kills="50" />
+    </flags>
     <wandering>
         <monster>189</monster>
         <monster>189</monster>

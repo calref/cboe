@@ -4440,7 +4440,7 @@
     </monster>
     <monster id="181">
         <name>Baby Hydra</name>
-        <pic w="1" h="1">159</pic>
+        <pic w="1" h="1">173</pic>
         <race>reptile</race>
         <level>8</level>
         <armor>6</armor>
