@@ -328,7 +328,7 @@ cSpell P_BLESS_PARTY = cSpell(eSpell::BLESS_PARTY).asType(eSkill::PRIEST_SPELLS)
 cSpell P_HEAL_MAJOR = cSpell(eSpell::HEAL_MAJOR).asType(eSkill::PRIEST_SPELLS).asLevel(5)
 	.withCost(7).needsSelect().when(WHEN_COMBAT).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
 cSpell P_RAISE_DEAD = cSpell(eSpell::RAISE_DEAD).asType(eSkill::PRIEST_SPELLS).asLevel(5)
-	.withCost(25).needsSelect(SELECT_ANY).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
+	.withCost(25).needsSelect(SELECT_DEAD).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
 cSpell P_FLAMESTRIKE = cSpell(eSpell::FLAMESTRIKE).asType(eSkill::PRIEST_SPELLS).asLevel(5)
 	.withRange(9).withTargetLock().withCost(8).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell P_SANCTUARY_MASS = cSpell(eSpell::SANCTUARY_MASS).asType(eSkill::PRIEST_SPELLS).asLevel(5)
@@ -348,7 +348,7 @@ cSpell P_REVIVE = cSpell(eSpell::REVIVE).asType(eSkill::PRIEST_SPELLS).asLevel(6
 cSpell P_HYPERACTIVITY = cSpell(eSpell::HYPERACTIVITY).asType(eSkill::PRIEST_SPELLS).asLevel(6)
 	.withCost(8).when(WHEN_COMBAT).when(WHEN_TOWN).when(WHEN_OUTDOORS).asPeaceful().finish();
 cSpell P_DESTONE = cSpell(eSpell::DESTONE).asType(eSkill::PRIEST_SPELLS).asLevel(6)
-	.withCost(8).needsSelect(SELECT_ANY).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
+	.withCost(8).needsSelect(SELECT_STONE).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
 cSpell P_SUMMON_GUARDIAN = cSpell(eSpell::SUMMON_GUARDIAN).asType(eSkill::PRIEST_SPELLS).asLevel(6)
 	.withRange(4).withCost(14).withRefer(REFER_TARGET).when(WHEN_COMBAT).when(WHEN_TOWN).finish();
 // This is always centered on the caster:
@@ -366,7 +366,7 @@ cSpell P_REVIVE_ALL = cSpell(eSpell::REVIVE_ALL).asType(eSkill::PRIEST_SPELLS).a
 cSpell P_RAVAGE_SPIRIT = cSpell(eSpell::RAVAGE_SPIRIT).asType(eSkill::PRIEST_SPELLS).asLevel(7)
 	.withRange(4).withTargetLock().withCost(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell P_RESURRECT = cSpell(eSpell::RESURRECT).asType(eSkill::PRIEST_SPELLS).asLevel(7)
-	.withCost(35).needsSelect(SELECT_ANY).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
+	.withCost(35).needsSelect(SELECT_DEAD).when(WHEN_TOWN).when(WHEN_OUTDOORS).finish();
 cSpell P_DIVINE_THUD = cSpell(eSpell::DIVINE_THUD).asType(eSkill::PRIEST_SPELLS).asLevel(7)
 	.withRange(12).withTargetLock().withCost(10).withRefer(REFER_TARGET).when(WHEN_COMBAT).finish();
 cSpell P_AVATAR = cSpell(eSpell::AVATAR).asType(eSkill::PRIEST_SPELLS).asLevel(7)

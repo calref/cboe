@@ -9,7 +9,9 @@
     <difficulty>0</difficulty>
     <lighting>lit</lighting>
     <exit dir="n" x="40" y="9" />
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>62</type>
         <contained>true</contained>

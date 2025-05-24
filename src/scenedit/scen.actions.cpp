@@ -71,6 +71,7 @@ std::vector<rb_t> right_button_status;
 rectangle right_buttons[NRSONPAGE];
 rectangle palette_buttons[10][6];
 short current_rs_top = 0;
+extern short right_button_hovered;
 
 ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
@@ -128,6 +129,7 @@ void init_screen_locs() {
 static cursor_type get_edit_cursor() {
 	switch(overall_mode) {
 		case MODE_INTRO_SCREEN: case MODE_MAIN_SCREEN: case MODE_EDIT_TYPES:
+		case MODE_EDIT_SPECIALS:
 			
 		case MODE_PLACE_CREATURE: case MODE_PLACE_ITEM: case MODE_PLACE_SPECIAL:
 			
@@ -186,8 +188,17 @@ void update_mouse_spot(location the_point) {
 	rectangle terrain_rect = ::terrain_rect;
 	terrain_rect.inset(8,8);
 	terrain_rect.right -= 4;
-	if(overall_mode >= MODE_MAIN_SCREEN)
+	if(overall_mode >= MODE_MAIN_SCREEN){
 		set_cursor(sword_curs);
+
+		// Mouse over right-side buttons: highlight which is selected, because accidental misclicks are common
+		right_button_hovered = -1;
+		for(int i = 0; i < NRSONPAGE; i++){
+			if(the_point.in(right_buttons[i])){
+				right_button_hovered = i;
+			}
+		}
+	}
 	else if(terrain_rect.contains(the_point)) {
 		set_cursor(get_edit_cursor());
 		if(cur_viewing_mode == 0) {
@@ -212,104 +223,112 @@ void update_mouse_spot(location the_point) {
 	if(overall_mode < MODE_MAIN_SCREEN) place_location();
 }
 
-static bool handle_lb_action(location the_point) {
+static bool handle_lb_action(int i){
 	fs::path file_to_load;
 	int x;
+	draw_lb_slot(i,1);
+	play_sound(37);
+	mainPtr().display();
+	// TODO: Proper button handling
+	sf::sleep(time_in_ticks(10));
+	draw_lb_slot(i,0);
+	mainPtr().display();
+	if(overall_mode >= MODE_MAIN_SCREEN) {
+		switch(left_button_status[i].action) {
+			case LB_NO_ACTION:
+				break;
+			case LB_RETURN: // Handled separately, below
+				break;
+			case LB_NEW_SCEN:
+				if(build_scenario()){
+					overall_mode = MODE_MAIN_SCREEN;
+					set_up_main_screen();
+				}
+				break;
+			case LB_LOAD_SCEN:
+				file_to_load = nav_get_scenario();
+				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+					restore_editor_state(true);
+				} else if(!file_to_load.empty())
+					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
+					set_up_start_screen();
+				break;
+			case LB_EDIT_TER:
+				start_terrain_editing();
+				break;
+			case LB_EDIT_MONST:
+				start_monster_editing(0);
+				break;
+			case LB_EDIT_ITEM:
+				start_item_editing(0);
+				break;
+			case LB_NEW_TOWN:
+				if(scenario.towns.size() >= 200) {
+					showError("You have reached the limit of 200 towns you can have in one scenario.");
+					return true;
+				}
+				if(new_town())
+					handle_close_terrain_view(MODE_MAIN_SCREEN);
+				break;
+			case LB_EDIT_TEXT:
+				right_sbar->setPosition(0);
+				start_string_editing(STRS_SCEN,0);
+				break;
+			case LB_EDIT_SPECITEM:
+				start_special_item_editing(false);
+				break;
+			case LB_EDIT_QUEST:
+				start_quest_editing(false);
+				break;
+			case LB_EDIT_SHOPS:
+				start_shops_editing(false);
+				break;
+			case LB_LOAD_OUT:
+				spot_hit = pick_out(cur_out, scenario);
+				if(spot_hit != cur_out) {
+					set_current_out(spot_hit, false);
+					if(overall_mode == MODE_EDIT_SPECIALS){
+						start_special_editing(1, false);
+					}
+				}
+				break;
+			case LB_EDIT_OUT:
+				start_out_edit();
+				mouse_button_held = false;
+				break;
+			case LB_LOAD_TOWN:
+				x = pick_town_num("select-town-edit",cur_town,scenario);
+				if(x >= 0){
+					cur_town = x;
+					town = scenario.towns[cur_town];
+					set_up_main_screen();
+					if(overall_mode == MODE_EDIT_SPECIALS){
+						start_special_editing(2, false);
+					}
+				}
+				break;
+			case LB_EDIT_TOWN:
+				start_town_edit();
+				mouse_button_held = false;
+				break;
+			case LB_EDIT_TALK:
+				start_dialogue_editing(0);
+				break;
+		}
+	}
+	if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
+		handle_close_terrain_view(MODE_MAIN_SCREEN);
+	}
+	mouse_button_held = false;
+	update_edit_menu();
+	return true;
+}
+
+static bool handle_lb_click(location the_point) {
 	for(int i = 0; i < NLS; i++)
 		if(!mouse_button_held && the_point.in(left_buttons[i][0])
 		   && (left_button_status[i].action != LB_NO_ACTION))  {
-			draw_lb_slot(i,1);
-			play_sound(37);
-			mainPtr().display();
-			// TODO: Proper button handling
-			sf::sleep(time_in_ticks(10));
-			draw_lb_slot(i,0);
-			mainPtr().display();
-			if(overall_mode == MODE_INTRO_SCREEN || overall_mode == MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
-				switch(left_button_status[i].action) {
-					case LB_NO_ACTION:
-						break;
-					case LB_RETURN: // Handled separately, below
-						break;
-					case LB_NEW_SCEN:
-						if(build_scenario()){
-							overall_mode = MODE_MAIN_SCREEN;
-							set_up_main_screen();
-						}
-						break;
-						
-					case LB_LOAD_SCEN:
-						file_to_load = nav_get_scenario();
-						if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
-							restore_editor_state(true);
-						} else if(!file_to_load.empty())
-							// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
-							set_up_start_screen();
-						break;
-					case LB_EDIT_TER:
-						start_terrain_editing();
-						break;
-					case LB_EDIT_MONST:
-						start_monster_editing(0);
-						break;
-					case LB_EDIT_ITEM:
-						start_item_editing(0);
-						break;
-					case LB_NEW_TOWN:
-						if(scenario.towns.size() >= 200) {
-							showError("You have reached the limit of 200 towns you can have in one scenario.");
-							return true;
-						}
-						if(new_town())
-							handle_close_terrain_view(MODE_MAIN_SCREEN);
-						break;
-					case LB_EDIT_TEXT:
-						right_sbar->setPosition(0);
-						start_string_editing(STRS_SCEN,0);
-						break;
-					case LB_EDIT_SPECITEM:
-						start_special_item_editing(false);
-						break;
-					case LB_EDIT_QUEST:
-						start_quest_editing(false);
-						break;
-					case LB_EDIT_SHOPS:
-						start_shops_editing(false);
-						break;
-					case LB_LOAD_OUT:
-						spot_hit = pick_out(cur_out, scenario);
-						if(spot_hit != cur_out) {
-							set_current_out(spot_hit, false);
-						}
-						break;
-					case LB_EDIT_OUT:
-						start_out_edit();
-						mouse_button_held = false;
-						break;
-					case LB_LOAD_TOWN:
-						x = pick_town_num("select-town-edit",cur_town,scenario);
-						if(x >= 0){
-							cur_town = x;
-							town = scenario.towns[cur_town];
-							set_up_main_screen();
-						}
-						break;
-					case LB_EDIT_TOWN:
-						start_town_edit();
-						mouse_button_held = false;
-						break;
-					case LB_EDIT_TALK:
-						start_dialogue_editing(0);
-						break;
-						
-				}
-			}
-			if((overall_mode < MODE_MAIN_SCREEN) && left_button_status[i].action == LB_RETURN) {
-				handle_close_terrain_view(MODE_MAIN_SCREEN);
-			}
-			mouse_button_held = false;
-			update_edit_menu();
-			return true;
+			return handle_lb_action(i);
 		}
 	return false;
 }
@@ -1157,6 +1176,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_INTRO_SCREEN:
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
+			case MODE_EDIT_SPECIALS:
 				break; // Nothing to do here, of course.
 			case MODE_COPY_CREATURE:
 				for(short x = 0; x < town->creatures.size(); x++)
@@ -1260,6 +1280,10 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 				short size_before = scenario.ter_types.size(), pos_before = pal_sbar->getPosition();
 				i += pos_before * 16;
 				if(i > size_before) return true;
+				if(i == 90){
+					showWarning("The pit/barrier terrain cannot be changed.");
+					return true;
+				}
 				if(option_hit) {
 					if(i == size_before - 1 && !scenario.is_ter_used(i))
 						scenario.ter_types.pop_back();
@@ -1617,10 +1641,10 @@ void handle_action(location the_point,sf::Event /*event*/) {
 	if(kb.isCtrlPressed())
 		ctrl_hit = true;
 	
-	if(handle_lb_action(the_point))
+	if(handle_lb_click(the_point))
 		return;
 	
-	if(overall_mode == MODE_MAIN_SCREEN && handle_rb_action(the_point, option_hit))
+	if(overall_mode >= MODE_MAIN_SCREEN && overall_mode != MODE_EDIT_TYPES && handle_rb_action(the_point, option_hit))
 		return;
 		
 	update_mouse_spot(the_point);
@@ -1725,7 +1749,19 @@ void handle_keystroke(sf::Event event) {
 				return;
 			}
 		}
-	
+
+	if(event.key.code == Key::Escape){
+		if(overall_mode == MODE_DRAWING){
+			// Not doing anything special. back to menu
+			handle_lb_action(NLS - 2);
+		}else{
+			// Using a tool. Turn it off
+			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
+			overall_mode = MODE_DRAWING;
+		}
+		return;
+	}
+
 	store_ter = current_terrain_type;
 	chr = keyToChar(chr2, event.key.shift);
 	
@@ -2491,7 +2527,8 @@ void set_up_main_screen() {
 	set_lb(-1,LB_TEXT,LB_EDIT_TALK,"Edit Town Dialogue");
 	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Created 1997, Free Open Source");
 	set_lb(NLS - 1,LB_TEXT,LB_NO_ACTION,version());
-	overall_mode = MODE_MAIN_SCREEN;
+	if(overall_mode < MODE_MAIN_SCREEN)
+		overall_mode = MODE_MAIN_SCREEN;
 	right_sbar->show();
 	pal_sbar->hide();
 	shut_down_menus(4);
@@ -2740,35 +2777,35 @@ void start_string_editing(eStrMode mode,short just_redo_text) {
 		std::ostringstream str;
 		switch(mode) {
 			case 0:
-				str << i << " - " << scenario.spec_strs[i].substr(0,30);
+				str << i << " - " << scenario.spec_strs[i];
 				set_rb(i,RB_SCEN_STR, i,str.str());
 				break;
 			case 1:
-				str << i << " - " << current_terrain->spec_strs[i].substr(0,30);
+				str << i << " - " << current_terrain->spec_strs[i];
 				set_rb(i,RB_OUT_STR, i,str.str());
 				break;
 			case 2:
-				str << i << " - " << town->spec_strs[i].substr(0,30);
+				str << i << " - " << town->spec_strs[i];
 				set_rb(i,RB_TOWN_STR, i,str.str());
 				break;
 			case 3:
-				str << i << " - " << scenario.journal_strs[i].substr(0,30);
+				str << i << " - " << scenario.journal_strs[i];
 				set_rb(i,RB_JOURNAL, i,str.str());
 				break;
 			case 4:
-				str << i << " - " << current_terrain->sign_locs[i].text.substr(0,30);
+				str << i << " - " << current_terrain->sign_locs[i];
 				set_rb(i,RB_OUT_SIGN, i,str.str());
 				break;
 			case 5:
-				str << i << " - " << town->sign_locs[i].text.substr(0,30);
+				str << i << " - " << town->sign_locs[i].text;
 				set_rb(i,RB_TOWN_SIGN, i,str.str());
 				break;
 			case 6:
-				str << i << " - " << current_terrain->area_desc[i].descr.substr(0,30);
+				str << i << " - " << current_terrain->area_desc[i];
 				set_rb(i,RB_OUT_RECT, i,str.str());
 				break;
 			case 7:
-				str << i << " - " << town->area_desc[i].descr.substr(0,30);
+				str << i << " - " << town->area_desc[i].descr;
 				set_rb(i,RB_TOWN_RECT, i,str.str());
 				break;
 		}
@@ -2811,6 +2848,7 @@ void start_special_editing(short mode,short just_redo_text) {
 		reset_rb();
 		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
 	}
+	overall_mode = MODE_EDIT_SPECIALS;
 	
 	for(size_t i = 0; i < num_specs; i++) {
 		std::ostringstream strb;

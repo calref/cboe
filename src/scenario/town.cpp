@@ -177,6 +177,15 @@ bool cTown::cWandering::isNull() const {
 	return true;
 }
 
+size_t cTown::count_hostiles() const {
+	size_t count = 0;
+	static std::set<eAttitude> hostile_attitudes = { eAttitude::HOSTILE_A, eAttitude::HOSTILE_B };
+	for(const cTownperson& creature : creatures){
+		count += hostile_attitudes.count(creature.start_attitude);
+	}
+	return count;
+}
+
 bool cTown::is_cleaned_out() const {
 	if(max_num_monst < 0) return false;
 	return m_killed >= max_num_monst;

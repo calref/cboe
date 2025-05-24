@@ -849,7 +849,11 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 			put_monst_info_in_dlog(me,monst,which);
 		}
 	} else if(hit == "preview") {
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog monstInfo(*ResMgr::dialogs.get("monster-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 		monstInfo.attachClickHandlers([](cDialog&,std::string,eKeyMod){return false;}, {"guard","mindless","invuln"});
@@ -1707,7 +1711,13 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "preview") {
 		cItem temp_item = item;
 		temp_item.ident = true;
+
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog itemInfo(*ResMgr::dialogs.get("item-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
+
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 		itemInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &itemInfo, false));
@@ -2819,20 +2829,10 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	me["contact"].setText(scenario.contact_info[1]);
 }
 
-static bool save_scen_adv_details(cDialog& me, std::string, eKeyMod) {
-	if(!me.toast(true)) return true;
-
-	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
-
-	scenario.campaign_id = me["cpnid"].getText();
-	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
-	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
-	scenario.bg_dungeon = boost::lexical_cast<int>(me["bg-dungeon"].getText().substr(13));
-	scenario.bg_fight = boost::lexical_cast<int>(me["bg-fight"].getText().substr(11));
-	scenario.init_spec = me["oninit"].getTextAsNum();
+static bool save_scen_adv_details(cDialog& me, std::string item_hit, eKeyMod) {
+	me.toast(item_hit == "okay");
 	return true;
 }
-
 
 static void put_scen_adv_details_in_dlog(cDialog& me) {
 	dynamic_cast<cLed&>(me["adjust"]).setState(scenario.adjust_diff ? led_red : led_off);
@@ -2879,6 +2879,7 @@ static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
 void edit_scen_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-details"));
 	info_dlg["okay"].attachClickHandler(save_scen_details);
+	info_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &info_dlg, false));
 	
 	put_scen_details_in_dlog(info_dlg);
 	
@@ -2887,12 +2888,23 @@ void edit_scen_details() {
 
 void edit_scen_adv_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-advanced"));
-	info_dlg["okay"].attachClickHandler(save_scen_adv_details);
+	info_dlg.attachClickHandlers(save_scen_adv_details, {"okay", "cancel"});
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
 
 	put_scen_adv_details_in_dlog(info_dlg);
 	info_dlg.run();
+
+	if(info_dlg.accepted()){
+		scenario.adjust_diff = dynamic_cast<cLed&>(info_dlg["adjust"]).getState() != led_red;
+
+		scenario.campaign_id = info_dlg["cpnid"].getText();
+		scenario.bg_out = boost::lexical_cast<int>(info_dlg["bg-out"].getText().substr(10));
+		scenario.bg_town = boost::lexical_cast<int>(info_dlg["bg-town"].getText().substr(10));
+		scenario.bg_dungeon = boost::lexical_cast<int>(info_dlg["bg-dungeon"].getText().substr(13));
+		scenario.bg_fight = boost::lexical_cast<int>(info_dlg["bg-fight"].getText().substr(11));
+		scenario.init_spec = info_dlg["oninit"].getTextAsNum();
+	}
 }
 
 bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
@@ -2986,7 +2998,8 @@ bool build_scenario() {
 	scenario.default_ground = grass ? 2 : 0;
 	
 	scenario.feature_flags = {
-		{"scenario-meta-format", "V2"}
+		{"scenario-meta-format", "V2"},
+		{"resurrection-balm", "required"},
 	};
 
 	fs::path basePath = progDir/"Blades of Exile Base"/(grass ? "bladbase.boes" : "cavebase.boes");
@@ -3157,6 +3170,7 @@ void edit_scenario_events() {
 	evt_dlg["prev"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(0); });
 	evt_dlg["next"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(1); });
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
+	evt_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &evt_dlg, false));
 	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
 		stk.setPage(i / 10);
 		short fieldId = i % 10;

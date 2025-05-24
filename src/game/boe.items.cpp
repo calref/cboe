@@ -631,9 +631,14 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 	story_dlg.run();
 }
 
-static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
-	if(me.toast(true))
+static bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	if(item_hit == "cancel"){
+		me.setResult<int>(0);
+		me.toast(false);
+	}
+	else if(me.toast(true)){
 		me.setResult<int>(me["number"].getTextAsNum());
+	}
 	return true;
 }
 
@@ -644,7 +649,7 @@ short get_num_of_items(short max_num) {
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel["extra-led"].hide();
-	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
+	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay", "cancel"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
 	numPanel["number"].setTextToNum(max_num);
@@ -825,9 +830,10 @@ void place_treasure(location where,short level,short loot,short mode) {
 	}
 }
 
-static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
+static bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast(true);
-	me.setResult(me["response"].getText());
+	if(item_hit == "cancel") me.setResult(std::string {""});
+	else me.setResult(me["response"].getText());
 	return true;
 }
 
@@ -835,7 +841,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	set_cursor(sword_curs);
 	
 	cDialog strPanel(*ResMgr::dialogs.get("get-response"));
-	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
+	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay", "cancel"});
 	if(!prompt.empty()) {
 		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
 		strPanel["prompt"].setText(prompt);
@@ -944,13 +950,16 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
 
+		if(mode != eSelectPC::ANY && univ.party[i].main_status >= eMainStatus::SPLIT)
+			can_pick = false;
+
 		else switch(mode) {
 			case eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE:
 				if(i == univ.cur_pc){
 					can_pick = false;
 					break;
 				}
-				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
+				if((overall_mode == MODE_COMBAT) && univ.party[i].is_alive() && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
 					can_pick = false;
 					extra_info = "too far away";
 					break;
@@ -967,6 +976,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						break;
 					case eBuyStatus::DEAD:
 						// Extra info not really needed, and kind of silly to print
+						extra_info = "";
 						can_pick = false;
 						break;
 					default:
@@ -990,6 +1000,12 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE){
+					can_pick = false;
+					extra_info = "";
+				}
+				break;
+			case eSelectPC::ONLY_STONE:
+				if(univ.party[i].main_status != eMainStatus::STONE){
 					can_pick = false;
 					extra_info = "";
 				}

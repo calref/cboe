@@ -102,6 +102,7 @@ extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
 extern std::vector<int> spec_item_array;
 extern cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 extern std::vector<word_rect_t> talk_words;
 extern bool talk_end_forced;
 
@@ -732,6 +733,7 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 	}
 
 	bool town_move_done = false;
+	bool left_town = false;
 	if(overall_mode == MODE_COMBAT) {
 		if(pc_combat_move(destination)) {
 			center = univ.current_pc().combat_pos;
@@ -753,6 +755,7 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 				update_explored(destination);
 				if(loc_off_act_area(univ.party.town_loc)) {
 					destination = end_town_mode(0,destination);
+					left_town = true;
 					town_move_done = true;
 					flushingInput = true;
 				}
@@ -792,6 +795,9 @@ void handle_move(location destination, bool& did_something, bool& need_redraw, b
 							univ.party.horses[univ.party.in_horse].which_town = univ.party.town_num;
 					}
 				}
+		}
+		if(left_town){
+			try_auto_save("ExitTown");
 		}
 	}
 }
@@ -1209,8 +1215,13 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 
 	need_reprint = true;
 	need_redraw = true;
-	if(overall_mode == MODE_TOWN)
-		do_alchemy();
+	if(overall_mode == MODE_TOWN){
+		if(univ.party.alchemy.any())
+			do_alchemy();
+		else
+			add_string_to_buf("Alchemy: No recipes known.");
+	}
+	else if(is_combat()) add_string_to_buf("Alchemy: Not in combat.");
 	else if(!is_town()) add_string_to_buf("Alchemy: Only in town.");
 	else add_string_to_buf("Alchemy: " + FINISH_FIRST);
 }
@@ -1408,12 +1419,13 @@ static void handle_party_death() {
 	for(cPlayer& pc : univ.party)
 		if(pc.main_status == eMainStatus::FLED)
 			pc.main_status = eMainStatus::ALIVE;
+	// The party didn't die, they fled outdoor combat:
 	if(is_combat() && univ.party.is_alive()) {
-		// TODO: Should this only happen in outdoor combat? Or should we allow fleeing town during combat?
 		end_town_mode(0,univ.party.town_loc);
 		add_string_to_buf("End combat.");
 		handle_wandering_specials(2);
 	}
+	// A split-off PC died, but the rest of the party may be alive.
 	if(!univ.party.is_alive() && univ.party.is_split()) {
 		univ.party.end_split(0);
 		if(univ.party.left_in == size_t(-1) || univ.party.town_num == univ.party.left_in) {
@@ -1430,6 +1442,7 @@ static void handle_party_death() {
 	draw_terrain();
 	put_pc_screen();
 	put_item_screen(stat_window);
+	// actual game over
 	if(!univ.party.is_alive()) {
 		play_sound(13);
 		handle_death();
@@ -2719,6 +2732,8 @@ static bool handle_debug_key(char key) {
 	return false;
 }
 
+extern std::vector<std::string> preset_words;
+
 bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 	bool are_done = false;
 	location pass_point; // TODO: This isn't needed
@@ -2828,11 +2843,26 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			chr2 = Key::G;
 		for(short i = 0; i < 9; i++)
 			if(chr2 == talk_chars[i] && (!talk_end_forced || i == 6 || i == 5)) {
-				// related to talk_area_rect, unsure why adding +9 is needed?
-				pass_point = talk_words[i].rect.topLeft();
-				pass_point.x += talk_area_rect.left+9;
-				pass_point.y += talk_area_rect.top+9;
-				are_done = handle_talk_event(pass_point, fps_limiter);
+				short j = 0;
+				bool word_shown = false;
+				for(std::string preset : preset_words){
+					if(preset == preset_words[i]) {
+						word_shown = talk_words[j].word == preset;
+						break;
+					}
+					else if(talk_words[j].word == preset){
+						j++;
+					}
+				}
+				if(word_shown){
+					pass_point = talk_words[j].rect.topLeft();
+					// related to talk_area_rect, unsure why adding +9 is needed?
+					pass_point.x += talk_area_rect.left+9;
+					pass_point.y += talk_area_rect.top+9;
+					are_done = handle_talk_event(pass_point, fps_limiter);
+				}else{
+					are_done = true;
+				}
 			}
 		return are_done;
 	}
@@ -3110,7 +3140,7 @@ void do_load() {
 	fs::path file_to_load = run_file_picker(false);
 	if(file_to_load.empty()) return;
 	set_cursor(watch_curs);
-	if(!load_party(file_to_load, univ))
+	if(!load_party(file_to_load, univ, spec_scen_g))
 		return;
 	finish_load_party();
 	if(overall_mode != MODE_STARTUP)
@@ -3428,15 +3458,18 @@ void increase_age(bool eating_trigger_autosave) {
 	}
 	else {
 		if(univ.party.age % 50 == 0) {
-			for(cPlayer& pc : univ.party)
+			for(cPlayer& pc : univ.party){
+				// Bonus HP wears off
 				if(pc.main_status == eMainStatus::ALIVE && pc.cur_health > pc.max_health)
-					pc.cur_health--; // Bonus HP wears off
+					pc.cur_health--;
+			}
 			univ.party.heal(1);
 		}
 	}
 	if(is_out()) {
 		if(univ.party.age % 80 == 0) {
 			univ.party.restore_sp(2);
+			// Enlightenment wears off
 			for(cPlayer& pc : univ.party)
 				if(pc.status[eStatus::DUMB] < 0)
 					pc.status[eStatus::DUMB]++;
@@ -3445,8 +3478,10 @@ void increase_age(bool eating_trigger_autosave) {
 	else {
 		if(univ.party.age % 40 == 0) {
 			for(cPlayer& pc : univ.party) {
+				// Bonus SP wears off
 				if(pc.main_status == eMainStatus::ALIVE && pc.cur_sp > pc.max_sp)
-					pc.cur_sp--; // Bonus SP wears off
+					pc.cur_sp--;
+				// Enlightenment wears off
 				if(pc.status[eStatus::DUMB] < 0)
 					pc.status[eStatus::DUMB]++;
 			}
@@ -3641,7 +3676,7 @@ void handle_death() {
 			}
 			fs::path file_to_load = run_file_picker(false);
 			if(!file_to_load.empty()){
-				if(load_party(file_to_load, univ)){
+				if(load_party(file_to_load, univ, spec_scen_g)){
 					finish_load_party();
 					if(overall_mode != MODE_STARTUP)
 						post_load();
@@ -3929,8 +3964,10 @@ bool outd_move_party(location destination,bool forced) {
 				univ.party.in_boat = -1;
 			}
 			else if(((real_dest.x != univ.party.out_loc.x) && (real_dest.y != univ.party.out_loc.y))
-					 || (!forced && out_boat_there(destination)))
+					 || (!forced && out_boat_there(destination))){
+				add_string_to_buf("Move: Boat can't move diagonally.");
 				return false;
+			}
 			else if(!outd_is_blocked(real_dest)
 					 && univ.scenario.ter_types[ter].boat_over
 					 && univ.scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE) {

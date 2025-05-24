@@ -343,7 +343,7 @@ void put_item_screen(eItemWinMode screen_num) {
 						sout << item.name << "  ";
 
 					// Charges:
-					bool show_charges = item.max_charges > 0;
+					bool show_charges = item.max_charges > 1 || item.charges > 1; // stacked gems have no max, but do have charges
 					// Show charges for unidentified ammunition and lockpicks, but not other unidentified items
 					if(item.missile < 0 && item.ability != eItemAbil::LOCKPICKS)
 						show_charges &= item.ident;
@@ -533,9 +533,8 @@ void place_item_bottom_buttons() {
 			rect_draw_some_item(*from_gw, pc_from_rect, item_stats_gworld(), to_rect, sf::BlendAlpha);
 			std::string numeral = std::to_string(i + 1);
 			short width = string_length(numeral, style);
-			// Offset "6" down two pixels to make it line up, because it has an ascender in this font
-			// Offset "1" - "4" down as well because they're not shorter and it looks a bit better
-			to_rect.offset(-width - 5, i != 4 ? 2 : 0);
+			// Offset "6" down an extra pixel to make it line up, because it has an ascender in this font
+			to_rect.offset(-width - 5, i == 5 ? 3 : 2);
 			win_draw_string(item_stats_gworld(), to_rect, numeral, eTextMode::LEFT_TOP, style);
 		}
 		else item_bottom_button_active[i] = false;
@@ -858,9 +857,10 @@ cVehicle* town_boat_there(location where) {
 }
 cVehicle* out_boat_there(location where) {
 	where = global_to_local(where);
+	location sector = {univ.party.outdoor_corner.x + univ.party.i_w_c.x, univ.party.outdoor_corner.y + univ.party.i_w_c.y};
 	for(short i = 0; i < univ.party.boats.size(); i++)
 		if((univ.party.boats[i].exists) && (where == univ.party.boats[i].loc)
-			&& (univ.party.boats[i].which_town == 200))
+			&& (univ.party.boats[i].which_town == 200) && (sector == univ.party.boats[i].sector))
 			return &univ.party.boats[i];
 	return nullptr;
 }

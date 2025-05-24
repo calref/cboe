@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
-	<!-- OK button -->
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='time1' top='122' left='146' width='67' height='16'/>
 	<field name='time2' top='150' left='146' width='67' height='16'/>
 	<field name='time3' top='178' left='146' width='67' height='16'/>
@@ -19,7 +18,8 @@
 	<field name='spec6' top='262' left='270' width='39' height='16'/>
 	<field name='spec7' top='290' left='270' width='39' height='16'/>
 	<field name='spec8' top='318' left='270' width='39' height='16'/>
-	<button name='okay' type='regular' top='317' left='431'>OK</button>
+	<button name='okay' type='regular' top='343' left='411'>OK</button>
+	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='71'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Town event timers</text>
 	<text top='25' left='50' width='439' height='40'>

@@ -3,8 +3,11 @@
 #include <boost/filesystem/operations.hpp>
 #include "keymods.hpp"
 
+// Measured on 5/23/25. For now, must be re-measured at 1x UI scale whenever preferences change (unless making the window smaller, maybe).
+short prefs_height = 529;
+
 // The default scale should be the largest that the user's screen can fit all three
-// BoE application windows (because they should probably default to match each other).
+// BoE application windows and core dialogs of the main game (because they should probably default to match each other).
 double fallback_scale() {
 	static double scale = 0;
 	// Suppress the float comparison warning.
@@ -17,7 +20,7 @@ double fallback_scale() {
 		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
 		short max_width = max(boe_width, max(pc_width, scen_width));
-		short max_height = max(boe_height, max(pc_height, scen_height)) + getMenubarHeight();
+		short max_height = max(prefs_height, max(boe_height, max(pc_height, scen_height))) + getMenubarHeight();
 
 		std::vector<double> scale_options = {1.0, 1.5, 2.0, 3.0, 4.0};
 		for(auto it = scale_options.rbegin(); it != scale_options.rend(); ++it){

@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
-	<!-- OK button -->
+<dialog defbtn='okay' escbtn='cancel'>
 	<stack name='list' pages='2'>
 		<field name='time1' top='133' left='130' width='67' height='16'/>
 		<field name='time2' top='161' left='130' width='67' height='16'/>
@@ -38,6 +37,7 @@
 	<button name='prev' type='left' def-key='left' top='411' left='130'/>
 	<button name='next' type='right' def-key='right' top='411' left='200'/>
 	<button name='okay' type='regular' top='411' left='350'>OK</button>
+	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='71'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Scenario event timers</text>
 	<text top='25' left='50' width='438' height='55'>

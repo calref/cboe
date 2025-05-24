@@ -9,7 +9,9 @@
     <difficulty>3</difficulty>
     <lighting>dark</lighting>
     <timer freq="500">54</timer>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>305</type>
     </item>
@@ -703,7 +705,7 @@
         <![CDATA[You find another massive steel door. Fortunately, "Sewer Key 3" fits in the keyhole just fine. After a lot of pulling and prying, the rusty door swings open.]]>
     </string>
     <string id="41">
-        <![CDATA[This passage slopes sharps up to the west, to a sort of observation platform.]]>
+        <![CDATA[This passage slopes sharply up to the west, to a sort of observation platform.]]>
     </string>
     <string id="42">
         <![CDATA[This small door glows slightly. It's probably magically locked. It has a keyhole, but, unfortunately, none of your keys fit.]]>

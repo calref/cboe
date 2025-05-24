@@ -8,7 +8,10 @@
     <bounds top="0" left="0" bottom="47" right="44" />
     <difficulty>4</difficulty>
     <lighting>lit</lighting>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+        <hidden>true</hidden>
+    </flags>
     <item id="0">
         <type>93</type>
         <property>true</property>

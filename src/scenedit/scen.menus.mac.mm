@@ -80,9 +80,13 @@ void init_menubar() {
 	
 	MenuHandler* handler = [[[MenuHandler alloc] init] retain];
 	setMenuCallback([app_menu itemWithTitle: @"About BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::ABOUT));
-	setMenuCallback([app_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
 	setMenuCallback([app_menu itemWithTitle: @"Quit BoE Scenario Editor"], handler, @selector(menuChoice:), int(eMenu::QUIT));
 	
+	// An inscrutable bug is making the apple menu not localize this element for some of the apps on some computers.
+	// Attaching the event to a nonexistent item should be harmless.
+	setMenuCallback([app_menu itemWithTitle: @"Preferences…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
+	setMenuCallback([app_menu itemWithTitle: @"Settings…"], handler, @selector(menuChoice:), int(eMenu::PREFS));
+
 	int i = 0;
 	for(eMenu opt : file_choices)
 		setMenuCallback([file_menu itemAtIndex: i++], handler, @selector(menuChoice:), int(opt));

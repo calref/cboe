@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<tilemap name='varying' rows='10' cols='1' top='128' left='34' cellspacing='5' framed='false'>
 		<button name='pick-town' type='large' top='0' left='0'>Choose Town</button>
 		<field name='town' type='int' top='2' left='112' width='67' height='16'/>

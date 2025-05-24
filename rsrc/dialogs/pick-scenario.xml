@@ -46,7 +46,9 @@
 			<text outline='double' name='start3' top='205' left='59' width='342' height='84'/>
 		</page>
 	</stack>
-	<button name='prev' type='left' def-key='left' top='294' left='62'/>
-	<button name='next' type='right' def-key='right' top='294' left='125'/>
-	<button name='cancel' type='regular' top='294' left='337'>Cancel</button>
+	<button name='cancel' type='regular' top='294' left='5'>Cancel</button>
+	<button name='prev' type='left' def-key='left' relative='pos pos-in' rel-anchor='prev' top='0' left='14'/>
+	<button name='next' type='right' def-key='right' relative='pos pos-in' rel-anchor='prev' top='0' left='0'/>
+	<button name='folder' type='large' relative='pos pos-in' rel-anchor='prev' top='0' left='14'>Show Folder</button>
+	<button name='refresh' type='regular' relative='pos pos-in' rel-anchor='prev' top='0' left='7'>Refresh</button>
 </dialog>

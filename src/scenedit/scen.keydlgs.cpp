@@ -39,36 +39,6 @@ extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
 
-static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
-	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
-	
-	// Not pretty, but works:
-	cUniverse univ;
-	univ.scenario = scenario;
-	univ.party.town_num = cur_town;
-	univ.party.outdoor_corner = cur_out;
-	univ.party.i_w_c = {0, 0};
-
-	switch(special.type){
-		case eSpecType::ONCE_DIALOG:
-			once_dialog(univ, special, cur_type, &me);
-			break;
-		default:{
-			std::string str1;
-			std::string str2;
-			univ.get_strs(str1, str2, cur_type, special.m1, special.m2);
-
-			if(str1.empty() && str2.empty()) break;
-
-			short defaultBackground = cDialog::defaultBackground;
-			cDialog::defaultBackground = cDialog::BG_DARK;
-			cStrDlog(str1, str2, "", scenario.intro_pic, PIC_SCEN, &me).show();
-			cDialog::defaultBackground = defaultBackground;
-		}break;
-	}
-	return true;
-}
-
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
 std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
 std::vector<pic_num_t> boom_pics = {0,1,2,3,4,5,8,9,10,11,12,13};
@@ -598,7 +568,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			strings = {"+1", "+2", "+3", "Shoot Flames", "Flaming", "+5", "Blessed", "+4"};
 			break;
 		case STRT_DIR:
-			strings = {"North", "Northease", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
+			strings = {"North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest", "None"};
 			break;
 		case STRT_QUEST_STATUS:
 			strings = {"Available", "Started", "Completed", "Failed"};
@@ -851,6 +821,54 @@ static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 	the_node.ex2b = me["x2b"].getTextAsNum();
 	the_node.ex2c = me["x2c"].getTextAsNum();
 	the_node.jumpto = me["jump"].getTextAsNum();
+}
+
+static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
+	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
+
+	// Not pretty, but works:
+	cUniverse univ;
+	univ.scenario = scenario;
+	univ.party.town_num = cur_town;
+	univ.party.outdoor_corner = cur_out;
+	univ.party.i_w_c = {0, 0};
+
+	std::string title = "";
+	ePicType pic_type = PIC_SCEN;
+	pic_num_t pic = scenario.intro_pic;
+
+	switch(special.type){
+		case eSpecType::ONCE_DIALOG:
+			once_dialog(univ, special, cur_type, &me);
+			break;
+		case eSpecType::TITLED_MSG:
+			univ.get_str(title, cur_type, special.m3);
+			pic_type = ePicType(special.pictype);
+			pic = special.pic;
+			BOOST_FALLTHROUGH;
+		default:{
+			std::string str1;
+			std::string str2;
+			univ.get_strs(str1, str2, cur_type, special.m1, special.m2);
+
+			if(str1.empty() && str2.empty()) break;
+
+			// Use dark background that the game uses:
+			short defaultBackground = cDialog::defaultBackground;
+			cDialog::defaultBackground = cDialog::BG_DARK;
+			cStrDlog dlog(str1, str2, title, pic, pic_type, &me);
+			dlog->getControl("record").show();
+			dlog.show();
+			cDialog::defaultBackground = defaultBackground;
+		}break;
+	}
+	return true;
+}
+
+static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_stack_t& edit_stack, short mode) {
+	save_spec_enc(me, edit_stack);
+	cSpecial& special = edit_stack.top().node;
+	return preview_spec_enc_dlog(me, item_hit, special, mode);
 }
 
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
@@ -1429,7 +1447,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 
 	special["back"].hide();
 	edit_stack.push({which_node,mode,the_node});
-	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog, _1, _2, std::ref(edit_stack.top().node), mode));
+	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog_stack, _1, _2, std::ref(edit_stack), mode));
 
 	put_spec_enc_in_dlog(special, edit_stack);
 	
@@ -1560,7 +1578,7 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 			short n = 0;
 			for(short j = i; j < i + 6; j++, n++) {
 				std::string str = fetch_str(mode, j);
-				if(!str.empty() && str[0] != '*')
+				if(str[0] != '*')
 					break;
 			}
 			if(n == 6) {
@@ -1586,6 +1604,9 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 		for(short i = 0; i < 6; i++) {
 			std::string id = "str" + std::to_string(i + 1);
 			edit[id].setText(fetch_str(mode, *str1 + i));
+			if(edit[id].getText() == "*"){
+				edit[id].setText("");
+			}
 		}
 	}
 	

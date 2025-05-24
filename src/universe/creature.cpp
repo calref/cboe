@@ -323,9 +323,11 @@ int cCreature::get_level() const {
 }
 
 bool cCreature::on_space(location loc) const {
-	if(loc.x - cur_loc.x >= 0 && loc.x - cur_loc.x <= x_width - 1 &&
-	   loc.y - cur_loc.y >= 0 && loc.y - cur_loc.y <= y_width - 1)
-		return true;
+	for(int x = cur_loc.x; x < cur_loc.x + x_width; ++x){
+		for(int y = cur_loc.y; y < cur_loc.y + y_width; ++y){
+			if(loc.x == x && loc.y == y) return true;
+		}
+	}
 	return false;
 }
 

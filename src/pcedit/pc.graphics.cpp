@@ -51,8 +51,7 @@ short store_which_string_dlog;
 short store_page_on,store_num_i;
 rectangle ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
-cCustomGraphics spec_scen_g; // not actually needed; just here to silence compiler because it's referenced in fileio.h
-// (actually, it WILL be needed eventually)
+cCustomGraphics spec_scen_g; // Will be needed if PCs can have custom graphics or we show the inventory
 
 void init_main_buttons() {
 	rectangle base_rect;

@@ -49,7 +49,8 @@ inline T sgn(T val) {
 }
 
 inline void add_check_overflow(short& val, int how_much) {
-	if(SHRT_MAX - val > how_much)
+	if(SHRT_MAX - val < how_much){
 		val = SHRT_MAX;
+	}
 	else val += how_much;
 }

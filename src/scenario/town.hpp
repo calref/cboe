@@ -84,6 +84,7 @@ public:
 	rectangle in_town_rect;
 	std::vector<cItem> preset_items;
 	std::vector<cTownperson> creatures;
+	size_t count_hostiles() const;
 	long max_num_monst;
 	std::vector<cField> preset_fields;
 	short spec_on_entry,spec_on_entry_if_dead;

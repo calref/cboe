@@ -99,6 +99,9 @@ fs::path locate_scenario(std::string scen_name, bool allow_unpacked) {
 	fs::path scenPath;
 
 	for(fs::path scenDir : all_scen_dirs()){
+		// Some possible directories, like the Itch client installation folder, might not exist
+		if(!fs::is_directory(scenDir)) continue;
+
 		for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
 			fs::file_status stat = iter->status();
 			std::string fname = iter->path().filename().string().c_str();
@@ -1858,8 +1861,12 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
 				flag->GetValue(&type);
 				if(type == "chop") {
-					flag->GetAttribute("day", &town->town_chop_time);
-					flag->GetAttribute("event", &town->town_chop_key);
+					if(flag->HasAttribute("day")){
+						flag->GetAttribute("day", &town->town_chop_time);
+					}
+					if(flag->HasAttribute("event")){
+						flag->GetAttribute("event", &town->town_chop_key);
+					}
 					flag->GetAttribute("kills", &town->max_num_monst);
 				} else if(type == "hidden") {
 					flag->GetText(&val);

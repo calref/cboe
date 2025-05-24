@@ -498,6 +498,7 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 void outdoor_details() {
 	cDialog out_dlg(*ResMgr::dialogs.get("edit-outdoor-details"));
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
+	out_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &out_dlg, false));
 	std::ostringstream str_out;
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
 	out_dlg["loc"].setText(str_out.str());
@@ -694,6 +695,7 @@ static void put_town_details_in_dlog(cDialog& me) {
 	me["chop"].setTextToNum(town->town_chop_time);
 	me["key"].setTextToNum(town->town_chop_key);
 	me["population"].setTextToNum(town->max_num_monst);
+	me["population-hint"].replaceText("{{num}}", std::to_string(town->count_hostiles()));
 	me["difficulty"].setTextToNum(town->difficulty);
 	cLedGroup& lighting = dynamic_cast<cLedGroup&>(me["lighting"]);
 	switch(town->lighting_type) {
@@ -713,8 +715,15 @@ void edit_town_details() {
 	using namespace std::placeholders;
 	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-details"));
 	town_dlg["okay"].attachClickHandler(save_town_details);
+	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
+	town_dlg["choose-key"].attachClickHandler([](cDialog& me, std::string id, bool losing) -> bool {
+		int value = me["key"].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me["key"].setTextToNum(value);
+		return true;
+	});
 	town_dlg["difficulty"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, 0, 10, "The town difficulty", "0 - easiest, 10 - hardest"));
 	town_dlg["pick-cmt"].attachFocusHandler([](cDialog& me, std::string id, bool losing) -> bool {
 		if(losing) return true;
@@ -761,6 +770,7 @@ void edit_town_events() {
 	
 	cDialog evt_dlg(*ResMgr::dialogs.get("edit-town-events"));
 	evt_dlg["okay"].attachClickHandler(save_town_events);
+	evt_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &evt_dlg, false));
 	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
 	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, town->specials.size(), "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
 	
@@ -978,6 +988,7 @@ void edit_town_wand() {
 	
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
 	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
 	// There's 16 of them, so this is kinda the easiest way to do it.
