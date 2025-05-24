@@ -1810,11 +1810,28 @@ class cChooseScenario {
 		me.toast(true);
 		return true;
 	}
+
+	// Show the custom scenario folder
+	bool showFolder() {
+		extern fs::path scenDir;
+		launchURL("file://" + scenDir.string());
+		return true;
+	}
+
+	// Refresh the scenario list (check if custom scenarios added/removed)
+	bool refreshList() {
+		scen_headers = build_scen_headers();
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		short page = stk.getPage();
+		// Redo the stack
+		put_scen_info();
+		// Put the viewer to the same page it was (clamped in case the list got shorter)
+		stk.setPage(min(page, stk.getPageCount() - 1));
+		return true;
+	}
 public:
 	cChooseScenario() {
-		// TODO: Add a button to jump to the scenarios folder
-		// Note: if the player jumps to the scenarios folder and adds scenarios, build_scen_headers() must be called again
-		scen_headers = build_scen_headers(); // TODO: Either make this local to this class, or make it take scen_headers by reference
+		scen_headers = build_scen_headers();
 	}
 	scen_header_type run() {
 		using namespace std::placeholders;
@@ -1831,6 +1848,8 @@ public:
 		me["scen1"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 0));
 		me["scen2"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 1));
 		me["scen3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
+		me["folder"].attachClickHandler(std::bind(&cChooseScenario::showFolder, this));
+		me["refresh"].attachClickHandler(std::bind(&cChooseScenario::refreshList, this));
 		
 		put_scen_info();
 		
