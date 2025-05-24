@@ -1244,8 +1244,8 @@ void erase_hidden_towns(cOutdoors& sector, int quadrant_x, int quadrant_y) {
 	for(short tile_index = 0; tile_index < sector.city_locs.size(); tile_index++) {
 		auto city_loc = sector.city_locs[tile_index];
 		if(!univ.scenario.is_town_entrance_valid(city_loc) ||
-			!does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE) ||
-			!sector.is_on_map(city_loc)) {
+			!sector.is_on_map(city_loc) ||
+			!does_location_have_special(sector, city_loc, eTerSpec::TOWN_ENTRANCE)) {
 			continue;
 		}
 		auto town_pos_x = AREA_MEDIUM * quadrant_x + sector.city_locs[tile_index].x;
