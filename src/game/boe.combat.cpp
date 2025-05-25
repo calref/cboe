@@ -2043,6 +2043,30 @@ void combat_run_monst() {
 	
 }
 
+static bool can_drain_pc(const location& source, const cPlayer& pc, short range) {
+	return pc.main_status == eMainStatus::ALIVE && pc.cur_sp > 4 &&
+		(can_see_light(source,pc.combat_pos,sight_obscurity) < 5) &&
+		(dist(source,pc.combat_pos) <= range);
+}
+
+static bool can_drain_monst(const location& source, const cCreature& monst, short range) {
+	return monst.is_alive() && monst.mp > 4 &&
+		(can_see_light(source,monst.cur_loc,sight_obscurity) < 5) &&
+		(dist(source,monst.cur_loc) <= range);
+}
+
+// Get other monsters that are this monster's enemy
+static std::vector<short> list_enemy_monsters(short m_num) {
+	std::vector<short> enemies;
+
+	for(short i = 0; i < univ.town.monst.size(); ++i){
+		if(i == m_num) continue;
+		if(!univ.town.monst[i].is_friendly(univ.town.monst[m_num])) enemies.push_back(i);
+	}
+
+	return enemies;
+}
+
 void do_monster_turn() {
 	bool acted_yet, had_monst = false,printed_poison = false,printed_disease = false,printed_acid = false;
 	bool redraw_not_yet_done = true;
@@ -2286,6 +2310,9 @@ void do_monster_turn() {
 				
 				// Missile (except basic breath weapons)
 				std::pair<eMonstAbil, uAbility> pick_abil;
+				bool any_have_sp = false;
+				short drain_target;
+				location drain_targ_space;
 				if(!acted_yet) {
 					// Go through all the monster's abilities and try to select one that's useable at this time
 					for(auto& abil : cur_monst->abil) {
@@ -2299,18 +2326,50 @@ void do_monster_turn() {
 									break;
 								pick_abil = abil;
 								break;
+							// check if anyone can be drained, make sure the first target can be drained if drain sp is chosen
+							case eMonstAbil::DRAIN_SP:
+								any_have_sp = can_drain_pc(cur_monst->cur_loc, univ.party[target], abil.second.gen.range);
+								if(!any_have_sp){
+									for(int j = 0; j < 6; ++j){
+										if(j == target) continue;
+										if(can_drain_pc(cur_monst->cur_loc, univ.party[j], abil.second.gen.range)){
+											any_have_sp = true;
+											drain_target = j;
+											drain_targ_space = univ.party[j].combat_pos;
+											break;
+										}
+									}
+								}
+								if(!any_have_sp){
+									std::vector<short> enemy_monst = list_enemy_monsters(i);
+									for(short j : enemy_monst){
+										if(can_drain_monst(cur_monst->cur_loc, univ.town.monst[j], abil.second.gen.range)){
+											any_have_sp = true;
+											drain_target = 100 + j;
+											drain_targ_space = univ.town.monst[j].cur_loc;
+											break;
+										}
+									}
+								}
+								// Fallthrough to next case if any enemies have SP to drain
+								if(!any_have_sp) break;
+								BOOST_FALLTHROUGH;
 							case eMonstAbil::DAMAGE: case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::FIELD:
-							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
+							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
 							case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD: case eMonstAbil::STUN: case eMonstAbil::DAMAGE2:
 								if(abil.second.gen.type == eMonstGen::TOUCH)
 									break; // We're looking for ranged attacks
-								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
+								if(abil.first != eMonstAbil::DRAIN_SP && dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
 									break; // Target not in range
 								if(abil.second.gen.type == eMonstGen::SPIT && monst_adjacent(targ_space, i))
 									break; // Target adjacent; prefer melee attacks
 								if(get_ran(1,1,1000) >= abil.second.gen.odds)
 									break;
 								pick_abil = abil;
+								if(abil.first == eMonstAbil::DRAIN_SP){
+									target = drain_target;
+									targ_space = drain_targ_space;
+								}
 								break;
 							case eMonstAbil::MISSILE_WEB:
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.special.extra1)
@@ -2712,7 +2771,7 @@ void monster_attack(short who_att,iLiving* target) {
 						switch(abil.first) {
 							case eMonstAbil::STUN: add_string_to_buf("  Stuns!"); break;
 							case eMonstAbil::PETRIFY: add_string_to_buf("  Petrifying touch!"); break;
-							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break; // TODO: This has no effect on monsters
+							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break;
 							case eMonstAbil::DRAIN_XP: add_string_to_buf("  Drains life!"); break;
 							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
 							case eMonstAbil::STEAL_FOOD:
@@ -2960,17 +3019,38 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		proxy.gen.dmg = eDamageType::FIRE;
 		monst_basic_abil(m_num, {eMonstAbil::DAMAGE, proxy}, target);
 	} else {
-		if(abil.first == eMonstAbil::DRAIN_SP && pc_target != nullptr && pc_target->cur_sp < 4) {
-			// modify target if target has no sp
-			// TODO: What if it's a monster with no sp?
+		if(abil.first == eMonstAbil::DRAIN_SP &&
+			((pc_target != nullptr && pc_target->cur_sp < 4) ||
+				(m_target != nullptr && m_target->mp < 4))) {
+			// modify target if target has no sp.
+			// The first target should ALWAYS have sp, but multiple attacks on the same turn could drain it
+			bool found_new = false;
+
+			// Roll 8 times to pick a PC who has SP
 			for(short i = 0; i < 8; i++) {
 				int j = get_ran(1,0,5);
 				cPlayer& pc = univ.party[j];
-				if(pc.main_status == eMainStatus::ALIVE && pc.cur_sp > 4 &&
-				   (can_see_light(source,pc.combat_pos,sight_obscurity) < 5) && (dist(source,pc.combat_pos) <= 8)) {
+				if(can_drain_pc(source, pc, abil.second.gen.range)) {
 					target = &pc;
 					targ_space = pc.combat_pos;
+					found_new = true;
 					break;
+				}
+			}
+			if(!found_new){
+				std::vector<short> m_enemies = list_enemy_monsters(m_num);
+				if(!m_enemies.empty()){
+					// Roll N + 2 times to pick an enemy monster who has SP, where N is the number of enemy monsters
+					// (This is inefficient but I'm trying to mirror how PC retargeting happens above.)
+					for(short i = 0; i < m_enemies.size() + 2; ++i){
+						int j = get_ran(1,0,m_enemies.size());
+						cCreature& monst = univ.town.monst[j];
+						if(can_drain_monst(source, monst, abil.second.gen.range)) {
+							target = &monst;
+							targ_space = monst.cur_loc;
+							found_new = true; // not necessary, but might as well
+						}
+					}
 				}
 			}
 		}

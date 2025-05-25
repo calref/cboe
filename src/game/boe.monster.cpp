@@ -370,14 +370,17 @@ short monst_pick_target(short which_m) {
 			univ.town.monst[which_m].target = 6;
 	
 	if(is_combat() && !cur_monst->is_friendly()) {
+		// First target the last PC who cast a spell
 		if(spell_caster < 6)
 			if((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos))
 				&& univ.party[spell_caster].main_status == eMainStatus::ALIVE)
 				return spell_caster;
+		// Then target the last PC who fired a missile
 		if(missile_firer < 6)
 			if((get_ran(1,1,5) < 3) && (monst_can_see(which_m,univ.party[missile_firer].combat_pos))
 				&& univ.party[missile_firer].main_status == eMainStatus::ALIVE)
 				return missile_firer;
+		// Or, keep target already stored
 		if(univ.town.monst[which_m].target < 6)
 			if((monst_can_see(which_m,univ.party[univ.town.monst[which_m].target].combat_pos))
 				&& univ.party[univ.town.monst[which_m].target].main_status == eMainStatus::ALIVE)
