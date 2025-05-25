@@ -22,6 +22,7 @@
 #include <boost/filesystem.hpp>
 #include "replay.hpp"
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -373,8 +374,10 @@ std::vector<scen_header_type> build_scen_headers() {
 			while(iter != fs::recursive_directory_iterator()) {
 				fs::file_status stat = iter->status();
 				if(stat.type() == fs::regular_file) {
+					std::string extension = iter->path().extension().string();
+					boost::algorithm::to_lower(extension);
 					// Skip various data files of unpacked scenarios
-					if(!scen_extensions.count(iter->path().extension().string())){
+					if(!scen_extensions.count(extension)){
 						++iter;
 						continue;
 					}
