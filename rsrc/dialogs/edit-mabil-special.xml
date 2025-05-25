@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='18' left='50' width='250' height='17'>Edit Monster Ability:</text>
 	<text top='52' left='10' width='100' height='16'>For monster:</text>

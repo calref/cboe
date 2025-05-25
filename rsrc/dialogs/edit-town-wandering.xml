@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='group1-monst1' top='137' left='174' width='39' height='16'/>
 	<field name='group1-monst2' top='165' left='174' width='39' height='16'/>
 	<field name='group1-monst3' top='193' left='174' width='39' height='16'/>

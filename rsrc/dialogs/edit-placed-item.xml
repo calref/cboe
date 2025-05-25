@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<!-- OK button -->
 	<button name='okay' type='regular' top='195' left='316'>OK</button>
 	<pict name='pic' type='dlog' num='16' top='8' left='12'/>

@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<pict type='dlog' num='16' top='8' left='11'/>
 	<text name='title' size='large' top='6' left='50' width='158' height='16'>Edit Item' Abilities</text>
 	<text anchor='title' relative='pos pos-in' top='0' left='14' width='111' height='14'>Item number:</text>

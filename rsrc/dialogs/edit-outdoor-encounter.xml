@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<!-- OK button -->
 	<field name='onmeet' top='189' left='361' width='46' height='16'/>
 	<field name='onwin' top='231' left='361' width='46' height='16'/>

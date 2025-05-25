@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='talk' top='189' left='149' width='67' height='16'/>
 	<button name='talk-edit' type='regular' top='186' left='228'>Choose</button>
 	<text name='picnum' top='189' left='375' width='40' height='16'/>

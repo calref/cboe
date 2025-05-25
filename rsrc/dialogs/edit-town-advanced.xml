@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='-2' left='10' width='256' height='17'>Advanced town details</text>
 	<text relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='439' height='40'>

@@ -2,6 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
+	<!--
+	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
+	 -->
 	<field name='name' top='51' left='162' width='151' height='16'/>
 	<button name='okay' type='regular' top='295' left='354'>OK</button>
 	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='71'>Cancel</button>
