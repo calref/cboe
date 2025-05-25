@@ -2184,6 +2184,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	for(int x = -1; x <= 1; x++) {
 		for(int y = -1; y <= 1; y++) {
 			location l3(l.x+x,l.y+y);
+			if(!cur_area->is_on_map(l3)) continue;
 			ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
 			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
 			if(ground_there != main_ground && ground_there != trim_ground) {
@@ -2204,6 +2205,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	// Adjusting terrains with trim
 	for(location d : trim_diffs) {
 		location l3(l.x+d.x, l.y+d.y);
+		if(!cur_area->is_on_map(l3)) continue;
 		adjust_space(l3);
 	}
 	
