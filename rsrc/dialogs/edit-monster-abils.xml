@@ -5,19 +5,6 @@
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
-	<field name='loot-item' top='178' left='194' width='64' height='16'/>
-	<field name='loot-chance' top='178' left='464' width='64' height='16'/>
-	<text top='216' left='120' width='40' height='16'>Magic:</text>
-	<field name='magic-res' top='215' left='167' width='80' height='16'/>
-	<text top='246' left='120' width='40' height='16'>Fire:</text>
-	<field name='fire-res' top='245' left='167' width='80' height='16'/>
-	<text top='216' left='273' width='40' height='16'>Cold:</text>
-	<field name='cold-res' top='215' left='320' width='80' height='16'/>
-	<text top='246' left='273' width='40' height='16'>Poison:</text>
-	<field name='poison-res' top='245' left='320' width='80' height='16'/>
-	<led name='mindless' top='215' left='415'>Mindless</led>
-	<led name='amorph' top='230' left='415'>Amorphous</led>
-	<led name='invuln' top='245' left='415'>Invulnerable</led>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Monster Abilities</text>
 	<text framed='true' top='6' left='222' width='111' height='14'>Monster number:</text>
@@ -26,6 +13,7 @@
 		Enter properties for this monster type. For a detailed
 		description of the fields, see the documentation.
 	</text>
+
 	<text size='large' top='54' left='7' width='110' height='14'>Special abilities:</text>
 	<stack name='abils'>
 		<text name='abil-name1' framed='true' top='54' left='124' width='183' height='14'/>
@@ -39,13 +27,7 @@
 	</stack>
 	<button name='abil-up' type='up' top='82' left='30'/>
 	<button name='abil-down' type='down' top='107' left='30'/>
-	<text size='large' top='160' left='7' width='158' height='16'>Special treasure:</text>
-	<text top='179' left='23' width='162' height='14'>Item to drop when killed:</text>
-	<text top='179' left='270' width='186' height='14'>Chance of dropping: (0-100)</text>
-	<text top='211' left='9' width='108' height='112'>Monster resistances:<br/><br/>
-		This is the % of full damage the monster takes when of this type.<br/>
-		e.g. 0 - no damage, 100 - normal, 200 - double
-	</text>
+
 	<text top='81' left='420' width='94' height='14'>Summon type:</text>
 	<group name='summon'>
 		<led name='s0' state='off' top='85' left='505'>Weak (no summon)</led>
@@ -54,18 +36,45 @@
 		<led name='s3' state='off' top='130' left='505'>Type 3</led>
 		<led name='s4' state='off' top='145' left='505'>Unique (no summon)</led>
 	</group>
+
+	<text size='large' top='160' left='7' width='158' height='16'>Special treasure:</text>
+	<text top='179' left='23' width='162' height='14'>Item to drop when killed:</text>
+	<field name='loot-item' top='178' left='194' width='64' height='16'/>
+	<text top='179' left='300' width='186' height='14'>Chance of dropping: (0-100)</text>
+	<field name='loot-chance' top='178' left='464' width='64' height='16'/>
+
+	<text top='211' left='9' width='108' height='112'>Monster resistances:<br/><br/>
+		This is the % of full damage the monster takes when of this type.<br/>
+		e.g. 0 - no damage, 100 - normal, 200 - double
+	</text>
+	<text top='216' left='120' width='40' height='16'>Magic:</text>
+	<field name='magic-res' top='215' left='167' width='80' height='16'/>
+	<text top='246' left='120' width='40' height='16'>Fire:</text>
+	<field name='fire-res' top='245' left='167' width='80' height='16'/>
+	<text top='216' left='273' width='40' height='16'>Cold:</text>
+	<field name='cold-res' top='215' left='320' width='80' height='16'/>
+	<text top='246' left='273' width='40' height='16'>Poison:</text>
+	<field name='poison-res' top='245' left='320' width='80' height='16'/>
+
+	<led name='mindless' top='215' left='415'>Mindless</led>
+	<led name='amorph' top='230' left='415'>Amorphous</led>
+	<led name='invuln' top='245' left='415'>Invulnerable</led>
+
 	<led name='invis' size='small' top='280' left='120'>
 		This monster is naturally and permanently invisible.
 	</led>
 	<led name='guard' size='small' top='296' left='120'>
 		This monster is a guard - when the town goes hostile, it will hunt the party down.
 	</led>
+
 	<text top='331' left='10' width='250' height='16'>Special node to call when monster first seen</text>
 	<field name='onsee' top='330' left='270' width='50' height='16'/>
 	<button name='edit-see' type='large' top='327' left='330'>Create/Edit</button>
+
 	<text top='361' left='10' width='250' height='16'>Monster vocalization sound</text>
 	<field name='snd' top='360' left='270' width='50' height='16'/>
 	<button name='pick-snd' type='regular' top='357' left='330'>Choose</button>
+
 	<button name='okay' type='regular' top='385' left='572'>OK</button>
 	<button name='cancel' type='regular' top='385' left='506'>Cancel</button>
 </dialog>
