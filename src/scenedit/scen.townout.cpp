@@ -264,6 +264,14 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 	return initial;
 }
 
+// Store the state of the special flag LEDs in case put_placed_item_in_dlog() is called again when a picker finishes
+// and would wipe them out
+static void store_item_special_flags(cDialog& me, cTown::cItem& item) {
+	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
+	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+}
+
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
 	cItem base = scenario.scen_items[item.code];
 	if(item.ability != eEnchant::NONE && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
@@ -276,11 +284,8 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 	me["name"].setText(base.full_name);
 	me["charges"].setTextToNum(item.charges);
 	me["abil"].setTextToNum(int(item.ability));
-	if(item.always_there)
-		dynamic_cast<cLed&>(me["always"]).setState(led_red);
-	if(item.property)
-		dynamic_cast<cLed&>(me["owned"]).setState(led_red);
-	// This one can be changed by moving the item so always must update
+	dynamic_cast<cLed&>(me["always"]).setState(item.always_there ? led_red : led_off);
+	dynamic_cast<cLed&>(me["owned"]).setState(item.property ? led_red : led_off);
 	dynamic_cast<cLed&>(me["contained"]).setState(item.contained ? led_red : led_off);
 	
 	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
@@ -327,9 +332,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 	}
 	
 	item.loc = boost::lexical_cast<location>(me["loc"].getText());
-	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
-	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
-	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+	store_item_special_flags(me, item);
 	int ench = me["abil"].getTextAsNum();
 	if(ench >= 0 && ench <= cEnchant::MAX) item.ability = eEnchant(ench);
 	
@@ -341,6 +344,7 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 	short i = choose_text(STRT_ITEM, item.code, &me, "Place which item?");
 	if(i >= 0) {
 		item.code = i;
+		store_item_special_flags(me, item);
 		put_placed_item_in_dlog(me, item, which);
 	}
 	return true;
@@ -356,6 +360,7 @@ static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cIte
 		i = choose_text(STRT_ENCHANT, i, &me, "Which enchantment?");
 	}
 	if(i >= -1 && i <= cEnchant::MAX) item.ability = eEnchant(i);
+	store_item_special_flags(me, item);
 	put_placed_item_in_dlog(me, item, which);
 	return true;
 }
@@ -364,6 +369,7 @@ static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem
 	cArea* area = get_current_area();
 	cLocationPicker picker(item.loc, *area, "Move Item", &me);
 	item.loc = picker.run();
+	store_item_special_flags(me, item);
 	item.contained = container_there(item.loc);
 	put_placed_item_in_dlog(me, item, which);
 	return true;
