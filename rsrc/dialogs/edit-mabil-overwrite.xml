@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' escbtn='cancel'>
+	<pict type='dlog' num='7' top='8' left='8'/>
+	<text name='warning' top='2' left='48' width='248' height='33'>
+		This ability will be overwritten: <br/>
+		<br/>
+		{{abil}}
+	</text>
+	<button name='cancel' type='regular' top='42' left='169'>Cancel</button>
+	<button name='okay' type='regular' top='42' left='238'>OK</button>
+</dialog>

@@ -1237,9 +1237,13 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			showError("Failed to add the new ability because the ability was not implemented. When reporting this, mention which ability you tried to add.", &me);
 			return true;
 		}
+		// An ability of the same basic type exists and must be overwritten
 		if(save_abils.find(iter->first) != save_abils.end() && save_abils[iter->first].active) {
-			// TODO: Warn about overwriting an ability and give a choce between keeping the old or the new
-			bool overwrite = true;
+			// Warn first
+			cChoiceDlog confirm("edit-mabil-overwrite", {"okay", "cancel"});
+			std::string name = save_abils[iter->first].to_string(iter->first);
+			confirm->getControl("warning").replaceText("{{abil}}", name);
+			bool overwrite = confirm.show() == "okay";
 			if(!overwrite) {
 				monst.abil = save_abils;
 				return true;
