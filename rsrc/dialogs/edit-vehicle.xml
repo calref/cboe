@@ -12,6 +12,7 @@
 	
 	<text name='loc-lbl' anchor='area-lbl' relative='pos-in pos' top='11' left='0' width='97' height='14'>Location</text>
 	<text name='loc' rel-anchor='prev' relative='pos pos-in' top='0' left='5' width='40' height='16'/>
+	<button name='pick-loc' rel-anchor='prev' relative='pos neg' type='regular' top='4' left='5'>Move</button>
 	
 	<text name='name-lbl' anchor='loc-lbl' relative='pos-in pos' top='11' left='0' width='97' height='14'>Name</text>
 	<field name='name' rel-anchor='prev' relative='pos pos-in' top='0' left='5' width='100' height='14'/>

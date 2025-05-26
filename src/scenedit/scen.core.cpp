@@ -16,6 +16,7 @@
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.sdfpicker.hpp"
+#include "scen.locpicker.hpp"
 #include "scen.townout.hpp"
 #include "scen.fileio.hpp"
 #include "scen.actions.hpp"
@@ -2627,6 +2628,15 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	
 	put_vehicle_area(dlg, what);
 	dlg["loc"].setText(boost::lexical_cast<std::string>(what.loc));
+	location new_loc = what.loc;
+	dlg["pick-loc"].attachClickHandler([&new_loc, is_boat](cDialog& me, std::string, eKeyMod) -> bool {
+		cArea* area = get_current_area();
+		cLocationPicker picker(new_loc, *area, is_boat ? "Move Boat" : "Move Horse", &me);
+		new_loc = picker.run();
+		me["loc"].setText(boost::lexical_cast<std::string>(new_loc));
+		return true;
+	});
+
 	dlg["num"].setTextToNum(num);
 	dlg["title"].setText(is_boat ? "Edit Boat" : "Edit Horse");
 	dlg["name"].setText(what.name);
@@ -2643,6 +2653,12 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 		what.property = prop.getState() != led_off;
 		what.exists = true;
 		what.name = dlg["name"].getText();
+		if(new_loc != what.loc){
+			what.loc = new_loc;
+			// Move editor view to keep showing vehicle
+			cen_x = new_loc.x;
+			cen_y = new_loc.y;
+		}
 	}
 	return what.exists;
 }
