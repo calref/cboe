@@ -623,7 +623,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					case PAT_RAD3: sout << "big circle"; break;
 					case PAT_WALL: sout << "line"; break;
 					case PAT_PROT: sout << "protective circle"; break;
-					case PAT_CUSTOM: sout << "unusual shap"; break;
+					case PAT_CUSTOM: sout << "unusual shape"; break;
 				}
 				sout << ")";
 			} else if(key == eMonstAbil::KILL) {
