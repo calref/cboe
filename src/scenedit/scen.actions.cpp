@@ -1325,6 +1325,8 @@ static bool handle_toolpal_action(location cur_point2) {
 	for(int i = 0; i < 10; i++)
 		for(int j = 0; j < 6; j++) {
 			auto cur_palette_buttons = editing_town ? town_buttons : out_buttons;
+			// cur_palette_buttons uses [j][i] and palette_buttons uses [i][j] -- this is not a mistake,
+			// just unfortunate.
 			if(cur_palette_buttons[j][i] != PAL_BLANK && !mouse_button_held && cur_point2.in(palette_buttons[i][j])
 			   && /*((j < 3) || (editing_town)) &&*/ (overall_mode < MODE_MAIN_SCREEN)) {
 				rectangle temp_rect = palette_buttons[i][j];
