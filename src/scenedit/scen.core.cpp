@@ -1245,7 +1245,7 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		// An ability of the same basic type exists and must be overwritten
 		if(save_abils.find(iter->first) != save_abils.end() && save_abils[iter->first].active) {
 			// Warn first
-			cChoiceDlog confirm("edit-mabil-overwrite", {"okay", "cancel"});
+			cChoiceDlog confirm("edit-mabil-overwrite", {"okay", "cancel"}, &me);
 			std::string name = save_abils[iter->first].to_string(iter->first);
 			confirm->getControl("warning").replaceText("{{abil}}", name);
 			bool overwrite = confirm.show() == "okay";
