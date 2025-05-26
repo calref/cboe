@@ -293,6 +293,8 @@ short choose_pattern(short cur_choice, cDialog* parent, bool expandRotatable) {
 	return cur_choice;
 }
 
+std::vector<std::string> attitude_disp_strs = {"Docile", "Hostile Type A", "Friendly", "Hostile Type B"};
+
 // TODO: I have two functions that do this. (The other one is pick_picture.)
 extern std::string scenario_temp_dir_name;
 pic_num_t choose_graphic(short cur_choice,ePicType g_type,cDialog* parent, bool static_only) {
@@ -520,7 +522,7 @@ short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent, std
 			strings = {"Current PC Only", "Cumulative", "Average", "Minimum", "Maximum"};
 			break;
 		case STRT_ATTITUDE:
-			strings = {"Docile", "Hostile Type A", "Friendly", "Hostile Type B"};
+			strings = attitude_disp_strs;
 			break;
 		case STRT_STAIR:
 			strings = {"Stairs Up", "Stairs Down", "Slope Up", "Slope Down", "Slimy Stairs Up", "Slimy Stairs Down", "Dark Slope Up", "Dark Slope Down"};

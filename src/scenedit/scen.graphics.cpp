@@ -1365,6 +1365,8 @@ static void place_selected_terrain(ter_num_t ter, rectangle draw_rect) {
 		rect_draw_some_item(*ResMgr::graphics.get("edbuttons"),tiny_from,mainPtr(),tiny_to);
 }
 
+extern std::vector<std::string> attitude_disp_strs;
+
 void place_location() {
 	std::ostringstream sout;
 	rectangle draw_rect,source_rect;
@@ -1397,8 +1399,10 @@ void place_location() {
 								sout << "Item: " << scenario.scen_items[first + i].full_name;
 							break;
 						case DRAW_MONST:
-							if(first + i + 1 < scenario.scen_monsters.size())
-								sout << "Monster: " << scenario.scen_monsters[first + i + 1].m_name;
+							if(first + i + 1 < scenario.scen_monsters.size()){
+								sout << "Creature: " << scenario.scen_monsters[first + i + 1].m_name;
+								sout << " (" << attitude_disp_strs[(int)scenario.scen_monsters[first + i + 1].default_attitude] << ")";
+							}
 							break;
 					}
 					break;
