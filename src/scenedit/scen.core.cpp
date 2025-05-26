@@ -1152,6 +1152,8 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
 			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 35)); break;
 		}
+		if(abil == eMonstAbil::SUMMON && detail.summon.type == eMonstSummon::TYPE)
+			me["name"].replaceText("%s", scenario.scen_monsters[detail.summon.what].m_name);
 		me["max"].setTextToNum(detail.summon.max);
 		me["min"].setTextToNum(detail.summon.min);
 		me["len"].setTextToNum(detail.summon.len);
