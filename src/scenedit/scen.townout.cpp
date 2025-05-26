@@ -57,12 +57,10 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
 	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
-	// TODO: Make attitude an enum
 	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected(boost::lexical_cast<std::string>(monst.start_attitude));
 	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
 	me["talk"].setTextToNum(monst.personality);
 	me["picnum"].setTextToNum(monst.facial_pic);
-	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
  	if(short(monst.facial_pic) < 0)
 		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[monst.number].picture_num, PIC_MONST);
 	else if((monst.facial_pic >= 1000))
