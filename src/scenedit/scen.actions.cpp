@@ -7,6 +7,7 @@
 #include <stack>
 #include <vector>
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
@@ -245,9 +246,14 @@ static bool handle_lb_action(int i){
 					set_up_main_screen();
 				}
 				break;
+			case LB_LOAD_LAST:
+				file_to_load = get_string_pref("LastScenario");
+				// Skip first line of the fallthrough
+				if(false)
 			case LB_LOAD_SCEN:
 				file_to_load = nav_get_scenario();
 				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+					set_pref("LastScenario", file_to_load.string());
 					restore_editor_state(true);
 				} else if(!file_to_load.empty())
 					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
@@ -2488,6 +2494,11 @@ void set_up_start_screen() {
 	set_lb(0,LB_TITLE,LB_NO_ACTION,"Blades of Exile");
 	set_lb(1,LB_TITLE,LB_NO_ACTION,"Scenario Editor");
 	set_lb(3,LB_TEXT,LB_NEW_SCEN,"Make New Scenario");
+	set_lb(4,LB_TEXT,LB_LOAD_SCEN,"Load Scenario");
+	fs::path last_scenario = get_string_pref("LastScenario");
+	if(!last_scenario.empty() && fs::exists(last_scenario)){
+		set_lb(5,LB_TEXT,LB_LOAD_LAST,"Load Last: " + last_scenario.filename().string());
+	}
 	set_lb(4,LB_TEXT,LB_LOAD_SCEN,"Load Scenario");
 	set_lb(7,LB_TEXT,LB_NO_ACTION,"To find out how to use the");
 	set_lb(8,LB_TEXT,LB_NO_ACTION,"editor, select Getting Started ");

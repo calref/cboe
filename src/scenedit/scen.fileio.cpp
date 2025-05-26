@@ -1095,6 +1095,8 @@ void save_scenario(bool rename) {
 		if(toFile.empty()) return;
 	}
 	
+	set_pref("LastScenario", toFile.string());
+
 	extern cUndoList undo_list;
 	undo_list.save();
 	

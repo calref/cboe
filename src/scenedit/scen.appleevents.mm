@@ -14,6 +14,7 @@
 #include "fileio/fileio.hpp"
 #include "scen.actions.hpp"
 #include "scen.townout.hpp"
+#include "tools/prefs.hpp"
 
 //extern bool ae_loading, startup_loaded, All_Done, party_in_memory, finished_init;
 extern cScenario scenario;
@@ -51,6 +52,7 @@ void set_up_apple_events() {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	if(load_scenario(fileName, scenario)) {
+		set_pref("LastScenario", fileName);
 		restore_editor_state(true);
 		change_made = false;
 		ae_loading = true;
