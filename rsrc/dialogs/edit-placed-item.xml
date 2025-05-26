@@ -26,5 +26,6 @@
 	<button name='del' type='regular' top='195' left='8'>Delete</button>
 	<button name='cancel' type='regular' top='195' left='248'>Cancel</button>
 	<text top='28' left='196' width='70' height='14'>Location:</text>
-	<text name='loc' top='28' left='272' width='116' height='14'/>
+	<text name='loc' top='28' left='257' width='90' height='14'/>
+	<button name='pick-loc' type='regular' relative='pos neg' rel-anchor='prev' top='4' left='5'>Move</button>
 </dialog>

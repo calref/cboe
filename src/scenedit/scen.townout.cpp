@@ -265,15 +265,14 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 }
 
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
-	std::ostringstream loc;
 	cItem base = scenario.scen_items[item.code];
 	if(item.ability != eEnchant::NONE && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
 		base.enchant_weapon(item.ability);
 	}
 	
 	me["num"].setTextToNum(which);
-	loc << "X = " << item.loc.x << ", Y = " << item.loc.y;
-	me["loc"].setText(loc.str());
+	me["loc"].setText(boost::lexical_cast<std::string>(item.loc));
+
 	me["name"].setText(base.full_name);
 	me["charges"].setTextToNum(item.charges);
 	me["abil"].setTextToNum(int(item.ability));
@@ -281,8 +280,8 @@ static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const
 		dynamic_cast<cLed&>(me["always"]).setState(led_red);
 	if(item.property)
 		dynamic_cast<cLed&>(me["owned"]).setState(led_red);
-	if(item.contained)
-		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
+	// This one can be changed by moving the item so always must update
+	dynamic_cast<cLed&>(me["contained"]).setState(item.contained ? led_red : led_off);
 	
 	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
 	
@@ -327,6 +326,7 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 		return false;
 	}
 	
+	item.loc = boost::lexical_cast<location>(me["loc"].getText());
 	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
 	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
 	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
@@ -360,6 +360,15 @@ static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cIte
 	return true;
 }
 
+static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
+	cArea* area = get_current_area();
+	cLocationPicker picker(item.loc, *area, "Move Item", &me);
+	item.loc = picker.run();
+	item.contained = container_there(item.loc);
+	put_placed_item_in_dlog(me, item, which);
+	return true;
+}
+
 static bool edit_placed_item_delete(cDialog& me, const short which) {
 	me.toast(false);
 	town->preset_items[which].code = -1;
@@ -370,6 +379,7 @@ void edit_placed_item(short which_i) {
 	using namespace std::placeholders;
 	
 	cTown::cItem item = town->preset_items[which_i];
+	location old_loc = item.loc;
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-placed-item"));
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
@@ -378,10 +388,16 @@ void edit_placed_item(short which_i) {
 	item_dlg["del"].attachClickHandler(std::bind(edit_placed_item_delete, _1, which_i));
 	item_dlg["abil-choose"].attachClickHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
 	item_dlg["abil"].attachFocusHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
-	
+	item_dlg["pick-loc"].attachClickHandler(std::bind(edit_placed_item_loc, _1, _2, std::ref(item), which_i));
 	put_placed_item_in_dlog(item_dlg, item, which_i);
 	
 	item_dlg.run();
+
+	if(item.loc != old_loc){
+		// Move editor view to keep showing item
+		cen_x = item.loc.x;
+		cen_y = item.loc.y;
+	}
 }
 
 static bool edit_sign_event_filter(cDialog& me, sign_loc_t& which_sign) {
