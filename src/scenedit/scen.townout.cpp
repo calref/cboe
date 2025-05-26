@@ -66,6 +66,7 @@ static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const shor
 	else if((monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);
+	me["loc"].setText(boost::lexical_cast<std::string>(monst.start_loc));
 }
 
 static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_monst) {
@@ -73,6 +74,7 @@ static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_mons
 	store_placed_monst.mobility = dynamic_cast<cLedGroup&>(me["mobility"]).getSelected()[3] - '1';
 	store_placed_monst.personality = me["talk"].getTextAsNum();
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();
+	store_placed_monst.start_loc = boost::lexical_cast<location>(me["loc"].getText());
 }
 
 static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownperson& monst, const short which) {
@@ -106,6 +108,11 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 		if(i >= 0)
 			monst.personality = i;
 		put_placed_monst_in_dlog(me, monst, which);
+	} else if(hit == "pick-loc") {
+		cArea* area = get_current_area();
+		cLocationPicker picker(monst.start_loc, *area, "Move Creature", &me);
+		monst.start_loc = picker.run();
+		put_placed_monst_in_dlog(me, monst, which);
 	} else if(hit == "more") { //advanced
 		store_m = edit_placed_monst_adv(monst, which, me);
 		if(store_m.number != 0)
@@ -117,13 +124,19 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 void edit_placed_monst(short which_m) {
 	using namespace std::placeholders;
 	cTownperson monst = town->creatures[which_m];
+	location old_loc = monst.start_loc;
 	
 	cDialog edit(*ResMgr::dialogs.get("edit-townperson"));
-	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
+	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "pick-loc", "okay", "cancel", "more", "del"});
 	
 	put_placed_monst_in_dlog(edit, monst, which_m);
 	
 	edit.run();
+	if(monst.start_loc != old_loc){
+		// Move editor view to keep showing monster
+		cen_x = monst.start_loc.x;
+		cen_y = monst.start_loc.y;
+	}
 }
 
 static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const short which) {

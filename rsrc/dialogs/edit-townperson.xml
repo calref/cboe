@@ -25,13 +25,9 @@
 		<led name='mob1' top='133' left='224'>No</led>
 		<led name='mob2' top='133' left='282'>Yes</led>
 	</group>
-	<button name='okay' type='regular' top='224' left='471'>OK</button>
-	<button name='cancel' type='regular' top='224' left='405'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text top='7' left='313' width='126' height='15'>Creature number:</text>
 	<text name='num' top='7' left='450' width='50' height='15'/>
-	<button name='more' type='large' top='224' left='51'>Advanced</button>
-	<button name='del' type='regular' top='224' left='155'>Delete</button>
 	<text top='24' left='50' width='476' height='40'>
 		Enter the information for this monster/townsperson.
 		You only need to worry about the talking section if this is not a hostile monster.
@@ -39,4 +35,13 @@
 	</text>
 	<text size='large' top='160' left='51' width='256' height='17'>Talking to this creature:</text>
 	<text top='205' left='295' width='101' height='26'>Leave at -1 for no pic.</text>
+
+	<text top='224' left='51' width='70' height='14'>Location:</text>
+	<text name='loc' top='224' left='122' width='90' height='14'/>
+	<button name='pick-loc' type='regular' relative='pos neg' rel-anchor='prev' top='4' left='5'>Move</button>
+
+	<button name='more' type='large' top='249' left='51'>Advanced</button>
+	<button name='del' type='regular' top='249' left='155'>Delete</button>
+	<button name='cancel' type='regular' top='249' left='405'>Cancel</button>
+	<button name='okay' type='regular' top='249' left='471'>OK</button>
 </dialog>
