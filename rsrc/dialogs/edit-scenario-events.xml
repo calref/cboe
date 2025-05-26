@@ -2,30 +2,27 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<stack name='list' pages='2'>
-		<field name='time1' top='133' left='130' width='67' height='16'/>
-		<field name='time2' top='161' left='130' width='67' height='16'/>
-		<field name='time3' top='189' left='130' width='67' height='16'/>
-		<field name='time4' top='217' left='130' width='67' height='16'/>
-		<field name='time5' top='245' left='130' width='67' height='16'/>
-		<field name='time6' top='273' left='130' width='67' height='16'/>
-		<field name='time7' top='301' left='130' width='67' height='16'/>
-		<field name='time8' top='329' left='130' width='67' height='16'/>
-		<field name='time9' top='357' left='130' width='67' height='16'/>
-		<field name='time10' top='385' left='130' width='67' height='16'/>
-		<field name='node1' top='133' left='270' width='39' height='16'/>
-		<field name='node2' top='161' left='270' width='39' height='16'/>
-		<field name='node3' top='189' left='270' width='39' height='16'/>
-		<field name='node4' top='217' left='270' width='39' height='16'/>
-		<field name='node5' top='245' left='270' width='39' height='16'/>
-		<field name='node6' top='273' left='270' width='39' height='16'/>
-		<field name='node7' top='301' left='270' width='39' height='16'/>
-		<field name='node8' top='329' left='270' width='39' height='16'/>
-		<field name='node9' top='357' left='270' width='39' height='16'/>
-		<field name='node10' top='385' left='270' width='39' height='16'/>
+		<field name='time1' type='uint' top='133' left='130' width='67' height='16'/>
+		<field name='time2' type='uint' top='161' left='130' width='67' height='16'/>
+		<field name='time3' type='uint' top='189' left='130' width='67' height='16'/>
+		<field name='time4' type='uint' top='217' left='130' width='67' height='16'/>
+		<field name='time5' type='uint' top='245' left='130' width='67' height='16'/>
+		<field name='time6' type='uint' top='273' left='130' width='67' height='16'/>
+		<field name='time7' type='uint' top='301' left='130' width='67' height='16'/>
+		<field name='time8' type='uint' top='329' left='130' width='67' height='16'/>
+		<field name='time9' type='uint' top='357' left='130' width='67' height='16'/>
+		<field name='time10' type='uint' top='385' left='130' width='67' height='16'/>
+		<field name='node1' type='int' top='133' left='270' width='39' height='16'/>
+		<field name='node2' type='int' top='161' left='270' width='39' height='16'/>
+		<field name='node3' type='int' top='189' left='270' width='39' height='16'/>
+		<field name='node4' type='int' top='217' left='270' width='39' height='16'/>
+		<field name='node5' type='int' top='245' left='270' width='39' height='16'/>
+		<field name='node6' type='int' top='273' left='270' width='39' height='16'/>
+		<field name='node7' type='int' top='301' left='270' width='39' height='16'/>
+		<field name='node8' type='int' top='329' left='270' width='39' height='16'/>
+		<field name='node9' type='int' top='357' left='270' width='39' height='16'/>
+		<field name='node10' type='int' top='385' left='270' width='39' height='16'/>
 	</stack>
 	<button name='edit1' type='large' top='131' left='324'>Create/Edit</button>
 	<button name='edit2' type='large' top='159' left='324'>Create/Edit</button>

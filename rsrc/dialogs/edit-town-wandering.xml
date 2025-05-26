@@ -2,25 +2,22 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
-	<field name='group1-monst1' top='137' left='174' width='39' height='16'/>
-	<field name='group1-monst2' top='165' left='174' width='39' height='16'/>
-	<field name='group1-monst3' top='193' left='174' width='39' height='16'/>
-	<field name='group1-monst4' top='221' left='174' width='39' height='16'/>
-	<field name='group2-monst1' top='137' left='239' width='39' height='16'/>
-	<field name='group2-monst2' top='165' left='239' width='39' height='16'/>
-	<field name='group2-monst3' top='193' left='239' width='39' height='16'/>
-	<field name='group2-monst4' top='221' left='239' width='39' height='16'/>
-	<field name='group3-monst1' top='137' left='304' width='39' height='16'/>
-	<field name='group3-monst2' top='165' left='304' width='39' height='16'/>
-	<field name='group3-monst3' top='193' left='304' width='39' height='16'/>
-	<field name='group3-monst4' top='221' left='304' width='39' height='16'/>
-	<field name='group4-monst1' top='137' left='369' width='39' height='16'/>
-	<field name='group4-monst2' top='165' left='369' width='39' height='16'/>
-	<field name='group4-monst3' top='193' left='369' width='39' height='16'/>
-	<field name='group4-monst4' top='221' left='369' width='39' height='16'/>
+	<field name='group1-monst1' type='uint' top='137' left='174' width='39' height='16'/>
+	<field name='group1-monst2' type='uint' top='165' left='174' width='39' height='16'/>
+	<field name='group1-monst3' type='uint' top='193' left='174' width='39' height='16'/>
+	<field name='group1-monst4' type='uint' top='221' left='174' width='39' height='16'/>
+	<field name='group2-monst1' type='uint' top='137' left='239' width='39' height='16'/>
+	<field name='group2-monst2' type='uint' top='165' left='239' width='39' height='16'/>
+	<field name='group2-monst3' type='uint' top='193' left='239' width='39' height='16'/>
+	<field name='group2-monst4' type='uint' top='221' left='239' width='39' height='16'/>
+	<field name='group3-monst1' type='uint' top='137' left='304' width='39' height='16'/>
+	<field name='group3-monst2' type='uint' top='165' left='304' width='39' height='16'/>
+	<field name='group3-monst3' type='uint' top='193' left='304' width='39' height='16'/>
+	<field name='group3-monst4' type='uint' top='221' left='304' width='39' height='16'/>
+	<field name='group4-monst1' type='uint' top='137' left='369' width='39' height='16'/>
+	<field name='group4-monst2' type='uint' top='165' left='369' width='39' height='16'/>
+	<field name='group4-monst3' type='uint' top='193' left='369' width='39' height='16'/>
+	<field name='group4-monst4' type='uint' top='221' left='369' width='39' height='16'/>
 	<button name='okay' type='regular' top='273' left='436'>OK</button>
 	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='71'>Cancel</button>
 	<text top='6' left='50' width='256' height='17'>Town wandering monsters</text>

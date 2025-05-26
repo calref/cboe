@@ -2,14 +2,11 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
-	<field name='extra1' top='126' left='221' width='67' height='16'/>
-	<field name='extra2' top='153' left='221' width='67' height='16'/>
-	<field name='death' top='298' left='285' width='67' height='16'/>
-	<field name='sdfy' top='362' left='262' width='39' height='16'/>
-	<field name='sdfx' top='362' left='310' width='39' height='16'/>
+	<field name='extra1' type='int' top='126' left='221' width='67' height='16'/>
+	<field name='extra2' type='int' top='153' left='221' width='67' height='16'/>
+	<field name='death' type='int' top='298' left='285' width='67' height='16'/>
+	<field name='sdfy' type='int' top='362' left='262' width='39' height='16'/>
+	<field name='sdfx' type='int' top='362' left='310' width='39' height='16'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Townsperson/monster advanced</text>
 	<text top='28' left='62' width='97' height='15'>Creature type:</text>
 	<text name='type' top='28' left='162' width='195' height='15'/>
@@ -25,7 +22,7 @@
 		Number of town special node to call before talking to creature:
 		(-1 for none)
 	</text>
-	<field name='hail' top='326' left='285' width='67' height='16'/>
+	<field name='hail' type='int' top='326' left='285' width='67' height='16'/>
 	<button name='edithail' type='large' top='322' left='360'>Create/Edit</button>
 	<text top='350' left='25' width='230' height='40'>
 		Stuff done flag creature's life is linked to:

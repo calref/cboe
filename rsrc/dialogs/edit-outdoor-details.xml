@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<field name='name' top='51' left='162' width='151' height='16'/>
 	<button name='okay' type='regular' top='295' left='354'>OK</button>
 	<button name='cancel' type='regular' relative='neg pos-in' rel-anchor='prev' top='0' left='71'>Cancel</button>
@@ -21,16 +18,16 @@
 		<led name='snd4' top='85' left='350'>Custom</led>
 	</group>
 	<text top='106' left='50' width='190' height='16'>Background: (-1 = scenario default)</text>
-	<field name='bg-out' top='104' left='250' width='80' height='16'/>
+	<field name='bg-out' type='int' top='104' left='250' width='80' height='16'/>
 	<button name='pick-out' type='regular' top='101' left='340'>Choose</button>
 	<text top='130' left='50' width='190' height='16'>Combat Background:</text>
-	<field name='bg-fight' top='128' left='250' width='80' height='16'/>
+	<field name='bg-fight' type='int' top='128' left='250' width='80' height='16'/>
 	<button name='pick-fight' type='regular' top='125' left='340'>Choose</button>
 	<text top='154' left='50' width='190' height='16'>Default Town Background:</text>
-	<field name='bg-town' top='152' left='250' width='80' height='16'/>
+	<field name='bg-town' type='int' top='152' left='250' width='80' height='16'/>
 	<button name='pick-town' type='regular' top='149' left='340'>Choose</button>
 	<text top='178' left='50' width='190' height='16'>Default Dungeon Background:</text>
-	<field name='bg-dungeon' top='176' left='250' width='80' height='16'/>
+	<field name='bg-dungeon' type='int' top='176' left='250' width='80' height='16'/>
 	<button name='pick-dungeon' type='regular' top='173' left='340'>Choose</button>
 	<text top='204' left='50' width='101' height='90'>Comment:<br/><br/>
 		You can put useful notes for yourself here. It's not used by the game for anything.

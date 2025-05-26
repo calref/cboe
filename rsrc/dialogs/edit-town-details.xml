@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Town Details</text>
 
@@ -14,17 +11,17 @@
 	<text top='58' left='50' width='130' height='14'>Town timing:</text>
 
 	<text top='78' left='59' width='242' height='14'>Day when town dies: (if -1, it doesn't)</text>
-	<field name='chop' top='77' left='327' width='43' height='16'/>
+	<field name='chop' type='int' top='77' left='327' width='43' height='16'/>
 
 	<text top='98' left='59' width='261' height='41'>Number of event which prevents town death (if -1 or 0, none) - see chapter in documentation on time for more details.</text>
-	<field name='key' top='101' left='327' width='43' height='16'/>
+	<field name='key' type='int' top='101' left='327' width='43' height='16'/>
 	<button name='choose-key' type='regular' relative='pos neg' rel-anchor='prev' top='4' left='4'>Choose</button>
 
 	<text top='216' left='50' width='234' height='42'>
 		Maximum number of monsters:
 		(When this many monsters are killed, the dungeon will be abandoned)
 	</text>
-	<field name='population' top='219' left='294' width='54' height='16'/>
+	<field name='population' type='uint'  top='219' left='294' width='54' height='16'/>
 	<text name='population-hint' relative='pos neg' rel-anchor='prev' top='4' left='4' width='90'>
 		This town has {{num}} hostile creatures.
 	</text>
@@ -33,7 +30,7 @@
 		Town difficulty (0-10):
 		(Determines how fast wandering monsters appear, how nasty traps are, and how hard it is to unlock doors.)
 	</text>
-	<field name='difficulty' top='265' left='294' width='54' height='16'/>
+	<field name='difficulty' type='uint' top='265' left='294' width='54' height='16'/>
 
 	<text top='143' left='50' width='63' height='14'>Lighting:</text>
 	<group name='lighting'>

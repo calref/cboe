@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='18' left='50' width='250' height='17'>Edit Monster Ability:</text>
 	<text top='52' left='10' width='100' height='16'>For monster:</text>
@@ -23,14 +20,14 @@
 	<button name='pick-summon' type='regular' top='161' left='330'>Choose</button>
 	
 	<text top='192' left='10' width='100' height='16'>Minimum number:</text>
-	<field name='min' top='190' left='120' width='50' height='16'/>
+	<field name='min' type='uint' top='190' left='120' width='50' height='16'/>
 	<text top='192' left='180' width='100' height='16'>Maximum number:</text>
-	<field name='max' top='190' left='290' width='50' height='16'/>
+	<field name='max' type='uint' top='190' left='290' width='50' height='16'/>
 	
 	<text top='220' left='10' width='100' height='16'>Summon duration:</text>
-	<field name='len' top='218' left='120' width='50' height='16'/>
+	<field name='len' type='uint' top='218' left='120' width='50' height='16'/>
 	<text top='220' left='180' width='100' height='16'>Chance of Using:</text>
-	<field name='odds' top='218' left='290' width='50' height='16'/>
+	<field name='odds' type='uint' top='218' left='290' width='50' height='16'/>
 	
 	<button name='okay' type='regular' top='244' left='330'>OK</button>
 	<button name='cancel' type='regular' top='244' left='265'>Cancel</button>

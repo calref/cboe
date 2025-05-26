@@ -2238,6 +2238,7 @@ bool edit_quest(size_t which_quest) {
 		return true;
 	});
 	// TODO: Some focus handlers
+	// Should quests be able to award negative XP or negative gold? I typed the text fields as 'uint' for now.
 	
 	if(scenario.quests.size() == 1) {
 		quest_dlg["left"].hide();

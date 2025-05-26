@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='18' left='50' width='250' height='17'>Edit Monster Ability:</text>
 	<text top='52' left='10' width='100' height='16'>For monster:</text>
@@ -17,14 +14,14 @@
 	<text name='ap' framed='true' top='136' left='120' width='200' height='16'/>
 	
 	<text name='extra1-title' framed='true' top='164' left='10' width='200' height='16'>Extra 1</text>
-	<field name='extra1' top='162' left='220' width='70' height='16'/>
+	<field name='extra1' type='uint' top='162' left='220' width='70' height='16'/>
 	<button name='pick-extra1' type='large' top='161' left='300'>Create/Edit</button>
 	
 	<text name='extra2-title' framed='true' top='192' left='10' width='200' height='16'>Extra 2</text>
-	<field name='extra2' top='190' left='220' width='70' height='16'/>
+	<field name='extra2' type='uint' top='190' left='220' width='70' height='16'/>
 	
 	<text name='extra3-title' framed='true' top='220' left='10' width='200' height='16'>Extra 3</text>
-	<field name='extra3' top='218' left='220' width='70' height='16'/>
+	<field name='extra3' type='uint' top='218' left='220' width='70' height='16'/>
 	
 	<button name='okay' type='regular' top='244' left='339'>OK</button>
 	<button name='cancel' type='regular' top='244' left='274'>Cancel</button>

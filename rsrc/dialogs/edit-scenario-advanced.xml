@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='256' height='17'>Scenario Advanced Details</text>
 
@@ -15,7 +12,7 @@
 	<led name='adjust' top='56' left='50' size='small'>Adjust difficulty if played by a party stronger than recommended</led>
 
 	<text top='79' left='50' width='120' height='14'>Special on Start:</text>
-	<field name='oninit' top='78' left='181' width='100' height='16'/>
+	<field name='oninit' type='int' top='78' left='181' width='100' height='16'/>
 	<button name='pickinit' type='large' top='74' left='290'>Create/Edit</button>
 
 	<text top='107' left='50' width='120' height='14'>Campaign ID:</text>

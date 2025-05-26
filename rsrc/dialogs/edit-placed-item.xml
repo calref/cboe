@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<!-- OK button -->
 	<button name='okay' type='regular' top='195' left='316'>OK</button>
 	<pict name='pic' type='dlog' num='16' top='8' left='12'/>
@@ -14,9 +11,9 @@
 		Charges:<br/>
 		(-1 = default)
 	</text>
-	<field name='charges' top='73' left='135' width='52' height='16'/>
+	<field name='charges' type='int' top='73' left='135' width='52' height='16'/>
 	<text name='abil-lbl' top='101' left='50' width='80' height='16'>Ability:</text>
-	<field name='abil' top='101' left='135' width='52' height='16'/>
+	<field name='abil' type='int' top='101' left='135' width='52' height='16'/>
 	<button name='abil-choose' type='regular' top='98' left='200'>Choose</button>
 	<text top='120' left='50' width='80' height='14'>Special Flags:</text>
 	<led name='always' font='bold' top='138' left='84' height='14'>Always here</led>

@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='8' left='50' width='100' height='17'>Editing Quests</text>
 	<text top='8' left='200' width='100' height='16'>Quest number:</text>
@@ -14,21 +11,21 @@
 	<field name='name' top='57' left='205' width='252' height='16'/>
 	<field name='descr' top='84' left='205' width='252' height='104'/>
 	<text top='209' left='50' width='170' height='28'>Must be completed by day:<br/>(-1 for no deadline)</text>
-	<field name='chop' top='208' left='205' width='110' height='16'/>
+	<field name='chop' type='int' top='208' left='205' width='110' height='16'/>
 	<text top='247' left='50' width='170' height='28'>Event to waive deadline:<br/>(-1 for none)</text>
-	<field name='evt' top='246' left='205' width='60' height='16'/>
+	<field name='evt' type='int' top='246' left='205' width='60' height='16'/>
 	<button name='choose-evt' type='regular' anchor='evt' relative='pos pos-in' top='-4' left='8'>Choose</button>
 	<text size='large' top='280' left='50' width='220' height='17'>Reward for completing:</text>
 	<text top='307' left='50' width='150' height='16'>Experience Points:</text>
-	<field name='xp' top='306' left='205' width='110' height='16'/>
+	<field name='xp' type='uint' top='306' left='205' width='110' height='16'/>
 	<text top='333' left='50' width='150' height='16'>Gold:</text>
-	<field name='gold' top='332' left='205' width='110' height='16'/>
+	<field name='gold' type='uint' top='332' left='205' width='110' height='16'/>
 	<led name='rel' wrap='true' top='208' left='345'>Deadline is relative to start day</led>
 	<led name='start' wrap='true' top='246' left='345'>Player is given quest when scenario starts</led>
 	<led name='inbank' top='285' left='345'>Include in a job bank:</led>
-	<field name='bank1' top='306' left='359' width='110' height='16'/>
+	<field name='bank1' type='int' top='306' left='359' width='110' height='16'/>
 	<button name='choose-bank1' type='regular' anchor='bank1' relative='pos pos-in' top='-4' left='8'>Choose</button>
-	<field name='bank2' top='332' left='359' width='110' height='16'/>
+	<field name='bank2' type='int' top='332' left='359' width='110' height='16'/>
 	<button name='choose-bank2' type='regular' anchor='bank2' relative='pos pos-in' top='-4' left='8'>Choose</button>
 	<button name='left' type='left' def-key='left' top='358' left='50'/>
 	<button name='right' type='right' def-key='right' top='358' left='115'/>

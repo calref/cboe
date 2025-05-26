@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict name='icon' type='monst' num='0' top='8' left='8'/>
 	<text size='large' top='6' left='44' width='158' height='16'>Edit Monster Statistics</text>
 	
@@ -15,31 +12,31 @@
 	<field name='name' top='30' left='180' width='186' height='16'/>
 	
 	<text top='58' left='8' width='120' height='14'>Monster picture:</text>
-	<field name='pic' top='57' left='140' width='52' height='16'/>
+	<field name='pic' type='uint' top='57' left='140' width='52' height='16'/>
 	<button name='pickicon' type='large' top='53' left='201'>Select Icon</button>
 	<text name='w' top='59' left='334' width='86' height='14'>Width = </text>
 	<text name='h' top='59' left='426' width='86' height='14'>Height = </text>
 	
 	<text top='83' left='8' width='179' height='14'>Monster level: (0 - 40)</text>
-	<field name='level' top='82' left='206' width='52' height='16'/>
+	<field name='level' type='uint' top='82' left='206' width='52' height='16'/>
 	
 	<text top='107' left='8' width='179' height='14'>Monster health: (0 - 2500)</text>
-	<field name='health' top='106' left='206' width='52' height='16'/>
+	<field name='health' type='uint' top='106' left='206' width='52' height='16'/>
 	
 	<text top='131' left='8' width='179' height='14'>Monster armor: (0 - 50)</text>
-	<field name='armor' top='130' left='206' width='52' height='16'/>
+	<field name='armor' type='uint' top='130' left='206' width='52' height='16'/>
 	
 	<text top='155' left='8' width='179' height='14'>Monster skill: (0 - 40)</text>
-	<field name='skill' top='154' left='206' width='52' height='16'/>
+	<field name='skill' type='uint' top='154' left='206' width='52' height='16'/>
 	
 	<text top='179' left='8' width='179' height='14'>Monster speed: (1-12)</text>
-	<field name='speed' top='178' left='206' width='52' height='16'/>
+	<field name='speed' type='uint' top='178' left='206' width='52' height='16'/>
 	
 	<text top='203' left='8' width='179' height='14'>Monster magic spells: (0 - 7)</text>
-	<field name='mage' top='202' left='206' width='51' height='16'/>
+	<field name='mage' type='uint' top='202' left='206' width='51' height='16'/>
 	
 	<text top='227' left='8' width='179' height='14'>Monster priest spells: (0 - 7)</text>
-	<field name='priest' top='226' left='206' width='51' height='16'/>
+	<field name='priest' type='uint' top='226' left='206' width='51' height='16'/>
 	
 	<text size='large' top='82' left='273' width='158' height='16'>Hand to hand combat:</text>
 	<text top='102' left='343' width='72' height='40'>Number of dice:<br/>(0 - 20)</text>
@@ -47,20 +44,20 @@
 	<text top='128' left='470' width='56' height='14'>Type</text>
 	
 	<text top='150' left='283' width='50' height='14'>Attack 1:</text>
-	<field name='dice1' top='149' left='350' width='52' height='16'/>
-	<field name='sides1' top='149' left='410' width='52' height='16'/>
+	<field name='dice1' type='uint' top='149' left='350' width='52' height='16'/>
+	<field name='sides1' type='uint' top='149' left='410' width='52' height='16'/>
 	<text name='type1' top='150' left='470' width='120' height='14'/>
 	<button name='picktype1' type='regular' top='146' left='525'>Choose</button>
 	
 	<text top='174' left='283' width='50' height='14'>Attack 2:</text>
-	<field name='dice2' top='173' left='350' width='52' height='16'/>
-	<field name='sides2' top='173' left='410' width='52' height='16'/>
+	<field name='dice2' type='uint' top='173' left='350' width='52' height='16'/>
+	<field name='sides2' type='uint' top='173' left='410' width='52' height='16'/>
 	<text name='type2' top='174' left='470' width='120' height='14'/>
 	<button name='picktype2' type='regular' top='170' left='525'>Choose</button>
 	
 	<text top='198' left='283' width='50' height='14'>Attack 3:</text>
-	<field name='dice3' top='197' left='350' width='52' height='16'/>
-	<field name='sides3' top='197' left='410' width='52' height='16'/>
+	<field name='dice3' type='uint' top='197' left='350' width='52' height='16'/>
+	<field name='sides3' type='uint' top='197' left='410' width='52' height='16'/>
 	<text name='type3' top='198' left='470' width='120' height='14'/>
 	<button name='picktype3' type='regular' top='194' left='525'>Choose</button>
 	
@@ -69,12 +66,12 @@
 	<button name='picktype' type='regular' top='250' left='264'>Choose</button>
 	
 	<text top='278' left='8' width='120' height='14'>Default talking picture:</text>
-	<field name='talk' top='276' left='138' width='77' height='16'/>
+	<field name='talk' type='uint' top='276' left='138' width='77' height='16'/>
 	<pict name='talkpic' type='talk' num='0' top='276' left='226'/>
 	<button name='picktalk' type='regular' top='275' left='264'>Choose</button>
 	
 	<text top='250' left='343' width='162' height='14'>Monster treasure: (0-4)</text>
-	<field name='treas' top='248' left='513' width='55' height='16'/>
+	<field name='treas' type='uint' top='248' left='513' width='55' height='16'/>
 	
 	<text top='275' left='343' width='302' height='14'>Default attitude:<br/>
 		(attitude creature has when you place it)

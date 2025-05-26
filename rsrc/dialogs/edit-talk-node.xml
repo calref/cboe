@@ -2,18 +2,15 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
-	<field name='who' top='26' left='186' width='64' height='16'/>
+	<field name='who' type='int' top='26' left='186' width='64' height='16'/>
 	<field name='key1' top='54' left='165' width='52' height='16' max-chars='4'/>
 	<field name='key2' top='54' left='285' width='52' height='16' max-chars='4'/>
 	<text top='6' left='350' width='160' height='48'>The in-game "Buy" button checks for these response keys, in order: purc, sale, heal, iden, trai, ench</text>
 	<text relative='pos-in pos' rel-anchor='prev' top='0' left='0' width='160' height='50'>The "Sell" button checks for sell.</text>
-	<field name='extra1' top='114' left='344' width='64' height='16'/>
-	<field name='extra2' top='137' left='344' width='64' height='16'/>
-	<field name='extra3' top='160' left='344' width='64' height='16'/>
-	<field name='extra4' top='183' left='344' width='64' height='16'/>
+	<field name='extra1' type='int' top='114' left='344' width='64' height='16'/>
+	<field name='extra2' type='int' top='137' left='344' width='64' height='16'/>
+	<field name='extra3' type='int' top='160' left='344' width='64' height='16'/>
+	<field name='extra4' type='int' top='183' left='344' width='64' height='16'/>
 	<field name='str1' top='223' left='72' width='430' height='80'/>
 	<field name='str2' top='328' left='72' width='434' height='80'/>
 

@@ -1,9 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='11'/>
 	<text name='title' size='large' top='6' left='50' width='158' height='16'>Edit Item' Abilities</text>
 	<text anchor='title' relative='pos pos-in' top='0' left='14' width='111' height='14'>Item number:</text>
@@ -16,11 +13,12 @@
 	
 	<text rel-anchor='prev' relative='abs pos' size='large' top='8' left='8' width='142' height='13'>Item special ability:</text>
 	<text name='abilname' rel-anchor='prev' relative='pos pos-in' framed='true' top='0' left='11' width='250' height='13'/>
+	<!-- These fields are called str1 and str2 but I think they can only be for numbers? -->
 	<text name='str1-title' rel-anchor='prev' relative='abs pos' framed='true' top='8' left='8' width='185' height='16'/>
-	<field name='str1' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
+	<field name='str1' type='int' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
 	<button name='str1-choose' rel-anchor='prev' relative='pos pos-in' type='large' top='-4' left='13'>Create/Edit</button>
 	<text name='str2-title' rel-anchor='prev' relative='abs pos' framed='true' top='3' left='8' width='185' height='16'/>
-	<field name='str2' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
+	<field name='str2' type='int' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
 	<button name='str2-choose1' rel-anchor='prev' relative='pos pos-in' type='regular' top='-4' left='13'>Choose</button>
 	<button name='str2-choose2' rel-anchor='prev' relative='pos pos-in' type='regular' top='0' left='5'>Priest</button>
 	

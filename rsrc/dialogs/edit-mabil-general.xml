@@ -2,10 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
-
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='18' left='50' width='250' height='17'>Edit Monster Ability:</text>
 	<text top='52' left='10' width='100' height='16'>For monster:</text>
@@ -22,23 +18,23 @@
 	<button name='pick-subtype' type='regular' top='161' left='330'>Choose</button>
 	
 	<text top='192' left='10' width='100' height='16'>Missile:</text>
-	<field name='missile' top='190' left='120' width='50' height='16'/>
+	<field name='missile' type='uint' top='190' left='120' width='50' height='16'/>
 	<text name='missile-touch' framed='true' top='192' left='120' width='50' height='16'>None</text>
 	<button name='pick-missile' type='regular' top='187' left='180'>Choose</button>
 	<pict name='missile-pic' type='missile' num='0' top='192' left='253'/>
 	
 	<text top='220' left='10' width='100' height='16'>Ability Range:</text>
-	<field name='range' top='218' left='120' width='50' height='16'/>
+	<field name='range' type='uint' top='218' left='120' width='50' height='16'/>
 	<text name='range-touch' framed='true' top='220' left='120' width='50' height='16'>Touch</text>
 	<text top='220' left='180' width='100' height='16'>Chance of Using:</text>
-	<field name='odds' top='218' left='290' width='50' height='16'/>
+	<field name='odds' type='uint' top='218' left='290' width='50' height='16'/>
 	
 	<text top='248' left='10' width='100' height='16'>Ability Strength:</text>
-	<field name='strength' top='246' left='120' width='70' height='16'/>
+	<field name='strength' type='uint' top='246' left='120' width='70' height='16'/>
 	<button name='pick-strength' type='regular' top='245' left='200'>Choose</button>
 	
 	<text name='extra-title' top='276' left='10' width='100' height='16'>Extra:</text>
-	<field name='extra' top='274' left='120' width='70' height='16'/>
+	<field name='extra' type='int' top='274' left='120' width='70' height='16'/>
 	<button name='pick-extra' type='regular' top='271' left='200'>Choose</button>
 	
 	<button name='okay' type='regular' top='300' left='330'>OK</button>

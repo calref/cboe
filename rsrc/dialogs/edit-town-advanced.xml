@@ -1,9 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='-2' left='10' width='256' height='17'>Advanced town details</text>
 	<text relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='439' height='40'>
@@ -15,23 +12,23 @@
 	<text name='exit-specials' relative='pos-in pos' rel-anchor='prev' top='0' left='-2' width='302' height='64' framed='true'/>
 	<text relative='pos-in' anchor='exit-specials' top='3' left='3' width='197' height='15'>Exit town specials:</text>
 	<button name='edit-onexit1' relative='pos-in pos' rel-anchor='prev' type='tiny' top='6' left='0' height='15' text-size='10'>Top</button>
-	<field name='onexit1' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<field name='onexit1' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
 	<button relative='pos-in pos' anchor='edit-onexit1' name='edit-onexit2' type='tiny' top='8' left='0' height='15' text-size='10'>Left</button>
-	<field name='onexit2' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<field name='onexit2' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
 	<button name='edit-onexit3' relative='pos pos-in' anchor='onexit1' type='tiny' top='4' left='8' height='15' text-size='10'>Bottom</button>
-	<field name='onexit3' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<field name='onexit3' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
 	<button name='edit-onexit4' relative='pos-in pos' anchor='edit-onexit3' type='tiny' top='8' left='0' height='15' text-size='10'>Right</button>
-	<field name='onexit4' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
+	<field name='onexit4' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='75' width='67' height='16'/>
 	<button name='exit-special-help' type='help' relative='neg-in pos-in' anchor='exit-specials' top='2' left='18'/>
 	
 	<text name='specials' relative='pos-in pos' anchor='exit-specials' top='10' left='0' width='302' height='90' framed='true'/>
 	<text relative='pos-in' anchor='specials' top='3' left='3' width='202' height='15'>Town entry special node:</text>
 	<button name='edit-onenter' relative='pos-in pos' rel-anchor='prev' type='tiny' top='8' left='0' height='15' text-size='10'>Still alive</button>
-	<field name='onenter' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<field name='onenter' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
 	<button name='edit-onenterdead' relative='pos-in pos' anchor='edit-onenter' type='tiny' top='8' left='0' height='15' text-size='10'>Been abandoned</button>
-	<field name='onenterdead' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<field name='onenterdead' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
 	<button name='edit-onhostile' relative='pos-in pos' anchor='edit-onenterdead' type='tiny' top='8' left='0' height='15' text-size='10'>When Goes Hostile</button>
-	<field name='onhostile' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
+	<field name='onhostile' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='146' width='67' height='16'/>
 	<button name='special-help' type='help' relative='neg-in pos-in' anchor='specials' top='2' left='18'/>
 	
 	<text name='exits' relative='pos pos-in' anchor='exit-specials' top='0' left='10' width='185' height='164' framed='true'/>
@@ -39,25 +36,25 @@
 	<text name='exit-x' relative='pos-in pos' rel-anchor='prev' top='4' left='100' width='35' height='15'>X</text>
 	<text name='exit-y' relative='pos pos-in' rel-anchor='prev' top='0' left='12' width='35' height='15'>Y</text>
 	<button name='exit1' relative='pos-in pos' anchor='exit-x' type='tiny' top='4' left='-100' width='96' height='15' text-size='10'>Top</button>
-	<field name='exit1-x' relative='pos-in pos' anchor='exit-x' top='4' left='-8' width='39' height='16'/>
-	<field name='exit1-y' relative='pos-in pos' anchor='exit-y' top='4' left='-8' width='39' height='16'/>
+	<field name='exit1-x' type='int' relative='pos-in pos' anchor='exit-x' top='4' left='-8' width='39' height='16'/>
+	<field name='exit1-y' type='int' relative='pos-in pos' anchor='exit-y' top='4' left='-8' width='39' height='16'/>
 	<button name='exit2' relative='pos-in pos' anchor='exit1' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Left</button>
-	<field name='exit2-x' relative='pos-in pos' anchor='exit1-x' top='8' left='0' width='39' height='16'/>
-	<field name='exit2-y' relative='pos-in pos' anchor='exit1-y' top='8' left='0' width='39' height='16'/>
+	<field name='exit2-x' type='int' relative='pos-in pos' anchor='exit1-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit2-y' type='int' relative='pos-in pos' anchor='exit1-y' top='8' left='0' width='39' height='16'/>
 	<button name='exit3' relative='pos-in pos' anchor='exit2' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Bottom</button>
-	<field name='exit3-x' relative='pos-in pos' anchor='exit2-x' top='8' left='0' width='39' height='16'/>
-	<field name='exit3-y' relative='pos-in pos' anchor='exit2-y' top='8' left='0' width='39' height='16'/>
+	<field name='exit3-x' type='int' relative='pos-in pos' anchor='exit2-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit3-y' type='int' relative='pos-in pos' anchor='exit2-y' top='8' left='0' width='39' height='16'/>
 	<button name='exit4' relative='pos-in pos' anchor='exit3' type='tiny' top='9' left='0' width='96' height='15' text-size='10'>Right</button>
-	<field name='exit4-x' relative='pos-in pos' anchor='exit3-x' top='8' left='0' width='39' height='16'/>
-	<field name='exit4-y' relative='pos-in pos' anchor='exit3-y' top='8' left='0' width='39' height='16'/>
+	<field name='exit4-x' type='int' relative='pos-in pos' anchor='exit3-x' top='8' left='0' width='39' height='16'/>
+	<field name='exit4-y' type='int' relative='pos-in pos' anchor='exit3-y' top='8' left='0' width='39' height='16'/>
 	<button name='exit-help' type='help' relative='neg-in pos-in' anchor='exits' top='2' left='18'/>
 	
 	<text name='bg' relative='pos pos-in' anchor='props' top='0' left='10' width='166' height='100' framed='true'/>
 	<text relative='pos-in' anchor='bg' top='3' left='3' width='100' height='15'>Backgrounds:</text>
 	<button name='pick-town' relative='pos-in pos' rel-anchor='prev' type='tiny' top='8' left='0' text-size='10'>Town:</button>
-	<field name='bg-town' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
+	<field name='bg-town' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
 	<button name='pick-fight' relative='pos-in pos' anchor='pick-town' type='tiny' top='15' left='0' text-size='10'>Combat:</button>
-	<field name='bg-fight' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
+	<field name='bg-fight' type='int' relative='pos-in' rel-anchor='prev' top='-4' left='80' width='80' height='16'/>
 	<button name='bg-help' type='help' relative='neg-in pos-in' anchor='bg' top='2' left='18'/>
 	
 	<text name='props' relative='pos-in pos' anchor='specials' top='10' left='0' width='126' height='100' framed='true'/>

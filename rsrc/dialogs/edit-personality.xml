@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<field name='title' top='42' left='174' width='189' height='16'/>
 	<field name='dunno' top='66' left='254' width='246' height='43'/>
 	<field name='look' top='123' left='73' width='427' height='68'/>
