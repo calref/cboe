@@ -1432,7 +1432,7 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 			item_names.push_back(item.full_name);
 		}
 		short current = me["loot-item"].getTextAsNum();
-		short i = get_num_response(0, scenario.scen_items.size()-1, "Which item?", item_names, current, current);
+		short i = cStringChoice(item_names, "Which item?", &me).show(current);
 		me["loot-item"].setTextToNum(i);
 		return true;
 	});
