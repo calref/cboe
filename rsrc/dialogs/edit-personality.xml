@@ -5,7 +5,6 @@
 	<!--
 	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
 	 -->
-	<!-- OK button -->
 	<field name='title' top='42' left='174' width='189' height='16'/>
 	<field name='dunno' top='66' left='254' width='246' height='43'/>
 	<field name='look' top='123' left='73' width='427' height='68'/>
@@ -22,4 +21,8 @@
 	<text top='103' left='50' width='160' height='14'>Response to 'look'</text>
 	<text top='196' left='50' width='165' height='14'>Response to 'name'</text>
 	<text top='288' left='52' width='170' height='14'>Response to 'job'</text>
+
+	<!-- OK button -->
+	<button name='okay' type='regular' top='381' left='441'>OK</button>
+	<button name='cancel' type='regular' top='381' left='375'>Cancel</button>
 </dialog>

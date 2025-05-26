@@ -16,8 +16,7 @@
 	<field name='extra4' top='183' left='344' width='64' height='16'/>
 	<field name='str1' top='223' left='72' width='430' height='80'/>
 	<field name='str2' top='328' left='72' width='434' height='80'/>
-	<button name='okay' type='regular' top='415' left='445'>OK</button>
-	<button name='cancel' type='regular' top='415' left='380'>Cancel</button>
+
 	<button name='back' type='large' top='415' left='49'>Go Back</button>
 	<button name='new' type='large' top='415' left='155'>Create New</button>
 	<text name='type' framed='true' top='79' left='135' width='160' height='14'/>
@@ -46,4 +45,8 @@
 	<button name='chooseC' type='regular' top='158' left='414'>Choose</button>
 	<button name='chooseB' type='regular' top='135' left='414'>Choose</button>
 	<button name='chooseA' type='regular' top='112' left='414'>Choose</button>
+
+	<!-- OK button -->
+	<button name='okay' type='regular' top='415' left='445'>OK</button>
+	<button name='cancel' type='regular' top='415' left='380'>Cancel</button>
 </dialog>
