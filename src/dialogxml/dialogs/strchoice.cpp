@@ -15,9 +15,11 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include "dialogxml/widgets/field.hpp"
+#include "dialogxml/dialogs/strdlog.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "sounds.hpp"
 #include "gfx/render_shapes.hpp"
+#include "tools/cursors.hpp"
 
 const sf::Color HILITE_COLOUR = Colours::LIGHT_GREEN;
 
@@ -309,4 +311,72 @@ void cStringChoice::savePage() {
 		std::string text_id = sout.str();
 		strings[string_idx] = dlg[text_id].getText();
 	}
+}
+
+static bool get_num_response_event_filter(cDialog& me, std::string, eKeyMod) {
+	if(me.toast(true)){
+		me.setResult<int>(me["number"].getTextAsNum());
+	}
+	return true;
+}
+
+short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, short initial_value, std::string extra_led, bool* led_output) {
+	std::ostringstream sout;
+	sout << prompt;
+
+	set_cursor(sword_curs);
+
+	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
+	numPanel.attachClickHandlers(get_num_response_event_filter, {"okay"});
+
+	if(extra_led.empty()){
+		numPanel["extra-led"].hide();
+	}else{
+		numPanel["extra-led"].setText(extra_led);
+		numPanel["extra-led"].recalcRect();
+		if(led_output != nullptr)
+			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
+	}
+
+	sout << " (" << min << '-' << max << ')';
+	numPanel["prompt"].setText(sout.str());
+	numPanel["number"].setTextToNum(initial_value);
+	if(!choice_names.empty()){
+		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
+			cStringChoice choose_dlg(choice_names, prompt, &me);
+			me["number"].setTextToNum(choose_dlg.show(me["number"].getTextAsNum()));
+			return true;
+		});
+	}else{
+		numPanel["choose"].hide();
+	}
+	if(min < max)
+		numPanel["number"].attachFocusHandler([min,max](cDialog& me,std::string,bool losing) -> bool {
+			if(!losing) return true;
+			int val = me["number"].getTextAsNum();
+			if(val < min || val > max) {
+				showError("Number out of range!");
+				return false;
+			}
+			return true;
+		});
+
+	bool cancel_clicked = false;
+	if(cancel_value){
+		numPanel["cancel"].attachClickHandler([cancel_value, &cancel_clicked](cDialog& me,std::string,eKeyMod) -> bool {
+			cancel_clicked = true;
+			me.setResult<int>(*cancel_value);
+			me.toast(false);
+			return true;
+		});
+	}else{
+		numPanel["cancel"].hide();
+	}
+
+	numPanel.run();
+	if(!cancel_clicked && led_output != nullptr){
+		*led_output = dynamic_cast<cLed&>(numPanel["extra-led"]).getState() == led_red;
+	}
+
+	return numPanel.getResult<int>();
 }

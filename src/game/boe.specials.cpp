@@ -28,6 +28,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "fileio/fileio.hpp"
 #include <array>
 #include "spell.hpp"

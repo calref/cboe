@@ -1414,6 +1414,17 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster-abils"),&parent);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
+
+	monst_dlg["pick-item"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		std::vector<std::string> item_names;
+		for(cItem& item : scenario.scen_items){
+			item_names.push_back(item.full_name);
+		}
+		short current = me["loot-item"].getTextAsNum();
+		short i = get_num_response(0, scenario.scen_items.size()-1, "Which item?", item_names, current, current);
+		me["loot-item"].setTextToNum(i);
+		return true;
+	});
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(initial)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(initial)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});

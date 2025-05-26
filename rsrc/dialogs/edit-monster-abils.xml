@@ -37,6 +37,7 @@
 	<text size='large' top='160' left='7' width='158' height='16'>Special treasure:</text>
 	<text top='179' left='23' width='162' height='14'>Item to drop when killed:</text>
 	<field name='loot-item' top='178' left='164' width='64' height='16' type='uint'/>
+	<button name='pick-item' type='regular' top='175' left='238'>Choose</button>
 
 	<text top='179' left='320' width='186' height='14'>Chance of dropping: (0-100)</text>
 	<field name='loot-chance' top='178' left='484' width='64' height='16' type='uint'/>
