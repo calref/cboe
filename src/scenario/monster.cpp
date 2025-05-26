@@ -709,7 +709,7 @@ std::string uAbility::to_string(eMonstAbil key) const {
 					}
 					break;
 			}
-			sout << " (" << summon.chance << "% chance)";
+			sout << " (" << std::fixed << std::setprecision(1) << double(summon.chance) / 10 << "% chance)";
 			break;
 		case eMonstAbilCat::RADIATE:
 			sout << "Radiates ";
