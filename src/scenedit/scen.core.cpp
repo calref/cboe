@@ -619,14 +619,12 @@ bool edit_ter_type(ter_num_t which) {
 	return ter_dlg.accepted() || which != first;
 }
 
-static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
-	std::ostringstream strb;
-	
-	if(monst.picture_num < 1000)
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,PIC_MONST);
+static void put_monst_pic(cPict& pict, pic_num_t num) {
+	if(num < 1000)
+		pict.setPict(num, PIC_MONST);
 	else {
 		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = monst.picture_num / 1000;
+		short size_g = num / 1000;
 		switch(size_g){
 			case 2:
 				type_g += PIC_WIDE;
@@ -638,8 +636,15 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 				type_g += PIC_LARGE;
 				break;
 		}
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,type_g);
+		pict.setPict(num,type_g);
 	}
+}
+
+static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
+	std::ostringstream strb;
+
+	put_monst_pic(dynamic_cast<cPict&>(me["icon"]), monst.picture_num);
+
 	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which);
 	me["name"].setText(monst.m_name);
@@ -1417,6 +1422,8 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	using namespace std::placeholders;
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster-abils"),&parent);
+
+	put_monst_pic(dynamic_cast<cPict&>(monst_dlg["icon"]), initial.picture_num);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
 
 	monst_dlg["pick-item"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
@@ -1433,7 +1440,8 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(initial)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(initial)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
 	
-	monst_dlg["num"].setTextToNum(which);
+	monst_dlg["info"].replaceText("{{num}}", std::to_string(which));
+	monst_dlg["info"].replaceText("{{name}}", initial.m_name);
 	put_monst_abils_in_dlog(monst_dlg, initial);
 	
 	monst_dlg.run();

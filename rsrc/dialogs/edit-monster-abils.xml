@@ -2,10 +2,9 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<pict type='dlog' num='16' top='8' left='8'/>
+	<pict name='icon' type='monst' num='0' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='158' height='16'>Edit Monster Abilities</text>
-	<text framed='true' top='6' left='222' width='111' height='14'>Monster number:</text>
-	<text name='num' framed='true' top='8' left='340' width='37' height='14'/>
+	<text name='info' framed='true' top='6' left='222' width='170' height='14'>Monster {{num}}: {{name}}</text>
 	<text top='2' left='408' width='184' height='54'>
 		Enter properties for this monster type. For a detailed
 		description of the fields, see the documentation.
