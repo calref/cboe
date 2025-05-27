@@ -12,6 +12,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "dialogxml/dialogs/strdlog.hpp"
 
@@ -2495,15 +2496,18 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town.name = temp_str;
+		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
+		std::string temp_str_trimmed = temp_str;
+		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
+		if(i == 0) the_town.name = temp_str_trimmed;
 		else if(i >= 1 && i < 17)
-			the_town.area_desc[i-1].descr = temp_str;
+			the_town.area_desc[i-1].descr = temp_str_trimmed;
 		else if(i >= 17 && i < 20)
-			the_town.comment[i-17] = temp_str;
+			the_town.comment[i-17] = temp_str_trimmed;
 		else if(i >= 20 && i < 120)
-			the_town.spec_strs[i-20] = temp_str;
+			the_town.spec_strs[i-20] = temp_str_trimmed;
 		else if(i >= 120 && i < 140)
-			the_town.sign_locs[i-120].text = temp_str;
+			the_town.sign_locs[i-120].text = temp_str_trimmed;
 	}
 	
 	len = sizeof(legacy::talking_record_type);
