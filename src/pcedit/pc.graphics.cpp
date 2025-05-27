@@ -13,6 +13,7 @@
 #include "dialogxml/widgets/led.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "mathutil.hpp"
+#include "tools/cursors.hpp"
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
 #endif
@@ -209,6 +210,7 @@ void redraw_screen() {
 	drawMenuBar();
 	
 	mainPtr().display();
+	restore_cursor();
 }
 
 static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {

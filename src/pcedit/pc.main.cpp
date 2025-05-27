@@ -139,6 +139,7 @@ int main(int argc, char* argv[]) {
 		cDialog::init();
 		redraw_screen();
 		menu_activate();
+		set_cursor(sword_curs);
 		
 		handle_events();
 
