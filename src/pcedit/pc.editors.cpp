@@ -190,43 +190,57 @@ static void display_traits_graphics(cDialog& me) {
 	me["xp"].setTextToNum(store);
 }
 
+static void keep_race_traits(cDialog& me) {
+	cPlayer *pc = store_pc;
+
+	// Set race
+	cLedGroup& grp = dynamic_cast<cLedGroup&>(me["race"]);
+	std::string race_selected = grp.getSelected();
+	eRace race = static_cast<eRace>(race_selected[4] - '1');
+	pc->race = race;
+
+	// 10 advantages
+	for(int i = 0; i < 10; ++i){
+		eTrait trait = eTrait(i);
+		pc->traits[trait] = dynamic_cast<cLed&>(me["good" + std::to_string(i+1)]).getState() == led_red;
+	}
+
+	// 7 disadvantages
+	for(int i = 0; i < 7; ++i){
+		eTrait trait = eTrait(i + 10);
+		pc->traits[trait] = dynamic_cast<cLed&>(me["bad" + std::to_string(i+1)]).getState() == led_red;
+	}
+}
+
 static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const short store_trait_mode) {
+	// String index for the help message in traits.txt
 	int abil_str = 0;
-	cPlayer *pc;
+	cPlayer *pc = store_pc;
 	
-	pc = store_pc;
 	if(item_hit == "race") {
-		item_hit = dynamic_cast<cLedGroup&>(me["race"]).getSelected();
-		eRace race;
-		switch(item_hit[4] - '1') {
-			case 0: race = eRace::HUMAN; break;
-			case 1: race = eRace::NEPHIL; break;
-			case 2: race = eRace::SLITH; break;
-			case 3: race = eRace::VAHNATAI; break;
-			default: return false;
-		}
-		if(store_trait_mode == 0)
-			pc->race = race;
-		display_traits_graphics(me);
-		abil_str = 36 + int(race) * 2;
+		cLedGroup& grp = dynamic_cast<cLedGroup&>(me["race"]);
+		item_hit = grp.getSelected();
+		abil_str = 36 + (item_hit[4] - '1') * 2;
+		// Can't edit race
+		if(store_trait_mode != 0)
+			grp.setSelected(grp.getPrevSelection());
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
-		eTrait trait = eTrait(hit + 10);
-		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
 		abil_str = 22 + hit * 2;
+		// Can't edit
+		if(store_trait_mode == 1)
+			dynamic_cast<cLed&>(me[item_hit]).setState(pc->traits[eTrait(hit + 10)] ? led_red : led_off);
 	} else if(item_hit.substr(0,4) == "good") {
+		// Different from the other calculations because there are more than 9 advantages
 		int hit = boost::lexical_cast<int>(item_hit.substr(4)) - 1;
-		eTrait trait = eTrait(hit);
-		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
 		abil_str = 2 + hit * 2;
+		// Can't edit
+		if(store_trait_mode == 1)
+			dynamic_cast<cLed&>(me[item_hit]).setState(pc->traits[eTrait(hit)] ? led_red : led_off);
 	}
 	if(abil_str > 0)
 		me["info"].setText(get_str("traits", abil_str));
-	return store_trait_mode == 0;
+	return true;
 }
 
 //mode; // 0 - edit  1 - just display  2 - can't change race
@@ -240,6 +254,12 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	
 	cDialog pickAbil(*ResMgr::dialogs.get("pick-race-abil"),parent);
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
+	if(mode != 1)
+		pickAbil["cancel"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, false));
+	else{
+		pickAbil["cancel"].hide();
+		pickAbil.setEscapeButton("done");
+	}
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
@@ -251,6 +271,8 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	else pickAbil["info"].setText(start_str2);
 	
 	pickAbil.run();
+	if(pickAbil.accepted() && mode != 1)
+		keep_race_traits(pickAbil);
 }
 
 void display_alchemy(bool allowEdit,cDialog* parent) {

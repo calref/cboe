@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<!--TODO Need a cancel button. In other contexts (like preferences), Escape would discard changes in a submenu.-->
-<dialog defbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<text size='large' top='9' left='55' width='181' height='16'>Special Characteristics:</text>
 	<pict type='dlog' num='7' top='6' left='6'/>
+	<button name='cancel' type='regular' top='349' left='350'>Cancel</button>
 	<button name='done' type='done' top='349' left='423'/>
 	<text size='large' top='30' left='55' width='65' height='18'>Species:</text>
 	<text name='xp' framed='true' top='352' left='254' width='50' height='16'/>
