@@ -289,7 +289,7 @@ void draw_main_screen() {
 	style.pointSize = 10;
 	style.font = FONT_PLAIN;
 	std::ostringstream sout;
-	sout << "Created in 1997 by Spiderweb Software, Inc. v" << oboeVersionString();
+	sout << "Created 1997, Free Open Source, v" << oboeVersionString();
 #if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
 	if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
 		sout << " [" << GIT_REVISION << "]";
@@ -297,9 +297,9 @@ void draw_main_screen() {
 #endif
 	std::string copyright = sout.str();
 	//dest_rect.offset(270,0);
-	dest_rect.right = mainPtr().getSize().x - 5;
+	dest_rect.right = pc_width - 5;
 	dest_rect.left = dest_rect.right - string_length(copyright, style) - 5;
-	win_draw_string(mainPtr(),dest_rect,copyright,eTextMode::WRAP,style);
+	win_draw_string(mainPtr(),dest_rect,copyright,eTextMode::WRAP,style,true);
 	
 	
 	reg_rect = whole_win_rect;
