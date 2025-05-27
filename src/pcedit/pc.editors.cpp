@@ -66,6 +66,19 @@ static void put_pc_spells(cDialog& me, short store_trait_mode) {
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
 }
 
+static bool check_for_spell_changes(cDialog& pcInfo, short pc_num, short mode) {
+	if(mode >= 10) {
+		mode %= 10;
+		for(short i = 0; i < 62; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			if(mode == 0 && univ.party[pc_num].mage_spells[i] != set) return true;
+			else if(mode == 1 && univ.party[pc_num].priest_spells[i] != set) return true;
+		}
+	}
+	return false;
+}
+
 static void keep_pc_spells(cDialog& pcInfo, short pc_num, short mode) {
 	if(mode >= 10) {
 		mode %= 10;
@@ -102,8 +115,8 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, const sho
 		me.toast(true);
 		keep_pc_spells(me, pc_num, trait_mode);
 	}else if(item_hit == "left") {
-		// TODO if spells haven't changed, confirmation shouldn't be necessary
-		if(confirm_switch_pc_spells(me, pc_num, trait_mode)){
+		// if spells haven't changed, confirmation isn't necessary
+		if(!check_for_spell_changes(me, pc_num, trait_mode) || confirm_switch_pc_spells(me, pc_num, trait_mode)){
 			do {
 				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
 			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
@@ -111,8 +124,8 @@ static bool display_pc_event_filter(cDialog& me, std::string item_hit, const sho
 			put_pc_spells(me, trait_mode);
 		}
 	}else if(item_hit == "right") {
-		// TODO if spells haven't changed, confirmation shouldn't be necessary
-		if(confirm_switch_pc_spells(me, pc_num, trait_mode)){
+		// if spells haven't changed, confirmation isn't necessary
+		if(!check_for_spell_changes(me, pc_num, trait_mode) || confirm_switch_pc_spells(me, pc_num, trait_mode)){
 			do {
 				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
 			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
