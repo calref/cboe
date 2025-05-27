@@ -70,7 +70,7 @@
 	<led name='spell62' state='off' top='272' left='268'/>
 	<button name='done' type='done' top='310' left='422'/>
 	<button name='left' type='left' def-key='left' top='310' left='12'/>
-	<button name='right' type='right' def-key='right' top='309' left='79'/>
-	<text name='who' size='large' top='15' left='53' width='83' height='16'>Spells For:</text>
-	<text framed='true' top='15' left='146' width='186' height='16'/>
+	<button name='right' type='right' def-key='right' top='310' left='79'/>
+	<text name='title' size='large' top='15' left='53' width='83' height='16'>{{type}} Spells For:</text>
+	<text name='who' framed='true' top='15' left='166' width='186' height='16'/>
 </dialog>

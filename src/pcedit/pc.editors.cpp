@@ -62,6 +62,7 @@ static void put_pc_spells(cDialog& me, short store_trait_mode) {
 		else cur.setState(led_off);
 	}
 	
+	me["title"].replaceText("{{type}}", store_trait_mode == 0 ? "Mage" : "Priest");
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
 }
 
