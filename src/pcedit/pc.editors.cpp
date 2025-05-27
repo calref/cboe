@@ -112,7 +112,7 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	}
 	put_pc_spells(pcInfo, mode);
 	
-	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
+	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(15 + mode,PIC_DLOG); // 15 is explosion, 16 is an ankh
 	
 	pcInfo.run();
 	
