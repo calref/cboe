@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='done' escbtn='done'>
+<dialog defbtn='done' escbtn='cancel'>
 	<!--
 	 TODO: Add width attributes to the LEDs
 	 -->
@@ -68,6 +68,7 @@
 	<led name='spell60' state='off' top='248' left='268'/>
 	<led name='spell61' state='off' top='260' left='268'/>
 	<led name='spell62' state='off' top='272' left='268'/>
+	<button name='cancel' type='regular' top='310' left='358'>Cancel</button>
 	<button name='done' type='done' top='310' left='422'/>
 	<button name='left' type='left' def-key='left' top='310' left='12'/>
 	<button name='right' type='right' def-key='right' top='310' left='79'/>

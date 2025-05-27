@@ -66,24 +66,59 @@ static void put_pc_spells(cDialog& me, short store_trait_mode) {
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
 }
 
+static void keep_pc_spells(cDialog& pcInfo, short pc_num, short mode) {
+	if(mode >= 10) {
+		mode %= 10;
+		for(short i = 0; i < 62; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
+			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
+		}
+	}
+}
+
+static bool confirm_switch_pc_spells(cDialog& me, short pc_num, short mode) {
+	cChoiceDlog dlog("confirm-edit-spells", {"keep","revert","cancel"}, &me);
+	dlog->getControl("keep-msg").replaceText("{{PC}}", univ.party[pc_num].name);
+	std::string choice = dlog.show();
+	if(choice == "keep"){
+		keep_pc_spells(me, pc_num, mode);
+		return true;
+	}else if(choice == "revert"){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 static bool display_pc_event_filter(cDialog& me, std::string item_hit, const short trait_mode) {
 	short pc_num;
 	
 	pc_num = which_pc_displayed;
-	if(item_hit == "done") {
+	if(item_hit == "cancel"){
+		me.toast(false);
+	}else if(item_hit == "done") {
 		me.toast(true);
-	} else if(item_hit == "left") {
-		do {
-			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	} else if(item_hit == "right") {
-		do {
-			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
+		keep_pc_spells(me, pc_num, trait_mode);
+	}else if(item_hit == "left") {
+		// TODO if spells haven't changed, confirmation shouldn't be necessary
+		if(confirm_switch_pc_spells(me, pc_num, trait_mode)){
+			do {
+				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
+			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+			which_pc_displayed = pc_num;
+			put_pc_spells(me, trait_mode);
+		}
+	}else if(item_hit == "right") {
+		// TODO if spells haven't changed, confirmation shouldn't be necessary
+		if(confirm_switch_pc_spells(me, pc_num, trait_mode)){
+			do {
+				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
+			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+			which_pc_displayed = pc_num;
+			put_pc_spells(me, trait_mode);
+		}
 	}
 	return true;
 }
@@ -102,12 +137,13 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	set_cursor(sword_curs);
 	
 	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
-	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
+	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right","cancel"});
 	
 	for(short i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
+		pcInfo[id].recalcRect();
 		if(mode < 10)
 			pcInfo[id].attachClickHandler(&cLed::noAction);
 	}
@@ -117,15 +153,6 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	
 	pcInfo.run();
 	
-	if(mode >= 10) {
-		mode %= 10;
-		for(short i = 0; i < 62; i++) {
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
-			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
-			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
-		}
-	}
 }
 
 static void display_traits_graphics(cDialog& me) {
@@ -431,6 +458,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(true);
 		me.toast(true);
 	} else if(item_hit == "left") {
+		// If the number of skill points hasn't changed, no confirmation is necessary
 		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 0) ? 5 : save.who - 1;
@@ -439,6 +467,7 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 			save.start_skp = save.skp;
 		}
 	} else if(item_hit == "right") {
+		// If the number of skill points hasn't changed, no confirmation is necessary
 		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 5) ? 0 : save.who + 1;
