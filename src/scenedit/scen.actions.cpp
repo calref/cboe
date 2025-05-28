@@ -2216,8 +2216,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		if(!cur_area->is_on_map(l3)) continue;
 		adjust_space(l3);
 	}
-	
-	if(scenario.ter_types[terrain_type].special == eTerSpec::IS_A_SIGN) {
+
+	cTerrain& ter = scenario.ter_types[terrain_type];
+	// Handle placing special terrains:
+	// Signs:
+	if(ter.special == eTerSpec::IS_A_SIGN) {
+		// Can't place signs at the edge of an outdoor section:
 		if(!editing_town && (l.x == 0 || l.x == 47 || l.y == 0 || l.y == 47)) {
 			cChoiceDlog("not-at-edge").show();
 			mouse_button_held = false;
@@ -2227,6 +2231,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		auto iter = std::find(signs.begin(), signs.end(), l);
 		if(iter == signs.end()) {
 			iter = std::find_if(signs.begin(), signs.end(), [cur_area](const sign_loc_t& sign) {
+				// TODO x of 100 is no longer a valid way to represent nonexistence
 				if(sign.x == 100) return true;
 				ter_num_t ter = cur_area->terrain(sign.x,sign.y);
 				return scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN;
@@ -2238,7 +2243,16 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		static_cast<location&>(*iter) = l;
 		ter_num_t terrain_type = cur_area->terrain(iter->x,iter->y);
-		edit_sign(*iter, iter - signs.begin(), scenario.ter_types[terrain_type].picture);
+		edit_sign(*iter, iter - signs.begin(), ter.picture);
+		mouse_button_held = false;
+	}
+	// Town entrances in the outdoors:
+	else if(ter.special == eTerSpec::TOWN_ENTRANCE && !editing_town){
+		// Let the designer know the terrain was placed:
+		draw_terrain();
+		redraw_screen();
+
+		town_entry(l);
 		mouse_button_held = false;
 	}
 }
@@ -2595,6 +2609,7 @@ void start_town_edit() {
 	pal_sbar->show();
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
+	// TODO this is hardcoding cave floor and grass as the only ground terrains
 	for(short i = 0; i < town->max_dim; i++)
 		for(short j = 0; j < town->max_dim; j++)
 			if(town->terrain(i,j) == 0)
@@ -2641,6 +2656,7 @@ void start_out_edit() {
 	shut_down_menus(1);
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
+	// TODO this is hardcoding cave floor and grass as the only ground terrains
 	for(short i = 0; i < 48; i++)
 		for(short j = 0; j < 48; j++)
 			if(current_terrain->terrain[i][j] == 0)
