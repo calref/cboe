@@ -2456,6 +2456,7 @@ void town_entry(location spot_hit) {
 		}
 	}
 	auto iter = std::find(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), spot_hit);
+	// Edit existing town entrance
 	if(iter != current_terrain->city_locs.end()) {
 		int town = pick_town_num("select-town-enter",iter->spec,scenario);
 		if(town >= 0) iter->spec = town;
@@ -2463,13 +2464,16 @@ void town_entry(location spot_hit) {
 		iter = std::find_if(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), [](const spec_loc_t& loc) {
 			return loc.spec < 0;
 		});
+		// Find unused town entrance and fill it
 		if(iter != current_terrain->city_locs.end()) {
 			int town = pick_town_num("select-town-enter",0,scenario);
 			if(town >= 0) {
 				*iter = spot_hit;
 				iter->spec = town;
 			}
-		} else {
+		}
+		// Add new town entrance at the back of list
+		else {
 			int town = pick_town_num("select-town-enter",0,scenario);
 			if(town >= 0) {
 				current_terrain->city_locs.emplace_back(spot_hit);

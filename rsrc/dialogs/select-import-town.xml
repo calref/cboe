@@ -7,7 +7,7 @@
 	<button name='okay' type='regular' top='181' left='278'>OK</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='175' height='17'>Importing a town</text>
-	<text name='prompt' top='143' left='50' width='162' height='27'>What town do you wish to import?</text>
+	<text name='prompt' top='143' left='50' width='162' height='27'>What town do you wish to import? (0 - {{max-num}})</text>
 	<text top='27' left='50' width='301' height='54'>
 		Enter a town number and hit OK, and you will be asked to select a scenario file.
 		The town with that number in the selected scenario will then be loaded in over the current town.

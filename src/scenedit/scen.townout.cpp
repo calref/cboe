@@ -453,17 +453,43 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 }
 
 static bool save_town_num(cDialog& me, std::string, eKeyMod) {
+	using namespace std::placeholders;
+	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
 	return true;
 }
 
-short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
+static bool create_town_num(cDialog& me, std::string, eKeyMod) {
 	using namespace std::placeholders;
+	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size(), "Town number"));
+	if(me.toast(true)){
+		int i = me["town"].getTextAsNum();
+		if(i == scenario.towns.size()){
+			// create town
+			if(scenario.towns.size() >= 200) {
+				showError("You have reached the limit of 200 towns you can have in one scenario.");
+				return true;
+			}
+			if(!new_town()){
+				// Create town canceled -- don't store the number because it is out of range
+				return true;
+			}
+		}
+		cur_town = i;
+		town = scenario.towns[cur_town];
+		start_town_edit();
+		me.setResult<short>(i);
+	}
+	return true;
+}
+
+short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	
 	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
+	town_dlg["prompt"].replaceText("{{max-num}}", std::to_string(scenario.towns.size() - 1));
+	town_dlg["prompt"].replaceText("{{next-num}}", std::to_string(scenario.towns.size()));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
-	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -474,11 +500,11 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 		me["town"].setTextToNum(i);
 		return true;
 	});
+	if(town_dlg.hasControl("edit")){
+		town_dlg["edit"].attachClickHandler(create_town_num);
+	}
 	
 	town_dlg["town"].setTextToNum(def);
-	std::string prompt = town_dlg["prompt"].getText();
-	prompt += " (0 - " + std::to_string(scenario.towns.size() - 1) + ')';
-	town_dlg["prompt"].setText(prompt);
 	
 	town_dlg.setResult<short>(-1);
 	town_dlg.run();
