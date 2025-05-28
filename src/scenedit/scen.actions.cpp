@@ -1488,19 +1488,19 @@ static bool handle_toolpal_action(location cur_point2) {
 						overall_mode = MODE_ERASE_CREATURE;
 						break;
 					case PAL_ENTER_N:
-						set_string("Place north entrace","Select entrance location");
+						set_string("Place north entrance","Select entrance location");
 						overall_mode = MODE_PLACE_NORTH_ENTRANCE;
 						break;
 					case PAL_ENTER_W:
-						set_string("Place west entrace","Select entrance location");
+						set_string("Place west entrance","Select entrance location");
 						overall_mode = MODE_PLACE_WEST_ENTRANCE;
 						break;
 					case PAL_ENTER_S:
-						set_string("Place south entrace","Select entrance location");
+						set_string("Place south entrance","Select entrance location");
 						overall_mode = MODE_PLACE_SOUTH_ENTRANCE;
 						break;
 					case PAL_ENTER_E:
-						set_string("Place east entrace","Select entrance location");
+						set_string("Place east entrance","Select entrance location");
 						overall_mode = MODE_PLACE_EAST_ENTRANCE;
 						break;
 					case PAL_WEB:
