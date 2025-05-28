@@ -2443,12 +2443,18 @@ void town_entry(location spot_hit) {
 		return;
 	}
 	// clean up old town entries
-	for(short x = 0; x < current_terrain->city_locs.size(); x++)
-		if(current_terrain->city_locs[x].spec >= 0) {
-			ter = current_terrain->terrain[current_terrain->city_locs[x].x][current_terrain->city_locs[x].y];
-			if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-				current_terrain->city_locs[x].spec = -1;
+	for(short i = 0; i < current_terrain->city_locs.size(); i++){
+		if(current_terrain->city_locs[i].spec >= 0) {
+			auto& city_loc = current_terrain->city_locs[i];
+			if(!get_current_area()->is_on_map(city_loc))
+				city_loc.spec = -1;
+			else{
+				ter = current_terrain->terrain[city_loc.x][city_loc.y];
+				if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
+					city_loc.spec = -1;
+			}
 		}
+	}
 	auto iter = std::find(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), spot_hit);
 	if(iter != current_terrain->city_locs.end()) {
 		int town = pick_town_num("select-town-enter",iter->spec,scenario);
