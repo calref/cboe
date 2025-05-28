@@ -1615,34 +1615,55 @@ void edit_dialog_text(eStrMode mode,short *str1,cDialog* parent) {
 	edit.run();
 }
 
-static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode) {
-	size_t num_specs = 0;
-	switch(spec_mode) {
-		case 0: num_specs = scenario.scen_specials.size(); break;
-		case 1: num_specs = current_terrain->specials.size(); break;
-		case 2: num_specs = town->specials.size(); break;
-	}
-	
-	if(item_hit == "cancel") me.setResult<short>(-1);
-	else if(item_hit == "okay") {
+static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, short spec_mode, short num_specs) {
+	std::string range = num_specs
+		? "The available range is 0 to " + std::to_string(num_specs - 1) + "."
+		: "There are currently no nodes defined at all.";
+	std::string how_to_create = "To create a new node, use " + std::to_string(num_specs) + " or -1";
+	if(item_hit == "cancel"){
+		me.setResult<short>(-1);
+		me.toast(false);
+	}else if(item_hit == "edit"){
+		short i = me["num"].getTextAsNum();
+		if(i > num_specs){
+			showWarning("There is no special node with that number. " + range, how_to_create + ".", &me);
+		}else{
+			if(i < 0 || i == num_specs)
+				i = get_fresh_spec(spec_mode);
+			me.setResult<short>(i);
+			edit_spec_enc(i, spec_mode, &me);
+			me.toast(true);
+		}
+	}else if(item_hit == "okay") {
 		short i = me["num"].getTextAsNum();
 		if(i < 0 || i >= num_specs) {
-			std::string range = num_specs
-				? "The available range is 0 to " + std::to_string(num_specs - 1) + "."
-				: "There are currently no nodes defined at all.";
-			showWarning("There is no special node with that number. " + range,"The node has been set anyway. To create it, select Edit Special Nodes from the menu, scroll to the bottom, and select Create new Node.",&me);
+			showWarning("There is no special node with that number. " + range, how_to_create + " and press Create/Edit.", &me);
+			// The editor used to make the node spot anyway, no matter how high the node number.
+			// I think that was a bad idea because you'd have to create every intermediate node number
+			// in order to create a specific high number node. Now we only allow creating the next node.
+			return true;
 		}
 		me.setResult(i);
 		me.toast(true);
-	} me.toast(false);
+	}
+
 	return true;
 }
 
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
+
+	size_t num_specs = 0;
+	switch(mode) {
+		case 0: num_specs = scenario.scen_specials.size(); break;
+		case 1: num_specs = current_terrain->specials.size(); break;
+		case 2: num_specs = town->specials.size(); break;
+	}
 	
 	cDialog edit(*ResMgr::dialogs.get("edit-special-assign"));
-	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, mode), {"okay", "cancel"});
+	edit["prompt"].replaceText("{{max-num}}", std::to_string(num_specs - 1));
+	edit["prompt"].replaceText("{{next-num}}", std::to_string(num_specs));
+	edit.attachClickHandlers(std::bind(edit_special_num_event_filter, _1, _2, mode, num_specs), {"okay", "edit", "cancel"});
 	
 	edit["num"].setTextToNum(what_start);
 	
