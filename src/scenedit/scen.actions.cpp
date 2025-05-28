@@ -2181,6 +2181,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
 		for(short i = 0; i < obj_dim.x; i++)
 			for(short j = 0; j < obj_dim.y; j++){
+				if(!cur_area->is_on_map(loc(l2.x + i, l2.y + j))) continue;
 				cur_area->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
 			}
 	}
