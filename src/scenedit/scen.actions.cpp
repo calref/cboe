@@ -2164,13 +2164,17 @@ static const std::array<location,5> trim_diffs = {{
 }};
 
 void set_terrain(location l,ter_num_t terrain_type) {
-	location l2;
 	cArea* cur_area = get_current_area();
 	
 	if(!cur_area->is_on_map(l)) return;
 	
+	ter_num_t old = cur_area->terrain(l.x,l.y);
+	auto revert = [&cur_area, l, old]() {
+		cur_area->terrain(l.x,l.y) = old;
+	};
+
 	cur_area->terrain(l.x,l.y) = terrain_type;
-	l2 = l;
+	location l2 = l;
 	
 	// Large objects (eg rubble)
 	if(scenario.ter_types[terrain_type].obj_num > 0){
@@ -2225,6 +2229,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		// Can't place signs at the edge of an outdoor section:
 		if(!editing_town && (l.x == 0 || l.x == 47 || l.y == 0 || l.y == 47)) {
 			cChoiceDlog("not-at-edge").show();
+			revert();
 			mouse_button_held = false;
 			return;
 		}
@@ -2244,6 +2249,10 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		}
 		static_cast<location&>(*iter) = l;
 		ter_num_t terrain_type = cur_area->terrain(iter->x,iter->y);
+		// Let the designer know the terrain was placed:
+		draw_terrain();
+		redraw_screen();
+
 		edit_sign(*iter, iter - signs.begin(), ter.picture);
 		mouse_button_held = false;
 	}
