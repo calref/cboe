@@ -226,7 +226,7 @@ void update_mouse_spot(location the_point) {
 
 static bool handle_lb_action(int i){
 	fs::path file_to_load;
-	int x;
+	int j;
 	draw_lb_slot(i,1);
 	play_sound(37);
 	mainPtr().display();
@@ -303,9 +303,9 @@ static bool handle_lb_action(int i){
 				mouse_button_held = false;
 				break;
 			case LB_LOAD_TOWN:
-				x = pick_town_num("select-town-edit",cur_town,scenario);
-				if(x >= 0){
-					cur_town = x;
+				j = pick_town_num("select-town-edit",cur_town,scenario);
+				if(j >= 0){
+					cur_town = j;
 					town = scenario.towns[cur_town];
 					set_up_main_screen();
 					if(overall_mode == MODE_EDIT_SPECIALS){
