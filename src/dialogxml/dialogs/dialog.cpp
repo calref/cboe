@@ -646,89 +646,99 @@ void cDialog::stackWindowsCorrectly() {
 	}
 }
 
-// This method handles one event received by the dialog.
-void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
+cKey translate_sfml_key(sf::Event::KeyEvent key_event) {
 	using Key = sf::Keyboard::Key;
 
 	cKey key;
+	switch(key_event.code){
+		case Key::Up:
+			key.spec = true;
+			key.k = key_up;
+			break;
+		case Key::Right:
+			key.spec = true;
+			key.k = key_right;
+			break;
+		case Key::Left:
+			key.spec = true;
+			key.k = key_left;
+			break;
+		case Key::Down:
+			key.spec = true;
+			key.k = key_down;
+			break;
+		case Key::Escape:
+			key.spec = true;
+			key.k = key_esc;
+			break;
+		case Key::Return: // TODO: Also enter (keypad)
+			key.spec = true;
+			key.k = key_enter;
+			break;
+		case Key::BackSpace:
+			key.spec = true;
+			key.k = key_bsp;
+			break;
+		case Key::Delete:
+			key.spec = true;
+			key.k = key_del;
+			break;
+		case Key::Tab:
+			key.spec = true;
+			key.k = key_tab;
+			break;
+		case Key::Insert:
+			key.spec = true;
+			key.k = key_insert;
+			break;
+		case Key::F1:
+			key.spec = true;
+			key.k = key_help;
+			break;
+		case Key::Home:
+			key.spec = true;
+			key.k = key_home;
+			break;
+		case Key::End:
+			key.spec = true;
+			key.k = key_end;
+			break;
+		case Key::PageUp:
+			key.spec = true;
+			key.k = key_pgup;
+			break;
+		case Key::PageDown:
+			key.spec = true;
+			key.k = key_pgdn;
+			break;
+		default:
+			key.spec = false;
+			key.c = keyToChar(key_event.code, false);
+			break;
+	}
+	key.mod = mod_none;
+	if(key_event.*systemKey)
+		key.mod += mod_ctrl;
+	if(key_event.shift) key.mod += mod_shift;
+	if(key_event.alt) key.mod += mod_alt;
+	return key;
+}
+
+// This method handles one event received by the dialog.
+void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
+
 	// HACK: This needs to be stored between consecutive invocations of this function
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
-	
+	cKey key;
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
-			switch(currentEvent.key.code){
-				case Key::Up:
-					key.spec = true;
-					key.k = key_up;
-					break;
-				case Key::Right:
-					key.spec = true;
-					key.k = key_right;
-					break;
-				case Key::Left:
-					key.spec = true;
-					key.k = key_left;
-					break;
-				case Key::Down:
-					key.spec = true;
-					key.k = key_down;
-					break;
-				case Key::Escape:
-					key.spec = true;
-					key.k = key_esc;
-					break;
-				case Key::Return: // TODO: Also enter (keypad)
-					key.spec = true;
-					key.k = key_enter;
-					break;
-				case Key::BackSpace:
-					key.spec = true;
-					key.k = key_bsp;
-					break;
-				case Key::Delete:
-					key.spec = true;
-					key.k = key_del;
-					break;
-				case Key::Tab:
-					key.spec = true;
-					key.k = key_tab;
-					break;
-				case Key::Insert:
-					key.spec = true;
-					key.k = key_insert;
-					break;
-				case Key::F1:
-					key.spec = true;
-					key.k = key_help;
-					break;
-				case Key::Home:
-					key.spec = true;
-					key.k = key_home;
-					break;
-				case Key::End:
-					key.spec = true;
-					key.k = key_end;
-					break;
-				case Key::PageUp:
-					key.spec = true;
-					key.k = key_pgup;
-					break;
-				case Key::PageDown:
-					key.spec = true;
-					key.k = key_pgdn;
-					break;
-				default:
-					key.spec = false;
-					key.c = keyToChar(currentEvent.key.code, false);
-					break;
-			}
-			key.mod = mod_none;
-			if(currentEvent.key.*systemKey)
-				key.mod += mod_ctrl;
-			if(currentEvent.key.shift) key.mod += mod_shift;
-			if(currentEvent.key.alt) key.mod += mod_alt;
+			key = translate_sfml_key(currentEvent.key);
+			
+			// Handles button hotkeys. Note that the event still falls through to text fields.
+			// It probably shouldn't, because right now we have to be careful not to put a button
+			// on the same dialog as a field if its hotkey is a typable character.
 			process_keystroke(key);
 			// Now check for focused fields.
 			if(currentFocus.empty()) break;

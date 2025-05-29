@@ -16,6 +16,8 @@
 #include "control.hpp"
 #include "gfx/render_text.hpp"
 #include "tools/undo.hpp"
+#include "tools/drawable.hpp"
+#include "tools/event_listener.hpp"
 
 /// The field's expected input type.
 enum eFldType {
@@ -31,7 +33,7 @@ enum eFldType {
 /// (If there's a current selection, the mobile end of the selection is kept in view.)
 /// Mouse support is currently nonexistent, except for focusing when clicked.
 /// There is no Unicode support.
-class cTextField : public cControl {
+class cTextField : public cControl, public iEventListener, public iDrawable {
 public:
 	bool parseAttribute(ticpp::Attribute& attr, std::string tagName, std::string fname) override;
 	bool parseContent(ticpp::Node& content, int n, std::string tagName, std::string fname, std::string& text) override;
@@ -43,6 +45,9 @@ public:
 		return {EVT_FOCUS, EVT_DEFOCUS};
 	}
 	bool handleClick(location where, cFramerateLimiter& fps_limiter) override;
+	bool handle_event(const sf::Event&) override;
+	bool handle_mouse_pressed(const sf::Event&);
+	bool handle_key_pressed(const sf::Event&, cKey& pendingKey);
 	void setText(std::string to) override;
 	storage_t store() const override;
 	void restore(storage_t to) override;

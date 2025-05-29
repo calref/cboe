@@ -59,6 +59,7 @@ short cur_viewing_mode = 0;
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
+std::shared_ptr<cTextField> palette_search_field;
 short mode_count = 0;
 short right_button_hovered = -1;
 
@@ -91,6 +92,8 @@ void save_prefs();
 cScenario scenario;
 rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
+rectangle search_field_text_rect;
+rectangle search_field_rect;
 
 extern void set_up_apple_events();
 
@@ -245,6 +248,24 @@ static void init_scrollbars() {
 	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
+static void init_search_field() {
+	search_field_text_rect.top = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 16;
+	search_field_text_rect.bottom = search_field_text_rect.top + 12;
+	search_field_text_rect.left = RIGHT_AREA_UL_X + 5;
+	TextStyle style;
+	search_field_text_rect.right = search_field_text_rect.left + string_length("Search: ", style);
+	search_field_rect = search_field_text_rect;
+	search_field_rect.offset({search_field_text_rect.width() + 5, -2});
+	search_field_rect.width() = RIGHT_AREA_WIDTH / 2;
+	
+	static cParentless mainWin(mainPtr());
+	palette_search_field.reset(new cTextField(mainWin));
+	palette_search_field->setBounds(search_field_rect);
+	palette_search_field->show();
+	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, "search_field", palette_search_field);
+	event_listeners["search_field"] = std::dynamic_pointer_cast<iEventListener>(palette_search_field);
+}
+
 sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
@@ -340,6 +361,7 @@ void init_scened(int argc, char* argv[]) {
 	cen_y = 18;
 		
 	init_scrollbars();
+	init_search_field();
 	init_lb();
 	init_rb();
 	
