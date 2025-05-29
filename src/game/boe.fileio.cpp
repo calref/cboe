@@ -335,6 +335,16 @@ void start_data_dump() {
 const std::set<std::string> scen_extensions = {".boes", ".exs"};
 
 extern fs::path scenDir;
+
+std::string name_alphabetical(std::string a) {
+	// The scenario editor will let you prepend whitespace to a scenario name :(
+	boost::algorithm::trim_left(a);
+	std::transform(a.begin(), a.end(), a.begin(), tolower);
+	if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
+	else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
+	return a;
+}
+
 std::vector<scen_header_type> build_scen_headers() {
 	fs::create_directories(scenDir);
 
@@ -391,13 +401,7 @@ std::vector<scen_header_type> build_scen_headers() {
 		}
 		if(!scen_headers.empty()){
 			std::sort(scen_headers.begin(), scen_headers.end(), [](scen_header_type hdr_a, scen_header_type hdr_b) -> bool {
-				std::string a = hdr_a.name, b = hdr_b.name;
-				std::transform(a.begin(), a.end(), a.begin(), tolower);
-				std::transform(b.begin(), b.end(), b.begin(), tolower);
-				if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
-				else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
-				if(b.substr(0,2) == "a ") b.erase(b.begin(), b.begin() + 2);
-				else if(b.substr(0,4) == "the ") b.erase(b.begin(), b.begin() + 4);
+				std::string a = name_alphabetical(hdr_a.name), b = name_alphabetical(hdr_b.name);
 				return a < b;
 			});
 		}

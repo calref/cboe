@@ -46,7 +46,37 @@
 			<text outline='double' name='start3' top='205' left='59' width='342' height='84'/>
 		</page>
 	</stack>
-	<button name='cancel' type='regular' top='294' left='5'>Cancel</button>
+
+	<button name='core' def-key='0' type='tiny' top='294' left='5'>Core</button>
+	<text name='custom' relative='pos neg' size='large' rel-anchor='prev' left='5' top='2'>Custom:</text>
+	<button name='a' def-key='a' type='tiny' relative='pos pos-in' rel-anchor='prev' top='2' left='3'>A</button>
+	<button name='b' def-key='b' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>B</button>
+	<button name='c' def-key='c' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>C</button>
+	<button name='d' def-key='d' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>D</button>
+	<button name='e' def-key='e' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>E</button>
+	<button name='f' def-key='f' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>F</button>
+	<button name='g' def-key='g' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>G</button>
+	<button name='h' def-key='h' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>H</button>
+	<button name='i' def-key='i' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>I</button>
+	<button name='j' def-key='j' type='tiny' relative='pos-in pos' anchor='a' top='2' left='0'>J</button>
+	<button name='k' def-key='k' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>K</button>
+	<button name='l' def-key='l' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>L</button>
+	<button name='m' def-key='m' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>M</button>
+	<button name='n' def-key='n' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>N</button>
+	<button name='o' def-key='o' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>O</button>
+	<button name='p' def-key='p' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>P</button>
+	<button name='q' def-key='q' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>Q</button>
+	<button name='r' def-key='r' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>R</button>
+	<button name='s' def-key='s' type='tiny' relative='pos-in pos' anchor='j' top='2' left='0'>S</button>
+	<button name='t' def-key='t' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>T</button>
+	<button name='u' def-key='u' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>U</button>
+	<button name='v' def-key='v' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>V</button>
+	<button name='w' def-key='w' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>W</button>
+	<button name='x' def-key='x' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>X</button>
+	<button name='y' def-key='y' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>Y</button>
+	<button name='z' def-key='z' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>Z</button>
+
+	<button name='cancel' type='regular' top='330' left='5'>Cancel</button>
 	<button name='prev' type='left' def-key='left' relative='pos pos-in' rel-anchor='prev' top='0' left='14'/>
 	<button name='next' type='right' def-key='right' relative='pos pos-in' rel-anchor='prev' top='0' left='0'/>
 	<button name='folder' type='large' relative='pos pos-in' rel-anchor='prev' top='0' left='14'>Show Folder</button>

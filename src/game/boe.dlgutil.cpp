@@ -1774,6 +1774,21 @@ class cChooseScenario {
 			}
 		}
 		stk.setPage(0);
+
+		// Show/hide alphabetical buttons
+		me["core"].hide();
+		if(scen_headers.size() > 0){
+			me["core"].show();
+		}
+		for(int i = 0; i < 26; ++i){
+			me[std::string(1, (char)('a' + i))].hide();
+		}
+		for(auto& hdr : scen_headers){
+			// I just checked, and the scenario editor will let you name your scenario "" or " "!
+			std::string name = name_alphabetical(hdr.name);
+			if(!name.empty())
+				me[name.substr(0, 1)].show();
+		}
 	}
 
 	bool doCancel() {
@@ -1850,6 +1865,24 @@ public:
 		me["scen3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
 		me["folder"].attachClickHandler(std::bind(&cChooseScenario::showFolder, this));
 		me["refresh"].attachClickHandler(std::bind(&cChooseScenario::refreshList, this));
+		me["core"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+			auto& stk = dynamic_cast<cStack&>(me["list"]);
+			stk.setPage(0);
+			return true;
+		});
+		for(int i = 0; i < 26; ++i){
+			std::string letter(1, (char)('a' + i));
+			me[letter].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
+				size_t first_letter_idx = std::find_if(scen_headers.begin(), scen_headers.end(), [letter](scen_header_type hdr) -> bool {
+					std::string name = name_alphabetical(hdr.name);
+					return !name.empty() && name.substr(0, 1) == letter;
+				}) - scen_headers.begin();
+				size_t page = 1 + first_letter_idx / 3;
+				auto& stk = dynamic_cast<cStack&>(me["list"]);
+				stk.setPage(page);
+				return true;
+			});
+		}
 		
 		put_scen_info();
 		
