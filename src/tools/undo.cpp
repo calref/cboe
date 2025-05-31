@@ -8,14 +8,27 @@
 
 #include "undo.hpp"
 
+// Uncomment this line when debugging undo/redo operations
+#define DEBUG_UNDO true
+
+#ifdef DEBUG_UNDO
+#define UNDO_LOG(x) LOG(x);
+#define UNDO_LOG_VALUE(x) LOG_VALUE(x);
+#else
+#define UNDO_LOG(x) ;
+#define UNDO_LOG_VALUE(x) ;
+#endif
+
 cAction::~cAction() {}
 
 void cAction::undo() {
+	UNDO_LOG("Undoing " + actname);
 	if(done && undo_me())
 		done = false;
 }
 
 void cAction::redo() {
+	UNDO_LOG("Redoing " + actname);
 	if(!done && redo_me())
 		done = true;
 }
@@ -71,6 +84,7 @@ void cUndoList::clear() {
 
 void cUndoList::add(action_ptr what){
 	if(!what) return;
+	UNDO_LOG("Performing " + what->getActionName());
 	theList.erase(theList.begin(), cur);
 	theList.push_front(what);
 	num_actions++;
