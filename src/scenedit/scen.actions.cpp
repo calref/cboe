@@ -20,6 +20,7 @@
 #include "scen.keydlgs.hpp"
 #include "scen.townout.hpp"
 #include "scen.menus.hpp"
+#include "scen.undo.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
 #include "tools/keymods.hpp"
@@ -710,6 +711,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	cArea* cur_area = get_current_area();
+	std::shared_ptr<cAction> undo_action = nullptr;
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		if(cur_viewing_mode == 0) {
 			spot_hit.x = cen_x + mouse_spot.x - 4;
@@ -1090,6 +1092,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				auto& specials = cur_area->special_locs;
 				for(short x = 0; x < specials.size(); x++)
 					if(specials[x] == spot_hit && specials[x].spec >= 0) {
+						spec_loc_t for_redo = specials[x];
 						specials[x] = {-1,-1};
 						specials[x].spec = -1;
 						if(x == specials.size() - 1) {
@@ -1098,6 +1101,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 								specials.pop_back();
 							} while(!specials.empty() && specials.back().spec < 0);
 						}
+						undo_action.reset(new aEraseSpecial(for_redo));
 						break;
 					}
 				overall_mode = MODE_DRAWING;
@@ -1204,6 +1208,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
 			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 		draw_terrain();
+
+		if(undo_action != nullptr){
+			undo_list.add(undo_action);
+			update_edit_menu();
+		}
 		return true;
 	}
 	bool need_redraw = false;

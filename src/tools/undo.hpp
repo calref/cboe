@@ -15,6 +15,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include "location.hpp"
 
 class cAction {
 	std::string actname;
@@ -93,6 +94,6 @@ public:
 	static size_t maxUndoSize;
 };
 
-// As a special convention, I will prefix action classes with 'a' instead of 'c'
+// As a special convention, I will prefix non-abstract action classes with 'a' instead of 'c'
 
 #endif

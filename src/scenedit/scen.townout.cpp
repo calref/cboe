@@ -17,6 +17,7 @@
 #include "scen.sdfpicker.hpp"
 #include "scen.fileio.hpp"
 #include "scen.core.hpp"
+#include "scen.undo.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
@@ -1640,27 +1641,6 @@ void set_current_out(location out_sec, bool continuous_shift, bool first_restore
 	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
 	last_shift_continuous = continuous_shift;
 	set_up_main_screen();
-}
-
-aNewTown::aNewTown(cTown* t)
-	: cAction("add town")
-	, theTown(t)
-{}
-
-bool aNewTown::undo_me() {
-	scenario.towns.resize(scenario.towns.size() - 1);
-	set_current_town(scenario.towns.size() - 1);
-	return true;
-}
-
-bool aNewTown::redo_me() {
-	scenario.towns.push_back(theTown);
-	set_current_town(scenario.towns.size() - 1);
-	return true;
-}
-
-aNewTown::~aNewTown() {
-	if(!isDone()) delete theTown;
 }
 
 bool new_town() {
