@@ -18,7 +18,7 @@ void draw_terrain();
 void draw_monsts();
 void draw_items();
 void force_tiny_redraw();
-void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw);
+//void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw);
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road);
 rectangle get_template_rect (unsigned short type_wanted);
 void draw_frames();

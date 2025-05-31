@@ -44,10 +44,10 @@ public:
 	location obj_size; // editor use only
 	pic_num_t map_pic = -1;
 	unsigned short i; // for temporary use in porting
+	std::vector<ter_num_t> tile_with;
 	
 	bool blocksMove() const;
 	void import_legacy(legacy::terrain_type_type& old);
-	void writeTo(std::ostream& file) const;
 };
 
 #endif

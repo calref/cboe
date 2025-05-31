@@ -29,7 +29,7 @@ enum {
 class cArea {
 public:
 	const size_t max_dim;
-	vector2d<ter_num_t> terrain;
+	vector2d<ter_num_t> terrain, variants;
 	std::vector<spec_loc_t> special_locs;
 	std::vector<sign_loc_t> sign_locs;
 	std::vector<info_rect_t> area_desc;
@@ -41,6 +41,7 @@ public:
 	explicit cArea(size_t dim)
 		: max_dim(dim)
 		, terrain(dim, dim)
+		, variants(dim, dim)
 		, maps(dim, boost::dynamic_bitset<>(dim))
 	{}
 

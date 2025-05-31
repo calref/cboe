@@ -1555,7 +1555,7 @@ void set_current_town(int to, bool first_restore) {
 		store_current_terrain_state();
 	}
 
-	if(to < 0 || to >= scenario.towns.size()) return;
+	if(to < 0 || to >= scenario.towns.size()) to = 0;
 	cur_town = to;
 	town = scenario.towns[cur_town];
 	scenario.editor_state.last_town_edited = cur_town;

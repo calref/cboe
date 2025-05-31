@@ -29,6 +29,7 @@ enum class eMapFeature {
 	ITEM,
 	CREATURE,
 	FIELD,
+	VARIANT,
 };
 
 class map_data {

@@ -75,6 +75,8 @@ map_data load_map(std::istream& fin, bool isTown, std::string name) {
 					curFeature = eMapFeature::FIELD;
 				} else if(c == '$') {
 					curFeature = eMapFeature::CREATURE;
+				} else if(c == '%') {
+					curFeature = eMapFeature::VARIANT;
 				} else if(c == 'h') {
 					vehicle_owned = true;
 					curFeature = eMapFeature::HORSE;
@@ -165,6 +167,7 @@ void map_data::writeTo(std::ostream& out) {
 					case eMapFeature::ENTRANCE_WEST: out << '<'; break;
 					case eMapFeature::BOAT: out << (feat.second > 0 ? 'b' : 'B') << abs(feat.second); break;
 					case eMapFeature::HORSE: out << (feat.second > 0 ? 'h' : 'H') << abs(feat.second); break;
+					case eMapFeature::VARIANT: out << '%' << feat.second; break;
 				}
 			}
 		}

@@ -744,41 +744,48 @@ rectangle visible_bounds() {
 	}
 }
 
-static ter_num_t ter_at(int q, int r) {
-	ter_num_t t_to_draw;
+struct ter_pos_t {
+	cArea* area;
+	int x, y;
+	ter_num_t get() const {
+		return area ? 90 : area->terrain(x,y);
+	}
+};
+
+static ter_pos_t ter_at(int q, int r) {
 	rectangle bounds = visible_bounds();
 	if(editing_town) {
-		t_to_draw = town->terrain(bounds.left + q, bounds.top + r);
+		return {town, bounds.left + q, bounds.top + r};
 	}
 	else {
 		short ter_x = bounds.left + q, ter_y = bounds.top + r;
 		if(ter_x == -1 && ter_y == -1 && cur_out.x > 0 && cur_out.y > 0)
-			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y - 1]->terrain[47][47];
+			return {scenario.outdoors[cur_out.x - 1][cur_out.y - 1], 47, 47};
 		else if(ter_x == -1 && ter_y == 48 && cur_out.x > 0 && cur_out.y < scenario.outdoors.height() - 1)
-			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y + 1]->terrain[47][0];
+			return {scenario.outdoors[cur_out.x - 1][cur_out.y + 1], 47, 0};
 		else if(ter_x == 48 && ter_y == -1 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y > 0)
-			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y - 1]->terrain[0][47];
+			return {scenario.outdoors[cur_out.x + 1][cur_out.y - 1], 0, 47};
 		else if(ter_x == 48 && ter_y == 48 && cur_out.x < scenario.outdoors.width() - 1 && cur_out.y < scenario.outdoors.height() - 1)
-			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y + 1]->terrain[0][0];
+			return {scenario.outdoors[cur_out.x + 1][cur_out.y + 1], 0, 0};
 		else if(ter_x == -1 && ter_y >= 0 && ter_y < 48 && cur_out.x > 0)
-			t_to_draw = scenario.outdoors[cur_out.x - 1][cur_out.y]->terrain[47][ter_y];
+			return {scenario.outdoors[cur_out.x - 1][cur_out.y], 47, ter_y};
 		else if(ter_y == -1 && ter_x >= 0 && ter_x < 48 && cur_out.y > 0)
-			t_to_draw = scenario.outdoors[cur_out.x][cur_out.y - 1]->terrain[ter_x][47];
+			return {scenario.outdoors[cur_out.x][cur_out.y - 1], ter_x, 47};
 		else if(ter_x == 48 && ter_y >= 0 && ter_y < 48 && cur_out.x < scenario.outdoors.width() - 1)
-			t_to_draw = scenario.outdoors[cur_out.x + 1][cur_out.y]->terrain[0][ter_y];
+			return {scenario.outdoors[cur_out.x + 1][cur_out.y], 0, ter_y};
 		else if(ter_y == 48 && ter_x >= 0 && ter_x < 48 && cur_out.y < scenario.outdoors.height() - 1)
-			t_to_draw = scenario.outdoors[cur_out.x][cur_out.y + 1]->terrain[ter_x][0];
+			return {scenario.outdoors[cur_out.x][cur_out.y + 1], ter_x, 0};
 		else if(ter_x == -1 || ter_x == 48 || ter_y == -1 || ter_y == 48)
-			t_to_draw = 90;
-		else t_to_draw = current_terrain->terrain[ter_x][ter_y];
+			return {nullptr};
+		else return {current_terrain, ter_x, ter_y};
 	}
-	return t_to_draw;
 }
 
+static void draw_one_terrain_spot (short i,short j,ter_pos_t terrain_to_draw);
+static void draw_one_tiny_terrain_spot (short i,short j,ter_pos_t terrain_to_draw,short size,bool road);
 void draw_terrain(){
 	location which_pt,where_draw;
 	rectangle draw_rect,clipping_rect = {8,8,332,260};
-	ter_num_t t_to_draw;
 	rectangle source_rect,tiny_to,tiny_to_base = {37,29,44,36},from_rect,to_rect;
 	rectangle boat_rect = {0,0,36,28};
 	tiny_to_base.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
@@ -794,7 +801,7 @@ void draw_terrain(){
 			for(short r = 0; r < 9; r++) {
 				where_draw.x = q;
 				where_draw.y = r;
-				t_to_draw = ter_at(q, r);
+				auto t_to_draw = ter_at(q, r);
 				draw_one_terrain_spot(q,r,t_to_draw);
 				
 				rectangle destrec;
@@ -885,7 +892,7 @@ void draw_terrain(){
 				tiny_to.offset(28 * q, 36 * r);
 				
 				// Tiny icons
-				std::vector<short> icons = get_small_icons(loc(cen_x + q - 4, cen_y + r - 4), t_to_draw);
+				std::vector<short> icons = get_small_icons(loc(cen_x + q - 4, cen_y + r - 4), t_to_draw.get());
 				
 				if(!icons.empty()) {
 					bool has_start = icons[0] == -1;
@@ -1037,9 +1044,9 @@ void draw_terrain(){
 			for(short r = 0; r < bounds.height(); r++) {
 				if(q + bounds.left > max) continue;
 				if(r + bounds.top > max) continue;
-				t_to_draw = ter_at(q, r);
+				auto t_to_draw = ter_at(q, r);
 				draw_one_tiny_terrain_spot(q,r,t_to_draw,size,is_road(q+bounds.left,r+bounds.top));
-				small_what_drawn[q][r] = t_to_draw;
+				small_what_drawn[q][r] = t_to_draw.get();
 			}
 		small_any_drawn = true;
 	}
@@ -1162,24 +1169,47 @@ void force_tiny_redraw() {
 	
 }
 
-void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
+static void draw_one_terrain_spot (short i,short j,ter_pos_t terrain_to_draw) {
 	location where_draw;
 	rectangle source_rect;
-	short picture_wanted;
+	short picture_wanted = -1;
+	ter_num_t t_type;
 	std::shared_ptr<const sf::Texture> source_gworld;
 	
 	if(i < 0 || i > 8 || j < 0 || j > 8)
 		return;
 	
-	picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+	bool is_transition = false;
+	if(terrain_to_draw.area == nullptr) {
+		t_type = 90;
+		picture_wanted = 74;
+	} else {
+		int x = terrain_to_draw.x, y = terrain_to_draw.y;
+		t_type = terrain_to_draw.area->terrain[x][y];
+		int variation = terrain_to_draw.area->variants[x][y];
+		if(variation == 0) {
+			picture_wanted = scenario.ter_types[t_type].picture;
+		} else {
+			is_transition =  true;
+			if(picture_wanted >= 1000) {
+				source_gworld = &ResMgr::graphics.get("sheet" + std::to_string(picture_wanted));
+			} else {
+				source_gworld = &ResMgr::graphics.get("tertrans");
+			}
+			source_rect.left = 28 * (variation - 1);
+			source_rect.right = 28 * variation;
+			source_rect.top = 0;
+			source_rect.bottom = 36;
+		}
+	}
 	
 	where_draw.x = (char) i;
 	where_draw.y = (char) j;
 	
-	if(picture_wanted >= 1000 && spec_scen_g) {
+	if(!is_transition && picture_wanted >= 1000 && spec_scen_g) {
 		graf_pos_ref(source_gworld, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000);
 	}
-	else if(picture_wanted >= 960)	{
+	else if(!is_transition && picture_wanted >= 960)	{
 		source_gworld = &ResMgr::graphics.get("teranim");
 		picture_wanted -= 960;
 		source_rect.left = 112 * (picture_wanted / 5);
@@ -1187,8 +1217,8 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 		source_rect.top = 36 * (picture_wanted % 5);
 		source_rect.bottom = source_rect.top + 36;
 	}
-	else {
-		source_rect = get_template_rect(terrain_to_draw);
+	else if(!is_transition && picture_wanted >= 0) {
+		source_rect = get_template_rect(t_type);
 		int which_sheet = picture_wanted / 50;
 		source_gworld = &ResMgr::graphics.get("ter" + std::to_string(1 + which_sheet));
 	}
@@ -1203,16 +1233,16 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	rect_draw_some_item(*source_gworld, source_rect, mainPtr(), destrec);
 }
 
-void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road) {
+void draw_one_tiny_terrain_spot (short i,short j,ter_pos_t terrain_to_draw,short size,bool road) {
 	rectangle dest_rect = {0,0,size,size},from_rect = {0,0,12,12};
 	short picture_wanted;
 	bool drawLargeIcon = false;
 	std::shared_ptr<const sf::Texture> source_gworld;
 	
-	picture_wanted = scenario.ter_types[terrain_to_draw].map_pic;
+	picture_wanted = scenario.ter_types[terrain_to_draw.get()].map_pic;
 	if(picture_wanted == NO_PIC) {
 		drawLargeIcon = true;
-		picture_wanted = scenario.ter_types[terrain_to_draw].picture;
+		picture_wanted = scenario.ter_types[terrain_to_draw.get()].picture;
 	}
 	
 	dest_rect.offset(8 + TER_RECT_UL_X + size * i, 8 + TER_RECT_UL_Y + size * j);

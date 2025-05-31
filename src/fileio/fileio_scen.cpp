@@ -1204,6 +1204,9 @@ void readTerrainFromXml(ticpp::Document&& data, cScenario& scenario) {
 				ter->GetText(&the_ter.ground_type);
 			} else if(type == "arena") {
 				ter->GetText(&the_ter.combat_arena);
+			} else if(type == "tile-with") {
+				the_ter.tile_with.emplace_back();
+				ter->GetText(&the_ter.tile_with.back());
 			} else if(type == "editor") {
 				Iterator<Element> edit;
 				for(edit = edit.begin(ter.Get()); edit != edit.end(); edit++) {
@@ -2133,6 +2136,9 @@ void loadOutMapData(map_data&& data, location which, cScenario& scen) {
 							break;
 						out.wandering_locs[feat.second] = loc(x,y);
 						break;
+					case eMapFeature::VARIANT:
+						out.variants[x][y] = feat.second;
+						break;
 				}
 			}
 		}
@@ -2201,6 +2207,9 @@ void loadTownMapData(map_data&& data, int which, cScenario& scen) {
 						if(feat.second >= town.creatures.size())
 							break;
 						town.creatures[feat.second].start_loc = loc(x,y);
+						break;
+					case eMapFeature::VARIANT:
+						town.variants[x][y] = feat.second;
 						break;
 				}
 			}

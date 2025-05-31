@@ -134,6 +134,7 @@
 			<xs:element name="arena" type="xs:integer"/>
 			<xs:element name="ground" minOccurs="0" type="xs:integer"/>
 			<xs:element name="trim-for" minOccurs="0" type="xs:integer"/>
+			<xs:element name="tile-with" minOccurs="0" type="xs:integer"/>
 			<xs:element name="editor" type="editorData" minOccurs="0"/>
 		</xs:all>
 		<xs:attribute name="id" type="xs:integer" use="required"/>
