@@ -13,7 +13,6 @@
 #include <boost/filesystem/path.hpp>
 
 #include "fileio/fileio.hpp"
-#include "gfx/render_shapes.hpp"
 #include "gfx/render_text.hpp"
 #include "winutil.hpp"
 
@@ -69,18 +68,18 @@ void draw_splash(const sf::Texture& splash, sf::RenderWindow& targ, rectangle de
 	targ.display();
 }
 
-static void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode);
+static void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode,sf::Color colour = Colours::WHITE);
 
 void rect_draw_some_item(sf::RenderTarget& targ_gworld,rectangle targ_rect) {
 	fill_rect(targ_gworld, targ_rect, sf::Color::Black);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode){
-	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode));
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode, sf::Color colour){
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_rect, sf::RenderStates(mode), colour);
 }
 
 // I added this because I tried using clip_rect to fix missiles/booms and it didn't work.
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,rectangle in_frame,sf::BlendMode mode){
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,rectangle in_frame,sf::BlendMode mode,sf::Color colour){
 	rectangle targ_clipped = targ_rect & in_frame;
 	if(targ_clipped.empty()) return;
 	rectangle src_clipped = src_rect;
@@ -88,10 +87,11 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	src_clipped.left += (targ_clipped.left - targ_rect.left);
 	src_clipped.bottom += (targ_clipped.bottom - targ_rect.bottom);
 	src_clipped.right += (targ_clipped.right - targ_rect.right);
-	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_clipped, sf::RenderStates(mode));
+	rect_draw_some_item(src_gworld, src_rect, targ_gworld, targ_clipped, sf::RenderStates(mode), colour);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode) {
+// This is the static function that all the overrides call:
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::RenderStates mode, sf::Color colour) {
 	rectangle src_gworld_rect(src_gworld), targ_gworld_rect(targ_gworld);
 	src_rect &= src_gworld_rect;
 	targ_rect &= targ_gworld_rect;
@@ -99,6 +99,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	setActiveRenderTarget(targ_gworld);
 	sf::Sprite tile(src_gworld, src_rect);
 	tile.setPosition(targ_rect.left, targ_rect.top);
+	tile.setColor(colour);
 	double xScale = targ_rect.width(), yScale = targ_rect.height();
 	xScale /= src_rect.width();
 	yScale /= src_rect.height();
@@ -106,7 +107,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,sf::Re
 	targ_gworld.draw(tile, mode);
 }
 
-void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
+void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect, sf::Color colour) {
 	static sf::RenderTexture src;
 	static bool inited = false;
 	if(!inited || src_rect.width() != src.getSize().x || src_rect.height() != src.getSize().y) {
@@ -120,7 +121,7 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 	
 	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
 	maskShader.setParameter("mask", mask_gworld);
-	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader);
+	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader, colour);
 }
 
 std::map<sf::RenderTexture*,std::vector<ScaleAwareText>> store_scale_aware_text;
@@ -163,12 +164,12 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 	dest_window.setView(scaled_view);
 }
 
-void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode) {
+void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode, sf::Color colour) {
 	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, targ_gworld, targ_rect, mode);
 	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
 
-void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect) {
+void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect, sf::Color colour) {
 	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, mask_gworld, targ_gworld, targ_rect);
 	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
