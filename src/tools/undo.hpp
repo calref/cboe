@@ -56,7 +56,6 @@ using action_ptr = std::shared_ptr<cAction>;
 class cUndoList {
 	std::list<action_ptr> theList;
 	std::list<action_ptr>::iterator cur, lastSave;
-	size_t num_actions = 0;
 public:
 	/// Construct a new undo list.
 	cUndoList();
