@@ -71,7 +71,7 @@ extern eItemWinMode stat_window;
 extern eGameMode overall_mode;
 extern fs::path progDir;
 extern location center;
-extern bool spell_forced,boom_anim_active;
+extern bool spell_forced,spell_recast,boom_anim_active;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev;
 extern short store_mage_target, store_priest_target;
@@ -481,7 +481,7 @@ void cast_spell(eSkill type) {
 	if(!spell_forced)
 		spell = pick_spell(6, type);
 	else {
-		if(!repeat_cast_ok(type))
+		if(spell_recast && !repeat_cast_ok(type))
 			return;
 		spell = type == eSkill::MAGE_SPELLS ? store_mage : store_priest;
 		pc_casting = type == eSkill::MAGE_SPELLS ? store_mage_caster : store_priest_caster;
@@ -1931,21 +1931,18 @@ static void put_spell_list(cDialog& me, const eSkill store_situation) {
 
 static bool pick_spell_caster(cDialog& me, std::string id, const eSkill store_situation, short& last_darkened, short& store_spell) {
 	short item_hit = id[id.length() - 1] - '1';
-	// TODO: This visibility check is probably not needed; wouldn't the dialog framework only trigger on visible elements?
-	if(me[id].isVisible()) {
-		pc_casting = item_hit;
-		if(!pc_can_cast_spell(univ.party[pc_casting],cSpell::fromNum(store_situation,store_spell))) {
-			if(store_situation == eSkill::MAGE_SPELLS)
-				store_spell = 70;
-			else store_spell = 70;
-			store_spell_target = 6;
-		}
-		draw_spell_info(me, store_situation,store_spell);
-		draw_spell_pc_info(me);
-		put_spell_led_buttons(me, store_situation,store_spell);
-		put_pc_caster_buttons(me);
-		put_pc_target_buttons(me, last_darkened);
+	pc_casting = item_hit;
+	if(!pc_can_cast_spell(univ.party[pc_casting],cSpell::fromNum(store_situation,store_spell))) {
+		if(store_situation == eSkill::MAGE_SPELLS)
+			store_spell = 70;
+		else store_spell = 70;
+		store_spell_target = 6;
 	}
+	draw_spell_info(me, store_situation,store_spell);
+	draw_spell_pc_info(me);
+	put_spell_led_buttons(me, store_situation,store_spell);
+	put_pc_caster_buttons(me);
+	put_pc_target_buttons(me, last_darkened);
 	return true;
 }
 

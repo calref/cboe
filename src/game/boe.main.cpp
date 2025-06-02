@@ -55,7 +55,7 @@ using clara::ParseResultType;
 bool All_Done = false;
 short num_fonts;
 bool first_startup_update = true;
-bool first_sound_played = false,spell_forced = false;
+bool first_sound_played = false,spell_forced = false,spell_recast = false;
 bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
@@ -794,7 +794,7 @@ static void replay_action(Element& action) {
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(action);
 		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
-		spell_forced = str_to_bool(info["spell_forced"]);
+		spell_forced = spell_recast = str_to_bool(info["spell_forced"]);
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){

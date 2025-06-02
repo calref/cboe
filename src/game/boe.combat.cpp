@@ -36,7 +36,7 @@ extern short which_combat_type;
 extern eItemWinMode stat_window;
 extern location center;
 extern short combat_active_pc;
-extern bool monsters_going,spell_forced;
+extern bool monsters_going,spell_forced,spell_recast;
 extern bool flushingInput;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
@@ -4585,7 +4585,7 @@ bool combat_cast_mage_spell() {
 		if(!spell_forced)
 			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS, true);
 		else {
-			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
+			if(spell_recast && !repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
 			spell_num = univ.current_pc().last_cast[eSkill::MAGE_SPELLS];
 		}
@@ -4804,7 +4804,7 @@ bool combat_cast_priest_spell() {
 		if(!spell_forced)
 			spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS, true);
 		else {
-			if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
+			if(spell_recast && !repeat_cast_ok(eSkill::PRIEST_SPELLS))
 				return false;
 			spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
 		}

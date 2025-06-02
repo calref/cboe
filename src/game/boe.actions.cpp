@@ -91,7 +91,7 @@ extern short cen_x, cen_y;//,pc_moves[6];
 extern eGameMode overall_mode;
 extern eItemWinMode stat_window;
 extern location	to_create;
-extern bool All_Done,spell_forced,monsters_going;
+extern bool All_Done,spell_forced,spell_recast,monsters_going;
 extern bool party_in_memory;
 extern sf::View mainView;
 extern bool targeting_line_visible;
@@ -100,6 +100,7 @@ extern bool targeting_line_visible;
 extern short which_item_page[6];
 extern short store_spell_target,pc_casting;
 extern eSpell store_mage, store_priest;
+extern short store_mage_caster, store_priest_caster;
 extern std::vector<int> spec_item_array;
 extern cUniverse univ;
 extern cCustomGraphics spec_scen_g;
@@ -371,7 +372,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 	extern eSpecCtxType spec_target_type;
 	// Dual-caster recast hint toggle:
 	// Change the recast hint to mage if last spell wasn't mage
-	if(spell_forced && is_combat() && univ.current_pc().last_cast_type != which_type){
+	if(spell_recast && is_combat() && univ.current_pc().last_cast_type != which_type){
 		spell_forced = false;
 		univ.current_pc().last_cast_type = which_type;
 		need_redraw = true;
@@ -384,6 +385,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 	} else if(overall_mode == MODE_OUTDOORS) {
 		cast_spell(which_type);
 		spell_forced = false;
+		spell_recast = false;
 		need_reprint = true;
 		need_redraw = true;
 	} else if(overall_mode == MODE_TOWN) {
@@ -391,6 +393,7 @@ void handle_spellcast(eSkill which_type, bool& did_something, bool& need_redraw,
 			store_sp[i] = univ.party[i].cur_sp;
 		cast_spell(which_type);
 		spell_forced = false;
+		spell_recast = false;
 		need_reprint = true;
 		need_redraw = true;
 		for(int i = 0; i < 6; i++)
@@ -1998,22 +2001,40 @@ void handle_menu_spell(eSpell spell_picked) {
 	}
 	
 	spell_forced = true;
+	spell_recast = false;
 	pc_casting = univ.cur_pc;
 	univ.current_pc().last_cast[spell_type] = spell_picked;
 	univ.current_pc().last_cast_type = spell_type;
-	if(spell_type == eSkill::MAGE_SPELLS)
+	if(spell_type == eSkill::MAGE_SPELLS){
 		store_mage = spell_picked;
-	else store_priest = spell_picked;
-	if(spell_type == eSkill::MAGE_SPELLS && (*spell_picked).need_select != SELECT_NO) {
-		if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
-			return;
-	}
-	else {
-		if(spell_type == eSkill::PRIEST_SPELLS && (*spell_picked).need_select != SELECT_NO)
-			if((store_spell_target = select_pc((*spell_picked).need_select == SELECT_ANY ? eSelectPC::ANY : eSelectPC::ONLY_LIVING,"Cast spell on who?")) == 6)
-				return;
+		store_mage_caster = pc_casting;
+	}else{
+		store_priest = spell_picked;
+		store_priest_caster = pc_casting;
 	}
 	
+	eSelectPC select_type;
+	switch((*spell_picked).need_select){
+		case SELECT_ACTIVE:
+			select_type = eSelectPC::ONLY_LIVING;
+			// Skip first line of fallthrough
+			if(false)
+		case SELECT_ANY:
+			select_type = eSelectPC::ANY;
+			// Skip first line of fallthrough
+			if(false)
+		case SELECT_DEAD:
+			select_type = eSelectPC::ONLY_DEAD;
+			// Skip first line of fallthrough
+			if(false)
+		case SELECT_STONE:
+			select_type = eSelectPC::ONLY_STONE;
+			store_spell_target = select_pc(select_type, "Cast spell on who?");
+			if(store_spell_target == 6) return;
+			break;
+		default: break;
+	}
+
 	bool did_something = false, need_redraw = false, need_reprint = false;
 	handle_spellcast(spell_type, did_something, need_redraw, need_reprint, false);
 	advance_time(did_something, need_redraw, need_reprint);
@@ -3020,7 +3041,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 			
 			// Spells (cast/cancel)
-		case 'M': spell_forced = true; BOOST_FALLTHROUGH;
+		case 'M': spell_forced = true; spell_recast = true; BOOST_FALLTHROUGH;
 		case 'm':
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 				handle_spellcast(eSkill::MAGE_SPELLS, did_something, need_redraw, need_reprint);
@@ -3028,7 +3049,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			}
 			break;
 			
-		case 'P': spell_forced = true; BOOST_FALLTHROUGH;
+		case 'P': spell_forced = true; spell_recast = true; BOOST_FALLTHROUGH;
 		case 'p':
 			if(overall_mode == MODE_SPELL_TARGET || overall_mode == MODE_FANCY_TARGET || overall_mode == MODE_TOWN_TARGET || overall_mode == MODE_OUTDOORS || overall_mode == MODE_TOWN || overall_mode == MODE_COMBAT) {
 				handle_spellcast(eSkill::PRIEST_SPELLS, did_something, need_redraw, need_reprint);
@@ -3109,6 +3130,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			break;
 	}
 	spell_forced = false;
+	spell_recast = false;
 	return are_done;
 }
 
