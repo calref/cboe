@@ -19,7 +19,7 @@ struct ter_change_t {
 
 typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
 
-// Action that modified town or outdoor terrain, so we should show the modified area when undoing or redoing
+// Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
 public:
 	cTerrainAction(std::string name, short town_num, location where);
@@ -35,16 +35,7 @@ private:
 	area_ref_t area;
 };
 
-/// Represents the action of adding a new town to the end of the list
-class aNewTown : public cAction {
-	class cTown* theTown;
-	bool undo_me() override;
-	bool redo_me() override;
-public:
-	aNewTown(class cTown* t);
-	~aNewTown();
-};
-
+/// Action that erased a special encounter from a spot
 class aEraseSpecial : public cTerrainAction {
 public:
 	aEraseSpecial(spec_loc_t special) : cTerrainAction("Erase Special Encounter", special), for_redo(special) {}
@@ -55,6 +46,7 @@ private:
 	bool editing_town;
 };
 
+/// Action which modifies terrain tiles (i.e. paintbrush, pencil, eraser)
 class aDrawTerrain : public cTerrainAction {
 public:
 	aDrawTerrain(std::string name, stroke_ter_changes_t stroke_changes) :
@@ -65,5 +57,17 @@ public:
 private:
 	const stroke_ter_changes_t changes;
 };
+
+/// Action which adds a new town to the end of the list, or deletes the last one
+class aCreateDeleteTown : public cAction {
+	bool created;
+	class cTown* theTown;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteTown(bool create, class cTown* t);
+	~aCreateDeleteTown();
+};
+
 
 #endif

@@ -23,13 +23,13 @@ cAction::~cAction() {}
 
 void cAction::undo() {
 	UNDO_LOG("Undoing " + actname);
-	if(done && undo_me())
+	if(done && reversed ? redo_me() : undo_me())
 		done = false;
 }
 
 void cAction::redo() {
 	UNDO_LOG("Redoing " + actname);
-	if(!done && redo_me())
+	if(!done && reversed ? undo_me() : redo_me())
 		done = true;
 }
 

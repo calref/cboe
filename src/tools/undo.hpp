@@ -23,7 +23,9 @@ class cAction {
 protected:
 	/// Construct a named action
 	/// @param name The name of the action to show in the Edit menu
-	cAction(std::string name) : actname(name) {}
+	cAction(std::string name, bool reversed = false) : actname(name), reversed(reversed) {}
+	/// For actions that have an inverse, this flag inverts the action implementation (i.e. create/delete)
+	bool reversed = true;
 public:
 	/// Undoes this action if it has not already been undone.
 	/// If it has already been undone, does nothing.

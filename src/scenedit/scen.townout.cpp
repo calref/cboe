@@ -48,6 +48,7 @@ extern cUndoList undo_list;
 extern std::string help_text_rsrc;
 extern bool editing_town;
 extern bool last_shift_continuous;
+extern void update_edit_menu();
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 	"Unused","Unused","Unused","Unused","Unused","Unused"};
@@ -1671,7 +1672,8 @@ bool new_town() {
 		for(short j = 0; j < town->max_dim; j++)
 			town->terrain(i,j) = preset;
 
-	undo_list.add(action_ptr(new aNewTown(scenario.towns.back())));
+	undo_list.add(action_ptr(new aCreateDeleteTown(true, scenario.towns.back())));
+	update_edit_menu();
 	change_made = true;
 	
 	return true;
@@ -1679,9 +1681,10 @@ bool new_town() {
 
 // before calling this, be sure to do all checks to make sure it's safe.
 void delete_last_town() {
-	cTown* last_town = scenario.towns.back();
+	undo_list.add(action_ptr(new aCreateDeleteTown(false, scenario.towns.back())));
+	update_edit_menu();
+
 	scenario.towns.pop_back();
-	delete last_town;
 	change_made = true;
 }
 

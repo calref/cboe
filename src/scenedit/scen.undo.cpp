@@ -14,6 +14,7 @@ extern cArea* get_current_area();
 extern void start_town_edit();
 extern void start_out_edit();
 extern void redraw_screen();
+extern void set_current_town(int,bool first_restore = false);
 
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where) : cAction(name) {
 	area.is_town = true;
@@ -72,24 +73,25 @@ bool aEraseSpecial::redo_me() {
 	return true;
 }
 
-aNewTown::aNewTown(cTown* t)
-	: cAction("Add Town")
+aCreateDeleteTown::aCreateDeleteTown(bool create, cTown* t)
+	: cAction(create ? "Create Town" : "Delete Last Town", !create)
 	, theTown(t)
 {}
 
-bool aNewTown::undo_me() {
+bool aCreateDeleteTown::undo_me() {
 	scenario.towns.resize(scenario.towns.size() - 1);
-	cur_town = min(cur_town, scenario.towns.size() - 1);
+	set_current_town(min(cur_town, scenario.towns.size() - 1));
 	return true;
 }
 
-bool aNewTown::redo_me() {
+bool aCreateDeleteTown::redo_me() {
 	scenario.towns.push_back(theTown);
+	set_current_town(scenario.towns.size() - 1);
 	return true;
 }
 
-aNewTown::~aNewTown() {
-	if(!isDone()) delete theTown;
+aCreateDeleteTown::~aCreateDeleteTown() {
+	if(isDone() == reversed) delete theTown;
 }
 
 bool aDrawTerrain::undo_me() {
