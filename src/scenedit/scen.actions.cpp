@@ -1714,17 +1714,24 @@ void swap_terrain() {
 	short a,b,c;
 	ter_num_t ter;
 	
+	// Prompt the designer for which terrain to change and how likely:
 	if(!change_ter(a,b,c)) return;
+
+	// Make the changes:
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
 			ter = cur_area->terrain(i,j);
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
-				cur_area->terrain(i,j) = b;
+				set_terrain(loc(i,j), b, changes);
 			}
 		}
 	
+
+	undo_list.add(action_ptr(new aDrawTerrain("Change Terrain Randomly", changes)));
+	update_edit_menu();
 }
 
 void set_new_terrain(ter_num_t selected_terrain) {
