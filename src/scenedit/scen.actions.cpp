@@ -2099,6 +2099,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 	std::stack<location> to_visit;
 	std::set<location, loc_compare> visited;
 	to_visit.push(start);
+	stroke_ter_changes_t changes;
 	
 	while(!to_visit.empty()) {
 		location this_loc = to_visit.top();
@@ -2114,9 +2115,11 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 			if(check == to_replace && !visited.count(adj_loc))
 				to_visit.push(adj_loc);
 		}
-		// TODO store it as a stroke
-		cur_area->terrain(this_loc.x, this_loc.y) = terrain_type;
+		set_terrain(this_loc, terrain_type, changes);
 	}
+
+	undo_list.add(action_ptr(new aDrawTerrain("Fill Terrain", changes)));
+	update_edit_menu();
 }
 
 void frill_up_terrain() {
