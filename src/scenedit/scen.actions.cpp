@@ -2125,6 +2125,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 void frill_up_terrain() {
 	ter_num_t terrain_type;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2137,15 +2138,17 @@ void frill_up_terrain() {
 					terrain_type = k;
 			}
 			
-			// TODO store it as a stroke
-			cur_area->terrain(i,j) = terrain_type;
+			set_terrain(loc(i, j), terrain_type, changes);
 		}
+	undo_list.add(action_ptr(new aDrawTerrain("Frill Up Terrain", changes)));
+	update_edit_menu();
 	draw_terrain();
 }
 
 void unfrill_terrain() {
 	ter_num_t terrain_type;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2155,9 +2158,10 @@ void unfrill_terrain() {
 			if(ter.frill_for >= 0)
 				terrain_type = ter.frill_for;
 			
-			// TODO store it as a stroke
-			cur_area->terrain(i,j) = terrain_type;
+			set_terrain(loc(i, j), terrain_type, changes);
 		}
+	undo_list.add(action_ptr(new aDrawTerrain("Remove Terrain Frills", changes)));
+	update_edit_menu();
 	draw_terrain();
 }
 
