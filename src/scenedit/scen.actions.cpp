@@ -2452,7 +2452,11 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 		return true;
 	if(get_ran(1,1,100) > odds)
 		return false;
-	for(short x = 0; x < town->preset_items.size(); x++)
+	for(short x = 0; x <= town->preset_items.size(); x++){
+		if(x == town->preset_items.size()){
+			town->preset_items.resize(x+1);
+			town->preset_items[x].code = -1;
+		}
 		if(town->preset_items[x].code < 0) {
 			town->preset_items[x] = {spot_hit, which_item, scenario.scen_items[which_item]};
 			town->preset_items[x].contained = container_there(spot_hit);
@@ -2460,11 +2464,9 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 			town->preset_items[x].always_there = always;
 			return true;
 		}
-	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
-	town->preset_items.back().contained = container_there(spot_hit);
-	town->preset_items.back().property = property;
-	town->preset_items.back().always_there = always;
-	return true;
+	}
+	// Shouldn't be reached:
+	return false;
 }
 
 void place_items_in_town() {
