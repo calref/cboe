@@ -91,3 +91,18 @@ bool aNewTown::redo_me() {
 aNewTown::~aNewTown() {
 	if(!isDone()) delete theTown;
 }
+
+bool aDrawTerrain::undo_me() {
+	cArea* cur_area = get_current_area();
+	for(auto change : changes){
+		cur_area->terrain(change.first.x, change.first.y) = change.second.old_num;
+	}
+	return true;
+}
+bool aDrawTerrain::redo_me() {
+	cArea* cur_area = get_current_area();
+	for(auto change : changes){
+		cur_area->terrain(change.first.x, change.first.y) = change.second.new_num;
+	}
+	return true;
+}

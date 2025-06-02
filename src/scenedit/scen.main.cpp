@@ -436,6 +436,7 @@ void handle_one_event(const sf::Event& event) {
 			break;
 			
 		case sf::Event::MouseButtonReleased:
+			commit_stroke();
 			mouse_button_held = false;
 			break;
 			

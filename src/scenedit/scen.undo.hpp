@@ -12,6 +12,13 @@ struct area_ref_t {
 	location where;
 };
 
+struct ter_change_t {
+	ter_num_t old_num;
+	ter_num_t new_num;
+};
+
+typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
+
 // Action that modified town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
 public:
@@ -46,6 +53,17 @@ public:
 private:
 	spec_loc_t for_redo;
 	bool editing_town;
+};
+
+class aDrawTerrain : public cTerrainAction {
+public:
+	aDrawTerrain(std::string name, stroke_ter_changes_t stroke_changes) :
+		cTerrainAction(name, stroke_changes.begin()->first), // Use arbitrary changed tile as site of change
+		changes(stroke_changes) {}
+	bool undo_me() override;
+	bool redo_me() override;
+private:
+	const stroke_ter_changes_t changes;
 };
 
 #endif

@@ -709,6 +709,18 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 	return false;
 }
 
+stroke_ter_changes_t current_stroke_changes;
+std::string current_stroke_type;
+
+void commit_stroke() {
+	if(!current_stroke_changes.empty()){
+		undo_list.add(action_ptr(new aDrawTerrain("Draw Terrain (" + current_stroke_type + ")", current_stroke_changes)));
+		update_edit_menu();
+		current_stroke_changes.clear();
+		current_stroke_type = "";
+	}
+}
+
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	cArea* cur_area = get_current_area();
 	std::shared_ptr<cAction> undo_action = nullptr;
@@ -751,8 +763,16 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					erasing_mode = terrain_matches(spot_hit.x, spot_hit.y, current_terrain_type);
 					mouse_button_held = true;
 				}
-				if(erasing_mode) set_terrain(spot_hit,current_ground);
-				else set_terrain(spot_hit,current_terrain_type);
+				if(erasing_mode){
+					stroke_ter_changes_t changes;
+					set_terrain(spot_hit,current_ground,changes);
+					undo_action.reset(new aDrawTerrain("Erase Terrain", changes));
+				}
+				else{
+					// This could be an ongoing stroke
+					current_stroke_type = "Pencil";
+					set_terrain(spot_hit,current_terrain_type,current_stroke_changes);
+				}
 				break;
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
@@ -844,22 +864,27 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				
 			case MODE_LARGE_PAINTBRUSH:
 				mouse_button_held = true;
+				current_stroke_type = "Lg. Paintbrush";
 				change_circle_terrain(spot_hit,4,current_terrain_type,20);
 				break;
 			case MODE_SMALL_PAINTBRUSH:
 				mouse_button_held = true;
+				current_stroke_type = "Sm. Paintbrush";
 				change_circle_terrain(spot_hit,1,current_terrain_type,20);
 				break;
 			case MODE_LARGE_SPRAYCAN:
 				mouse_button_held = true;
+				current_stroke_type = "Lg. Spraycan";
 				change_circle_terrain(spot_hit,4,current_terrain_type,1);
 				break;
 			case MODE_SMALL_SPRAYCAN:
 				mouse_button_held = true;
+				current_stroke_type = "Sm. Spraycan";
 				change_circle_terrain(spot_hit,2,current_terrain_type,1);
 				break;
 			case MODE_ERASER: // erase
 				change_circle_terrain(spot_hit,2,current_ground,20);
+				current_stroke_type = "Eraser";
 				mouse_button_held = true;
 				break;
 			case MODE_FLOOD_FILL:
@@ -2031,6 +2056,7 @@ void handle_scroll(const sf::Event& event) {
 	}
 }
 
+// This is used by various paintbrushes/the spraycans
 void change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
@@ -2041,7 +2067,7 @@ void change_circle_terrain(location center,short radius,ter_num_t terrain_type,s
 			l.x = i;
 			l.y = j;
 			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
-				set_terrain(l,terrain_type);
+				set_terrain(l,terrain_type,current_stroke_changes);
 		}
 }
 
@@ -2049,6 +2075,7 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2057,8 +2084,11 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 			if((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
 				&& (!hollow || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
 				&& ((hollow) || (get_ran(1,1,20) <= probability)))
-				set_terrain(l,terrain_type);
+				set_terrain(l,terrain_type,changes);
 		}
+
+	undo_list.add(action_ptr(new aDrawTerrain("Change Rectangle Terrain", changes)));
+	update_edit_menu();
 }
 
 void flood_fill_terrain(location start, ter_num_t terrain_type) {
@@ -2084,6 +2114,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 			if(check == to_replace && !visited.count(adj_loc))
 				to_visit.push(adj_loc);
 		}
+		// TODO store it as a stroke
 		cur_area->terrain(this_loc.x, this_loc.y) = terrain_type;
 	}
 }
@@ -2103,6 +2134,7 @@ void frill_up_terrain() {
 					terrain_type = k;
 			}
 			
+			// TODO store it as a stroke
 			cur_area->terrain(i,j) = terrain_type;
 		}
 	draw_terrain();
@@ -2120,6 +2152,7 @@ void unfrill_terrain() {
 			if(ter.frill_for >= 0)
 				terrain_type = ter.frill_for;
 			
+			// TODO store it as a stroke
 			cur_area->terrain(i,j) = terrain_type;
 		}
 	draw_terrain();
@@ -2161,14 +2194,20 @@ static const std::array<location,5> trim_diffs = {{
 	loc(0,0), loc(-1,0), loc(1,0), loc(0,-1), loc(0,1)
 }};
 
-void set_terrain(location l,ter_num_t terrain_type) {
+void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes) {
 	cArea* cur_area = get_current_area();
 	
 	if(!cur_area->is_on_map(l)) return;
 	
 	ter_num_t old = cur_area->terrain(l.x,l.y);
-	auto revert = [&cur_area, l, old]() {
+	if(stroke_changes.find(l) != stroke_changes.end()){
+		// Don't successively overwrite the original terrain value of a tile in one stroke
+		old = stroke_changes[l].old_num;
+	}
+	stroke_changes[l] = {old, terrain_type};
+	auto revert = [&cur_area, &stroke_changes, l, old]() {
 		cur_area->terrain(l.x,l.y) = old;
+		stroke_changes.erase(l);
 	};
 
 	const cTerrain& new_ter = scenario.ter_types[terrain_type];
@@ -2196,8 +2235,16 @@ void set_terrain(location l,ter_num_t terrain_type) {
 		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
 		for(short i = 0; i < obj_dim.x; i++)
 			for(short j = 0; j < obj_dim.y; j++){
-				if(!cur_area->is_on_map(loc(l2.x + i, l2.y + j))) continue;
-				cur_area->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
+				location temp = loc(l2.x + i, l2.y + j);
+				if(!cur_area->is_on_map(temp)) continue;
+
+				ter_num_t object_part = find_object_part(q,i,j,terrain_type);
+				ter_num_t part_old = cur_area->terrain(temp.x, temp.y);
+				if(stroke_changes.find(temp) != stroke_changes.end()){
+					part_old = stroke_changes[temp].old_num;
+				}
+				stroke_changes[temp] = {part_old, object_part};
+				cur_area->terrain(temp.x,temp.y) = object_part;
 			}
 	}
 	
@@ -2221,6 +2268,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 				// Otherwise it might overwrite important things, like buildings or forests.
 				if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
 					continue;
+				stroke_changes[l3] = {ter_there, new_ter};
 				cur_area->terrain(l3.x,l3.y) = new_ter;
 			}
 		}
@@ -2230,7 +2278,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	for(location d : trim_diffs) {
 		location l3(l.x+d.x, l.y+d.y);
 		if(!cur_area->is_on_map(l3)) continue;
-		adjust_space(l3);
+		adjust_space(l3, stroke_changes);
 	}
 
 	cTerrain& ter = scenario.ter_types[terrain_type];
@@ -2278,7 +2326,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	}
 }
 
-void adjust_space(location l) {
+void adjust_space(location l, stroke_ter_changes_t& stroke_changes) {
 	bool needed_change = false;
 	location l2;
 	cArea* cur_area = get_current_area();
@@ -2364,6 +2412,11 @@ void adjust_space(location l) {
 		ter_num_t replace = scenario.get_trim_terrain(main_ground, trim_ground, need_trim);
 		if(replace != 90) { // If we got 90 back, the required trim doesn't exist.
 			needed_change = true;
+			ter_change_t change = {cur_area->terrain(l.x, l.y), replace};
+			if(stroke_changes.find(l) != stroke_changes.end()){
+				change.old_num = stroke_changes[l].old_num;
+			}
+			stroke_changes[l] = change;
 			cur_area->terrain(l.x,l.y) = replace;
 		}
 	}
@@ -2372,10 +2425,9 @@ void adjust_space(location l) {
 		for(location d : trim_diffs) {
 			if(d.x == 0 && d.y == 0) continue;
 			location l2(l.x+d.x, l.y+d.y);
-			adjust_space(l2);
+			adjust_space(l2, stroke_changes);
 		}
 	}
-	
 }
 
 bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
@@ -2452,12 +2504,14 @@ void set_special(location spot_hit) {
 	}
 	auto& specials = get_current_area()->special_locs;
 	for(short x = 0; x < specials.size(); x++)
+		// Edit the node of the encounter already on the space
 		if(specials[x] == spot_hit && specials[x].spec >= 0) {
 			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
 			if(spec >= 0) specials[x].spec = spec;
 			return;
 		}
 	for(short x = 0; x <= specials.size(); x++) {
+		// Find/create an empty encounter spot
 		if(x == specials.size())
 			specials.emplace_back(-1,-1,-1);
 		if(specials[x].spec < 0) {
