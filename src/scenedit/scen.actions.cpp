@@ -751,17 +751,6 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					erasing_mode = terrain_matches(spot_hit.x, spot_hit.y, current_terrain_type);
 					mouse_button_held = true;
 				}
-				if(!editing_town) {
-					// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
-					const cTerrain& paint_ter = scenario.ter_types[current_terrain_type];
-					const cTerrain& erase_ter = scenario.ter_types[current_ground];
-					const cTerrain& cur_ter = scenario.ter_types[cur_area->terrain(spot_hit.x, spot_hit.y)];
-					if(cur_ter.special == eTerSpec::TOWN_ENTRANCE && (erasing_mode ? erase_ter : paint_ter).special != eTerSpec::TOWN_ENTRANCE)
-						for(short i = current_terrain->city_locs.size() - 1; i >= 0; i--) {
-							if(current_terrain->city_locs[i] == spot_hit)
-								current_terrain->city_locs.erase(current_terrain->city_locs.begin() + i);
-						}
-				}
 				if(erasing_mode) set_terrain(spot_hit,current_ground);
 				else set_terrain(spot_hit,current_terrain_type);
 				break;
@@ -2181,6 +2170,19 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	auto revert = [&cur_area, l, old]() {
 		cur_area->terrain(l.x,l.y) = old;
 	};
+
+	const cTerrain& new_ter = scenario.ter_types[terrain_type];
+	const cTerrain& old_ter = scenario.ter_types[old];
+	if(!editing_town) {
+		// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
+		if(old_ter.special == eTerSpec::TOWN_ENTRANCE && new_ter.special != eTerSpec::TOWN_ENTRANCE){
+			for(short i = current_terrain->city_locs.size() - 1; i >= 0; i--) {
+				if(current_terrain->city_locs[i] == l)
+					current_terrain->city_locs.erase(current_terrain->city_locs.begin() + i);
+			}
+		}
+		// Don't implicitly erase signs, because the designer may have entered text in them
+	}
 
 	cur_area->terrain(l.x,l.y) = terrain_type;
 	location l2 = l;
