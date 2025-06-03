@@ -855,21 +855,25 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		}
 		data.CloseElement("wandering");
 	}
-	for(size_t i = 0; i < town.preset_items.size(); i++) {
+	// The vector may contain empty slots, but don't save them
+	size_t i = 0;
+	for(cTown::cItem item : town.preset_items) {
+		if(item.code < 0) continue;
 		data.OpenElement("item");
 		data.PushAttribute("id", i);
-		data.PushElement("type", town.preset_items[i].code);
-		if(town.preset_items[i].charges > 0)
-			data.PushElement("charges", town.preset_items[i].charges);
-		if(town.preset_items[i].ability != eEnchant::NONE)
-			data.PushElement("mod", town.preset_items[i].ability);
-		if(town.preset_items[i].always_there)
+		data.PushElement("type", item.code);
+		if(item.charges > 0)
+			data.PushElement("charges", item.charges);
+		if(item.ability != eEnchant::NONE)
+			data.PushElement("mod", item.ability);
+		if(item.always_there)
 			data.PushElement("always", true);
-		if(town.preset_items[i].property)
+		if(item.property)
 			data.PushElement("property", true);
-		if(town.preset_items[i].contained)
+		if(item.contained)
 			data.PushElement("contained", true);
 		data.CloseElement("item");
+		++i;
 	}
 	for(size_t i = 0; i < town.creatures.size(); i++) {
 		data.OpenElement("creature");
