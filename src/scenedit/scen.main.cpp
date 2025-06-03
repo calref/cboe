@@ -645,7 +645,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_DELETE:
 			if(scenario.towns.size() == 1) {
-				showError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
+				showError("You can't delete the only town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
 			if(scenario.towns.size() - 1 == cur_town) {
@@ -653,7 +653,7 @@ void handle_menu_choice(eMenu item_hit) {
 				return;
 			}
 			if(scenario.towns.size() - 1 == scenario.which_town_start) {
-				showError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
+				showError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the party's starting point and try this again.");
 				return;
 			}
 			if(cChoiceDlog("delete-town-confirm", {"okay", "cancel"}).show() == "okay")
