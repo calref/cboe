@@ -1301,23 +1301,45 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 					return true;
 				}
 				if(option_hit) {
-					if(i == size_before - 1 && !scenario.is_ter_used(i))
-						scenario.ter_types.pop_back();
-					else if(i == size_before) {
+					// option-click the plus button: create a new row of terrains
+					if(i == size_before){
+						terrain_type_changes_t terrains;
 						scenario.ter_types.resize(size_before + 16);
-						for(; i < scenario.ter_types.size(); i++)
+						for(; i < scenario.ter_types.size(); i++){
 							scenario.ter_types[i].name = "New Terrain";
-					} else {
-						scenario.ter_types[i] = cTerrain();
-						scenario.ter_types[i].name = "Unused Terrain";
+							terrains.push_back(scenario.ter_types[i]);
+						}
+
+						undo_list.add(action_ptr(new aCreateDeleteTerrain(terrains)));
+						update_edit_menu();
+					}
+					else{
+						// option-click the last one and it's safe to delete: delete it
+						if(i == size_before - 1 && !scenario.is_ter_used(i)){
+							undo_list.add(action_ptr(new aCreateDeleteTerrain(false, scenario.ter_types.back())));
+							update_edit_menu();
+							scenario.ter_types.pop_back();
+						}
+						// option-click terrain that can't be deleted (because it would break other terrains' numbers, or is in use somewhere):
+						// reset type info
+						else{
+							scenario.ter_types[i] = cTerrain();
+							scenario.ter_types[i].name = "Unused Terrain";
+						}
 					}
 				} else {
+					// Click the plus button: create a new terrain and edit it immediately
 					if(i == size_before) {
 						scenario.ter_types.emplace_back();
 						scenario.ter_types.back().name = "New Terrain";
 					}
-					if(!edit_ter_type(i) && i == size_before && scenario.ter_types.back().name == "New Terrain")
+					if(!edit_ter_type(i) && i == size_before && scenario.ter_types.back().name == "New Terrain"){
+						// Canceled:
 						scenario.ter_types.pop_back();
+					}else{
+						undo_list.add(action_ptr(new aCreateDeleteTerrain(true, scenario.ter_types.back())));
+						update_edit_menu();
+					}
 				}
 				if(size_before / 16 > scenario.ter_types.size() / 16)
 					pos_before--;

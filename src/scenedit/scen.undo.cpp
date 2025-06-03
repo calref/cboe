@@ -94,6 +94,22 @@ aCreateDeleteTown::~aCreateDeleteTown() {
 	if(isDone() == reversed) delete theTown;
 }
 
+bool aCreateDeleteTerrain::undo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cTerrain ter : terrains){
+		scenario.ter_types.pop_back();
+	}
+	return true;
+}
+
+bool aCreateDeleteTerrain::redo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cTerrain ter : terrains){
+		scenario.ter_types.push_back(ter);
+	}
+	return true;
+}
+
 bool aDrawTerrain::undo_me() {
 	cArea* cur_area = get_current_area();
 	for(auto change : changes){

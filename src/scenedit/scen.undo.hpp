@@ -4,6 +4,9 @@
 #include "location.hpp"
 #include "tools/undo.hpp"
 #include "scenario/town.hpp"
+#include "scenario/scenario.hpp"
+
+extern cScenario scenario;
 
 struct area_ref_t {
 	bool is_town;
@@ -21,6 +24,7 @@ struct ter_change_t {
 typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
 typedef std::map<size_t, cTown::cItem> item_changes_t;
 typedef std::map<size_t, cTownperson> creature_changes_t;
+typedef std::vector<cTerrain> terrain_type_changes_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
@@ -92,6 +96,20 @@ class aCreateDeleteTown : public cAction {
 public:
 	aCreateDeleteTown(bool create, class cTown* t);
 	~aCreateDeleteTown();
+};
+
+/// Action which adds new terrain type(s) to the end of the list, or deletes from the end of the list
+class aCreateDeleteTerrain : public cAction {
+	terrain_type_changes_t terrains;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteTerrain(bool create, cTerrain terrain) :
+		cAction(create ? "Create Terrain Type" : "Delete Terrain Type", !create),
+		terrains({terrain}) {}
+	aCreateDeleteTerrain(terrain_type_changes_t terrains) :
+		cAction("Create Terrain Types", false),
+		terrains(terrains) {}
 };
 
 
