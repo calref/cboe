@@ -2485,6 +2485,13 @@ void place_items_in_town() {
 								   scenario.storage_shortcuts[k].item_odds[x],items_placed);
 				}
 		}
+
+	if(!items_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseItem("Add Random Items", true, items_placed)));
+		update_edit_menu();
+	}else{
+		cChoiceDlog("no-items-added").show();
+	}
 	draw_terrain();
 }
 
