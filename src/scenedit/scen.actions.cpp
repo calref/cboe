@@ -951,18 +951,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						set_string("Paste item","Not while outdoors.");
 						break;
 					}
-					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
-						return item.code < 0;
-					});
-					if(iter != town->preset_items.end()) {
-						*iter = *item;
-						iter->loc = spot_hit;
-						iter->contained = container_there(spot_hit);
-					} else {
-						town->preset_items.push_back(*item);
-						town->preset_items.back().loc = spot_hit;
-						town->preset_items.back().contained = container_there(spot_hit);
-					}
+					place_item(spot_hit, mode_count, false, false, 100, current_items_placed);
+					undo_list.add(action_ptr(new aPlaceEraseItem("Paste Item", true, current_items_placed)));
+					update_edit_menu();
+					current_items_placed.clear();
 				} else if(auto patch = boost::get<vector2d<ter_num_t>>(&clipboard)) {
 					for(int x = 0; x < patch->width(); x++)
 						for(int y = 0; y < patch->height(); y++)
