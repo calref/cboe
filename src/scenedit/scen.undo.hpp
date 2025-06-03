@@ -3,6 +3,7 @@
 
 #include "location.hpp"
 #include "tools/undo.hpp"
+#include "scenario/town.hpp"
 
 struct area_ref_t {
 	bool is_town;
@@ -18,13 +19,14 @@ struct ter_change_t {
 };
 
 typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
+typedef std::map<size_t, cTown::cItem> item_changes_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
 public:
-	cTerrainAction(std::string name, short town_num, location where);
-	cTerrainAction(std::string name, location out_sec, location where);
-	cTerrainAction(std::string name, location where);
+	cTerrainAction(std::string name, short town_num, location where, bool reversed = false);
+	cTerrainAction(std::string name, location out_sec, location where, bool reversed = false);
+	cTerrainAction(std::string name, location where, bool reversed = false);
 	void undo();
 	void redo();
 	bool undo_me() = 0;
@@ -56,6 +58,17 @@ public:
 	bool redo_me() override;
 private:
 	const stroke_ter_changes_t changes;
+};
+
+/// Action which places or erases item(s) in a town
+class aPlaceEraseItem : public cTerrainAction {
+	bool placed;
+	item_changes_t items;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceEraseItem(std::string name, bool place, item_changes_t items);
+	aPlaceEraseItem(std::string name, bool place, size_t index, cTown::cItem item);
 };
 
 /// Action which adds a new town to the end of the list, or deletes the last one

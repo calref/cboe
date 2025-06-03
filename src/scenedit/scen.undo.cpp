@@ -16,17 +16,17 @@ extern void start_out_edit();
 extern void redraw_screen();
 extern void set_current_town(int,bool first_restore = false);
 
-cTerrainAction::cTerrainAction(std::string name, short town_num, location where) : cAction(name) {
+cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
 	area.town_num = town_num;
 	area.where = where;
 }
-cTerrainAction::cTerrainAction(std::string name, location out_sec, location where) : cAction(name) {
+cTerrainAction::cTerrainAction(std::string name, location out_sec, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = false;
 	area.out_sec = out_sec;
 	area.where = where;
 }
-cTerrainAction::cTerrainAction(std::string name, location where) : cAction(name) {
+cTerrainAction::cTerrainAction(std::string name, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = editing_town;
 	// One of these two will be ignored
 	area.town_num = cur_town;
@@ -105,6 +105,32 @@ bool aDrawTerrain::redo_me() {
 	cArea* cur_area = get_current_area();
 	for(auto change : changes){
 		cur_area->terrain(change.first.x, change.first.y) = change.second.new_num;
+	}
+	return true;
+}
+
+aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, size_t index, cTown::cItem item)
+	: cTerrainAction(name, item.loc, !place)
+	, items({{index, item}})
+{}
+
+aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, item_changes_t items)
+	: cTerrainAction(name, items.begin()->second.loc, !place)
+	, items(items)
+{}
+
+bool aPlaceEraseItem::undo_me() {
+	auto& town_items = scenario.towns[cur_town]->preset_items;
+	for(auto change : items){
+		town_items[change.first].code = -1;
+	}
+	return true;
+}
+
+bool aPlaceEraseItem::redo_me() {
+	auto& town_items = scenario.towns[cur_town]->preset_items;
+	for(auto change : items){
+		town_items[change.first] = change.second;
 	}
 	return true;
 }

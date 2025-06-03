@@ -712,12 +712,18 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 stroke_ter_changes_t current_stroke_changes;
 std::string current_stroke_type;
 
+item_changes_t current_items_placed;
+
 void commit_stroke() {
 	if(!current_stroke_changes.empty()){
 		undo_list.add(action_ptr(new aDrawTerrain("Draw Terrain (" + current_stroke_type + ")", current_stroke_changes)));
 		update_edit_menu();
 		current_stroke_changes.clear();
 		current_stroke_type = "";
+	}else if(!current_items_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseItem(current_items_placed.size() > 1 ? "Place Items" : "Place Item", true, current_items_placed)));
+		update_edit_menu();
+		current_items_placed.clear();
 	}
 }
 
@@ -896,16 +902,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				// If we just placed this item there, forget it
 				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
-					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
-						return item.code < 0;
-					});
-					if(iter != town->preset_items.end()) {
-						*iter = {spot_hit, mode_count, scenario.scen_items[mode_count]};
-						if(container_there(spot_hit)) iter->contained = true;
-					} else {
-						town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
-						if(container_there(spot_hit)) town->preset_items.back().contained = true;
-					}
+					place_item(spot_hit, mode_count, false, false, 100, current_items_placed);
 					last_placement = spot_hit;
 				}
 				break;
@@ -1154,11 +1151,12 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				for(short x = 0; x < town->preset_items.size(); x++)
 					if((spot_hit.x == town->preset_items[x].loc.x) &&
 					   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+
+						undo_list.add(action_ptr(new aPlaceEraseItem("Erase Item", false, x, town->preset_items[x])));
+						update_edit_menu();
 						town->preset_items[x].code = -1;
 						break;
 					}
-				while(!town->preset_items.empty() && town->preset_items.back().code == -1)
-					town->preset_items.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_SET_TOWN_START:
@@ -2444,7 +2442,7 @@ void adjust_space(location l, stroke_ter_changes_t& stroke_changes) {
 	}
 }
 
-bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
+bool place_item(location spot_hit,short which_item,bool property,bool always,short odds,std::map<size_t,cTown::cItem>& items_placed) {
 	// odds 0 - 100, with 100 always
 	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
 		return true;
@@ -2462,6 +2460,8 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 			town->preset_items[x].contained = container_there(spot_hit);
 			town->preset_items[x].property = property;
 			town->preset_items[x].always_there = always;
+			items_placed[x] = town->preset_items[x];
+
 			return true;
 		}
 	}
@@ -2471,6 +2471,7 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 
 void place_items_in_town() {
 	location l;
+	std::map<size_t, cTown::cItem> items_placed;
 	for(short i = 0; i < town->max_dim; i++)
 		for(short j = 0; j < town->max_dim; j++) {
 			l.x = i;
@@ -2481,7 +2482,7 @@ void place_items_in_town() {
 					for(short x = 0; x < 10; x++)
 						place_item(l,scenario.storage_shortcuts[k].item_num[x],
 								   scenario.storage_shortcuts[k].property,false,
-								   scenario.storage_shortcuts[k].item_odds[x]);
+								   scenario.storage_shortcuts[k].item_odds[x],items_placed);
 				}
 		}
 	draw_terrain();
