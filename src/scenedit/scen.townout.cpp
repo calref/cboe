@@ -390,6 +390,8 @@ static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem
 
 static bool edit_placed_item_delete(cDialog& me, const short which) {
 	me.toast(false);
+	undo_list.add(action_ptr(new aPlaceEraseItem("Delete Item", false, which, town->preset_items[which])));
+	update_edit_menu();
 	town->preset_items[which].code = -1;
 	return true;
 }
