@@ -23,7 +23,7 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 void flood_fill_terrain(location start, ter_num_t terrain_type);
 void frill_up_terrain();
 void unfrill_terrain();
-void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes);
+void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes,bool handle_special=true);
 void adjust_space(location l,stroke_ter_changes_t& stroke_changes);
 void commit_stroke();
 bool is_lava(short x,short y);

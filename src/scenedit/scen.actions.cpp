@@ -957,7 +957,12 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				} else if(auto patch = boost::get<vector2d<ter_num_t>>(&clipboard)) {
 					for(int x = 0; x < patch->width(); x++)
 						for(int y = 0; y < patch->height(); y++)
-							cur_area->terrain(spot_hit.x + x, spot_hit.y + y) = (*patch)[x][y];
+							set_terrain(loc(spot_hit.x + x, spot_hit.y + y), (*patch)[x][y], current_stroke_changes, false);
+					if(!current_stroke_changes.empty()){
+						undo_list.add(action_ptr(new aDrawTerrain("Paste Terrain", current_stroke_changes)));
+						update_edit_menu();
+						current_stroke_changes.clear();
+					}
 				} else {
 					showError("Nothing to paste. Try copying something first.");
 				}
@@ -2190,7 +2195,7 @@ static const std::array<location,5> trim_diffs = {{
 	loc(0,0), loc(-1,0), loc(1,0), loc(0,-1), loc(0,1)
 }};
 
-void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes) {
+void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes, bool handle_special) {
 	cArea* cur_area = get_current_area();
 	
 	if(!cur_area->is_on_map(l)) return;
@@ -2222,59 +2227,61 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 	cur_area->terrain(l.x,l.y) = terrain_type;
 	location l2 = l;
 	
-	// Large objects (eg rubble)
-	if(scenario.ter_types[terrain_type].obj_num > 0){
-		int q = scenario.ter_types[terrain_type].obj_num;
-		location obj_loc = scenario.ter_types[terrain_type].obj_pos;
-		location obj_dim = scenario.ter_types[terrain_type].obj_size;
-		while(obj_loc.x > 0) l2.x-- , obj_loc.x--;
-		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
-		for(short i = 0; i < obj_dim.x; i++)
-			for(short j = 0; j < obj_dim.y; j++){
-				location temp = loc(l2.x + i, l2.y + j);
-				if(!cur_area->is_on_map(temp)) continue;
+	if(handle_special){
+		// Large objects (eg rubble)
+		if(scenario.ter_types[terrain_type].obj_num > 0){
+			int q = scenario.ter_types[terrain_type].obj_num;
+			location obj_loc = scenario.ter_types[terrain_type].obj_pos;
+			location obj_dim = scenario.ter_types[terrain_type].obj_size;
+			while(obj_loc.x > 0) l2.x-- , obj_loc.x--;
+			while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
+			for(short i = 0; i < obj_dim.x; i++)
+				for(short j = 0; j < obj_dim.y; j++){
+					location temp = loc(l2.x + i, l2.y + j);
+					if(!cur_area->is_on_map(temp)) continue;
 
-				ter_num_t object_part = find_object_part(q,i,j,terrain_type);
-				ter_num_t part_old = cur_area->terrain(temp.x, temp.y);
-				if(stroke_changes.find(temp) != stroke_changes.end()){
-					part_old = stroke_changes[temp].old_num;
+					ter_num_t object_part = find_object_part(q,i,j,terrain_type);
+					ter_num_t part_old = cur_area->terrain(temp.x, temp.y);
+					if(stroke_changes.find(temp) != stroke_changes.end()){
+						part_old = stroke_changes[temp].old_num;
+					}
+					stroke_changes[temp] = {part_old, object_part};
+					cur_area->terrain(temp.x,temp.y) = object_part;
 				}
-				stroke_changes[temp] = {part_old, object_part};
-				cur_area->terrain(temp.x,temp.y) = object_part;
-			}
-	}
+		}
 	
-	// First make sure surrounding spaces have the correct ground types.
-	// This should handle the case of placing hills around mountains.
-	unsigned int main_ground = scenario.ter_types[terrain_type].ground_type;
-	long trim_ground = scenario.ter_types[terrain_type].trim_ter;
-	for(int x = -1; x <= 1; x++) {
-		for(int y = -1; y <= 1; y++) {
-			location l3(l.x+x,l.y+y);
-			if(!cur_area->is_on_map(l3)) continue;
-			ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
-			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
-			if(ground_there != main_ground && ground_there != trim_ground) {
-				ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
-				if(new_ter > scenario.ter_types.size()) continue;
-				cTerrain& ter_type = scenario.ter_types[new_ter];
-				// We need to be very cautious here.
-				// Only make the change if the terrain already there is the archetype for the ground type
-				// that is the trim terrain of the terrain we're trying to place.
-				// Otherwise it might overwrite important things, like buildings or forests.
-				if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
-					continue;
-				stroke_changes[l3] = {ter_there, new_ter};
-				cur_area->terrain(l3.x,l3.y) = new_ter;
+		// First make sure surrounding spaces have the correct ground types.
+		// This should handle the case of placing hills around mountains.
+		unsigned int main_ground = scenario.ter_types[terrain_type].ground_type;
+		long trim_ground = scenario.ter_types[terrain_type].trim_ter;
+		for(int x = -1; x <= 1; x++) {
+			for(int y = -1; y <= 1; y++) {
+				location l3(l.x+x,l.y+y);
+				if(!cur_area->is_on_map(l3)) continue;
+				ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
+				unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
+				if(ground_there != main_ground && ground_there != trim_ground) {
+					ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
+					if(new_ter > scenario.ter_types.size()) continue;
+					cTerrain& ter_type = scenario.ter_types[new_ter];
+					// We need to be very cautious here.
+					// Only make the change if the terrain already there is the archetype for the ground type
+					// that is the trim terrain of the terrain we're trying to place.
+					// Otherwise it might overwrite important things, like buildings or forests.
+					if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
+						continue;
+					stroke_changes[l3] = {ter_there, new_ter};
+					cur_area->terrain(l3.x,l3.y) = new_ter;
+				}
 			}
 		}
-	}
 	
-	// Adjusting terrains with trim
-	for(location d : trim_diffs) {
-		location l3(l.x+d.x, l.y+d.y);
-		if(!cur_area->is_on_map(l3)) continue;
-		adjust_space(l3, stroke_changes);
+		// Adjusting terrains with trim
+		for(location d : trim_diffs) {
+			location l3(l.x+d.x, l.y+d.y);
+			if(!cur_area->is_on_map(l3)) continue;
+			adjust_space(l3, stroke_changes);
+		}
 	}
 
 	cTerrain& ter = scenario.ter_types[terrain_type];
@@ -2288,6 +2295,7 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 			mouse_button_held = false;
 			return;
 		}
+		if(!handle_special) return;
 		auto& signs = cur_area->sign_locs;
 		auto iter = std::find(signs.begin(), signs.end(), l);
 		if(iter == signs.end()) {
@@ -2313,6 +2321,7 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 	}
 	// Town entrances in the outdoors:
 	else if(ter.special == eTerSpec::TOWN_ENTRANCE && !editing_town){
+		if(!handle_special) return;
 		// Let the designer know the terrain was placed:
 		draw_terrain();
 		redraw_screen();
