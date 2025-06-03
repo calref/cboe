@@ -115,6 +115,7 @@ public:
 	void set_up_lights();
 	short light_obscurity(short x,short y) const; // Obscurity function used for calculating lighting
 	bool is_cleaned_out() const;
+	bool any_items() const;
 	
 	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);

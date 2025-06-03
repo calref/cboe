@@ -694,19 +694,36 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_ITEMS_NOT_PROPERTY:
+			if(!town->any_items()){
+				cChoiceDlog("no-items").show();
+				break;
+			}
 			for(int i = 0; i < town->preset_items.size(); i++)
 				town->preset_items[i].property = 0;
 			cChoiceDlog("set-not-owned").show();
 			draw_terrain();
 			change_made = true;
 			break;
-		case eMenu::TOWN_ITEMS_CLEAR:
+		case eMenu::TOWN_ITEMS_CLEAR:{
+			if(!town->any_items()){
+				cChoiceDlog("no-items").show();
+				break;
+			}
 			if(cChoiceDlog("clear-items-confirm", {"okay", "cancel"}).show() == "cancel")
 				break;
-			town->preset_items.clear();
+			item_changes_t changes;
+			auto& town_items = town->preset_items;
+			for(size_t i = 0; i < town_items.size(); ++i){
+				if(town_items[i].code < 0) continue;
+				changes[i] = town_items[i];
+				town_items[i].code = -1;
+			}
+			undo_list.add(action_ptr(new aPlaceEraseItem("Clear Items", false, changes)));
+			update_edit_menu();
+
 			draw_terrain();
 			change_made = true;
-			break;
+		}break;
 		case eMenu::TOWN_SPECIALS:
 			right_sbar->setPosition(0);
 			start_special_editing(2,0);
