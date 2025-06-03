@@ -20,6 +20,7 @@ struct ter_change_t {
 
 typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
 typedef std::map<size_t, cTown::cItem> item_changes_t;
+typedef std::map<size_t, cTownperson> creature_changes_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
@@ -69,6 +70,17 @@ class aPlaceEraseItem : public cTerrainAction {
 public:
 	aPlaceEraseItem(std::string name, bool place, item_changes_t items);
 	aPlaceEraseItem(std::string name, bool place, size_t index, cTown::cItem item);
+};
+
+/// Action which places or erases creature(s) in a town
+class aPlaceEraseCreature : public cTerrainAction {
+	bool placed;
+	creature_changes_t creatures;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceEraseCreature(std::string name, bool place, creature_changes_t creatures);
+	aPlaceEraseCreature(std::string name, bool place, size_t index, cTownperson creature);
 };
 
 /// Action which adds a new town to the end of the list, or deletes the last one

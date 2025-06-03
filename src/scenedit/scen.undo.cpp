@@ -134,3 +134,29 @@ bool aPlaceEraseItem::redo_me() {
 	}
 	return true;
 }
+
+aPlaceEraseCreature::aPlaceEraseCreature(std::string name, bool place, size_t index, cTownperson creature)
+	: cTerrainAction(name, creature.start_loc, !place)
+	, creatures({{index, creature}})
+{}
+
+aPlaceEraseCreature::aPlaceEraseCreature(std::string name, bool place, creature_changes_t creatures)
+	: cTerrainAction(name, creatures.begin()->second.start_loc, !place)
+	, creatures(creatures)
+{}
+
+bool aPlaceEraseCreature::undo_me() {
+	auto& town_creatures = scenario.towns[cur_town]->creatures;
+	for(auto change : creatures){
+		town_creatures[change.first].number = 0;
+	}
+	return true;
+}
+
+bool aPlaceEraseCreature::redo_me() {
+	auto& town_creatures = scenario.towns[cur_town]->creatures;
+	for(auto change : creatures){
+		town_creatures[change.first] = change.second;
+	}
+	return true;
+}

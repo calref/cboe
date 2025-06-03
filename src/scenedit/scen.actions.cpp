@@ -713,6 +713,7 @@ stroke_ter_changes_t current_stroke_changes;
 std::string current_stroke_type;
 
 item_changes_t current_items_placed;
+creature_changes_t current_creatures_placed;
 
 void commit_stroke() {
 	if(!current_stroke_changes.empty()){
@@ -722,6 +723,10 @@ void commit_stroke() {
 		current_stroke_type = "";
 	}else if(!current_items_placed.empty()){
 		undo_list.add(action_ptr(new aPlaceEraseItem(current_items_placed.size() > 1 ? "Place Items" : "Place Item", true, current_items_placed)));
+		update_edit_menu();
+		current_items_placed.clear();
+	}else if(!current_creatures_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseCreature(current_creatures_placed.size() > 1 ? "Place Creatures" : "Place Creature", true, current_creatures_placed)));
 		update_edit_menu();
 		current_items_placed.clear();
 	}
@@ -936,16 +941,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						set_string("Paste monster","Not while outdoors.");
 						break;
 					}
-					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
-						return who.number == 0;
-					});
-					if(iter != town->creatures.end()) {
-						*iter = *monst;
-						iter->start_loc = spot_hit;
-					} else { // Placement failed
-						town->creatures.push_back(*monst);
-						town->creatures.back().start_loc = spot_hit;
-					}
+					place_creature(spot_hit, static_cast<mon_num_t>(mode_count), current_creatures_placed);
+					undo_list.add(action_ptr(new aPlaceEraseCreature("Paste Creature", true, current_creatures_placed)));
+					update_edit_menu();
+					current_creatures_placed.clear();
 				} else if(auto item = boost::get<cTown::cItem>(&clipboard)) {
 					if(!editing_town) {
 						set_string("Paste item","Not while outdoors.");
@@ -968,14 +967,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				// If we just placed this same creature here, forget it
 				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
-					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
-						return who.number == 0;
-					});
-					if(iter != town->creatures.end()) {
-						*iter = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
-					} else { // Placement failed
-						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
-					}
+					place_creature(spot_hit, static_cast<mon_num_t>(mode_count), current_creatures_placed);
 					last_placement = spot_hit;
 				}
 				break;
@@ -1132,11 +1124,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_ERASE_CREATURE: //delete monst
 				for(short x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
+						undo_list.add(action_ptr(new aPlaceEraseCreature("Erase Creature", false, x, town->creatures[x])));
+						update_edit_menu();
 						town->creatures[x].number = 0;
 						break;
 					}
-				while(!town->creatures.empty() && town->creatures.back().number == 0)
-					town->creatures.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_ITEM: // delete item
@@ -2485,6 +2477,22 @@ void place_items_in_town() {
 		cChoiceDlog("no-items-added").show();
 	}
 	draw_terrain();
+}
+
+bool place_creature(location spot_hit, mon_num_t which, creature_changes_t& creatures_placed) {
+	for(short x = 0; x <= town->creatures.size(); x++){
+		if(x == town->creatures.size()){
+			town->creatures.resize(x+1);
+			town->creatures[x].number = 0;
+		}
+		if(town->creatures[x].number == 0) {
+			town->creatures[x] = {spot_hit, which, scenario.scen_monsters[which]};
+			creatures_placed[x] = town->creatures[x];
+			return true;
+		}
+	}
+	// Shouldn't be reached:
+	return false;
 }
 
 void place_edit_special(location loc) {

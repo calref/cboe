@@ -91,6 +91,8 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 		me.toast(false);
 	} else if(hit == "del") {
 		me.toast(false);
+		undo_list.add(action_ptr(new aPlaceEraseCreature("Delete Creature", false, which, town->creatures[which])));
+		update_edit_menu();
 		town->creatures[which].number = 0;
 	} else if(hit == "type-edit") {
 		get_placed_monst_in_dlog(me, monst);
