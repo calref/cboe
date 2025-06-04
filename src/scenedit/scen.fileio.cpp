@@ -857,7 +857,7 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	}
 	// The vector may contain empty slots at the end for undo/redo purposes, but don't save them.
 	size_t last_item = town.preset_items.size() - 1;
-	while(last_item >= 0 && town.preset_items[last_item].code < 0) --last_item;
+	while(last_item >= 0 && ((town.preset_items.size() <= last_item) || town.preset_items[last_item].code < 0)) --last_item;
 	for(size_t i = 0; i <= last_item; ++i) {
 		const cTown::cItem& item = town.preset_items[i];
 		data.OpenElement("item");
@@ -877,7 +877,7 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 	}
 	// The vector may contain empty slots at the end for undo/redo purposes, but don't save them.
 	size_t last_creature = town.creatures.size() - 1;
-	while(last_item >= 0 && town.creatures[last_creature].number <= 0) --last_creature;
+	while(last_creature >= 0 && ((town.creatures.size() <= last_creature) || town.creatures[last_creature].number <= 0)) --last_creature;
 	for(size_t i = 0; i <= last_creature; ++i) {
 		data.OpenElement("creature");
 		data.PushAttribute("id", i);
