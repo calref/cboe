@@ -83,6 +83,12 @@ public:
 		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
 	};
 	void destroy_terrain();
+	// Iterate through EVERY special node with a callback.
+	void for_each_special(std::function<void(const cSpecial&)> callback);
+	// Factored into 3 separate functions in case there's ever a reason to be more selective:
+	void for_each_scen_special(std::function<void(const cSpecial&)> callback);
+	void for_each_town_special(int town, std::function<void(const cSpecial&)> callback);
+	void for_each_out_special(int sector_x, int sector_y, std::function<void(const cSpecial&)> callback);
 public:
 	unsigned short difficulty,intro_pic,default_ground;
 	int bg_out, bg_fight, bg_town, bg_dungeon;

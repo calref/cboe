@@ -650,3 +650,33 @@ std::string cScenario::get_sdf_name(int row, int col) {
 		return "";
 	return sdf_names[row][col];
 }
+
+void cScenario::for_each_special(std::function<void(const cSpecial&)> callback) {
+	for_each_scen_special(callback);
+	for(int town = 0; town < towns.size(); ++town){
+		for_each_town_special(town, callback);
+	}
+	for(int x = 0; x < outdoors.width(); ++x){
+		for(int y = 0; y < outdoors.height(); ++y){
+			for_each_out_special(x, y, callback);
+		}
+	}
+}
+
+void cScenario::for_each_scen_special(std::function<void(const cSpecial&)> callback) {
+	for(cSpecial special : scen_specials){
+		callback(special);
+	}
+}
+
+void cScenario::for_each_town_special(int town, std::function<void(const cSpecial&)> callback) {
+	for(cSpecial special : towns[town]->specials){
+		callback(special);
+	}
+}
+
+void cScenario::for_each_out_special(int sector_x, int sector_y, std::function<void(const cSpecial&)> callback) {
+	for(cSpecial special : outdoors[sector_x][sector_y]->specials){
+		callback(special);
+	}
+}
