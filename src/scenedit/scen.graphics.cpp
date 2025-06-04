@@ -83,12 +83,13 @@ extern rectangle palette_buttons[10][6];
 extern ePalBtn town_buttons[6][10], out_buttons[6][10];
 rectangle palette_button_base = {0,0,18,26};
 rectangle terrain_buttons_rect = {0,0,410,294};
+rectangle terrain_buttons_rect_editing = {0,0,610,294};
 extern rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 rectangle left_button_base = {5,5,21,280};
 rectangle right_button_base = {RIGHT_AREA_UL_Y,RIGHT_AREA_UL_X,17,RIGHT_AREA_UL_Y};
 rectangle terrain_rect = {0,0,340,272};
 std::string current_string[2];
-extern rectangle terrain_rects[256];
+extern rectangle terrain_rects[16*TYPE_ROWS_EDITING];
 
 unsigned char small_what_drawn[64][64];
 extern bool small_any_drawn;
@@ -331,6 +332,7 @@ static std::vector<short> get_small_icons(location at, ter_num_t t_to_draw) {
 void Set_up_win() {
 	terrain_rect.offset(TER_RECT_UL_X, TER_RECT_UL_Y);
 	terrain_buttons_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
+	terrain_buttons_rect_editing.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 	palette_button_base.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 
 	for(short i = 0; i < 10; i++)
@@ -442,7 +444,7 @@ void draw_main_screen() {
 	// draw terrain palette
 	if((overall_mode < MODE_MAIN_SCREEN) || (overall_mode == MODE_EDIT_TYPES)) {
 		place_location();
-		set_up_terrain_buttons(false);
+		set_up_type_buttons(false);
 		TextStyle style;
 		win_draw_string(mainPtr(), search_field_text_rect, "Search:", eTextMode::WRAP, style);
 		palette_search_field->show();
@@ -528,27 +530,33 @@ void draw_rb_slot (short which,short mode)  {
 	win_draw_string(mainPtr(),text_rect,right_button_status[which].label,eTextMode::LEFT_TOP,style);
 }
 
-void set_up_terrain_buttons(bool reset) {
+void set_up_type_buttons(bool reset) {
 	short pic,small_i;
 	rectangle ter_from,ter_from_base = {0,0,36,28}, ter_plus_from = {148,235,164,251};
 	rectangle tiny_from,tiny_to;
 	
 	rectangle palette_from,palette_to = palette_button_base;
 	int max;
+	int rows = TYPE_ROWS_DRAWING;
 	switch(draw_mode) {
 		case DRAW_TERRAIN: max = scenario.ter_types.size(); break;
 		case DRAW_ITEM: max = scenario.scen_items.size(); break;
-		case DRAW_MONST: max = scenario.scen_monsters.size(); max--; break;
+		case DRAW_MONST: max = scenario.scen_monsters.size(); max--; break; // I think this is because monsters have no number 0
 		default: return;
 	}
-	if(overall_mode == MODE_EDIT_TYPES) max++;
+	if(overall_mode == MODE_EDIT_TYPES){
+		max++; // The plus button
+		rows = TYPE_ROWS_EDITING;
+	}
 	
 	if(reset) pal_sbar->setPosition(0);
-	pal_sbar->setMaximum((max - 241) / 16);
+
+	int rows_overflow = ceil(max / 16.0) - rows;
+	pal_sbar->setMaximum(rows_overflow);
 	
 	int first = pal_sbar->getPosition() * 16;
-	if(draw_mode == DRAW_MONST) first++, max++;
-	int end = min(first + 256, max);
+	if(draw_mode == DRAW_MONST) first++, max++; // Monsters have no number 0
+	int end = min(first + 16 * rows, max);
 
 	std::string search_query = palette_search_field->getText();
 	boost::algorithm::to_lower(search_query);
@@ -566,6 +574,7 @@ void set_up_terrain_buttons(bool reset) {
 		draw_rect.offset(RIGHT_AREA_UL_X, RIGHT_AREA_UL_Y);
 		switch(draw_mode){
 			case DRAW_TERRAIN:{
+				// Plus button
 				if(i == scenario.ter_types.size()) {
 					rect_draw_some_item(editor_mixed, ter_plus_from, mainPtr(), draw_rect);
 					break;
@@ -609,6 +618,11 @@ void set_up_terrain_buttons(bool reset) {
 					rect_draw_some_item(editor_mixed, tiny_from, mainPtr(), tiny_to, sf::BlendAlpha, colour);
 			}break;
 			case DRAW_MONST:{
+				// Plus button
+				if(i == scenario.scen_monsters.size()) {
+					rect_draw_some_item(editor_mixed, ter_plus_from, mainPtr(), draw_rect);
+					break;
+				}
 				const cMonster& monst = scenario.scen_monsters[i];
 
 				std::string name = monst.m_name;
@@ -718,6 +732,11 @@ void set_up_terrain_buttons(bool reset) {
 				}
 			}break;
 			case DRAW_ITEM:{
+				// Plus button
+				if(i == scenario.scen_items.size()) {
+					rect_draw_some_item(editor_mixed, ter_plus_from, mainPtr(), draw_rect);
+					break;
+				}
 				const cItem& item = scenario.scen_items[i];
 				pic = item.graphic_num;
 
@@ -1421,16 +1440,23 @@ void place_location() {
 	frame_rect(mainPtr(), terrain_buttons_rect, sf::Color::Black);
 	location mouse = translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr()));
 	
-	location moveTo(5, terrain_rects[255].top + 18);
+	location moveTo(5, terrain_rects[16 * TYPE_ROWS_DRAWING - 1].top + 18);
+	if(overall_mode == MODE_EDIT_TYPES) moveTo.y = terrain_rects[16 * TYPE_ROWS_EDITING -1].top + 18;
 	draw_rect = text_rect;
 	draw_rect.offset(moveTo);
-	if(overall_mode < MODE_MAIN_SCREEN) {
-		// std::cout << "Mouse: " << mouse << " Buttons: " << terrain_buttons_rect << " Terrain: " << terrain_rect << std::endl;
-		if(mouse.in(terrain_buttons_rect)) {
+	// Drawing modes and type editing mode, show tooltips for the type buttons
+	if(overall_mode < MODE_MAIN_SCREEN || overall_mode == MODE_EDIT_TYPES) {
+		rectangle buttons_rect = terrain_buttons_rect;
+		int rows = TYPE_ROWS_DRAWING;
+		if(overall_mode == MODE_EDIT_TYPES){
+			buttons_rect = terrain_buttons_rect_editing;
+			rows = TYPE_ROWS_EDITING;
+		}
+		if(mouse.in(buttons_rect)) {
 			location rel_mouse = mouse;
 			rel_mouse.x -= RIGHT_AREA_UL_X;
 			rel_mouse.y -= RIGHT_AREA_UL_Y;
-			for(int i = 0; i < 256; i++) {
+			for(int i = 0; i < 16 * rows; i++) {
 				if(rel_mouse.in(terrain_rects[i])) {
 					int first = pal_sbar->getPosition() * 16;
 					switch(draw_mode) {
@@ -1452,26 +1478,35 @@ void place_location() {
 					break;
 				}
 			}
-		} else if(mouse.in(terrain_rect) && mouse_spot.x >= 0)
-			sout << "Under mouse: x = " << (cen_x - 4 + mouse_spot.x)
-				<< ", y = " << (cen_y - 4 + mouse_spot.y);
-		if(sout.str().empty())
-			sout << "Center: x = " << cen_x << ", y = " << cen_y;
-	} else {
-		moveTo.y += 13; // TODO: Not sure how important this is.
-		sout << "Click terrain to edit. ";
+		}
 	}
+	// Edit types, when none are hovered
+	if(sout.str().empty() && overall_mode == MODE_EDIT_TYPES){
+		moveTo.y += 13;
+		std::string type = "terrain";
+		if(draw_mode == DRAW_MONST) type = "monster";
+		else if(draw_mode == DRAW_ITEM) type = "item";
+		sout << "Click " << type << " to edit.";
+	}
+	// Modes showing the terrain map, show the highlighted spot coords or screen center coords
+	if(sout.str().empty() && mouse.in(terrain_rect) && mouse_spot.x >= 0)
+		sout << "Under mouse: x = " << (cen_x - 4 + mouse_spot.x)
+			<< ", y = " << (cen_y - 4 + mouse_spot.y);
+	if(sout.str().empty())
+		sout << "Center: x = " << cen_x << ", y = " << cen_y;
 	TextStyle style;
 	style.lineHeight = 12;
 	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
 	clear_sstr(sout);
-	
-	moveTo = location(260 ,terrain_rects[255].top + 18);
-	draw_rect = text_rect;
-	draw_rect.offset(moveTo);
-	sout << current_terrain_type;
-	win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
-	clear_sstr(sout);
+
+	if(overall_mode != MODE_EDIT_TYPES){
+		moveTo = location(260, terrain_rects[255].top + 18);
+		draw_rect = text_rect;
+		draw_rect.offset(moveTo);
+		sout << current_terrain_type;
+		win_draw_string(mainPtr(), draw_rect, sout.str(), eTextMode::LEFT_TOP, style);
+		clear_sstr(sout);
+	}
 	
 	if(overall_mode < MODE_MAIN_SCREEN) {
 		moveTo = location(5,terrain_rects[255].bottom + 121);

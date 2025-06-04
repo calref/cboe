@@ -50,7 +50,7 @@ cUndoList undo_list;
 
 short flood_count = 0;
 
-rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
+rectangle terrain_rects[16*TYPE_ROWS_EDITING],terrain_rect_base = {0,0,16,16},command_rects[21];
 extern rectangle terrain_buttons_rect;
 
 extern short cen_x, cen_y, cur_town;
@@ -121,7 +121,7 @@ void init_screen_locs() {
 	border_rect[2].top = border_rect[2].bottom - 8;
 	border_rect[3].left = border_rect[3].right - 8;
 	
-	for(short i = 0; i < 256; i++) {
+	for(short i = 0; i < 16 * TYPE_ROWS_EDITING; i++) {
 		terrain_rects[i] = terrain_rect_base;
 		terrain_rects[i].offset(3 + (i % 16) * (terrain_rect_base.right + 1),
 			3 + (i / 16) * (terrain_rect_base.bottom + 1));
@@ -261,13 +261,13 @@ static bool handle_lb_action(int i){
 					set_up_start_screen();
 				break;
 			case LB_EDIT_TER:
-				start_terrain_editing();
+				start_type_editing(DRAW_TERRAIN);
 				break;
 			case LB_EDIT_MONST:
-				start_monster_editing(0);
+				start_type_editing(DRAW_MONST);
 				break;
 			case LB_EDIT_ITEM:
-				start_item_editing(0);
+				start_type_editing(DRAW_ITEM);
 				break;
 			case LB_NEW_TOWN:
 				if(scenario.towns.size() >= 200) {
@@ -360,62 +360,6 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 			size_t pos_before = right_sbar->getPosition();
 			switch(right_button_status[i + right_top].action) {
 				case RB_CLEAR:
-					break;
-				case RB_MONST:
-					size_before = scenario.scen_monsters.size();
-					if(option_hit) {
-						if(j == size_before - 1 && !scenario.is_monst_used(j))
-							scenario.scen_monsters.pop_back();
-						else if(j == size_before) {
-							scenario.scen_monsters.resize(size_before + 8);
-							for(; j < scenario.scen_monsters.size(); j++)
-								scenario.scen_monsters[j].m_name = "New Monster";
-						} else {
-							scenario.scen_monsters[j] = cMonster();
-							scenario.scen_monsters[j].m_name = "Unused Monster";
-						}
-					} else {
-						if(j == size_before) {
-							scenario.scen_monsters.emplace_back();
-							scenario.scen_monsters.back().m_name = "New Monster";
-						}
-						if(!edit_monst_type(j) && j == size_before && scenario.scen_monsters.back().m_name == "New Monster")
-							scenario.scen_monsters.pop_back();
-					}
-					start_monster_editing(size_before == scenario.scen_monsters.size());
-					if(size_before > scenario.scen_monsters.size())
-						pos_before--;
-					right_sbar->setPosition(pos_before);
-					break;
-				case RB_ITEM:
-					size_before = scenario.scen_items.size();
-					if(option_hit) {
-						if(j == size_before - 1 && !scenario.is_item_used(j))
-							scenario.scen_items.pop_back();
-						else if(j == size_before) {
-							scenario.scen_items.resize(size_before + 8);
-							for(; j < scenario.scen_items.size(); j++) {
-								scenario.scen_items[j].full_name = "New Item";
-								scenario.scen_items[j].name = "Item";
-							}
-						} else {
-							scenario.scen_items[j] = cItem();
-							scenario.scen_items[j].full_name = "Unused Item";
-							scenario.scen_items[j].name = "Item";
-						}
-					} else {
-						if(j == size_before) {
-							scenario.scen_items.emplace_back();
-							scenario.scen_items.back().full_name = "New Item";
-							scenario.scen_items.back().name = "Item";
-						}
-						if(!edit_item_type(j) && j == size_before && scenario.scen_items.back().name == "New Item")
-							scenario.scen_items.pop_back();
-					}
-					start_item_editing(size_before == scenario.scen_items.size());
-					if(size_before > scenario.scen_items.size())
-						pos_before--;
-					right_sbar->setPosition(pos_before);
 					break;
 				case RB_SCEN_SPEC:
 					size_before = scenario.scen_specials.size();
@@ -1261,7 +1205,9 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 }
 
 static bool handle_terpal_action(location cur_point, bool option_hit) {
-	for(int i = 0; i < 256; i++)
+	int rows = TYPE_ROWS_DRAWING;
+	if(overall_mode == MODE_EDIT_TYPES) rows = TYPE_ROWS_EDITING;
+	for(int i = 0; i < 16 * rows; i++)
 		if(cur_point.in(terrain_rects[i])) {
 			int k = pal_sbar->getPosition() * 16 + i;
 			rectangle temp_rect = terrain_rects[i];
@@ -1292,59 +1238,180 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						break;
 				}
 			}
+			// MODE_EDIT_TYPES:
 			else {
-				short size_before = scenario.ter_types.size(), pos_before = pal_sbar->getPosition();
+				short pos_before = pos_before = pal_sbar->getPosition();
 				i += pos_before * 16;
+				short size_before = scenario.ter_types.size();
+				if(draw_mode == DRAW_MONST) size_before = scenario.scen_monsters.size(), i++;
+				else if(draw_mode == DRAW_ITEM) size_before = scenario.scen_items.size();
 				if(i > size_before) return true;
-				if(i == 90){
+
+				if(draw_mode == DRAW_TERRAIN && i == 90){
 					showWarning("The pit/barrier terrain cannot be changed.");
 					return true;
 				}
 				if(option_hit) {
-					// option-click the plus button: create a new row of terrains
+					// option-click the plus button: create a new row of types
 					if(i == size_before){
-						terrain_type_changes_t terrains;
-						scenario.ter_types.resize(size_before + 16);
-						for(; i < scenario.ter_types.size(); i++){
-							scenario.ter_types[i].name = "New Terrain";
-							terrains.push_back(scenario.ter_types[i]);
-						}
+						switch(draw_mode){
+							case DRAW_TERRAIN:{
+								terrain_type_changes_t terrains;
+								scenario.ter_types.resize(size_before + 16);
+								for(; i < scenario.ter_types.size(); i++){
+									scenario.ter_types[i].name = "New Terrain";
+									terrains.push_back(scenario.ter_types[i]);
+								}
 
-						undo_list.add(action_ptr(new aCreateDeleteTerrain(terrains)));
-						update_edit_menu();
+								undo_list.add(action_ptr(new aCreateDeleteTerrain(terrains)));
+								update_edit_menu();
+							}break;
+							case DRAW_MONST:{
+								monst_type_changes_t monsts;
+								scenario.scen_monsters.resize(size_before + 16);
+								for(; i < scenario.scen_monsters.size(); i++){
+									scenario.scen_monsters[i].m_name = "New Monster";
+									monsts.push_back(scenario.scen_monsters[i]);
+								}
+
+								undo_list.add(action_ptr(new aCreateDeleteMonster(monsts)));
+								update_edit_menu();
+							}break;
+							case DRAW_ITEM:{
+								item_type_changes_t items;
+								scenario.scen_items.resize(size_before + 16);
+								for(; i < scenario.scen_items.size(); i++){
+									scenario.scen_items[i].full_name = "New Item";
+									items.push_back(scenario.scen_items[i]);
+								}
+
+								undo_list.add(action_ptr(new aCreateDeleteItem(items)));
+								update_edit_menu();
+							}break;
+						}
 					}
 					else{
-						// option-click the last one and it's safe to delete: delete it
-						if(i == size_before - 1 && !scenario.is_ter_used(i)){
-							undo_list.add(action_ptr(new aCreateDeleteTerrain(false, scenario.ter_types.back())));
-							update_edit_menu();
-							scenario.ter_types.pop_back();
-						}
-						// option-click terrain that can't be deleted (because it would break other terrains' numbers, or is in use somewhere):
-						// reset type info
-						else{
-							scenario.ter_types[i] = cTerrain();
-							scenario.ter_types[i].name = "Unused Terrain";
+						switch(draw_mode){
+							case DRAW_TERRAIN:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_ter_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteTerrain(false, scenario.ter_types.back())));
+									update_edit_menu();
+									scenario.ter_types.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									scenario.ter_types[i] = cTerrain();
+									scenario.ter_types[i].name = "Unused Terrain";
+								}
+								break;
+							case DRAW_MONST:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_monst_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteMonster(false, scenario.scen_monsters.back())));
+									update_edit_menu();
+									scenario.scen_monsters.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									scenario.scen_monsters[i] = cMonster();
+									scenario.scen_monsters[i].m_name = "Unused Monster";
+								}
+								break;
+							case DRAW_ITEM:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_item_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteItem(false, scenario.scen_items.back())));
+									update_edit_menu();
+									scenario.scen_items.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									scenario.scen_items[i] = cItem();
+									scenario.scen_items[i].full_name = "Unused Item";
+								}
+								break;
 						}
 					}
 				} else {
-					// Click the plus button: create a new terrain and edit it immediately
+					// Click the plus button: create a new type and edit it immediately
 					if(i == size_before) {
-						scenario.ter_types.emplace_back();
-						scenario.ter_types.back().name = "New Terrain";
+						switch(draw_mode){
+							case DRAW_TERRAIN:
+								scenario.ter_types.emplace_back();
+								scenario.ter_types.back().name = "New Terrain";
+								break;
+							case DRAW_MONST:
+								scenario.scen_monsters.emplace_back();
+								scenario.scen_monsters.back().m_name = "New Monster";
+								break;
+							case DRAW_ITEM:
+								scenario.scen_items.emplace_back();
+								scenario.scen_items.back().full_name = "New Item";
+								break;
+						}
 					}
-					if(!edit_ter_type(i) && i == size_before && scenario.ter_types.back().name == "New Terrain"){
-						// Canceled:
-						scenario.ter_types.pop_back();
-					}else{
-						undo_list.add(action_ptr(new aCreateDeleteTerrain(true, scenario.ter_types.back())));
-						update_edit_menu();
+					switch(draw_mode){
+						case DRAW_TERRAIN:
+							if(!edit_ter_type(i)){
+								// Canceled editing
+								if(i == size_before){
+									// Canceled creating new:
+									scenario.ter_types.pop_back();
+								}
+							}
+							// Created new:
+							else if(i == size_before){
+								undo_list.add(action_ptr(new aCreateDeleteTerrain(true, scenario.ter_types.back())));
+								update_edit_menu();
+							}else{
+								// TODO edited existing (if different)
+							}
+							break;
+						case DRAW_MONST:
+							if(!edit_monst_type(i)){
+								// Canceled editing
+								if(i == size_before){
+									// Canceled creating new:
+									scenario.scen_monsters.pop_back();
+								}
+							}
+							// Created new:
+							else if(i == size_before){
+								undo_list.add(action_ptr(new aCreateDeleteMonster(true, scenario.scen_monsters.back())));
+								update_edit_menu();
+							}else{
+								// TODO edited existing (if different)
+							}
+							break;
+						case DRAW_ITEM:
+							if(!edit_item_type(i)){
+								// Canceled editing
+								if(i == size_before){
+									// Canceled creating new:
+									scenario.scen_items.pop_back();
+								}
+							}
+							// Created new:
+							else if(i == size_before){
+								undo_list.add(action_ptr(new aCreateDeleteItem(true, scenario.scen_items.back())));
+								update_edit_menu();
+							}else{
+								// TODO edited existing (if different)
+							}
+							break;
 					}
 				}
-				if(size_before / 16 > scenario.ter_types.size() / 16)
-					pos_before--;
+				short size_after = scenario.ter_types.size();
+				if(draw_mode == DRAW_MONST) size_after = scenario.scen_monsters.size(), i++;
+				else if(draw_mode == DRAW_ITEM) size_after = scenario.scen_items.size();
+				pos_before += (size_after / 16 - size_before / 16);
+				pal_sbar->setMaximum(max(pos_before, pal_sbar->getMaximum()));
 				pal_sbar->setPosition(pos_before);
-				set_up_terrain_buttons(false);
+				set_up_type_buttons(false);
 				change_made = true;
 			}
 			place_location();
@@ -1621,15 +1688,15 @@ static bool handle_toolpal_action(location cur_point2) {
 						break;
 					case PAL_TERRAIN: // Terrain palette
 						draw_mode = DRAW_TERRAIN;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_ITEM: // Item palette
 						draw_mode = DRAW_ITEM;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_MONST: // Monster palette
 						draw_mode = DRAW_MONST;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_BOAT:
 						set_string("Place/edit boat","Select boat location");
@@ -2732,7 +2799,7 @@ void start_town_edit() {
 	scenario.editor_state.editing_town = editing_town = true;
 	scenario.editor_state.drawing = true;
 	restore_current_town_state();
-	set_up_terrain_buttons(true);
+	set_up_type_buttons(true);
 	shut_down_menus(4);
 	shut_down_menus(2);
 	right_sbar->hide();
@@ -2779,7 +2846,7 @@ void start_out_edit() {
 	scenario.editor_state.editing_town = editing_town = false;
 	scenario.editor_state.drawing = true;
 	restore_current_out_state();
-	set_up_terrain_buttons(true);
+	set_up_type_buttons(true);
 	right_sbar->hide();
 	pal_sbar->show();
 	shut_down_menus(4);
@@ -2797,66 +2864,17 @@ void start_out_edit() {
 	redraw_screen();
 }
 
-void start_terrain_editing() {
+void start_type_editing(eDrawMode mode) {
 	right_sbar->hide();
 	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
-	draw_mode = DRAW_TERRAIN;
-	set_up_terrain_buttons(true);
+	draw_mode = mode;
+	set_up_type_buttons(true);
 	place_location();
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete/clear",true);
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Alt-click '+' to add many",true);
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
-}
-
-void start_monster_editing(bool just_redo_text) {
-	int num_options = scenario.scen_monsters.size() + 1;
-	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		right_sbar->setPosition(0);
-		
-		reset_rb();
-		right_sbar->setMaximum(num_options - 1 - NRSONPAGE);
-	}
-	for(short i = 1; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.scen_monsters.size())
-			title = "Create New Monster";
-		else title = scenario.scen_monsters[i].m_name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i - 1,RB_MONST, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
-	redraw_screen();
-}
-
-void start_item_editing(bool just_redo_text) {
-	int num_options = scenario.scen_items.size() + 1;
-	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(short i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.scen_items.size())
-			title = "Create New Item";
-		else title = scenario.scen_items[i].full_name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i,RB_ITEM, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
-	redraw_screen();
 }
 
 void start_special_item_editing(bool just_redo_text) {

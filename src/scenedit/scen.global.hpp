@@ -22,6 +22,10 @@ const int TER_RECT_UL_Y = 19;
 const int UI_LAYER_DEFAULT = 1000;
 const int UI_LAYER_MENUBAR = 1200;
 
+// When editing types, several more rows can fit because the tool palette isn't there
+const int TYPE_ROWS_DRAWING = 16;
+const int TYPE_ROWS_EDITING = 23;
+
 enum eScenMode {
 	MODE_DRAWING = 0,
 	MODE_TOGGLE_ROAD = 1,

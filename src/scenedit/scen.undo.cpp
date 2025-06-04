@@ -110,6 +110,38 @@ bool aCreateDeleteTerrain::redo_me() {
 	return true;
 }
 
+bool aCreateDeleteMonster::undo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cMonster monst : monsters){
+		scenario.scen_monsters.pop_back();
+	}
+	return true;
+}
+
+bool aCreateDeleteMonster::redo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cMonster monst : monsters){
+		scenario.scen_monsters.push_back(monst);
+	}
+	return true;
+}
+
+bool aCreateDeleteItem::undo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cItem item : items){
+		scenario.scen_items.pop_back();
+	}
+	return true;
+}
+
+bool aCreateDeleteItem::redo_me() {
+	// TODO if not in MODE_EDIT_TYPES, show it
+	for(cItem item : items){
+		scenario.scen_items.push_back(item);
+	}
+	return true;
+}
+
 bool aDrawTerrain::undo_me() {
 	cArea* cur_area = get_current_area();
 	for(auto change : changes){

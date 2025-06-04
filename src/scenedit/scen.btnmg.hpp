@@ -22,8 +22,6 @@ enum eLBAction {
 
 enum eRBAction {
 	RB_CLEAR = 0,
-	RB_MONST = 2,
-	RB_ITEM = 3,
 	RB_SCEN_SPEC = 4,
 	RB_OUT_SPEC = 5,
 	RB_TOWN_SPEC = 6,

@@ -5,6 +5,8 @@
 #include "tools/undo.hpp"
 #include "scenario/town.hpp"
 #include "scenario/scenario.hpp"
+#include "scenario/item.hpp"
+#include "scenario/monster.hpp"
 
 extern cScenario scenario;
 
@@ -25,6 +27,8 @@ typedef std::map<location,ter_change_t,loc_compare> stroke_ter_changes_t;
 typedef std::map<size_t, cTown::cItem> item_changes_t;
 typedef std::map<size_t, cTownperson> creature_changes_t;
 typedef std::vector<cTerrain> terrain_type_changes_t;
+typedef std::vector<cMonster> monst_type_changes_t;
+typedef std::vector<class cItem> item_type_changes_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
@@ -112,5 +116,32 @@ public:
 		terrains(terrains) {}
 };
 
+/// Action which adds new monster type(s) to the end of the list, or deletes from the end of the list
+class aCreateDeleteMonster : public cAction {
+	monst_type_changes_t monsters;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteMonster(bool create, cMonster monst) :
+		cAction(create ? "Create Monster Type" : "Delete Monster Type", !create),
+		monsters({monst}) {}
+	aCreateDeleteMonster(monst_type_changes_t monsts) :
+		cAction("Create Monster Types", false),
+		monsters(monsts) {}
+};
+
+/// Action which adds new item type(s) to the end of the list, or deletes from the end of the list
+class aCreateDeleteItem : public cAction {
+	item_type_changes_t items;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteItem(bool create, class cItem item) :
+		cAction(create ? "Create Item Type" : "Delete Item Type", !create),
+		items({item}) {}
+	aCreateDeleteItem(item_type_changes_t items) :
+		cAction("Create Item Types", false),
+		items(items) {}
+};
 
 #endif
