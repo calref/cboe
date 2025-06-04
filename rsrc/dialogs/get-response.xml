@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
-<dialog defbtn='okay'>
+<dialog defbtn='okay' escbtn='cancel'>
 	<field name='response' type='text' top='34' left='88' width='75' height='16'/>
 	<text name='prompt' size='large' top='6' left='55' width='141' height='16'>You respond:</text>
 	<pict name='pic' type='dlog' num='16' top='8' left='8'/>
+	<button name='cancel' type='regular' top='62' left='75'>Cancel</button>
 	<button name='okay' type='regular' top='62' left='146'>OK</button>
 </dialog>

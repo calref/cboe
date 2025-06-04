@@ -8,6 +8,7 @@
 #include "boe.monster.hpp"
 #include "boe.combat.hpp"
 #include "boe.text.hpp"
+#include "boe.town.hpp"
 #include "boe.specials.hpp"
 #include "boe.items.hpp"
 #include "sounds.hpp"
@@ -369,14 +370,17 @@ short monst_pick_target(short which_m) {
 			univ.town.monst[which_m].target = 6;
 	
 	if(is_combat() && !cur_monst->is_friendly()) {
+		// First target the last PC who cast a spell
 		if(spell_caster < 6)
 			if((get_ran(1,1,5) < 5) && (monst_can_see(which_m,univ.party[spell_caster].combat_pos))
 				&& univ.party[spell_caster].main_status == eMainStatus::ALIVE)
 				return spell_caster;
+		// Then target the last PC who fired a missile
 		if(missile_firer < 6)
 			if((get_ran(1,1,5) < 3) && (monst_can_see(which_m,univ.party[missile_firer].combat_pos))
 				&& univ.party[missile_firer].main_status == eMainStatus::ALIVE)
 				return missile_firer;
+		// Or, keep target already stored
 		if(univ.town.monst[which_m].target < 6)
 			if((monst_can_see(which_m,univ.party[univ.town.monst[which_m].target].combat_pos))
 				&& univ.party[univ.town.monst[which_m].target].main_status == eMainStatus::ALIVE)
@@ -703,8 +707,6 @@ bool try_move(short i,location start,short x,short y) {
 }
 
 bool combat_move_monster(short which,location destination) {
-	
-	
 	if(!monst_can_be_there(destination,which))
 		return false;
 	else if(!monst_check_special_terrain(destination,2,which))
@@ -798,7 +800,7 @@ bool monster_placid(short m_num) {
 }
 
 // This damages a monster by any fields it's in, and destroys any barrels or crates
-// it's stiing on.
+// it's sitting on.
 void monst_inflict_fields(short which_monst) {
 	short r1;
 	location where_check;
@@ -889,8 +891,12 @@ void monst_inflict_fields(short which_monst) {
 	
 }
 
-//mode; // 1 - town 2 - combat
-bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
+extern std::set<eDirection> no_move_from_north;
+extern std::set<eDirection> no_move_from_west;
+extern std::set<eDirection> no_move_from_south;
+extern std::set<eDirection> no_move_from_east;
+
+static bool monst_check_one_special_terrain(location where_check,short mode,short which_monst) {
 	ter_num_t ter = 0;
 	short r1,guts = 0;
 	bool can_enter = true,mage = false;
@@ -898,21 +904,21 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	bool do_look = false; // If becomes true, terrain changed, so need to update what party sees
 	cCreature *which_m;
 	eTerSpec ter_abil;
-	unsigned short ter_dir;
+	eDirection ter_dir;
 	
 	from_loc = univ.town.monst[which_monst].cur_loc;
 	ter = univ.town->terrain(where_check.x,where_check.y);
 	////
 	which_m = &univ.town.monst[which_monst];
 	ter_abil = univ.scenario.ter_types[ter].special;
-	ter_dir = univ.scenario.ter_types[ter].flag1;
+	ter_dir = eDirection(univ.scenario.ter_types[ter].flag1);
 	
 	if(mode > 0 && ter_abil == eTerSpec::CONVEYOR) {
 		if(
-			((ter_dir == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_dir == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_dir == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_dir == DIR_W) && (where_check.x > from_loc.x)) ) {
+			(no_move_from_north.count(ter_dir) && (where_check.y > from_loc.y)) ||
+			(no_move_from_east.count(ter_dir) && (where_check.x < from_loc.x)) ||
+			(no_move_from_south.count(ter_dir) && (where_check.y < from_loc.y)) ||
+			(no_move_from_west.count(ter_dir) && (where_check.x > from_loc.x))) {
 			return false;
 		}
 	}
@@ -961,6 +967,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	if(univ.town.is_fire_barr(where_check.x,where_check.y)) {
 		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4) {
+			// Monster breaks the barrier
 			// TODO: Are these barrier sounds right?
 			play_sound(60);
 			which_m->spell_note(49);
@@ -976,6 +983,7 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	if(univ.town.is_force_barr(where_check.x,where_check.y)) { /// Not in big towns
 		if(!which_m->is_friendly() && get_ran(1,1,100) < which_m->mu * 10 + which_m->cl * 4
 			&& (!univ.town->strong_barriers)) {
+			// Monster breaks the barrier
 			play_sound(60);
 			which_m->spell_note(49);
 			univ.town.set_force_barr(where_check.x,where_check.y,false);
@@ -987,29 +995,21 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 		if(monster_placid(which_monst))
 			can_enter = false;
 		else {
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_crate(to_loc.x,to_loc.y, true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_CRATE, from_loc, where_check);
 		}
 	}
 	if(univ.town.is_barrel(where_check.x,where_check.y)) {
 		if(monster_placid(which_monst))
 			can_enter = false;
 		else {
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
-			
+			push_thing(PUSH_BARREL, from_loc, where_check);
+		}
+	}
+	if(univ.town.is_block(where_check.x, where_check.y)){
+		if(monster_placid(which_monst))
+			can_enter = false;
+		else {
+			push_thing(PUSH_BLOCK, from_loc, where_check);
 		}
 	}
 	if(monster_placid(which_monst) && // monsters don't hop into bed when things are calm
@@ -1070,6 +1070,17 @@ bool monst_check_special_terrain(location where_check,short mode,short which_mon
 	}
 	
 	return can_enter;
+}
+
+//mode; // 1 - town 2 - combat
+bool monst_check_special_terrain(location where_check,short mode,short which_monst) {
+	cCreature* which_m = &univ.town.monst[which_monst];
+	for(int x = where_check.x; x < where_check.x + which_m->x_width; ++x){
+		for(int y = where_check.y; y < where_check.y + which_m->y_width; ++y){
+			if(!monst_check_one_special_terrain({x, y}, mode, which_monst)) return false;
+		}
+	}
+	return true;
 }
 
 void record_monst(cCreature* which_m, bool forced) {

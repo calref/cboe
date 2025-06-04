@@ -114,6 +114,7 @@ public:
 	long unique_id;
 	// transient stuff
 	std::map<eSkill,eSpell> last_cast = {{ eSkill::MAGE_SPELLS, eSpell::NONE}, { eSkill::PRIEST_SPELLS, eSpell::NONE }};
+	std::map<eSkill,short> last_target = {{ eSkill::MAGE_SPELLS, 6 }, { eSkill::PRIEST_SPELLS, 6 }};
 	// There is already a global last_spellcast_type, but that variable is for the whole party.
 	// This one is per-PC
 	eSkill last_cast_type = eSkill::INVALID;

@@ -59,7 +59,10 @@ short cur_viewing_mode = 0;
 short cen_x, cen_y;
 eScenMode overall_mode = MODE_INTRO_SCREEN;
 std::shared_ptr<cScrollbar> right_sbar, pal_sbar;
+std::shared_ptr<cTextField> palette_search_field;
 short mode_count = 0;
+short right_button_hovered = -1;
+
 cOutdoors* current_terrain;
 
 std::string scenario_temp_dir_name = "ed_scenario";
@@ -89,6 +92,8 @@ void save_prefs();
 cScenario scenario;
 rectangle right_sbar_rect;
 extern rectangle terrain_buttons_rect;
+rectangle search_field_text_rect;
+rectangle search_field_rect;
 
 extern void set_up_apple_events();
 
@@ -120,16 +125,22 @@ static void launch_scenario(eLaunchType type) {
 	// Prompt to save first
 	if(!save_check("save-before-launch", false)) return;
 
+	fs::path app_folder = fs::current_path();
 	fs::path game_binary;
 #ifdef SFML_SYSTEM_MACOS
 	game_binary = "Blades of Exile.app/Contents/MacOS/Blades of Exile";
+	// Run by double-click on app bundle
+	if(app_folder == "/"){
+		extern fs::path bundlePath();
+		app_folder = bundlePath().parent_path();
+	}
 #elif defined(SFML_SYSTEM_WINDOWS)
 	game_binary = "Blades of Exile.exe";
 #elif defined(SFML_SYSTEM_LINUX)
 	game_binary = "Blades of Exile";
 #endif
 
-	game_binary = bp::search_path(game_binary, {fs::current_path()});
+	game_binary = bp::search_path(game_binary, {app_folder});
 	if(game_binary.empty()){
 		showError("The current working directory does not contain Blades of Exile.");
 		return;
@@ -237,6 +248,24 @@ static void init_scrollbars() {
 	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
 }
 
+static void init_search_field() {
+	search_field_text_rect.top = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 16;
+	search_field_text_rect.bottom = search_field_text_rect.top + 12;
+	search_field_text_rect.left = RIGHT_AREA_UL_X + 5;
+	TextStyle style;
+	search_field_text_rect.right = search_field_text_rect.left + string_length("Search: ", style);
+	search_field_rect = search_field_text_rect;
+	search_field_rect.offset({search_field_text_rect.width() + 5, -2});
+	search_field_rect.width() = RIGHT_AREA_WIDTH / 2;
+	
+	static cParentless mainWin(mainPtr());
+	palette_search_field.reset(new cTextField(mainWin));
+	palette_search_field->setBounds(search_field_rect);
+	palette_search_field->show();
+	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, "search_field", palette_search_field);
+	event_listeners["search_field"] = std::dynamic_pointer_cast<iEventListener>(palette_search_field);
+}
+
 sf::FloatRect compute_viewport(const sf::RenderWindow& mainPtr, float ui_scale) {
 
 	// See compute_viewport() in boe.graphics.cpp
@@ -301,6 +330,7 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
+			set_pref("LastScenario", file);
 			restore_editor_state(true);
 			change_made = false;
 			ae_loading = true;
@@ -331,6 +361,7 @@ void init_scened(int argc, char* argv[]) {
 	cen_y = 18;
 		
 	init_scrollbars();
+	init_search_field();
 	init_lb();
 	init_rb();
 	
@@ -448,6 +479,7 @@ void handle_menu_choice(eMenu item_hit) {
 				break;
 			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+				set_pref("LastScenario", file_to_load.string());
 				restore_editor_state(true);
 				change_made = false;
 			} else if(!file_to_load.empty())
@@ -861,7 +893,8 @@ void pick_preferences() {
 		// Validate the debug party
 		if(!debug_party.empty()){
 			cUniverse univ;
-			if(!load_party(debug_party, univ)){
+			cCustomGraphics graphics;
+			if(!load_party(debug_party, univ, graphics)){
 				showError("Your chosen debug party could not be loaded.", "", &me);
 				me[id].setText(get_string_pref("DefaultPartyPath"));
 				return false;

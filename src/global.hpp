@@ -29,7 +29,7 @@ const char* oboeVersionString();
 // Window Resolutions
 const short boe_width = 605, boe_height = 430;
 const short pc_width = 590, pc_height = 440;
-const short scen_width = 584, scen_height = 420;
+const short scen_width = 584, scen_height = 435;
 
 // A convenient alias
 namespace boost { namespace filesystem {} namespace process {}}

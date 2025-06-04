@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text name='title' size='large' top='6' left='50' width='158' height='16'>Edit Special Node</text>
 	<text top='8' left='222' width='90' height='14'>Node number:</text>
@@ -30,80 +27,80 @@
 	
 	<text size='large' top='102' left='8' width='158' height='16'>Stuff Done Flags:</text>
 	<text name='sdf1-lbl' framed='true' top='121' left='22' width='220' height='15'/>
-	<field name='sdf1' top='120' left='254' width='51' height='16'/>
+	<field name='sdf1' type='int' top='120' left='254' width='51' height='16'/>
 	<button name='sdf1-edit' type='tiny' top='106' left='272'/>
 	<led name='sdf1-toggle' top='106' left='272'/>
 	
 	<text name='sdf2-lbl' framed='true' top='121' left='317' width='176' height='16'/>
-	<field name='sdf2' top='120' left='510' width='51' height='16'/>
+	<field name='sdf2' type='int' top='120' left='510' width='51' height='16'/>
 	<button name='sdf2-edit' type='tiny' top='106' left='528'/>
 	<led name='sdf2-toggle' top='106' left='528'/>
 	
 	
 	<text size='large' top='141' left='8' width='176' height='16'>Message, Pict:</text>
 	<text name='msg1-lbl' framed='true' top='164' left='22' width='238' height='15'/>
-	<field name='msg1' top='163' left='270' width='51' height='16'/>
+	<field name='msg1' type='int' top='163' left='270' width='51' height='16'/>
 	<button name='msg1-edit' type='large' top='161' left='329'>Create/Edit</button>
 	<led name='msg1-toggle' top='167' left='329'/>
 	
 	<text name='msg2-lbl' framed='true' top='188' left='22' width='238' height='15'/>
-	<field name='msg2' top='187' left='270' width='51' height='16'/>
+	<field name='msg2' type='int' top='187' left='270' width='51' height='16'/>
 	<button name='msg2-edit' type='large' top='185' left='329'>Create/Edit</button>
 	<led name='msg2-toggle' top='191' left='329'/>
 	
 	<text name='msg3-lbl' framed='true' top='212' left='22' width='238' height='15'/>
-	<field name='msg3' top='211' left='270' width='51' height='16'/>
+	<field name='msg3' type='int' top='211' left='270' width='51' height='16'/>
 	<button name='msg3-edit' type='large' top='209' left='329'>Create/Edit</button>
 	<led name='msg3-toggle' top='215' left='329'/>
 	
 	<text name='pict-lbl' framed='true' top='236' left='22' width='238' height='15'/>
-	<field name='pict' top='235' left='270' width='51' height='16'/>
+	<field name='pict' type='int' top='235' left='270' width='51' height='16'/>
 	<button name='pict-edit' type='large' top='233' left='329'>Choose</button>
 	<led name='pict-toggle' top='239' left='329'/>
 	
 	<text name='pictype-lbl' framed='true' top='260' left='22' width='238' height='15'/>
-	<field name='pictype' top='259' left='270' width='51' height='16'/>
+	<field name='pictype' type='int' top='259' left='270' width='51' height='16'/>
 	<button name='pictype-edit' type='large' top='257' left='329'>Choose</button>
 	<led name='pictype-toggle' top='263' left='329'/>
 	
 	
 	<text size='large' top='281' left='8' width='158' height='16'>Extra 1:</text>
 	<text name='x1a-lbl' framed='true' top='302' left='22' width='238' height='15'/>
-	<field name='x1a' top='301' left='270' width='51' height='16'/>
+	<field name='x1a' type='int' top='301' left='270' width='51' height='16'/>
 	<button name='x1a-edit' type='large' top='298' left='330'>Choose</button>
 	<led name='x1a-toggle' top='304' left='330'/>
 	
 	<text name='x1b-lbl' framed='true' top='326' left='22' width='238' height='15'/>
-	<field name='x1b' top='325' left='270' width='51' height='16'/>
+	<field name='x1b' type='int' top='325' left='270' width='51' height='16'/>
 	<button name='x1b-edit' type='large' top='322' left='330'>Create/Edit</button>
 	<led name='x1b-toggle' top='328' left='330'/>
 	
 	<text name='x1c-lbl' framed='true' top='350' left='22' width='238' height='15'/>
-	<field name='x1c' top='349' left='270' width='51' height='16'/>
+	<field name='x1c' type='int' top='349' left='270' width='51' height='16'/>
 	<button name='x1c-edit' type='large' top='346' left='330'>Create/Edit</button>
 	<led name='x1c-toggle' top='352' left='330'/>
 	
 	
 	<text size='large' top='372' left='8' width='158' height='16'>Extra 2:</text>
 	<text name='x2a-lbl' framed='true' top='394' left='22' width='238' height='15'/>
-	<field name='x2a' top='394' left='270' width='51' height='16'/>
+	<field name='x2a' type='int' top='394' left='270' width='51' height='16'/>
 	<button name='x2a-edit' type='large' top='391' left='330'>Choose</button>
 	<led name='x2a-toggle' top='397' left='330'/>
 	
 	<text name='x2b-lbl' framed='true' top='419' left='22' width='238' height='15'/>
-	<field name='x2b' top='418' left='270' width='51' height='16'/>
+	<field name='x2b' type='int' top='418' left='270' width='51' height='16'/>
 	<button name='x2b-edit' type='large' top='416' left='330'>Create/Edit</button>
 	<led name='x2b-toggle' top='422' left='330'/>
 	
 	<text name='x2c-lbl' framed='true' top='443' left='22' width='238' height='15'/>
-	<field name='x2c' top='442' left='270' width='51' height='16'/>
+	<field name='x2c' type='int' top='442' left='270' width='51' height='16'/>
 	<button name='x2c-edit' type='large' top='440' left='330'>Create/Edit</button>
 	<led name='x2c-toggle' top='446' left='330'/>
 	
 	
 	<text size='large' top='471' left='8' width='87' height='16'>Jump To:</text>
 	<text name='jump-lbl' framed='true' top='472' left='99' width='182' height='14'/>
-	<field name='jump' top='471' left='291' width='52' height='15'/>
+	<field name='jump' type='int' top='471' left='291' width='52' height='15'/>
 	<button name='jump-edit' type='large' top='468' left='349'>Create/Edit</button>
 	<led name='jump-toggle' top='474' left='349'/>
 	

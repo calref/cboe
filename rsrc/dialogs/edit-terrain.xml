@@ -2,9 +2,6 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='done' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<pict name='graphic' type='ter' num='0' top='8' left='8'/>
 	<text size='large' top='6' left='50' height='17' width='138'>Edit Terrain Type</text>
 	
@@ -20,12 +17,12 @@
 	<field name='name' top='30'  left='186' height='16' width='186'/>
 	
 	<text top='63' left='9' height='14' width='120'>Terrain picture:</text>
-	<field name='pict' top='62'  left='141' height='16' width='52' />
+	<field name='pict' type='uint' top='62'  left='141' height='16' width='52' />
 	<button name='pickpict' type='large' top='59' left='205'>Pick Picture</button>
 	<button name='pickanim' type='large' top='59' left='319'>Animated</button>
 	
 	<text top='63' left='430' width='60' height='14'>Map icon:</text>
-	<field name='map' top='62' left='495' width='80' height='16'/>
+	<field name='map' type='uint' top='62' left='495' width='80' height='16'/>
 	<pict name='seemap' top='86' left='465' type='map' num='0'/>
 	<button name='pickmap' type='regular' top='86' left='495'>Choose</button>
 	<text top='115' left='431' height='32' width='157'>(Enter -1 to scale down the large picture)</text>
@@ -55,19 +52,19 @@
 	</group>
 	
 	<text top='194' left='8' height='14' width='91'>Shortcut key:</text>
-	<field name='key' top='193' left='109' height='16' width='52' />
+	<field name='key' top='193' left='109' height='16' width='52' max-chars='1' />
 	<text top='194' left='171' height='14' width='91'>Light radius:</text>
-	<field name='light' top='193' left='271' height='16' width='52' />
+	<field name='light' type='uint' top='193' left='271' height='16' width='52' />
 	<text top='193' left='333' height='14' width='128'>Transform to what?</text>
-	<field name='trans' top='193' left='467' height='16' width='52' />
+	<field name='trans' type='uint' top='193' left='467' height='16' width='52' />
 	<button name='picktrans' top='190' left='530' type='regular'>Choose</button>
 	
 	<text top='217' left='8' height='14' width='91'>Ground type:</text>
-	<field name='ground' top='216' left='109' height='16' width='52' />
+	<field name='ground' type='uint' top='216' left='109' height='16' width='52' />
 	<text top='217' left='171' height='14' width='91'>Trim terrain:</text>
-	<field name='trimter' top='216' left='271' height='16' width='52' />
+	<field name='trimter' type='int' top='216' left='271' height='16' width='52' />
 	<text top='217' left='333' height='14' width='128'>Trim type:</text>
-	<field name='trim' top='216' left='467' height='16' width='52' />
+	<field name='trim' type='uint' top='216' left='467' height='16' width='52' />
 	<button name='picktrim' top='213' left='530' type='regular'>Choose</button>
 	
 	<text size='large' top='238' left='8' height='14' width='175'>Special properties:</text>
@@ -99,21 +96,21 @@
 	</group>
 	
 	<text top='254' left='467' height='14' width='100'>Combat Arena:</text>
-	<field name='arena' top='275' left='467' height='16' width='64'/>
+	<field name='arena' type='uint' top='275' left='467' height='16' width='64'/>
 	<button name='pickarena' type='regular' top='299' left='467'>Choose</button>
 	<button name='picktown' type='regular' top='299' left='532'>Custom</button>
 	<button name='object' top='344' left='467' type='large'>Object Detail</button>
 	
 	<text top='385' left='9' height='14' width='91'>Extra values:</text>
 	<text name='flag1text' framed='true' top='385' left='109' height='14' width='209'>*flag1</text>
-	<field name='flag1' top='384' left='329' height='16' width='64' />
+	<field name='flag1' type='int' top='384' left='329' height='16' width='64' />
 	<button name='pickflag1' top='381' left='404' type='regular'>Choose</button>
 	<button name='editspec' top='381' left='404' type='large'>Create/Edit</button>
 	<text name='flag2text' framed='true' top='410' left='109' height='14' width='209'>*flag2</text>
-	<field name='flag2' top='409' left='329' height='16' width='64' />
+	<field name='flag2' type='int' top='409' left='329' height='16' width='64' />
 	<button name='pickflag2' top='406' left='404' type='regular'>Choose</button>
 	<text name='flag3text' framed='true' top='435' left='109' height='14' width='209'>*flag3</text>
-	<field name='flag3' top='434' left='329' height='16' width='64' />
+	<field name='flag3' type='int' top='434' left='329' height='16' width='64' />
 	<button name='pickflag3' top='431' left='404' type='regular'>Choose</button>
 	
 	<button name='done' type='regular' top='455' left='517'>OK</button>

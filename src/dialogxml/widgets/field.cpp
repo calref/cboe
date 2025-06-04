@@ -139,6 +139,66 @@ void cTextField::replay_selection(ticpp::Element& next_action) {
 	redraw();
 }
 
+// Parentless text field handle input
+bool cTextField::handle_event(const sf::Event& event) {
+	// Not visible -> not interested
+	if(!this->isVisible())
+		return false;
+	
+	static cKey pendingKey;
+
+	switch(event.type) {
+		case sf::Event::MouseButtonPressed:
+			return this->handle_mouse_pressed(event);
+		case sf::Event::KeyPressed:
+			return this->handle_key_pressed(event, pendingKey);
+		case sf::Event::TextEntered:
+			if(!pendingKey.spec && haveFocus) {
+				pendingKey.c = event.text.unicode;
+				if(pendingKey.c != '\t')
+					handleInput(pendingKey, true);
+			}
+			break;
+		default: break;
+	}
+	
+	return false;
+}
+
+bool cTextField::handle_key_pressed(const sf::Event& event, cKey& pendingKey) {
+	if(haveFocus){
+		cKey key = translate_sfml_key(event.key);
+		// TODO if multiple parentless fields ever exist, tab order will need to be handled
+		
+		// If it's a character key, and the system key (control/command) is not pressed,
+		// we have an upcoming TextEntered event which contains more information.
+		// Otherwise, handle it right away. But never handle enter or escape.
+		if((key.spec && key.k != key_enter && key.k != key_esc) || mod_contains(key.mod, mod_ctrl))
+			handleInput(key, true);
+		pendingKey = key;
+		return true;
+	}
+	return false;
+}
+
+// Parentless text field toggle focus on click
+bool cTextField::handle_mouse_pressed(const sf::Event& event) {
+	location event_location = this->translated_location({
+		event.mouseButton.x,
+		event.mouseButton.y
+	});
+	
+	bool in_bounds = event_location.in(this->getBounds());
+	// TODO if multiple parentless fields ever exist, focus must be taken from the other one here
+	haveFocus = in_bounds;
+	insertionPoint = 0;
+	if(haveFocus){
+		static cFramerateLimiter fps_limiter;
+		handleClick(event_location, fps_limiter);
+	}
+	return in_bounds;
+}
+
 bool cTextField::handleClick(location clickLoc, cFramerateLimiter& fps_limiter) {
 	if(!haveFocus && getDialog() && !getDialog()->setFocus(this)) return true;
 	haveFocus = true;
@@ -462,7 +522,8 @@ void cTextField::handleInput(cKey key, bool record) {
 			selectionPoint = ++insertionPoint;
 		}
 	} else switch(key.k) {
-		case key_enter: break; // Shouldn't be receiving this anyway
+		case key_none: case key_enter:
+			break; // Shouldn't be receiving this anyway
 		case key_left: case key_word_left:
 			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select) {

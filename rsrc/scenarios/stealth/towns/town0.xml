@@ -10,7 +10,9 @@
     <lighting>lit</lighting>
     <onenter condition="alive">0</onenter>
     <onenter condition="dead">0</onenter>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>33</type>
     </item>

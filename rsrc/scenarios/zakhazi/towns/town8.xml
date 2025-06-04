@@ -9,7 +9,9 @@
     <difficulty>0</difficulty>
     <lighting>lit</lighting>
     <timer freq="60">37</timer>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <wandering>
         <monster>190</monster>
         <monster>190</monster>

@@ -884,7 +884,7 @@ void handle_talk_node(int which_talk_entry, bool is_redo) {
 			if(univ.party.save_talk(univ.town->talking.people[store_personality%10].title, univ.town->name, save_talk_str1, save_talk_str2)) {
 				give_help(57,0);
 				play_sound(0);
-				ASB("Noted in journal.");
+				ASB("Added to conversation notes.");
 			} else ASB("This is already saved.");
 			print_buf();
 			return;
@@ -1774,6 +1774,21 @@ class cChooseScenario {
 			}
 		}
 		stk.setPage(0);
+
+		// Show/hide alphabetical buttons
+		me["core"].hide();
+		if(scen_headers.size() > 0){
+			me["core"].show();
+		}
+		for(int i = 0; i < 26; ++i){
+			me[std::string(1, (char)('a' + i))].hide();
+		}
+		for(auto& hdr : scen_headers){
+			// I just checked, and the scenario editor will let you name your scenario "" or " "!
+			std::string name = name_alphabetical(hdr.name);
+			if(!name.empty())
+				me[name.substr(0, 1)].show();
+		}
 	}
 
 	bool doCancel() {
@@ -1810,11 +1825,28 @@ class cChooseScenario {
 		me.toast(true);
 		return true;
 	}
+
+	// Show the custom scenario folder
+	bool showFolder() {
+		extern fs::path scenDir;
+		launchURL("file://" + scenDir.string());
+		return true;
+	}
+
+	// Refresh the scenario list (check if custom scenarios added/removed)
+	bool refreshList() {
+		scen_headers = build_scen_headers();
+		auto& stk = dynamic_cast<cStack&>(me["list"]);
+		short page = stk.getPage();
+		// Redo the stack
+		put_scen_info();
+		// Put the viewer to the same page it was (clamped in case the list got shorter)
+		stk.setPage(min(page, stk.getPageCount() - 1));
+		return true;
+	}
 public:
 	cChooseScenario() {
-		// TODO: Add a button to jump to the scenarios folder
-		// Note: if the player jumps to the scenarios folder and adds scenarios, build_scen_headers() must be called again
-		scen_headers = build_scen_headers(); // TODO: Either make this local to this class, or make it take scen_headers by reference
+		scen_headers = build_scen_headers();
 	}
 	scen_header_type run() {
 		using namespace std::placeholders;
@@ -1831,6 +1863,26 @@ public:
 		me["scen1"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 0));
 		me["scen2"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 1));
 		me["scen3"].attachClickHandler(std::bind(&cChooseScenario::doSelectScenario, this, 2));
+		me["folder"].attachClickHandler(std::bind(&cChooseScenario::showFolder, this));
+		me["refresh"].attachClickHandler(std::bind(&cChooseScenario::refreshList, this));
+		me["core"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+			auto& stk = dynamic_cast<cStack&>(me["list"]);
+			stk.setPage(0);
+			return true;
+		});
+		for(int i = 0; i < 26; ++i){
+			std::string letter(1, (char)('a' + i));
+			me[letter].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
+				size_t first_letter_idx = std::find_if(scen_headers.begin(), scen_headers.end(), [letter](scen_header_type hdr) -> bool {
+					std::string name = name_alphabetical(hdr.name);
+					return !name.empty() && name.substr(0, 1) == letter;
+				}) - scen_headers.begin();
+				size_t page = 1 + first_letter_idx / 3;
+				auto& stk = dynamic_cast<cStack&>(me["list"]);
+				stk.setPage(page);
+				return true;
+			});
+		}
 		
 		put_scen_info();
 		
@@ -1889,7 +1941,7 @@ class cFilePicker {
 		save_files.resize(save_file_mtimes.size());
 
 		cStack& stk = get_stack();
-		int num_pages = ceil((float)save_file_mtimes.size() / parties_per_page);
+		int num_pages = max(1, ceil((float)save_file_mtimes.size() / parties_per_page));
 		stk.setPageCount(num_pages);
 		// HACK: For some reason which should be fixed, the buttons and labels on subsequent pages
 		// aren't getting text on the static buttons and labels
@@ -2076,7 +2128,8 @@ class cFilePicker {
 		while(saves_loaded < parties_needed){
 			fs::path next_file = save_file_mtimes[saves_loaded].first;
 			cUniverse party_univ;
-			if(!load_party(next_file, save_files[saves_loaded], true)){
+			cCustomGraphics graphics;
+			if(!load_party(next_file, save_files[saves_loaded], graphics, true)){
 				// Below, we check the load_failed flag to display when a party is corrupt
 			}
 			saves_loaded++;
@@ -2097,7 +2150,7 @@ class cFilePicker {
 			if(party_idx < parties_needed)
 				populate_slot(slot_idx, save_file_mtimes[party_idx].first, save_file_mtimes[party_idx].second, save_files[party_idx]);
 			else
-				empty_slot(party_idx - start_idx);
+				empty_slot(slot_idx);
 		}
 
 		++pages_populated;

@@ -47,6 +47,7 @@
 #include "tools/enum_map.hpp"
 #include "tools/event_listener.hpp"
 #include "tools/drawable_manager.hpp"
+#include "gfx/gfxsheets.hpp"
 
 using clara::ParserResult;
 using clara::ParseResultType;
@@ -54,7 +55,7 @@ using clara::ParseResultType;
 bool All_Done = false;
 short num_fonts;
 bool first_startup_update = true;
-bool first_sound_played = false,spell_forced = false;
+bool first_sound_played = false,spell_forced = false,spell_recast = false;
 bool party_in_memory = false;
 std::shared_ptr<cScrollbar> text_sbar, item_sbar, shop_sbar;
 std::shared_ptr<cButton> done_btn, help_btn;
@@ -65,6 +66,7 @@ extern const rectangle item_sbar_rect = {148,560,255,576};
 bool bgm_on = false,bgm_init = false;
 location store_anim_ul;
 cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 
 bool flushingInput = false, ae_loading = false;
 long start_time;
@@ -98,6 +100,9 @@ std::string help_text_rsrc = "help";
 }
 */
 std::map<std::string,std::vector<std::string>> feature_flags = {
+	// Legacy scenario flags
+	{"resurrection-balm", {"required"}}, // This means it CAN be supported, if the scenario has the flag.
+	{"conveyor-belts", {"V2"}}, // Diagonal conveyor belts and big monster physics
 	// Legacy behavior of the T debug action (used by some replays)
 	// does not change the party's outdoors location
 	{"debug-enter-town", {"move-outdoors"}},
@@ -119,6 +124,8 @@ std::map<std::string,std::vector<std::string>> feature_flags = {
 	// Bugs required for several VoDT test replays to run faithfully
 	{"empty-wandering-monster-bug", {"fixed"}},
 	{"too-many-extra-wandering-monsters-bug", {"fixed"}},
+	{"store-spell-target", {"fixed"}},
+	{"store-spell-caster", {"fixed"}},
 	// Game balance
 	{"magic-resistance", {"fixed"}} // Resist Magic used to not help with magic damage!
 };
@@ -183,6 +190,8 @@ short anim_step = -1;
 // Spell casting globals
 eSpell store_mage = eSpell::NONE, store_priest = eSpell::NONE;
 short store_mage_lev = 0, store_priest_lev = 0;
+short store_mage_target = 6, store_priest_target = 6;
+short store_mage_caster = 6, store_priest_caster = 6;
 short store_spell_target = 6,pc_casting;
 short num_targets_left = 0;
 location spell_targets[8];
@@ -202,7 +211,7 @@ std::unordered_map <std::string, std::shared_ptr <iEventListener>> event_listene
 cDrawableManager drawable_mgr;
 
 sf::Clock animTimer;
-extern long anim_ticks;
+extern long ter_anim_ticks;
 
 static void init_boe(int, char*[]);
 static void handle_scenario_args();
@@ -452,7 +461,7 @@ static void process_args(int argc, char* argv[]) {
 	}
 
 	if(saved_game){
-		if(!load_party(*saved_game, univ)) {
+		if(!load_party(*saved_game, univ, spec_scen_g)) {
 			std::cout << "Failed to load save file: " << *saved_game << std::endl;
 			return;
 		}
@@ -497,6 +506,8 @@ static void handle_scenario_args() {
 				start_new_game(true);
 			}
 			if(univ.party.is_in_scenario()){
+				// This check is correct, because the scen_name field of cScenario is the actual title,
+				// not header.exs or *.boes as univ.party.scen_name would be
 				if(univ.scenario.scen_name == scenario.scen_name){
 					// The party is already in the correct scenario.
 					// Ask whether to clear SDFs or not
@@ -513,7 +524,7 @@ static void handle_scenario_args() {
 				resetting = true;
 			}
 			if(!univ.party.is_in_scenario()){
-				put_party_in_scen(path.filename().string(), scen_arg_town || scen_arg_out_sec, true);
+				put_party_in_scen(path.string(), scen_arg_town || scen_arg_out_sec, true);
 			}
 		}else{
 			std::cerr << "Failed to load scenario: " << *scen_arg_path << std::endl;
@@ -627,7 +638,7 @@ static void replay_action(Element& action) {
 		fancy_file_picker(saving);
 	}else if(t == "load_party"){
 		decode_file(action.GetText(), tempDir / "temp.exg");
-		load_party(tempDir / "temp.exg", univ);
+		load_party(tempDir / "temp.exg", univ, spec_scen_g);
 
 		finish_load_party();
 
@@ -783,7 +794,7 @@ static void replay_action(Element& action) {
 	}else if(t == "handle_spellcast"){
 		auto info = info_from_action(action);
 		eSkill which_type = boost::lexical_cast<eSkill>(info["which_type"]);
-		spell_forced = str_to_bool(info["spell_forced"]);
+		spell_forced = spell_recast = str_to_bool(info["spell_forced"]);
 
 		handle_spellcast(which_type, did_something, need_redraw, need_reprint);
 	}else if(t == "handle_target_space"){
@@ -1069,6 +1080,7 @@ void init_boe(int argc, char* argv[]) {
 	init_tiling();
 	init_snd_tool();
 	
+	// see fallback_scale() in winutil.cpp for where the default UI scale is calculated based on screen size
 	adjust_window_mode();
 	init_ui();
 	// If we don't do this now it'll flash white to start with
@@ -1458,7 +1470,7 @@ void update_terrain_animation() {
 	if(overall_mode == MODE_STARTUP) return;
 	if(animTimer.getElapsedTime().asMilliseconds() < fortyTicks) return;
 
-	anim_ticks++;
+	ter_anim_ticks++;
 	animTimer.restart();
 }
 

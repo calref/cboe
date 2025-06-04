@@ -107,12 +107,10 @@ namespace{
 		.no_preview();
 	node_properties_t S_REST = node_builder_t(eSpecType::REST)
 		.msg();
-	// TODO implement preview
 	node_properties_t S_MSG_TITLE = node_builder_t(eSpecType::TITLED_MSG)
 		.msg()
 		.msg3(eSpecPicker::MSG_SINGLE)
-		.pic()
-		.no_preview();
+		.pic();
 	node_properties_t S_END_SCEN = node_builder_t(eSpecType::END_SCENARIO)
 		.no_preview();
 	node_properties_t S_SETPTR = node_builder_t(eSpecType::SET_POINTER)

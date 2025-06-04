@@ -20,6 +20,20 @@ env.Install(path.join(data_dir, "shaders"), Glob("#src/gfx/mask.*"))
 
 # Scenarios
 
+def scenario_changed(header, target, prev_ni, _repo_node):
+	'''Decide whether to repackage a scenario'''
+	if not path.exists(str(target)): return True
+	last_packaged = path.getmtime(str(target))
+	scen_dir = path.dirname(str(header))
+	for dir, _, files in walk_dir(scen_dir):
+		for fname in files:
+			fname = path.join(dir, fname)
+			last_modified = path.getmtime(fname)
+			if last_modified > last_packaged:
+				print(f'{fname} is newer than {target} ({path.getmtime(fname)} > {last_packaged})')
+				return True
+	return False
+
 def pack_scenario(target, source, env):
 	prev_dir = path.abspath('.')
 	for i in range(min(len(target), len(source))):
@@ -31,15 +45,16 @@ def pack_scenario(target, source, env):
 					if fname.startswith('.'): continue
 					cur_file = path.join(cur_dir, fname)
 					tar.add(path.join(dir, fname), arcname = cur_file)
+scen_env = env.Clone()
+scen_env.Append(BUILDERS={"BuildScenario": Builder(action=pack_scenario, suffix=".boes", src_suffix="")})
 
-env.Append(BUILDERS={"BuildScenario": Builder(action=pack_scenario, suffix=".boes", src_suffix="")})
-
-env.BuildScenario('#build/rsrc/bases/bladbase.boes', 'bases/bladbase/header.exs')
-env.BuildScenario('#build/rsrc/bases/cavebase.boes', 'bases/cavebase/header.exs')
-env.BuildScenario('#build/rsrc/scenarios/busywork.boes', 'scenarios/busywork/header.exs')
-env.BuildScenario('#build/rsrc/scenarios/valleydy.boes', 'scenarios/valleydy/header.exs')
-env.BuildScenario('#build/rsrc/scenarios/stealth.boes', 'scenarios/stealth/header.exs')
-env.BuildScenario('#build/rsrc/scenarios/zakhazi.boes', 'scenarios/zakhazi/header.exs')
+scen_env.Decider(scenario_changed)
+scen_env.BuildScenario('#build/rsrc/bases/bladbase.boes', 'bases/bladbase/header.exs')
+scen_env.BuildScenario('#build/rsrc/bases/cavebase.boes', 'bases/cavebase/header.exs')
+scen_env.BuildScenario('#build/rsrc/scenarios/busywork.boes', 'scenarios/busywork/header.exs')
+scen_env.BuildScenario('#build/rsrc/scenarios/valleydy.boes', 'scenarios/valleydy/header.exs')
+scen_env.BuildScenario('#build/rsrc/scenarios/stealth.boes', 'scenarios/stealth/header.exs')
+scen_env.BuildScenario('#build/rsrc/scenarios/zakhazi.boes', 'scenarios/zakhazi/header.exs')
 
 env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("#build/rsrc/scenarios/*.boes"))
 env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("#build/rsrc/bases/*.boes"))

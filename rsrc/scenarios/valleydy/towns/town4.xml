@@ -9,7 +9,9 @@
     <difficulty>8</difficulty>
     <lighting>lit</lighting>
     <onenter condition="alive">10</onenter>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>17</type>
         <property>true</property>

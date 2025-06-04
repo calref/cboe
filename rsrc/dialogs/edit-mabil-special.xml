@@ -14,14 +14,14 @@
 	<text name='ap' framed='true' top='136' left='120' width='200' height='16'/>
 	
 	<text name='extra1-title' framed='true' top='164' left='10' width='200' height='16'>Extra 1</text>
-	<field name='extra1' top='162' left='220' width='70' height='16'/>
+	<field name='extra1' type='uint' top='162' left='220' width='70' height='16'/>
 	<button name='pick-extra1' type='large' top='161' left='300'>Create/Edit</button>
 	
 	<text name='extra2-title' framed='true' top='192' left='10' width='200' height='16'>Extra 2</text>
-	<field name='extra2' top='190' left='220' width='70' height='16'/>
+	<field name='extra2' type='uint' top='190' left='220' width='70' height='16'/>
 	
 	<text name='extra3-title' framed='true' top='220' left='10' width='200' height='16'>Extra 3</text>
-	<field name='extra3' top='218' left='220' width='70' height='16'/>
+	<field name='extra3' type='uint' top='218' left='220' width='70' height='16'/>
 	
 	<button name='okay' type='regular' top='244' left='339'>OK</button>
 	<button name='cancel' type='regular' top='244' left='274'>Cancel</button>

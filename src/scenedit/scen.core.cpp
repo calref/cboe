@@ -16,6 +16,7 @@
 #include "scen.core.hpp"
 #include "scen.keydlgs.hpp"
 #include "scen.sdfpicker.hpp"
+#include "scen.locpicker.hpp"
 #include "scen.townout.hpp"
 #include "scen.fileio.hpp"
 #include "scen.actions.hpp"
@@ -619,14 +620,12 @@ bool edit_ter_type(ter_num_t which) {
 	return ter_dlg.accepted() || which != first;
 }
 
-static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
-	std::ostringstream strb;
-	
-	if(monst.picture_num < 1000)
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,PIC_MONST);
+static void put_monst_pic(cPict& pict, pic_num_t num) {
+	if(num < 1000)
+		pict.setPict(num, PIC_MONST);
 	else {
 		ePicType type_g = PIC_CUSTOM_MONST;
-		short size_g = monst.picture_num / 1000;
+		short size_g = num / 1000;
 		switch(size_g){
 			case 2:
 				type_g += PIC_WIDE;
@@ -638,8 +637,15 @@ static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which
 				type_g += PIC_LARGE;
 				break;
 		}
-		dynamic_cast<cPict&>(me["icon"]).setPict(monst.picture_num,type_g);
+		pict.setPict(num,type_g);
 	}
+}
+
+static void put_monst_info_in_dlog(cDialog& me, cMonster& monst, mon_num_t which) {
+	std::ostringstream strb;
+
+	put_monst_pic(dynamic_cast<cPict&>(me["icon"]), monst.picture_num);
+
 	dynamic_cast<cPict&>(me["talkpic"]).setPict(monst.default_facial_pic, PIC_TALK);
 	me["num"].setTextToNum(which);
 	me["name"].setText(monst.m_name);
@@ -849,7 +855,11 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 			put_monst_info_in_dlog(me,monst,which);
 		}
 	} else if(hit == "preview") {
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog monstInfo(*ResMgr::dialogs.get("monster-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
 		monstInfo["left"].hide();
 		monstInfo["right"].hide();
 		monstInfo.attachClickHandlers([](cDialog&,std::string,eKeyMod){return false;}, {"guard","mindless","invuln"});
@@ -1143,6 +1153,8 @@ static void fill_monst_abil_detail(cDialog& me, cMonster& monst, eMonstAbil abil
 			case eMonstSummon::LEVEL: me["summon"].setTextToNum(detail.summon.what); break;
 			case eMonstSummon::SPECIES: me["summon"].setText(get_str("traits", detail.summon.what * 2 + 35)); break;
 		}
+		if(abil == eMonstAbil::SUMMON && detail.summon.type == eMonstSummon::TYPE)
+			me["name"].replaceText("%s", scenario.scen_monsters[detail.summon.what].m_name);
 		me["max"].setTextToNum(detail.summon.max);
 		me["min"].setTextToNum(detail.summon.min);
 		me["len"].setTextToNum(detail.summon.len);
@@ -1233,9 +1245,13 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 			showError("Failed to add the new ability because the ability was not implemented. When reporting this, mention which ability you tried to add.", &me);
 			return true;
 		}
+		// An ability of the same basic type exists and must be overwritten
 		if(save_abils.find(iter->first) != save_abils.end() && save_abils[iter->first].active) {
-			// TODO: Warn about overwriting an ability and give a choce between keeping the old or the new
-			bool overwrite = true;
+			// Warn first
+			cChoiceDlog confirm("edit-mabil-overwrite", {"okay", "cancel"}, &me);
+			std::string name = save_abils[iter->first].to_string(iter->first);
+			confirm->getControl("warning").replaceText("{{abil}}", name);
+			bool overwrite = confirm.show() == "okay";
 			if(!overwrite) {
 				monst.abil = save_abils;
 				return true;
@@ -1409,12 +1425,26 @@ cMonster edit_monst_abil(cMonster initial,short which,cDialog& parent) {
 	using namespace std::placeholders;
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster-abils"),&parent);
+
+	put_monst_pic(dynamic_cast<cPict&>(monst_dlg["icon"]), initial.picture_num);
 	monst_dlg["loot-item"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 399, "Item To Drop", "-1 for no item"));
+
+	monst_dlg["pick-item"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
+		std::vector<std::string> item_names;
+		for(cItem& item : scenario.scen_items){
+			item_names.push_back(item.full_name);
+		}
+		short current = me["loot-item"].getTextAsNum();
+		short i = cStringChoice(item_names, "Which item?", &me).show(current);
+		me["loot-item"].setTextToNum(i);
+		return true;
+	});
 	monst_dlg["loot-chance"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 100, "Dropping Chance", "-1 for no item"));
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_detail, _1, _2, std::ref(initial)), {"abil-edit1", "abil-edit2", "abil-edit3", "abil-edit4"});
 	monst_dlg.attachClickHandlers(std::bind(edit_monst_abil_event_filter, _1, _2, std::ref(initial)), {"okay", "cancel", "abil-up", "abil-down", "edit-see", "pick-snd"});
 	
-	monst_dlg["num"].setTextToNum(which);
+	monst_dlg["info"].replaceText("{{num}}", std::to_string(which));
+	monst_dlg["info"].replaceText("{{name}}", initial.m_name);
 	put_monst_abils_in_dlog(monst_dlg, initial);
 	
 	monst_dlg.run();
@@ -1707,7 +1737,13 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "preview") {
 		cItem temp_item = item;
 		temp_item.ident = true;
+
+		// Use dark background that the game uses:
+		short defaultBackground = cDialog::defaultBackground;
+		cDialog::defaultBackground = cDialog::BG_DARK;
 		cDialog itemInfo(*ResMgr::dialogs.get("item-info"), &me);
+		cDialog::defaultBackground = defaultBackground;
+
 		itemInfo["left"].hide();
 		itemInfo["right"].hide();
 		itemInfo["done"].attachClickHandler(std::bind(&cDialog::toast, &itemInfo, false));
@@ -2205,6 +2241,7 @@ bool edit_quest(size_t which_quest) {
 		return true;
 	});
 	// TODO: Some focus handlers
+	// Should quests be able to award negative XP or negative gold? I typed the text fields as 'uint' for now.
 	
 	if(scenario.quests.size() == 1) {
 		quest_dlg["left"].hide();
@@ -2591,6 +2628,15 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 	
 	put_vehicle_area(dlg, what);
 	dlg["loc"].setText(boost::lexical_cast<std::string>(what.loc));
+	location new_loc = what.loc;
+	dlg["pick-loc"].attachClickHandler([&new_loc, is_boat](cDialog& me, std::string, eKeyMod) -> bool {
+		cArea* area = get_current_area();
+		cLocationPicker picker(new_loc, *area, is_boat ? "Move Boat" : "Move Horse", &me);
+		new_loc = picker.run();
+		me["loc"].setText(boost::lexical_cast<std::string>(new_loc));
+		return true;
+	});
+
 	dlg["num"].setTextToNum(num);
 	dlg["title"].setText(is_boat ? "Edit Boat" : "Edit Horse");
 	dlg["name"].setText(what.name);
@@ -2607,6 +2653,12 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 		what.property = prop.getState() != led_off;
 		what.exists = true;
 		what.name = dlg["name"].getText();
+		if(new_loc != what.loc){
+			what.loc = new_loc;
+			// Move editor view to keep showing vehicle
+			cen_x = new_loc.x;
+			cen_y = new_loc.y;
+		}
 	}
 	return what.exists;
 }
@@ -2819,20 +2871,10 @@ static void put_scen_details_in_dlog(cDialog& me) {
 	me["contact"].setText(scenario.contact_info[1]);
 }
 
-static bool save_scen_adv_details(cDialog& me, std::string, eKeyMod) {
-	if(!me.toast(true)) return true;
-
-	scenario.adjust_diff = dynamic_cast<cLed&>(me["adjust"]).getState() != led_red;
-
-	scenario.campaign_id = me["cpnid"].getText();
-	scenario.bg_out = boost::lexical_cast<int>(me["bg-out"].getText().substr(10));
-	scenario.bg_town = boost::lexical_cast<int>(me["bg-town"].getText().substr(10));
-	scenario.bg_dungeon = boost::lexical_cast<int>(me["bg-dungeon"].getText().substr(13));
-	scenario.bg_fight = boost::lexical_cast<int>(me["bg-fight"].getText().substr(11));
-	scenario.init_spec = me["oninit"].getTextAsNum();
+static bool save_scen_adv_details(cDialog& me, std::string item_hit, eKeyMod) {
+	me.toast(item_hit == "okay");
 	return true;
 }
-
 
 static void put_scen_adv_details_in_dlog(cDialog& me) {
 	dynamic_cast<cLed&>(me["adjust"]).setState(scenario.adjust_diff ? led_red : led_off);
@@ -2879,6 +2921,7 @@ static bool edit_scen_default_bgs(cDialog& me, std::string which, eKeyMod) {
 void edit_scen_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-details"));
 	info_dlg["okay"].attachClickHandler(save_scen_details);
+	info_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &info_dlg, false));
 	
 	put_scen_details_in_dlog(info_dlg);
 	
@@ -2887,12 +2930,23 @@ void edit_scen_details() {
 
 void edit_scen_adv_details() {
 	cDialog info_dlg(*ResMgr::dialogs.get("edit-scenario-advanced"));
-	info_dlg["okay"].attachClickHandler(save_scen_adv_details);
+	info_dlg.attachClickHandlers(save_scen_adv_details, {"okay", "cancel"});
 	info_dlg.attachClickHandlers(edit_scen_default_bgs, {"bg-out", "bg-town", "bg-dungeon", "bg-fight"});
 	info_dlg["pickinit"].attachClickHandler(edit_scen_init_spec);
 
 	put_scen_adv_details_in_dlog(info_dlg);
 	info_dlg.run();
+
+	if(info_dlg.accepted()){
+		scenario.adjust_diff = dynamic_cast<cLed&>(info_dlg["adjust"]).getState() != led_red;
+
+		scenario.campaign_id = info_dlg["cpnid"].getText();
+		scenario.bg_out = boost::lexical_cast<int>(info_dlg["bg-out"].getText().substr(10));
+		scenario.bg_town = boost::lexical_cast<int>(info_dlg["bg-town"].getText().substr(10));
+		scenario.bg_dungeon = boost::lexical_cast<int>(info_dlg["bg-dungeon"].getText().substr(13));
+		scenario.bg_fight = boost::lexical_cast<int>(info_dlg["bg-fight"].getText().substr(11));
+		scenario.init_spec = info_dlg["oninit"].getTextAsNum();
+	}
 }
 
 bool edit_make_scen_1(std::string& author,std::string& title,bool& grass) {
@@ -2986,7 +3040,8 @@ bool build_scenario() {
 	scenario.default_ground = grass ? 2 : 0;
 	
 	scenario.feature_flags = {
-		{"scenario-meta-format", "V2"}
+		{"scenario-meta-format", "V2"},
+		{"resurrection-balm", "required"},
 	};
 
 	fs::path basePath = progDir/"Blades of Exile Base"/(grass ? "bladbase.boes" : "cavebase.boes");
@@ -3157,6 +3212,7 @@ void edit_scenario_events() {
 	evt_dlg["prev"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(0); });
 	evt_dlg["next"].attachClickHandler([&stk] (cDialog&, std::string, eKeyMod) { return stk.setPage(1); });
 	evt_dlg["okay"].attachClickHandler(save_scenario_events);
+	evt_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &evt_dlg, false));
 	for(int i = 0; i < scenario.scenario_timers.size(); i++) {
 		stk.setPage(i / 10);
 		short fieldId = i % 10;

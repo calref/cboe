@@ -63,8 +63,8 @@ void draw_startup_stats();
 void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter);
 sf::FloatRect compute_viewport(const sf::RenderWindow&, int mode, float ui_scale, float width, float height);
 
-
 void draw_startup_anim(bool advance);
 
+void debug_show_texture(const sf::Texture& texture, float seconds = 2, std::string label = "");
 
 #endif

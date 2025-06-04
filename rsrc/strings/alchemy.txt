@@ -1,10 +1,10 @@
 Alchemy and Poison
 30
-Alchemy can be incredibly useful. Potions can give you the added boost you may need to get through a long grueling dungeon, and you cannot raise the dead without the right concoction.
+Alchemy can be incredibly useful. Potions can give you the added boost you may need to get through a long grueling dungeon, and in newer scenarios, you cannot raise the dead without the right concoction.
 You need three things to make a potion:|1. High alchemy skill. When a character tries to make a potion, their alchemy skill must be above a certain level. The higher above that level, the better the chance for success.
 2. The right ingredient. Ingredients are usually found at special encounters outdoors, and regenerate themselves after a time. Generally, the person who teaches a recipe tells you what plant it needs.
 3. The recipe. These are usually bought in towns. You only need to buy each recipe once for the entire party.
-When you have all these things, go into a town and click on the blue bottle button. Pick the PC with the highest alchemy skill to make the potion. Hope.
+When you have all these things, go into a town and click "Do Alchemy" in the Actions menu. Pick the PC with the highest alchemy skill to make the potion. Hope.
 Here is a list of the alchemical concoctions, with min. skill to make: |Weak Curing |  Min. Skill - 1 |Need holly. Cures poison somewhat.
 Weak Healing |  Min. Skill - 1 |Need comfrey root. Provides mild healing.|
 Weak Poison |  Min. Skill - 1 |Need holly or spider glands. The lowest level poison.
@@ -19,7 +19,7 @@ Potion of Clarity |  Min. Skill - 9 |Need graymold and holly. Cures dumbfounding
 Strong Poison |  Min. Skill - 10 |Need asptongue mold. Powerful stuff.
 Strong Healing Potion |  Min. Skill - 12 |Need graymold and comfrey root. Provides excellent healing.
 Killer Poison |  Min. Skill - 12 |Need mandrake root. The strongest poison.
-Resurrection Balm |  Min. Skill - 9 |Need ember flowers. Necessary to cast Raise Dead or Resurrection.
+Resurrection Balm |  Min. Skill - 9 |Need ember flowers. Necessary to cast Raise Dead or Resurrection in newer scenarios.
 Medium Power Potion |  Min. Skill - 14 |Need mandrake root and asptongue mold. Restores a fair amount of spell points.
 Knowledge Brew |  Min. Skill - 19 |This most powerful of potions requires Mandrake and Ember Flowers for its creation.
 Strength Potion |  Min. Skill - 10 |This brew is a great aid in combat. Making it requires ember flowers and graymold.

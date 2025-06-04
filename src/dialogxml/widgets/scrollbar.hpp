@@ -53,7 +53,6 @@ class cScrollbar : public cControl, public iEventListener, public iDrawable {
 	// in the inventory area). 
 	rectangle wheel_event_rect {0, 0, 0, 0};
 	void draw_vertical(), draw_horizontal();
-	location translated_location(const sf::Vector2i) const;
 	eScrollbarPart location_to_part(const location& location) const;
 	location mouse_pressed_at;
 	int drag_start_position;

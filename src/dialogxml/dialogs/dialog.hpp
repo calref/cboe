@@ -13,6 +13,7 @@
 /// Dialog-related classes and types.
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
 
 #include <string>
 #include <map>
@@ -54,6 +55,8 @@ protected:
 	bool equal(const cDialogIterator& other) const;
 	void increment();
 };
+
+cKey translate_sfml_key(sf::Event::KeyEvent);
 
 /// Defines a fancy dialog box with various controls.
 class cDialog : public iComponent, public iNameGiver {

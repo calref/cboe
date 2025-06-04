@@ -209,7 +209,7 @@ cItem::cItem(){
 	ability = eItemAbil::NONE;
 	abil_strength = 0;
 	abil_data.value = 0;
-	missile = 0;
+	missile = -1;
 	type_flag = 0;
 	is_special = 0;
 	value = 0;

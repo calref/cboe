@@ -32,6 +32,7 @@ short menuChoiceId=-1;
 #endif
 
 cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 
 rectangle pc_area_buttons[6][4] ; // 0 - whole 1 - pic 2 - name 3 - stat strs 4,5 - later
 rectangle item_string_rects[24][4]; // 0 - name 1 - drop  2 - id  3 -
@@ -100,7 +101,7 @@ static void process_args(int argc, char* argv[]) {
 		exit(0);
 	}
 	if(!file.empty()) {
-		if(load_party(file, univ)) {
+		if(load_party(file, univ, spec_scen_g)) {
 			party_in_scen = !univ.party.scen_name.empty();
 			if(!party_in_scen) load_base_item_defs();
 			scen_items_loaded = true;
@@ -138,6 +139,7 @@ int main(int argc, char* argv[]) {
 		cDialog::init();
 		redraw_screen();
 		menu_activate();
+		set_cursor(sword_curs);
 		
 		handle_events();
 
@@ -290,7 +292,7 @@ void handle_menu_choice(eMenu item_hit) {
 			if(result) {
 				file = item_hit == eMenu::FILE_OPEN ? nav_get_party() : univ.file;
 				if(!file.empty()) {
-					if(load_party(file, univ)) {
+					if(load_party(file, univ, spec_scen_g)) {
 						party_in_scen = !univ.party.scen_name.empty();
 						if(!party_in_scen) load_base_item_defs();
 						scen_items_loaded = true;

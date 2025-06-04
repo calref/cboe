@@ -10,7 +10,9 @@
     <lighting>lit</lighting>
     <exit dir="e" x="31" y="7" />
     <onexit dir="e">13</onexit>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>21</type>
     </item>

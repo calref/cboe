@@ -46,7 +46,7 @@ void cScrollPane::recalcRect() {
 	globalFrame.inset(-4,-4);
 	frame.left = globalFrame.left;
 	frame.right = globalFrame.right;
-	scroll.setMaximum((globalFrame.height() - frame.height()) / 5);
+	scroll.setMaximum(ceil((globalFrame.height() - frame.height()) / 5.0));
 	scroll.setPageSize((frame.height() - 5) / 5);
 	rectangle scrollFrame;
 	scrollFrame.left = frame.right;

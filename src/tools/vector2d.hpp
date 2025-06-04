@@ -22,6 +22,25 @@ template<typename Type, typename Alloc = std::allocator<Type>> class vector2d {
 	friend class const_col_ref;
 	std::vector<Type, Alloc> data;
 	size_t w, h;
+
+	// Range-checking vector2d access is important because an out-of-bounds (x,y) combination can refer to an in-bounds index of
+	// the underlying array
+	Type& at(size_t x, size_t y) {
+		if(x >= w || y >= h){
+			throw "Tried to access out-of-range element at (" + std::to_string(x) + ", " + std::to_string(y) + ") in vector2d size "
+					+ std::to_string(w) + "x" + std::to_string(h);
+		}
+		size_t idx = w * y + x;
+		return data[idx];
+	}
+	const Type& at(size_t x, size_t y) const {
+		if(x >= w || y >= h){
+			throw "Tried to access out-of-range element at (" + std::to_string(x) + ", " + std::to_string(y) + ") in vector2d size "
+					+ std::to_string(w) + "x" + std::to_string(h);
+		}
+		size_t idx = w * y + x;
+		return data[idx];
+	}
 public:
 	using value_type = Type;
 	class row_ref {
@@ -40,10 +59,10 @@ public:
 		}
 	public:
 		Type& operator[](size_t x) {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 		row_ref operator=(row_ref&& other) {
 			row_ref& me = *this;
@@ -94,10 +113,10 @@ public:
 		}
 	public:
 		Type& operator[](size_t y) {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 		col_ref operator=(col_ref&& other) {
 			col_ref& me = *this;
@@ -139,7 +158,7 @@ public:
 		const_row_ref(const vector2d<Type, Alloc>& ref, size_t row) : ref(ref), y(row) {}
 	public:
 		const Type& operator[](size_t x) const {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 	};
 	class const_col_ref {
@@ -149,7 +168,7 @@ public:
 		const_col_ref(const vector2d<Type, Alloc>& ref, size_t col) : ref(ref), x(col) {}
 	public:
 		const Type& operator[](size_t y) const {
-			return ref.data[ref.w * y + x];
+			return ref.at(x, y);
 		}
 	};
 	col_ref operator[](size_t x) {

@@ -12,6 +12,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "dialogxml/dialogs/strdlog.hpp"
 
@@ -99,6 +100,9 @@ fs::path locate_scenario(std::string scen_name, bool allow_unpacked) {
 	fs::path scenPath;
 
 	for(fs::path scenDir : all_scen_dirs()){
+		// Some possible directories, like the Itch client installation folder, might not exist
+		if(!fs::is_directory(scenDir)) continue;
+
 		for(fs::recursive_directory_iterator iter(scenDir); iter != fs::recursive_directory_iterator(); iter++) {
 			fs::file_status stat = iter->status();
 			std::string fname = iter->path().filename().string().c_str();
@@ -1858,8 +1862,12 @@ void readTownFromXml(ticpp::Document&& data, cTown*& town, cScenario& scen) {
 			for(flag = flag.begin(elem.Get()); flag != flag.end(); flag++) {
 				flag->GetValue(&type);
 				if(type == "chop") {
-					flag->GetAttribute("day", &town->town_chop_time);
-					flag->GetAttribute("event", &town->town_chop_key);
+					if(flag->HasAttribute("day")){
+						flag->GetAttribute("day", &town->town_chop_time);
+					}
+					if(flag->HasAttribute("event")){
+						flag->GetAttribute("event", &town->town_chop_key);
+					}
 					flag->GetAttribute("kills", &town->max_num_monst);
 				} else if(type == "hidden") {
 					flag->GetText(&val);
@@ -2488,15 +2496,18 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_town.name = temp_str;
+		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
+		std::string temp_str_trimmed = temp_str;
+		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
+		if(i == 0) the_town.name = temp_str_trimmed;
 		else if(i >= 1 && i < 17)
-			the_town.area_desc[i-1].descr = temp_str;
+			the_town.area_desc[i-1].descr = temp_str_trimmed;
 		else if(i >= 17 && i < 20)
-			the_town.comment[i-17] = temp_str;
+			the_town.comment[i-17] = temp_str_trimmed;
 		else if(i >= 20 && i < 120)
-			the_town.spec_strs[i-20] = temp_str;
+			the_town.spec_strs[i-20] = temp_str_trimmed;
 		else if(i >= 120 && i < 140)
-			the_town.sign_locs[i-120].text = temp_str;
+			the_town.sign_locs[i-120].text = temp_str_trimmed;
 	}
 	
 	len = sizeof(legacy::talking_record_type);

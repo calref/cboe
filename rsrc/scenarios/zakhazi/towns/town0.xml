@@ -9,6 +9,7 @@
     <difficulty>0</difficulty>
     <lighting>lit</lighting>
     <flags>
+        <chop kills="30000" />
         <tavern>true</tavern>
     </flags>
     <item id="0">

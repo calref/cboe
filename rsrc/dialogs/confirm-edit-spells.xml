@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='keep' escbtn='cancel'>
+	<pict type='dlog' num='7' top='6' left='6'/>
+	<text name='keep-msg' top='6' left='49' width='256' height='32'>
+		Keep changes to {{PC}}'s spells before editing someone else?
+	</text>
+	<button name='cancel' type='regular' top='43' left='109'>Cancel</button>
+	<button name='revert' type='regular' top='43' left='175'>Discard</button>
+	<button name='keep' type='regular' top='43' left='240'>Keep</button>
+</dialog>

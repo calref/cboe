@@ -512,8 +512,11 @@ if platform == "darwin":
 		def fix_target_rpaths():
 			if not path.exists('deps/fix-rpaths/fix-rpaths.py'):
 				subprocess.call(["git", "submodule", "update", "--init", "deps/fix-rpaths"])
-			print(f'build/Blades of Exile/{targ}.app')
-			subprocess.call(["deps/fix-rpaths/fix-rpaths.py", f'build/Blades of Exile/{targ}.app'])
+			app = f'build/Blades of Exile/{targ}.app'
+			# The build for the target may have failed, in which case, don't call fix-rpaths
+			if path.exists(app):
+				print(app)
+				subprocess.call(["deps/fix-rpaths/fix-rpaths.py", f'build/Blades of Exile/{targ}.app'])
 		if not env.GetOption('clean'):
 			atexit.register(fix_target_rpaths)
 elif platform == "win32":

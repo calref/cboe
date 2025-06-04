@@ -631,9 +631,14 @@ void story_dialog(std::string title, str_num_t first, str_num_t last, eSpecCtxTy
 	story_dlg.run();
 }
 
-static bool get_num_of_items_event_filter(cDialog& me, std::string, eKeyMod) {
-	if(me.toast(true))
+static bool get_num_of_items_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
+	if(item_hit == "cancel"){
+		me.setResult<int>(0);
+		me.toast(false);
+	}
+	else if(me.toast(true)){
 		me.setResult<int>(me["number"].getTextAsNum());
+	}
 	return true;
 }
 
@@ -644,7 +649,7 @@ short get_num_of_items(short max_num) {
 	
 	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
 	numPanel["extra-led"].hide();
-	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
+	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay", "cancel"});
 	
 	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
 	numPanel["number"].setTextToNum(max_num);
@@ -825,9 +830,10 @@ void place_treasure(location where,short level,short loot,short mode) {
 	}
 }
 
-static bool get_text_response_event_filter(cDialog& me, std::string, eKeyMod) {
+static bool get_text_response_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	me.toast(true);
-	me.setResult(me["response"].getText());
+	if(item_hit == "cancel") me.setResult(std::string {""});
+	else me.setResult(me["response"].getText());
 	return true;
 }
 
@@ -835,7 +841,7 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	set_cursor(sword_curs);
 	
 	cDialog strPanel(*ResMgr::dialogs.get("get-response"));
-	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay"});
+	strPanel.attachClickHandlers(get_text_response_event_filter, {"okay", "cancel"});
 	if(!prompt.empty()) {
 		dynamic_cast<cPict&>(strPanel["pic"]).setPict(pic);
 		strPanel["prompt"].setText(prompt);
@@ -846,67 +852,6 @@ std::string get_text_response(std::string prompt, pic_num_t pic) {
 	std::string result = strPanel.getResult<std::string>();
 	std::transform(result.begin(), result.end(), result.begin(), tolower);
 	return result;
-}
-
-short get_num_response(short min, short max, std::string prompt, std::vector<std::string> choice_names, boost::optional<short> cancel_value, short initial_value, std::string extra_led, bool* led_output) {
-	std::ostringstream sout;
-	sout << prompt;
-	
-	set_cursor(sword_curs);
-	
-	cDialog numPanel(*ResMgr::dialogs.get("get-num"));
-	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay"});
-	
-	if(extra_led.empty()){
-		numPanel["extra-led"].hide();
-	}else{
-		numPanel["extra-led"].setText(extra_led);
-		numPanel["extra-led"].recalcRect();
-		if(led_output != nullptr)
-			dynamic_cast<cLed&>(numPanel["extra-led"]).setState(*led_output ? led_red : led_off);
-	}
-
-	sout << " (" << min << '-' << max << ')';
-	numPanel["prompt"].setText(sout.str());
-	numPanel["number"].setTextToNum(initial_value);
-	if(!choice_names.empty()){
-		numPanel["choose"].attachClickHandler([&choice_names, &prompt](cDialog& me,std::string,eKeyMod) -> bool {
-			cStringChoice choose_dlg(choice_names, prompt, &me);
-			me["number"].setTextToNum(choose_dlg.show(me["number"].getTextAsNum()));
-			return true;
-		});
-	}else{
-		numPanel["choose"].hide();
-	}
-	if(min < max)
-		numPanel["number"].attachFocusHandler([min,max](cDialog& me,std::string,bool losing) -> bool {
-			if(!losing) return true;
-			int val = me["number"].getTextAsNum();
-			if(val < min || val > max) {
-				showError("Number out of range!");
-				return false;
-			}
-			return true;
-		});
-
-	bool cancel_clicked = false;
-	if(cancel_value){
-		numPanel["cancel"].attachClickHandler([cancel_value, &cancel_clicked](cDialog& me,std::string,eKeyMod) -> bool {
-			cancel_clicked = true;
-			me.setResult<int>(*cancel_value);
-			me.toast(false);
-			return true;
-		});
-	}else{
-		numPanel["cancel"].hide();
-	}
-
-	numPanel.run();
-	if(!cancel_clicked && led_output != nullptr){
-		*led_output = dynamic_cast<cLed&>(numPanel["extra-led"]).getState() == led_red;
-	}
-	
-	return numPanel.getResult<int>();
 }
 
 static bool select_pc_event_filter (cDialog& me, std::string item_hit, eKeyMod) {
@@ -944,13 +889,16 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 		if(univ.party[i].main_status == eMainStatus::ABSENT || univ.party[i].main_status == eMainStatus::FLED)
 			can_pick = false;
 
+		if(mode != eSelectPC::ANY && univ.party[i].main_status >= eMainStatus::SPLIT)
+			can_pick = false;
+
 		else switch(mode) {
 			case eSelectPC::ONLY_CAN_GIVE_FROM_ACTIVE:
 				if(i == univ.cur_pc){
 					can_pick = false;
 					break;
 				}
-				if((overall_mode == MODE_COMBAT) && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
+				if((overall_mode == MODE_COMBAT) && univ.party[i].is_alive() && !adjacent(univ.party[univ.cur_pc].combat_pos,univ.party[i].combat_pos)) {
 					can_pick = false;
 					extra_info = "too far away";
 					break;
@@ -967,6 +915,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 						break;
 					case eBuyStatus::DEAD:
 						// Extra info not really needed, and kind of silly to print
+						extra_info = "";
 						can_pick = false;
 						break;
 					default:
@@ -990,6 +939,12 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 				BOOST_FALLTHROUGH;
 			case eSelectPC::ONLY_LIVING:
 				if(univ.party[i].main_status != eMainStatus::ALIVE){
+					can_pick = false;
+					extra_info = "";
+				}
+				break;
+			case eSelectPC::ONLY_STONE:
+				if(univ.party[i].main_status != eMainStatus::STONE){
 					can_pick = false;
 					extra_info = "";
 				}

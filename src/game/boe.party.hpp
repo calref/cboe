@@ -25,14 +25,36 @@ bool cast_spell_on_space(location where, eSpell spell);
 void crumble_wall(location where);
 void do_mindduel(short pc_num,cCreature *monst);
 void dispel_fields(short i,short j,short mode);
+
+// Reasons the player can't cast any Mage or Priest spells
+enum eCastStatus {
+	CAST_OK,
+	// Immutable reasons, shouldn't be printed when multiple PCs are checked (peace mode)
+	NO_CAST_SKILL,
+	NO_CAST_ANAMA,
+	// Should only be printed once when multiple PCs are checked (peace mode)
+	NO_CAST_ANTIMAGIC,
+	// Should be printed for each character when multiple PCs are checked (peace mode)
+	NO_CAST_SP,
+	NO_CAST_ENCUMBERED,
+	NO_CAST_DUMBFOUNDED,
+	NO_CAST_PARALYZED,
+	NO_CAST_ASLEEP,
+	// Fallthrough: If there are any ways this can be reached, they should be given their own enum values!
+	NO_CAST_UNKNOWN,
+	// Pacifism is intentionally not included here because it applies only to specific spells,
+	// and disables them in the spell picker or when you use the item.
+};
+eCastStatus pc_can_cast_spell(const cPlayer& pc,const eSkill type);
 bool pc_can_cast_spell(const cPlayer& pc,eSpell spell_num);
-bool pc_can_cast_spell(const cPlayer& pc,eSkill spell_num);
-eSpell pick_spell(short pc_num,eSkill type);
+void print_cast_status(eCastStatus status, eSkill type, std::string pc_name = "");
+eSpell pick_spell(short pc_num, eSkill type, bool check_done = false);
+
 void start_town_targeting(eSpell s_num,short who_c,bool freebie,eSpellPat pat = PAT_SINGLE);
 void do_alchemy();
 eAlchemy alch_choice(short pc_num);
 bool pick_pc_graphic(short pc_num,short mode,cDialog* parent_num);
-bool pick_pc_name(short pc_num,cDialog* parent)  ;
+bool pick_pc_name(short pc_num,cDialog* parent);
 bool has_trapped_monst();
 mon_num_t pick_trapped_monst();
 bool flying() ;

@@ -9,7 +9,7 @@
 	<pict type='dlog' num='16' top='8' left='8'/>
 	<text size='large' top='6' left='50' width='167' height='17'>Pick Town to Edit:</text>
 	<text name='prompt' top='25' left='50' width='185' height='28'>
-		Enter the number of the town you want to edit next:
+		Enter the number of the town you want to edit next: (0 - {{max-num}})
 	</text>
 	<button name='choose' type='regular' top='56' left='169'>Choose</button>
 </dialog>

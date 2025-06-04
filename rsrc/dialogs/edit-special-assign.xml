@@ -2,13 +2,16 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<field name='num' type='uint' top='64' left='209' width='75' height='16'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
-	<button name='okay' type='regular' top='87' left='311'>OK</button>
 	<text size='large' top='6' left='50' width='256' height='17'>Set Special Number:</text>
-	<text top='25' left='50' width='323' height='27'>
-		Which special node should be called when this space is entered/examined?
+	<text name='prompt' top='25' left='50' width='323' height='27'>
+		Which special node should be called when this space is entered/examined? (0-{{max-num}} for existing, {{next-num}} for new.)
 	</text>
 	<text top='64' left='120' width='84' height='16'>Special node:</text>
-	<button name='cancel' type='regular' top='87' left='246'>Cancel</button>
+	<field name='num' type='uint' top='64' left='209' width='75' height='16'/>
+	<!--TODO add a picker-->
+
+	<button name='cancel' type='regular' top='87' left='5'>Cancel</button>
+	<button name='edit' type='large' top='87' left='180'>Create/Edit</button>
+	<button name='okay' type='regular' top='87' left='286'>OK</button>
 </dialog>

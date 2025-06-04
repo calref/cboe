@@ -56,7 +56,6 @@ short monsters_faces[190] = {
 	23,0,0,0,0,0,0,0,23,23,
 	0,0,0,55,23,36,31,0,0,0};
 extern rectangle	windRect;
-extern long anim_ticks;
 extern tessel_ref_t bg[];
 extern short which_combat_type;
 extern eGameMode overall_mode;
@@ -1081,7 +1080,7 @@ void handle_target_mode(eGameMode target_mode, int range, eSpell spell) {
 		std::vector<location> enemy_locs_already_seen;
 		for(short i = 0; i < univ.town.monst.size(); i++){
 			auto& monst = univ.town.monst[i];
-			if(monst.is_alive() && party_can_see_monst(i)) {
+			if(monst.is_alive() && party_can_see_monst(i) && !monst.invisible) {
 				eAttitude att = monst.attitude;
 				if((att == eAttitude::HOSTILE_A || att == eAttitude::HOSTILE_B)
 					&& dist(loc, monst.cur_loc) <= range){

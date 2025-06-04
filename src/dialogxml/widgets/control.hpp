@@ -493,6 +493,7 @@ protected:
 	/// Plays the proper sound for this control being clicked on
 	void playClickSound();
 	static std::string generateRandomString();
+	location translated_location(const sf::Vector2i) const;
 private:
 	friend class cDialog; // This is so it can access parseColour and anchor
 	friend class cContainer; // This is so it can access anchor

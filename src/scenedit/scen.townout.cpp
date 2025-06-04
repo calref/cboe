@@ -57,17 +57,16 @@ const char *day_str_2[] = {"Unused","Event code (0 - no event)","Event code (0 -
 static void put_placed_monst_in_dlog(cDialog& me, cTownperson& monst, const short which) {
 	me["num"].setTextToNum(which);
 	me["type"].setText(scenario.scen_monsters[monst.number].m_name);
-	// TODO: Make attitude an enum
 	dynamic_cast<cLedGroup&>(me["attitude"]).setSelected(boost::lexical_cast<std::string>(monst.start_attitude));
 	dynamic_cast<cLedGroup&>(me["mobility"]).setSelected("mob" + std::to_string(monst.mobility + 1));
 	me["talk"].setTextToNum(monst.personality);
 	me["picnum"].setTextToNum(monst.facial_pic);
-	// TODO: Use -1 instead of 0 for "no pic", since 0 is a valid talking picture
  	if(short(monst.facial_pic) < 0)
 		dynamic_cast<cPict&>(me["pic"]).setPict(scenario.scen_monsters[monst.number].picture_num, PIC_MONST);
 	else if((monst.facial_pic >= 1000))
 		dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic - 1000,PIC_CUSTOM_TALK);
 	else dynamic_cast<cPict&>(me["pic"]).setPict(monst.facial_pic,PIC_TALK);
+	me["loc"].setText(boost::lexical_cast<std::string>(monst.start_loc));
 }
 
 static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_monst) {
@@ -75,6 +74,7 @@ static void get_placed_monst_in_dlog(cDialog& me, cTownperson& store_placed_mons
 	store_placed_monst.mobility = dynamic_cast<cLedGroup&>(me["mobility"]).getSelected()[3] - '1';
 	store_placed_monst.personality = me["talk"].getTextAsNum();
 	store_placed_monst.facial_pic = me["picnum"].getTextAsNum();
+	store_placed_monst.start_loc = boost::lexical_cast<location>(me["loc"].getText());
 }
 
 static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownperson& monst, const short which) {
@@ -108,6 +108,11 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 		if(i >= 0)
 			monst.personality = i;
 		put_placed_monst_in_dlog(me, monst, which);
+	} else if(hit == "pick-loc") {
+		cArea* area = get_current_area();
+		cLocationPicker picker(monst.start_loc, *area, "Move Creature", &me);
+		monst.start_loc = picker.run();
+		put_placed_monst_in_dlog(me, monst, which);
 	} else if(hit == "more") { //advanced
 		store_m = edit_placed_monst_adv(monst, which, me);
 		if(store_m.number != 0)
@@ -119,13 +124,19 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 void edit_placed_monst(short which_m) {
 	using namespace std::placeholders;
 	cTownperson monst = town->creatures[which_m];
+	location old_loc = monst.start_loc;
 	
 	cDialog edit(*ResMgr::dialogs.get("edit-townperson"));
-	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "okay", "cancel", "more", "del"});
+	edit.attachClickHandlers(std::bind(edit_placed_monst_event_filter, _1, _2, std::ref(monst), which_m), {"type-edit", "pict-edit", "talk-edit", "pick-loc", "okay", "cancel", "more", "del"});
 	
 	put_placed_monst_in_dlog(edit, monst, which_m);
 	
 	edit.run();
+	if(monst.start_loc != old_loc){
+		// Move editor view to keep showing monster
+		cen_x = monst.start_loc.x;
+		cen_y = monst.start_loc.y;
+	}
 }
 
 static void put_placed_monst_adv_in_dlog(cDialog& me, cTownperson& monst, const short which) {
@@ -264,25 +275,29 @@ cTownperson edit_placed_monst_adv(cTownperson initial, short which, cDialog& par
 	return initial;
 }
 
+// Store the state of the special flag LEDs in case put_placed_item_in_dlog() is called again when a picker finishes
+// and would wipe them out
+static void store_item_special_flags(cDialog& me, cTown::cItem& item) {
+	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
+	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
+	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+}
+
 static bool put_placed_item_in_dlog(cDialog& me, const cTown::cItem& item, const short which) {
-	std::ostringstream loc;
 	cItem base = scenario.scen_items[item.code];
 	if(item.ability != eEnchant::NONE && (base.variety == eItemType::ONE_HANDED || base.variety == eItemType::TWO_HANDED)) {
 		base.enchant_weapon(item.ability);
 	}
 	
 	me["num"].setTextToNum(which);
-	loc << "X = " << item.loc.x << ", Y = " << item.loc.y;
-	me["loc"].setText(loc.str());
+	me["loc"].setText(boost::lexical_cast<std::string>(item.loc));
+
 	me["name"].setText(base.full_name);
 	me["charges"].setTextToNum(item.charges);
 	me["abil"].setTextToNum(int(item.ability));
-	if(item.always_there)
-		dynamic_cast<cLed&>(me["always"]).setState(led_red);
-	if(item.property)
-		dynamic_cast<cLed&>(me["owned"]).setState(led_red);
-	if(item.contained)
-		dynamic_cast<cLed&>(me["contained"]).setState(led_red);
+	dynamic_cast<cLed&>(me["always"]).setState(item.always_there ? led_red : led_off);
+	dynamic_cast<cLed&>(me["owned"]).setState(item.property ? led_red : led_off);
+	dynamic_cast<cLed&>(me["contained"]).setState(item.contained ? led_red : led_off);
 	
 	dynamic_cast<cPict&>(me["pic"]).setPict(base.graphic_num, PIC_ITEM);
 	
@@ -327,9 +342,8 @@ static bool get_placed_item_in_dlog(cDialog& me, cTown::cItem& item, const short
 		return false;
 	}
 	
-	item.always_there = dynamic_cast<cLed&>(me["always"]).getState() != led_off;
-	item.property = dynamic_cast<cLed&>(me["owned"]).getState() != led_off;
-	item.contained = dynamic_cast<cLed&>(me["contained"]).getState() != led_off;
+	item.loc = boost::lexical_cast<location>(me["loc"].getText());
+	store_item_special_flags(me, item);
 	int ench = me["abil"].getTextAsNum();
 	if(ench >= 0 && ench <= cEnchant::MAX) item.ability = eEnchant(ench);
 	
@@ -341,6 +355,7 @@ static bool edit_placed_item_type(cDialog& me, cTown::cItem& item, const short w
 	short i = choose_text(STRT_ITEM, item.code, &me, "Place which item?");
 	if(i >= 0) {
 		item.code = i;
+		store_item_special_flags(me, item);
 		put_placed_item_in_dlog(me, item, which);
 	}
 	return true;
@@ -356,6 +371,17 @@ static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cIte
 		i = choose_text(STRT_ENCHANT, i, &me, "Which enchantment?");
 	}
 	if(i >= -1 && i <= cEnchant::MAX) item.ability = eEnchant(i);
+	store_item_special_flags(me, item);
+	put_placed_item_in_dlog(me, item, which);
+	return true;
+}
+
+static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
+	cArea* area = get_current_area();
+	cLocationPicker picker(item.loc, *area, "Move Item", &me);
+	item.loc = picker.run();
+	store_item_special_flags(me, item);
+	item.contained = container_there(item.loc);
 	put_placed_item_in_dlog(me, item, which);
 	return true;
 }
@@ -370,6 +396,7 @@ void edit_placed_item(short which_i) {
 	using namespace std::placeholders;
 	
 	cTown::cItem item = town->preset_items[which_i];
+	location old_loc = item.loc;
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-placed-item"));
 	item_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &item_dlg, false));
@@ -378,10 +405,16 @@ void edit_placed_item(short which_i) {
 	item_dlg["del"].attachClickHandler(std::bind(edit_placed_item_delete, _1, which_i));
 	item_dlg["abil-choose"].attachClickHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
 	item_dlg["abil"].attachFocusHandler(std::bind(edit_placed_item_abil, _1, _2, std::ref(item), which_i));
-	
+	item_dlg["pick-loc"].attachClickHandler(std::bind(edit_placed_item_loc, _1, _2, std::ref(item), which_i));
 	put_placed_item_in_dlog(item_dlg, item, which_i);
 	
 	item_dlg.run();
+
+	if(item.loc != old_loc){
+		// Move editor view to keep showing item
+		cen_x = item.loc.x;
+		cen_y = item.loc.y;
+	}
 }
 
 static bool edit_sign_event_filter(cDialog& me, sign_loc_t& which_sign) {
@@ -420,17 +453,43 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 }
 
 static bool save_town_num(cDialog& me, std::string, eKeyMod) {
+	using namespace std::placeholders;
+	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
 	return true;
 }
 
-short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
+static bool create_town_num(cDialog& me, std::string, eKeyMod) {
 	using namespace std::placeholders;
+	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size(), "Town number"));
+	if(me.toast(true)){
+		int i = me["town"].getTextAsNum();
+		if(i == scenario.towns.size()){
+			// create town
+			if(scenario.towns.size() >= 200) {
+				showError("You have reached the limit of 200 towns you can have in one scenario.");
+				return true;
+			}
+			if(!new_town()){
+				// Create town canceled -- don't store the number because it is out of range
+				return true;
+			}
+		}
+		cur_town = i;
+		town = scenario.towns[cur_town];
+		start_town_edit();
+		me.setResult<short>(i);
+	}
+	return true;
+}
+
+short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 	
 	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
+	town_dlg["prompt"].replaceText("{{max-num}}", std::to_string(scenario.towns.size() - 1));
+	town_dlg["prompt"].replaceText("{{next-num}}", std::to_string(scenario.towns.size()));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["okay"].attachClickHandler(save_town_num);
-	town_dlg["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -441,11 +500,11 @@ short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
 		me["town"].setTextToNum(i);
 		return true;
 	});
+	if(town_dlg.hasControl("edit")){
+		town_dlg["edit"].attachClickHandler(create_town_num);
+	}
 	
 	town_dlg["town"].setTextToNum(def);
-	std::string prompt = town_dlg["prompt"].getText();
-	prompt += " (0 - " + std::to_string(scenario.towns.size() - 1) + ')';
-	town_dlg["prompt"].setText(prompt);
 	
 	town_dlg.setResult<short>(-1);
 	town_dlg.run();
@@ -498,6 +557,7 @@ static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
 void outdoor_details() {
 	cDialog out_dlg(*ResMgr::dialogs.get("edit-outdoor-details"));
 	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
+	out_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &out_dlg, false));
 	std::ostringstream str_out;
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
 	out_dlg["loc"].setText(str_out.str());
@@ -694,6 +754,7 @@ static void put_town_details_in_dlog(cDialog& me) {
 	me["chop"].setTextToNum(town->town_chop_time);
 	me["key"].setTextToNum(town->town_chop_key);
 	me["population"].setTextToNum(town->max_num_monst);
+	me["population-hint"].replaceText("{{num}}", std::to_string(town->count_hostiles()));
 	me["difficulty"].setTextToNum(town->difficulty);
 	cLedGroup& lighting = dynamic_cast<cLedGroup&>(me["lighting"]);
 	switch(town->lighting_type) {
@@ -713,8 +774,15 @@ void edit_town_details() {
 	using namespace std::placeholders;
 	cDialog town_dlg(*ResMgr::dialogs.get("edit-town-details"));
 	town_dlg["okay"].attachClickHandler(save_town_details);
+	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
+	town_dlg["choose-key"].attachClickHandler([](cDialog& me, std::string id, bool losing) -> bool {
+		int value = me["key"].getTextAsNum();
+		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
+		me["key"].setTextToNum(value);
+		return true;
+	});
 	town_dlg["difficulty"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, 0, 10, "The town difficulty", "0 - easiest, 10 - hardest"));
 	town_dlg["pick-cmt"].attachFocusHandler([](cDialog& me, std::string id, bool losing) -> bool {
 		if(losing) return true;
@@ -761,6 +829,7 @@ void edit_town_events() {
 	
 	cDialog evt_dlg(*ResMgr::dialogs.get("edit-town-events"));
 	evt_dlg["okay"].attachClickHandler(save_town_events);
+	evt_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &evt_dlg, false));
 	evt_dlg.attachClickHandlers(edit_town_events_event_filter, {"edit1", "edit2", "edit3", "edit4", "edit5", "edit6", "edit7", "edit8"});
 	evt_dlg.attachFocusHandlers(std::bind(check_range_msg, _1, _2, _3, -1, town->specials.size(), "The town special node", "-1 for no special"), {"spec1", "spec2", "spec3", "spec4", "spec5", "spec6", "spec7", "spec8"});
 	
@@ -978,6 +1047,7 @@ void edit_town_wand() {
 	
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
 	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
 	// There's 16 of them, so this is kinda the easiest way to do it.

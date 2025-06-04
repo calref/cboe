@@ -28,6 +28,7 @@
 #include "dialogxml/dialogs/strdlog.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "dialogxml/dialogs/3choice.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 #include "fileio/fileio.hpp"
 #include <array>
 #include "spell.hpp"
@@ -140,6 +141,10 @@ bool handle_wandering_specials(short mode) {
 	return true;
 }
 
+std::set<eDirection> no_move_from_north = { DIR_N, DIR_NW, DIR_NE };
+std::set<eDirection> no_move_from_west = { DIR_W, DIR_NW, DIR_SW };
+std::set<eDirection> no_move_from_south = { DIR_S, DIR_SW, DIR_SE };
+std::set<eDirection> no_move_from_east = { DIR_E, DIR_NE, DIR_SE };
 
 // returns true if can enter this space
 // sets forced to true if definitely can enter
@@ -183,11 +188,12 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 	
 	// TODO: Why not support conveyors outdoors, too?
 	if(mode != eSpecCtx::OUT_MOVE && ter_special == eTerSpec::CONVEYOR) {
+		eDirection ter_dir = eDirection(ter_flag1);
 		if(
-			((ter_flag1 == DIR_N) && (where_check.y > from_loc.y)) ||
-			((ter_flag1 == DIR_E) && (where_check.x < from_loc.x)) ||
-			((ter_flag1 == DIR_S) && (where_check.y < from_loc.y)) ||
-			((ter_flag1 == DIR_W) && (where_check.x > from_loc.x)) ) {
+			(no_move_from_north.count(ter_dir) && (where_check.y > from_loc.y)) ||
+			(no_move_from_east.count(ter_dir) && (where_check.x < from_loc.x)) ||
+			(no_move_from_south.count(ter_dir) && (where_check.y < from_loc.y)) ||
+			(no_move_from_west.count(ter_dir) && (where_check.x > from_loc.x)) ) {
 			ASB("The moving floor prevents you.");
 			return false;
 		}
@@ -282,32 +288,15 @@ bool check_special_terrain(location where_check,eSpecCtx mode,cPlayer& which_pc,
 		}
 		if(univ.town.is_crate(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the crate.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_crate(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_crate(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_CRATE, from_loc, where_check);
 		}
 		if(univ.town.is_barrel(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the barrel.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_barrel(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_barrel(to_loc.x,to_loc.y,true);
-			for(short i = 0; i < univ.town.items.size(); i++)
-				if(univ.town.items[i].variety != eItemType::NO_ITEM && univ.town.items[i].item_loc == where_check
-				   && univ.town.items[i].contained && univ.town.items[i].held)
-					univ.town.items[i].item_loc = to_loc;
+			push_thing(PUSH_BARREL, from_loc, where_check);
 		}
 		if(univ.town.is_block(where_check.x,where_check.y)) {
 			add_string_to_buf("  You push the stone block.");
-			to_loc = push_loc(from_loc,where_check);
-			univ.town.set_block(where_check.x,where_check.y,false);
-			if(to_loc.x > 0)
-				univ.town.set_block(to_loc.x,to_loc.y,true);
+			push_thing(PUSH_BLOCK, from_loc, where_check);
 		}
 	}
 	
@@ -1133,6 +1122,8 @@ void use_item(short pc,short item) {
 					case SELECT_NO: break;
 					case SELECT_ACTIVE: store_spell_target = select_pc(eSelectPC::ONLY_LIVING); break;
 					case SELECT_ANY: store_spell_target = select_pc(eSelectPC::ANY); break;
+					case SELECT_DEAD: store_spell_target = select_pc(eSelectPC::ONLY_DEAD); break;
+					case SELECT_STONE: store_spell_target = select_pc(eSelectPC::ONLY_STONE); break;
 				}
 				if(overall_mode == MODE_COMBAT) {
 					bool priest = (*spell).is_priest();
@@ -1699,117 +1690,168 @@ void kill_monst(cCreature& which_m,short who_killed,eMainStatus type) {
 }
 
 // Pushes party and monsters around by moving walls and conveyor belts.
-// This is very fragile, and only hands a few cases.
+// NOTE: conveyors will also PREVENT PCs and monsters from moving ONTO them in an opposing direction.
+// This is handled in check_special_terrain() in this file and monst_check_special_terrain() in boe.monster.cpp
 void push_things() {
 	bool redraw = false;
-	ter_num_t ter;
-	location l;
 	
 	if(is_out()) // TODO: Make these work outdoors
 		return;
 	if(!univ.town.belt_present)
 		return;
 	
-	for(short i = 0; i < univ.town.monst.size(); i++)
-		if(univ.town.monst[i].is_alive()) {
-			l = univ.town.monst[i].cur_loc;
-			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
+	auto check_push = [&redraw](location& l, short x_width = 1, short y_width = 1) -> bool {
+		// Approximate the aggregate force of multiple conveyor belts a big monster could be pushed by,
+		// but never double-push in one cardinal direction.
+		bool up = false;
+		bool down = false;
+		bool left = false;
+		bool right = false;
+		for(int x = l.x; x < l.x + x_width; ++x){
+			for(int y = l.y; y < l.y + y_width; ++y){
+				ter_num_t ter = univ.town->terrain(x,y);
+				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
+					switch(univ.scenario.ter_types[ter].flag1){
+						case DIR_N: up = true; break;
+						case DIR_E: right = true; break;
+						case DIR_S: down = true; break;
+						case DIR_W: left = true; break;
+						// An animated diagonal conveyor terrain might look strange? But if someone wants to try.
+						// Diagonal conveyor support *could* require a scenario feature flag, but having a terrain
+						// with the diagonal direction set already indicates a desire for it to work.
+						case DIR_NE: right = true; up = true; break;
+						case DIR_SE: right = true; down = true; break;
+						case DIR_SW: left = true; down = true; break;
+						case DIR_NW: left = true; up = true; break;
+					}
 				}
 			}
-			if(l != univ.town.monst[i].cur_loc) {
-				univ.town.monst[i].cur_loc = l;
-				if((point_onscreen(center,univ.town.monst[i].cur_loc)) ||
-					(point_onscreen(center,l)))
-					redraw = true;
-			}
 		}
-	for(short i = 0; i < univ.town.items.size(); i++)
-		if(univ.town.items[i].variety != eItemType::NO_ITEM) {
-			l = univ.town.items[i].item_loc;
-			ter = univ.town->terrain(l.x,l.y);
-			if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-				switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-					case DIR_N: l.y--; break;
-					case DIR_E: l.x++; break;
-					case DIR_S: l.y++; break;
-					case DIR_W: l.x--; break;
+		location start_l = l;
+		location check_l = l;
+		// These may cancel each other out
+		if(up) --check_l.y;
+		if(down) ++check_l.y;
+		if(left) --check_l.x;
+		if(right) ++check_l.x;
+
+		if(check_l == start_l) return false;
+
+		// Now check for walls
+		if(univ.scenario.get_feature_flag("conveyor-belts") == "V2"){
+			// Don't count the thing as blocking itself (l is a reference to its actual position!)
+			l.x += univ.town->max_dim;
+
+			bool end_position_blocked = false;
+			for(int x = check_l.x; x < check_l.x + x_width; ++x){
+				for(int y = check_l.y; y < check_l.y + y_width; ++y){
+					if(is_blocked({x, y})){
+						end_position_blocked = true;
+						break;
+					}
 				}
 			}
-			if(l != univ.town.items[i].item_loc) {
-				univ.town.items[i].item_loc = l;
-				if((point_onscreen(center,univ.town.items[i].item_loc)) ||
-					(point_onscreen(center,l)))
-					redraw = true;
+
+			if(end_position_blocked){
+				// If one and only one component of a diagonal push can be completed, then do that
+				int blocked_vertical = false;
+				int blocked_horizontal = false;
+
+				for(int x = start_l.x; x < start_l.x + x_width; ++x){
+					for(int y = check_l.y; y < check_l.y + y_width; ++y){
+						if(is_blocked({x, y})){
+							blocked_vertical = 1;
+							break;
+						}
+					}
+				}
+
+				for(int x = check_l.x; x < check_l.x + x_width; ++x){
+					for(int y = start_l.y; y < start_l.y + y_width; ++y){
+						if(is_blocked({x, y})){
+							blocked_horizontal = 1;
+							break;
+						}
+					}
+				}
+
+				if(blocked_vertical + blocked_horizontal == 1){
+					if(blocked_vertical) check_l.y = start_l.y;
+					else if(blocked_horizontal) check_l.x = start_l.x;
+				}else{
+					check_l = start_l;
+				}
 			}
 		}
+
+		l = check_l;
+		if(l != start_l){
+			for(int x = min(start_l.x, l.x); x < max(start_l.x, l.x) + x_width; ++x){
+				for(int y = min(start_l.y, l.y); y < max(start_l.y, l.y) + y_width; ++y){
+					if(point_onscreen(center, {x, y})){
+						redraw = true;
+						break;
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	};
+
+	// Push monsters
+	for(short i = 0; i < univ.town.monst.size(); i++){
+		cCreature& creature = univ.town.monst[i];
+		if(creature.is_alive()) {
+			if(univ.scenario.get_feature_flag("conveyor-belts") == "V2"){
+				check_push(creature.cur_loc, creature.x_width, creature.y_width);
+			}else{
+				check_push(creature.cur_loc);
+			}
+			// Monsters destroy crates/barrels in monst_inflict_fields() in boe.monster.cpp
+		}
+	}
+	// Push items
+	for(short i = 0; i < univ.town.items.size(); i++){
+		if(univ.town.items[i].variety != eItemType::NO_ITEM){
+			check_push(univ.town.items[i].item_loc);
+		}
+	}
 	
+	// Push party in peace mode
 	if(is_town()) {
-		ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
-		l = univ.party.town_loc;
-		if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-			switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-				case DIR_N: l.y--; break;
-				case DIR_E: l.x++; break;
-				case DIR_S: l.y++; break;
-				case DIR_W: l.x--; break;
-			}
-		}
-		if(l != univ.party.town_loc) {
-			// TODO: Will this push you into a placed forcecage or barrier? Should it?
+		if(check_push(univ.party.town_loc)){
 			ASB("You get pushed.");
-			if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
-				draw_terrain(0);
-			center = l;
-			univ.party.town_loc = l;
-			update_explored(l);
-			ter = univ.town->terrain(univ.party.town_loc.x,univ.party.town_loc.y);
-			(void) ter; // Though it's never read currently, it at least keeps things consistent
+			center = univ.party.town_loc;
+			update_explored(center);
 			draw_map(true);
-			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)) {
+			if(univ.town.is_barrel(univ.party.town_loc.x,univ.party.town_loc.y)){
 				univ.town.set_barrel(univ.party.town_loc.x,univ.party.town_loc.y,false);
 				ASB("You smash the barrel.");
 			}
-			if(univ.town.is_crate(univ.party.town_loc.x,univ.party.town_loc.y)) {
+			if(univ.town.is_crate(univ.party.town_loc.x,univ.party.town_loc.y)){
 				univ.town.set_crate(univ.party.town_loc.x,univ.party.town_loc.y,false);
 				ASB("You smash the crate.");
 			}
-			if(univ.town.is_block(univ.party.town_loc.x,univ.party.town_loc.y)) {
+			// You will then share a space with the block, which I think is fine?
+			if(univ.town.is_block(univ.party.town_loc.x,univ.party.town_loc.y)){
 				ASB("You crash into the block.");
 				hit_party(get_ran(1, 1, 6), eDamageType::WEAPON);
 			}
+			// If the party smashed a barrel or a crate, drop those items on the floor
 			for(short k = 0; k < univ.town.items.size(); k++)
 				if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 				   && (univ.town.items[k].item_loc == univ.party.town_loc))
 					univ.town.items[k].contained = univ.town.items[k].held = false;
-			redraw = true;
 		}
 	}
+	// Push PCs in combat mode
 	if(is_combat()) {
-		for(short i = 0; i < 6; i++)
-			if(univ.party[i].main_status == eMainStatus::ALIVE) {
-				ter = univ.town->terrain(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y);
-				l = univ.party[i].combat_pos;
-				if (univ.scenario.ter_types[ter].special==eTerSpec::CONVEYOR) {
-					switch(univ.scenario.ter_types[ter].flag1) { // TODO: Implement the other 4 possible directions
-						case DIR_N: l.y--; break;
-						case DIR_E: l.x++; break;
-						case DIR_S: l.y++; break;
-						case DIR_W: l.x--; break;
-					}
-				}
-				if(l != univ.party[i].combat_pos) {
+		for(short i = 0; i < 6; i++){
+			if(univ.party[i].main_status == eMainStatus::ALIVE){
+				if(check_push(univ.party[i].combat_pos)){
 					ASB("Someone gets pushed.");
-					ter = univ.town->terrain(l.x,l.y);
-					if(univ.scenario.ter_types[ter].special == eTerSpec::CONVEYOR)
-						draw_terrain(0);
-					univ.party[i].combat_pos = l;
-					update_explored(l);
+					update_explored(univ.party[i].combat_pos);
 					draw_map(true);
 					if(univ.town.is_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						univ.town.set_barrel(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
@@ -1819,10 +1861,12 @@ void push_things() {
 						univ.town.set_crate(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y,false);
 						ASB("You smash the crate.");
 					}
+					// You will then share a space with the block, which I think is fine?
 					if(univ.town.is_block(univ.party[i].combat_pos.x,univ.party[i].combat_pos.y)) {
 						ASB("You crash into the block.");
 						damage_pc(univ.party[i],get_ran(1, 1, 6), eDamageType::WEAPON,eRace::UNKNOWN);
 					}
+					// If the party smashed a barrel or a crate, drop those items on the floor
 					for(short k = 0; k < univ.town.items.size(); k++)
 						if(univ.town.items[k].variety != eItemType::NO_ITEM && univ.town.items[k].held
 						   && (univ.town.items[k].item_loc == univ.party[i].combat_pos))
@@ -1830,8 +1874,9 @@ void push_things() {
 					redraw = true;
 				}
 			}
+		}
 	}
-	if(redraw) {
+	if(redraw){
 		print_buf();
 		draw_terrain(0);
 	}
@@ -4147,6 +4192,7 @@ void townmode_spec(const runtime_state& ctx) {
 				else increase_light(-spec.ex2a);
 			}
 			break;
+		// This is for 1 monster only. The name is very confusing! See MAKE_TOWN_HOSTILE for whole town/group attitude changes.
 		case eSpecType::TOWN_SET_ATTITUDE:{
 			int num_monst = univ.town.monst.size();
 			if((spec.ex1a < 0) || (spec.ex1a >= num_monst)){
@@ -4547,9 +4593,16 @@ void outdoor_spec(const runtime_state& ctx){
 			*ctx.ret_a = 1;
 			break;
 		case eSpecType::OUT_FORCE_TOWN: {
+			short town = spec.ex1a;
+			if(town < 0 || town >= univ.scenario.towns.size()){
+				showError("The scenario attempted to put the party in a nonexistent town: " + std::to_string(town));
+				break;
+			}
+			size_t town_dim = univ.scenario.towns[town]->max_dim;
 			l = {spec.ex2a, spec.ex2b};
+			// town entry direction. 9 means forced position
 			int i = 0;
-			if(l.x < 0 || l.y < 0 || l.x >= 64 || l.y >= 64)
+			if(l.x >= 0 && l.y >= 0 && l.x < town_dim && l.y < town_dim)
 				i = 9;
 			else if(spec.ex1b == 0) i = 2;
 			else if(spec.ex1b == 4) i = 0;

@@ -212,14 +212,14 @@
 	sdf -1, -1
 	msg 54, -1, 0
 	pic 64, 1
-	ex1 3, 31, -1
-	ex2 2, 32, -1
+	ex1 2, 32, -1
+	ex2 3, 31, -1
 	goto -1
 @block-move = 31
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 0, -1, -1
+	ex1 1, -1, -1
 	ex2 0, -1, -1
 	goto -1
 @once-dlog = 32

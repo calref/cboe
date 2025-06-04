@@ -11,9 +11,9 @@
 		Charges:<br/>
 		(-1 = default)
 	</text>
-	<field name='charges' top='73' left='135' width='52' height='16'/>
+	<field name='charges' type='int' top='73' left='135' width='52' height='16'/>
 	<text name='abil-lbl' top='101' left='50' width='80' height='16'>Ability:</text>
-	<field name='abil' top='101' left='135' width='52' height='16'/>
+	<field name='abil' type='int' top='101' left='135' width='52' height='16'/>
 	<button name='abil-choose' type='regular' top='98' left='200'>Choose</button>
 	<text top='120' left='50' width='80' height='14'>Special Flags:</text>
 	<led name='always' font='bold' top='138' left='84' height='14'>Always here</led>
@@ -26,5 +26,6 @@
 	<button name='del' type='regular' top='195' left='8'>Delete</button>
 	<button name='cancel' type='regular' top='195' left='248'>Cancel</button>
 	<text top='28' left='196' width='70' height='14'>Location:</text>
-	<text name='loc' top='28' left='272' width='116' height='14'/>
+	<text name='loc' top='28' left='257' width='90' height='14'/>
+	<button name='pick-loc' type='regular' relative='pos neg' rel-anchor='prev' top='4' left='5'>Move</button>
 </dialog>

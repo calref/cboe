@@ -111,12 +111,6 @@ eScrollStyle cScrollbar::getStyle() const {
 	return style;
 }
 
-// TODO: centralize this translation somewhere
-// Translate raw x/y position using the view of the current rendering target
-location cScrollbar::translated_location(const sf::Vector2i point) const {
-	return location { const_cast<cScrollbar*>(this)->getWindow().mapPixelToCoords(point) };
-}
-
 bool cScrollbar::handle_event(const sf::Event& event) {
 	// Not visible -> not interested
 	if(!this->isVisible())

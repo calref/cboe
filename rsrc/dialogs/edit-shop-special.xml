@@ -7,7 +7,7 @@
 	<text top='50' left='10' width='100' height='16'>Name:</text>
 	<field name='name' top='48' left='110' width='200' height='16'/>
 	<text top='75' left='10' width='100' height='16'>Special Node:</text>
-	<field name='node' top='74' left='110' width='80' height='16'/>
+	<field name='node' type='int' top='74' left='110' width='80' height='16'/>
 	<button name='edit' type='large' top='71' left='200'>Create/Edit</button>
 	<text top='100' left='10' width='100' height='16'>Quantity:</text>
 	<field name='amount' type='uint' top='98' left='110' width='80' height='16'/>

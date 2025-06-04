@@ -23,8 +23,8 @@
 	sdf -1, -1
 	msg 7, -1, 0
 	pic 25, 3
-	ex1 3, -1, -1
-	ex2 2, 4, -1
+	ex1 2, 4, -1
+	ex2 3, -1, -1
 	goto -1
 @start-shop = 4
 	sdf -1, -1

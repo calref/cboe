@@ -56,14 +56,14 @@ struct terrain_view_t {
 // access to scenedit-specific global variables (which won't work unless we want to compile the common
 // sources 3 times), or globals redeclared for no reason in boe.main.cpp and pc.main.cpp
 struct editor_state_t {
-	bool drawing;
-	bool editing_town;
+	bool drawing = false;
+	bool editing_town = true; // I don't think this starting value of the default editor state matters.
 
-	short last_town_edited;
+	short last_town_edited = 0;
 	// Remember last view and zoom for each town
 	std::map<short, terrain_view_t> town_view_state;
 
-	location last_out_edited;
+	location last_out_edited = {0, 0};
 	// Remember last view and zoom for each outdoor section--
 	// but only for when the designer makes a discontinuous section change.
 	// When simply shifting over by 1 section we won't want to

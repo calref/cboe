@@ -30,7 +30,6 @@ struct cCustomGraphics {
 	bool is_old = false;
 	void clear() {
 		sheets.clear();
-		party_sheet.reset();
 	}
 	explicit operator bool() {
 		return !sheets.empty() && bool(sheets[0]);
@@ -39,6 +38,7 @@ struct cCustomGraphics {
 		return !bool(*this);
 	}
 	void convert_sheets();
+	// Copy a graphic from custom scenario graphics into custom PARTY graphics so it can go between scenarios
 	void copy_graphic(pic_num_t dest, pic_num_t src, size_t numSlots);
 	graf_pos find_graphic(pic_num_t pic, bool party = false);
 	size_t count(bool party = false);

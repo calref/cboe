@@ -13,7 +13,9 @@
     <exit dir="n" x="7" y="27" />
     <onexit dir="n">23</onexit>
     <timer freq="100">2</timer>
-    <flags />
+    <flags>
+        <chop kills="30000" />
+    </flags>
     <item id="0">
         <type>24</type>
     </item>
@@ -402,7 +404,7 @@
         <![CDATA["I am amused by your progress. Continue. If you make it to the end, you will certainly have shown yourselves worthy of being eaten by me. It's more of an honor to my race than you might think."]]>
     </string>
     <string id="17">
-        <![CDATA[You hear the voice again. It is no longer amused, by quite surprised. "Still with us, I see? Now you ogres aren't cheating with your payments and throwing down a mage or two, are you?"]]>
+        <![CDATA[You hear the voice again. It is no longer amused, but quite surprised. "Still with us, I see? Now you ogres aren't cheating with your payments and throwing down a mage or two, are you?"]]>
     </string>
     <string id="18">
         <![CDATA["Were that the case, rest assured I'll be up there before long to eat quite a few of you. Such surprises were not part of the deal."]]>

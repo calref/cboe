@@ -2,21 +2,18 @@
 <!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
-	<!--
-	 TODO: Assign numeric types (type = 'int' or 'uint') to fields as appropriate
-	 -->
 	<field name='full' top='30' left='163' width='226' height='16'/>
 	<field name="short" top='54' left='163' width='125' height='16'/>
-	<field name='picnum' top='82' left='140' width='52' height='16'/>
-	<field name='level' top='219' left='161' width='52' height='16'/>
-	<field name='awkward' top='243' left='161' width='52' height='16'/>
-	<field name='bonus' top='267' left='161' width='52' height='16'/>
-	<field name='prot' top='291' left='161' width='52' height='16'/>
-	<field name='charges' top='315' left='161' width='52' height='16'/>
-	<field name='flag' top='219' left='366' width='52' height='16'/>
-	<field name='value' top='243' left='366' width='52' height='16'/>
-	<field name='weight' top='267' left='366' width='52' height='16'/>
-	<field name='class' top='291' left='366' width='52' height='16'/>
+	<field name='picnum' type='uint' top='82' left='140' width='52' height='16'/>
+	<field name='level' type='uint' top='219' left='161' width='52' height='16'/>
+	<field name='awkward' type='uint' top='243' left='161' width='52' height='16'/>
+	<field name='bonus' type='uint' top='267' left='161' width='52' height='16'/>
+	<field name='prot' type='int' top='291' left='161' width='52' height='16'/>
+	<field name='charges' type='uint' top='315' left='161' width='52' height='16'/>
+	<field name='flag' type='uint' top='219' left='366' width='52' height='16'/>
+	<field name='value' type='uint' top='243' left='366' width='52' height='16'/>
+	<field name='weight' type='uint' top='267' left='366' width='52' height='16'/>
+	<field name='class' type='uint' top='291' left='366' width='52' height='16'/>
 	<button name='okay' type='regular' top='357' left='509'>OK</button>
 	<button name='cancel' type='regular' top='357' left='434'>Cancel</button>
 	<button name='prev' type='left' top='357' left='13'/>
@@ -82,7 +79,7 @@
 	<pict name='missile-pic' type='missile' num='3' top='243' left='440'/>
 	<button name='choosemiss' type='regular' top='240' left='521'>Choose</button>
 	<text name='skill-title' top='270' left='440' width='140' height='16'>Weapon key skill:</text>
-	<field name='weap-type' top='291' left='440' width='73' height='16'/>
+	<field name='weap-type' type='uint' top='291' left='440' width='73' height='16'/>
 	<button name='choosetp' type='regular' top='288' left='521'>Choose</button>
 	<text top='313' left='221' width='363' height='40'>
 		Enter properties for this item type. 

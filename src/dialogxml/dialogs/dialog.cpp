@@ -151,6 +151,25 @@ cDialog::cDialog(const DialogDefn& file, cDialog* p) : parent(p), doAnimations(d
 	loadFromFile(file);
 }
 
+static std::string ctrlTypeName(eControlType type) {
+	std::string ctrlType;
+	switch(type) {
+		case CTRL_UNKNOWN: ctrlType = "???"; break;
+		case CTRL_BTN: ctrlType = "button"; break;
+		case CTRL_LED: ctrlType = "led"; break;
+		case CTRL_LINE: ctrlType = "line"; break;
+		case CTRL_PICT: ctrlType = "pict"; break;
+		case CTRL_FIELD: ctrlType = "field"; break;
+		case CTRL_TEXT: ctrlType = "text"; break;
+		case CTRL_GROUP: ctrlType = "group"; break;
+		case CTRL_STACK: ctrlType = "stack"; break;
+		case CTRL_SCROLL: ctrlType = "slider"; break;
+		case CTRL_PANE: ctrlType = "pane"; break;
+		case CTRL_MAP: ctrlType = "tilemap"; break;
+	}
+	return ctrlType;
+}
+
 extern fs::path progDir;
 void cDialog::loadFromFile(const DialogDefn& file){
 	bg = defaultBackground;
@@ -258,46 +277,20 @@ void cDialog::loadFromFile(const DialogDefn& file){
 			if(!ctrl.anchor.empty()) {
 				cControl* anchor = findControl(ctrl.anchor);
 				if(anchor == nullptr) {
-					std::string ctrlType;
-					switch(ctrl.getType()) {
-						case CTRL_UNKNOWN: ctrlType = "???"; break;
-						case CTRL_BTN: ctrlType = "button"; break;
-						case CTRL_LED: ctrlType = "led"; break;
-						case CTRL_LINE: ctrlType = "line"; break;
-						case CTRL_PICT: ctrlType = "pict"; break;
-						case CTRL_FIELD: ctrlType = "field"; break;
-						case CTRL_TEXT: ctrlType = "text"; break;
-						case CTRL_GROUP: ctrlType = "group"; break;
-						case CTRL_STACK: ctrlType = "stack"; break;
-						case CTRL_SCROLL: ctrlType = "slider"; break;
-						case CTRL_PANE: ctrlType = "pane"; break;
-						case CTRL_MAP: ctrlType = "tilemap"; break;
-					}
-					throw xBadVal(ctrlType, "anchor", ctrl.anchor, 0, 0, fname);
+					throw xBadVal(ctrlTypeName(ctrl.getType()), "anchor", ctrl.anchor, 0, 0, fname);
 				}
 				if(!anchor->anchor.empty()) {
 					// Make sure it's not a loop!
 					std::vector<std::string> refs{ctrl.anchor};
 					while(!anchor->anchor.empty()) {
+						cControl* next_anchor = findControl(anchor->anchor);
+						if(next_anchor == nullptr){
+							throw xBadVal(ctrlTypeName(anchor->getType()), "anchor", anchor->anchor, 0, 0, fname);
+						}
 						refs.push_back(anchor->anchor);
-						anchor = findControl(anchor->anchor);
+						anchor = next_anchor;
 						if(std::find(refs.begin(), refs.end(), anchor->anchor) != refs.end()) {
-							std::string ctrlType;
-							switch(ctrl.getType()) {
-								case CTRL_UNKNOWN: ctrlType = "???"; break;
-								case CTRL_BTN: ctrlType = "button"; break;
-								case CTRL_LED: ctrlType = "led"; break;
-								case CTRL_LINE: ctrlType = "line"; break;
-								case CTRL_PICT: ctrlType = "pict"; break;
-								case CTRL_FIELD: ctrlType = "field"; break;
-								case CTRL_TEXT: ctrlType = "text"; break;
-								case CTRL_GROUP: ctrlType = "group"; break;
-								case CTRL_STACK: ctrlType = "stack"; break;
-								case CTRL_SCROLL: ctrlType = "slider"; break;
-								case CTRL_PANE: ctrlType = "pane"; break;
-								case CTRL_MAP: ctrlType = "tilemap"; break;
-							}
-							throw xBadVal(ctrlType, "anchor", "<circular dependency>", 0, 0, fname);
+							throw xBadVal(ctrlTypeName(ctrl.getType()), "anchor", "<circular dependency>", 0, 0, fname);
 						}
 					}
 					all_resolved = false;
@@ -452,6 +445,12 @@ void cDialog::recalcRect(){
 
 	winRect.right *= get_ui_scale();
 	winRect.bottom *= get_ui_scale();
+	// Uncomment if you need to measure any dialogs.
+	/*
+	LOG_VALUE(fname);
+	LOG_VALUE(winRect.right);
+	LOG_VALUE(winRect.bottom);
+	//*/
 }
 
 bool cDialog::initCalled = false;
@@ -647,89 +646,99 @@ void cDialog::stackWindowsCorrectly() {
 	}
 }
 
-// This method handles one event received by the dialog.
-void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
+cKey translate_sfml_key(sf::Event::KeyEvent key_event) {
 	using Key = sf::Keyboard::Key;
 
 	cKey key;
+	switch(key_event.code){
+		case Key::Up:
+			key.spec = true;
+			key.k = key_up;
+			break;
+		case Key::Right:
+			key.spec = true;
+			key.k = key_right;
+			break;
+		case Key::Left:
+			key.spec = true;
+			key.k = key_left;
+			break;
+		case Key::Down:
+			key.spec = true;
+			key.k = key_down;
+			break;
+		case Key::Escape:
+			key.spec = true;
+			key.k = key_esc;
+			break;
+		case Key::Return: // TODO: Also enter (keypad)
+			key.spec = true;
+			key.k = key_enter;
+			break;
+		case Key::BackSpace:
+			key.spec = true;
+			key.k = key_bsp;
+			break;
+		case Key::Delete:
+			key.spec = true;
+			key.k = key_del;
+			break;
+		case Key::Tab:
+			key.spec = true;
+			key.k = key_tab;
+			break;
+		case Key::Insert:
+			key.spec = true;
+			key.k = key_insert;
+			break;
+		case Key::F1:
+			key.spec = true;
+			key.k = key_help;
+			break;
+		case Key::Home:
+			key.spec = true;
+			key.k = key_home;
+			break;
+		case Key::End:
+			key.spec = true;
+			key.k = key_end;
+			break;
+		case Key::PageUp:
+			key.spec = true;
+			key.k = key_pgup;
+			break;
+		case Key::PageDown:
+			key.spec = true;
+			key.k = key_pgdn;
+			break;
+		default:
+			key.spec = false;
+			key.c = keyToChar(key_event.code, false);
+			break;
+	}
+	key.mod = mod_none;
+	if(key_event.*systemKey)
+		key.mod += mod_ctrl;
+	if(key_event.shift) key.mod += mod_shift;
+	if(key_event.alt) key.mod += mod_alt;
+	return key;
+}
+
+// This method handles one event received by the dialog.
+void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter& fps_limiter) {
+
 	// HACK: This needs to be stored between consecutive invocations of this function
 	static cKey pendingKey = {true};
 	std::string itemHit = "";
 	location where;
-	
+	cKey key;
 	switch(currentEvent.type) {
 		case sf::Event::KeyPressed:
-			switch(currentEvent.key.code){
-				case Key::Up:
-					key.spec = true;
-					key.k = key_up;
-					break;
-				case Key::Right:
-					key.spec = true;
-					key.k = key_right;
-					break;
-				case Key::Left:
-					key.spec = true;
-					key.k = key_left;
-					break;
-				case Key::Down:
-					key.spec = true;
-					key.k = key_down;
-					break;
-				case Key::Escape:
-					key.spec = true;
-					key.k = key_esc;
-					break;
-				case Key::Return: // TODO: Also enter (keypad)
-					key.spec = true;
-					key.k = key_enter;
-					break;
-				case Key::BackSpace:
-					key.spec = true;
-					key.k = key_bsp;
-					break;
-				case Key::Delete:
-					key.spec = true;
-					key.k = key_del;
-					break;
-				case Key::Tab:
-					key.spec = true;
-					key.k = key_tab;
-					break;
-				case Key::Insert:
-					key.spec = true;
-					key.k = key_insert;
-					break;
-				case Key::F1:
-					key.spec = true;
-					key.k = key_help;
-					break;
-				case Key::Home:
-					key.spec = true;
-					key.k = key_home;
-					break;
-				case Key::End:
-					key.spec = true;
-					key.k = key_end;
-					break;
-				case Key::PageUp:
-					key.spec = true;
-					key.k = key_pgup;
-					break;
-				case Key::PageDown:
-					key.spec = true;
-					key.k = key_pgdn;
-					break;
-				default:
-					key.spec = false;
-					key.c = keyToChar(currentEvent.key.code, false);
-					break;
-			}
-			key.mod = mod_none;
-			if(currentEvent.key.*systemKey)
-				key.mod += mod_ctrl;
-			if(currentEvent.key.shift) key.mod += mod_shift;
-			if(currentEvent.key.alt) key.mod += mod_alt;
+			key = translate_sfml_key(currentEvent.key);
+			
+			// Handles button hotkeys. Note that the event still falls through to text fields.
+			// It probably shouldn't, because right now we have to be careful not to put a button
+			// on the same dialog as a field if its hotkey is a typable character.
 			process_keystroke(key);
 			// Now check for focused fields.
 			if(currentFocus.empty()) break;

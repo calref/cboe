@@ -9,7 +9,9 @@
     <difficulty>2</difficulty>
     <lighting>dark</lighting>
     <timer freq="3">41</timer>
-    <flags />
+    <flags>
+        <chop kills="10" />
+    </flags>
     <item id="0">
         <type>182</type>
     </item>

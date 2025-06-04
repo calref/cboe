@@ -1,0 +1,2667 @@
+<actions SHA="dc0b3d4" Tag="v0.0.12" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0 39 0 53 0 30 0 31 0 32 0 59 0 40 0 56 0 44 0 42 43 29 0 28 0 24 0 58 0 60 0 12 0 10 11 61 0 41 0]
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 1.5
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <debug-kill-party>
+            <version>V2</version>
+        </debug-kill-party>
+        <empty-wandering-monster-bug>
+            <version>fixed</version>
+        </empty-wandering-monster-bug>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <magic-resistance>
+            <version>fixed</version>
+        </magic-resistance>
+        <pacifist-spellcast-check>
+            <version>V2</version>
+        </pacifist-spellcast-check>
+        <scenario-meta-format>
+            <version>V2</version>
+        </scenario-meta-format>
+        <store-spell-caster>
+            <version>fixed</version>
+        </store-spell-caster>
+        <store-spell-target>
+            <version>fixed</version>
+        </store-spell-target>
+        <talk-go-back>
+            <version>StackV1</version>
+        </talk-go-back>
+        <target-lock>
+            <version>V1</version>
+            <version>V2</version>
+        </target-lock>
+        <too-many-extra-wandering-monsters-bug>
+            <version>fixed</version>
+        </too-many-extra-wandering-monsters-bug>
+    </feature_flags>
+    <srand>1747009805</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load1</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[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
+x71LDty7xPveWsD/BxPhxn8A6AAA
+]]>
+</load_party>
+    <startup_button_click>
+        <btn>Start Scenario</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <build_scen_headers>
+        <![CDATA[sanctify.boes
+myscenario.boes
+select-target.boes
+use-special-terrain
+specterr.exs
+]]>
+</build_scen_headers>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>scen3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>yes</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>down</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>up</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(14,27)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(16,27)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(13,28)</move>
+    <move>(12,28)</move>
+    <move>(11,28)</move>
+    <move>(11,28)</move>
+    <move>(10,28)</move>
+    <move>(10,27)</move>
+    <move>(10,26)</move>
+    <move>(9,27)</move>
+    <move>(9,27)</move>
+    <move>(8,26)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(8,25)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(9,27)</move>
+    <move>(10,26)</move>
+    <move>(11,25)</move>
+    <move>(12,25)</move>
+    <move>(13,25)</move>
+    <move>(14,25)</move>
+    <move>(15,25)</move>
+    <move>(16,25)</move>
+    <move>(17,25)</move>
+    <move>(18,25)</move>
+    <move>(19,25)</move>
+    <move>(20,25)</move>
+    <move>(21,25)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(22,24)</handle_talk>
+    <click_talk_rect>
+        <node>38</node>
+        <preset>false</preset>
+        <rect>{(70,92) - (122,105)}</rect>
+        <word>Triad</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>40</node>
+        <preset>false</preset>
+        <rect>{(124,124) - (224,138)}</rect>
+        <word>assistance</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>41</node>
+        <preset>false</preset>
+        <rect>{(164,124) - (242,140)}</rect>
+        <word>package</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(22,25)</move>
+    <move>(23,25)</move>
+    <move>(23,24)</move>
+    <move>(24,24)</move>
+    <move>(25,24)</move>
+    <move>(26,24)</move>
+    <move>(27,23)</move>
+    <move>(27,22)</move>
+    <move>(27,21)</move>
+    <move>(27,20)</move>
+    <move>(27,20)</move>
+    <move>(27,19)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(25,19)</handle_talk>
+    <click_talk_rect>
+        <node>22</node>
+        <preset>false</preset>
+        <rect>{(107,156) - (193,172)}</rect>
+        <word>attacking</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>26</node>
+        <preset>false</preset>
+        <rect>{(116,108) - (187,124)}</rect>
+        <word>recipes</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>5</handle_sale>
+    <click_shop_item>{(19,63) - (249,99)}</click_shop_item>
+    <handle_sale>0</handle_sale>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-2</node>
+        <preset>true</preset>
+        <rect>{(4,389) - (47,406)}</rect>
+        <word>Buy</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>25</node>
+        <preset>false</preset>
+        <rect>{(96,44) - (152,60)}</rect>
+        <word>spells</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,93) - (485,105)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>10</handle_sale>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>16</handle_sale>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>16</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(27,20)</move>
+    <move>(26,21)</move>
+    <move>(25,21)</move>
+    <move>(24,21)</move>
+    <move>(23,21)</move>
+    <move>(23,20)</move>
+    <display_map></display_map>
+    <move>(22,21)</move>
+    <move>(21,21)</move>
+    <move>(20,21)</move>
+    <move>(19,21)</move>
+    <move>(18,21)</move>
+    <move>(17,21)</move>
+    <move>(16,21)</move>
+    <move>(16,21)</move>
+    <move>(15,21)</move>
+    <move>(15,20)</move>
+    <move>(14,19)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(14,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(14,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(13,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(13,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(13,19)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(12,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(12,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(12,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(14,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(14,20)</move>
+    <move>(15,21)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(15,20)</move>
+    <move>(16,19)</move>
+    <move>(17,19)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(16,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(18,18)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(17,17)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(18,17)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(19,17)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(18,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(19,18)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(19,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(20,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(20,18)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(21,19)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(21,18)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(21,17)</move>
+    <move>(21,16)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(20,17)</move>
+    <move>(19,18)</move>
+    <move>(18,18)</move>
+    <move>(17,18)</move>
+    <move>(16,18)</move>
+    <move>(15,19)</move>
+    <move>(15,20)</move>
+    <move>(15,21)</move>
+    <move>(16,21)</move>
+    <move>(17,21)</move>
+    <move>(17,22)</move>
+    <move>(17,23)</move>
+    <move>(17,24)</move>
+    <move>(17,25)</move>
+    <move>(16,25)</move>
+    <move>(15,25)</move>
+    <move>(14,25)</move>
+    <move>(13,25)</move>
+    <move>(12,25)</move>
+    <move>(11,25)</move>
+    <move>(10,25)</move>
+    <move>(10,24)</move>
+    <move>(10,23)</move>
+    <move>(10,22)</move>
+    <move>(10,21)</move>
+    <move>(10,20)</move>
+    <move>(10,19)</move>
+    <move>(10,19)</move>
+    <move>(10,18)</move>
+    <move>(10,19)</move>
+    <move>(10,20)</move>
+    <move>(10,21)</move>
+    <move>(10,22)</move>
+    <move>(10,23)</move>
+    <move>(10,24)</move>
+    <move>(10,25)</move>
+    <move>(10,26)</move>
+    <move>(10,27)</move>
+    <move>(10,28)</move>
+    <move>(10,29)</move>
+    <move>(10,30)</move>
+    <move>(10,31)</move>
+    <move>(11,31)</move>
+    <move>(11,31)</move>
+    <move>(12,31)</move>
+    <move>(13,31)</move>
+    <move>(14,32)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(14,33)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(13,32)</move>
+    <move>(12,32)</move>
+    <move>(13,31)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(13,30)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(12,31)</move>
+    <move>(11,31)</move>
+    <move>(11,32)</move>
+    <move>(10,32)</move>
+    <move>(9,33)</move>
+    <move>(9,33)</move>
+    <move>(8,33)</move>
+    <move>(9,33)</move>
+    <move>(10,34)</move>
+    <move>(10,35)</move>
+    <move>(9,35)</move>
+    <move>(9,35)</move>
+    <move>(8,35)</move>
+    <move>(9,35)</move>
+    <move>(10,36)</move>
+    <move>(10,37)</move>
+    <move>(11,37)</move>
+    <move>(11,37)</move>
+    <move>(12,37)</move>
+    <move>(11,37)</move>
+    <move>(10,38)</move>
+    <move>(10,39)</move>
+    <move>(9,39)</move>
+    <click_control>
+        <id>pick</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick3</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(9,39)</move>
+    <move>(8,39)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(8,41)</handle_talk>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(8,40)</handle_talk>
+    <click_talk_rect>
+        <node>51</node>
+        <preset>false</preset>
+        <rect>{(127,44) - (170,58)}</rect>
+        <word>slith</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>52</node>
+        <preset>false</preset>
+        <rect>{(134,188) - (182,204)}</rect>
+        <word>loyal</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>50</node>
+        <preset>false</preset>
+        <rect>{(120,60) - (174,72)}</rect>
+        <word>army</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>50</node>
+        <preset>false</preset>
+        <rect>{(6,124) - (87,138)}</rect>
+        <word>Exilesss</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>50</node>
+        <preset>false</preset>
+        <rect>{(96,124) - (150,136)}</rect>
+        <word>army</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>49</node>
+        <preset>false</preset>
+        <rect>{(6,92) - (76,108)}</rect>
+        <word>ignored</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>51</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (123,170)}</rect>
+        <word>distrusssted</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(9,39)</move>
+    <move>(10,39)</move>
+    <handle_use_space_select></handle_use_space_select>
+    <handle_use_space>(9,39)</handle_use_space>
+    <move>(10,40)</move>
+    <move>(10,41)</move>
+    <move>(10,41)</move>
+    <move>(10,42)</move>
+    <move>(9,42)</move>
+    <move>(8,42)</move>
+    <move>(7,42)</move>
+    <move>(6,42)</move>
+    <move>(5,42)</move>
+    <move>(4,41)</move>
+    <move>(3,40)</move>
+    <move>(3,39)</move>
+    <move>(3,38)</move>
+    <move>(3,37)</move>
+    <move>(3,36)</move>
+    <move>(3,35)</move>
+    <move>(3,34)</move>
+    <move>(3,33)</move>
+    <move>(3,32)</move>
+    <move>(3,31)</move>
+    <move>(3,30)</move>
+    <move>(3,29)</move>
+    <move>(3,28)</move>
+    <move>(3,27)</move>
+    <move>(3,26)</move>
+    <move>(3,25)</move>
+    <move>(3,24)</move>
+    <move>(3,23)</move>
+    <move>(3,22)</move>
+    <move>(3,21)</move>
+    <move>(3,22)</move>
+    <move>(3,23)</move>
+    <move>(3,24)</move>
+    <move>(3,25)</move>
+    <move>(3,26)</move>
+    <move>(3,27)</move>
+    <move>(3,28)</move>
+    <move>(3,29)</move>
+    <move>(3,30)</move>
+    <move>(3,31)</move>
+    <move>(3,32)</move>
+    <move>(3,33)</move>
+    <move>(3,34)</move>
+    <move>(3,35)</move>
+    <move>(3,36)</move>
+    <move>(3,37)</move>
+    <move>(3,38)</move>
+    <move>(3,39)</move>
+    <move>(3,40)</move>
+    <move>(4,41)</move>
+    <move>(5,42)</move>
+    <move>(6,42)</move>
+    <move>(7,42)</move>
+    <move>(8,42)</move>
+    <move>(9,42)</move>
+    <move>(10,42)</move>
+    <move>(11,42)</move>
+    <move>(12,42)</move>
+    <move>(13,42)</move>
+    <move>(14,42)</move>
+    <move>(15,42)</move>
+    <move>(16,42)</move>
+    <move>(17,42)</move>
+    <move>(17,41)</move>
+    <move>(17,41)</move>
+    <move>(17,40)</move>
+    <move>(18,39)</move>
+    <move>(17,40)</move>
+    <move>(17,39)</move>
+    <move>(18,38)</move>
+    <move>(19,37)</move>
+    <move>(20,36)</move>
+    <move>(20,35)</move>
+    <move>(20,35)</move>
+    <move>(20,34)</move>
+    <move>(21,34)</move>
+    <move>(22,34)</move>
+    <move>(22,33)</move>
+    <move>(23,33)</move>
+    <move>(24,33)</move>
+    <move>(25,33)</move>
+    <move>(26,33)</move>
+    <move>(27,32)</move>
+    <move>(26,33)</move>
+    <move>(25,34)</move>
+    <move>(25,35)</move>
+    <move>(25,35)</move>
+    <move>(25,36)</move>
+    <move>(26,37)</move>
+    <move>(25,36)</move>
+    <move>(24,35)</move>
+    <move>(24,35)</move>
+    <move>(25,35)</move>
+    <move>(26,34)</move>
+    <move>(27,34)</move>
+    <move>(28,34)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(29,33)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(29,34)</move>
+    <move>(29,34)</move>
+    <move>(30,34)</move>
+    <move>(30,35)</move>
+    <move>(30,36)</move>
+    <move>(30,37)</move>
+    <move>(31,38)</move>
+    <move>(32,37)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(34,37)</handle_talk>
+    <click_talk_rect>
+        <node>0</node>
+        <preset>false</preset>
+        <rect>{(54,44) - (168,57)}</rect>
+        <word>commander</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>1</node>
+        <preset>false</preset>
+        <rect>{(133,124) - (186,138)}</rect>
+        <word>sliths</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>2</node>
+        <preset>false</preset>
+        <rect>{(6,220) - (62,235)}</rect>
+        <word>books</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>12</node>
+        <preset>false</preset>
+        <rect>{(148,76) - (212,92)}</rect>
+        <word>Halgas</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>0</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (82,74)}</rect>
+        <word>fortress</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>6</node>
+        <preset>false</preset>
+        <rect>{(6,188) - (90,202)}</rect>
+        <word>Cavalier</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>5</node>
+        <preset>false</preset>
+        <rect>{(6,124) - (120,140)}</rect>
+        <word>catastrophe</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>3</node>
+        <preset>false</preset>
+        <rect>{(184,124) - (250,137)}</rect>
+        <word>critical</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>11</node>
+        <preset>false</preset>
+        <rect>{(141,156) - (215,172)}</rect>
+        <word>support</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>14</node>
+        <preset>false</preset>
+        <rect>{(49,140) - (114,156)}</rect>
+        <word>Mayer</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>8</node>
+        <preset>false</preset>
+        <rect>{(6,236) - (84,252)}</rect>
+        <word>package</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (68,92)}</rect>
+        <word>accept</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>10</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (83,172)}</rect>
+        <word>guarded</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>10</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (60,172)}</rect>
+        <word>guard</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>9</node>
+        <preset>false</preset>
+        <rect>{(6,300) - (66,316)}</rect>
+        <word>hurry</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>8</node>
+        <preset>false</preset>
+        <rect>{(56,188) - (134,204)}</rect>
+        <word>package</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(32,38)</move>
+    <move>(32,39)</move>
+    <move>(33,40)</move>
+    <click_control>
+        <id>pick</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pick3</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(33,40)</move>
+    <move>(34,40)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(35,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>steal</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_pause></handle_pause>
+    <move>(33,40)</move>
+    <move>(32,40)</move>
+    <move>(31,39)</move>
+    <move>(30,38)</move>
+    <move>(30,37)</move>
+    <move>(30,36)</move>
+    <move>(30,35)</move>
+    <move>(29,34)</move>
+    <move>(28,33)</move>
+    <move>(27,34)</move>
+    <move>(26,34)</move>
+    <move>(25,34)</move>
+    <move>(24,34)</move>
+    <move>(25,34)</move>
+    <move>(26,34)</move>
+    <move>(27,34)</move>
+    <move>(28,33)</move>
+    <move>(28,32)</move>
+    <move>(28,31)</move>
+    <move>(28,30)</move>
+    <move>(28,29)</move>
+    <move>(28,28)</move>
+    <move>(28,27)</move>
+    <move>(29,26)</move>
+    <move>(30,26)</move>
+    <move>(31,26)</move>
+    <move>(32,26)</move>
+    <move>(33,26)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(34,27)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(33,27)</move>
+    <move>(33,27)</move>
+    <move>(33,28)</move>
+    <move>(32,28)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(33,28)</move>
+    <move>(34,28)</move>
+    <move>(35,29)</move>
+    <move>(35,30)</move>
+    <move>(34,30)</move>
+    <move>(33,30)</move>
+    <move>(32,30)</move>
+    <move>(31,31)</move>
+    <move>(32,31)</move>
+    <move>(32,32)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(31,32)</handle_talk>
+    <click_talk_rect>
+        <node>-13</node>
+        <preset>true</preset>
+        <rect>{(121,389) - (188,404)}</rect>
+        <word>Record</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-10</node>
+        <preset>true</preset>
+        <rect>{(4,366) - (50,384)}</rect>
+        <word>Look</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>16</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (58,122)}</rect>
+        <word>river</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>18</node>
+        <preset>false</preset>
+        <rect>{(6,140) - (96,154)}</rect>
+        <word>Vahnatai</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>17</node>
+        <preset>false</preset>
+        <rect>{(49,220) - (137,234)}</rect>
+        <word>unsettled</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>19</node>
+        <preset>false</preset>
+        <rect>{(57,156) - (166,170)}</rect>
+        <word>malevolent</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(163,76) - (228,92)}</rect>
+        <word>dragon</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>21</node>
+        <preset>false</preset>
+        <rect>{(169,76) - (245,92)}</rect>
+        <word>dragons</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>20</node>
+        <preset>false</preset>
+        <rect>{(6,172) - (69,188)}</rect>
+        <word>benign</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>16</node>
+        <preset>false</preset>
+        <rect>{(128,108) - (181,122)}</rect>
+        <word>north</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>15</node>
+        <preset>false</preset>
+        <rect>{(66,124) - (122,140)}</rect>
+        <word>spells</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <click_shop_item>{(19,207) - (249,243)}</click_shop_item>
+    <handle_sale>4</handle_sale>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <click_shop_item>{(19,243) - (249,279)}</click_shop_item>
+    <handle_sale>5</handle_sale>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>15</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>16</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>shop-scrollbar</name>
+        <newPos>17</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <click_shop_item>{(19,315) - (249,351)}</click_shop_item>
+    <handle_sale>23</handle_sale>
+    <end_shop_mode></end_shop_mode>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(33,32)</move>
+    <move>(34,33)</move>
+    <move>(34,34)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(34,33)</move>
+    <move>(33,32)</move>
+    <move>(32,31)</move>
+    <move>(33,30)</move>
+    <move>(34,30)</move>
+    <move>(35,29)</move>
+    <move>(34,28)</move>
+    <move>(33,27)</move>
+    <move>(33,26)</move>
+    <move>(33,25)</move>
+    <move>(33,25)</move>
+    <move>(33,24)</move>
+    <move>(32,23)</move>
+    <move>(32,22)</move>
+    <move>(33,22)</move>
+    <move>(34,22)</move>
+    <move>(35,22)</move>
+    <move>(36,22)</move>
+    <move>(37,22)</move>
+    <move>(38,21)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,22)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(39,21)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(39,22)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(40,21)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(40,22)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(41,21)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(41,20)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(42,20)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(41,21)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(41,21)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(40,21)</move>
+    <move>(40,22)</move>
+    <move>(40,23)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(40,24)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(39,24)</move>
+    <move>(38,24)</move>
+    <move>(37,23)</move>
+    <move>(36,22)</move>
+    <move>(35,21)</move>
+    <move>(35,22)</move>
+    <move>(34,22)</move>
+    <move>(33,22)</move>
+    <move>(32,23)</move>
+    <move>(33,24)</move>
+    <move>(33,25)</move>
+    <move>(34,26)</move>
+    <move>(35,26)</move>
+    <move>(36,26)</move>
+    <move>(37,26)</move>
+    <move>(38,26)</move>
+    <move>(37,27)</move>
+    <move>(37,28)</move>
+    <move>(37,29)</move>
+    <move>(37,30)</move>
+    <move>(37,31)</move>
+    <move>(37,32)</move>
+    <move>(37,33)</move>
+    <move>(37,34)</move>
+    <move>(37,35)</move>
+    <move>(37,35)</move>
+    <move>(37,36)</move>
+    <move>(38,37)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,37)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>pc3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,38)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,38)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,38)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(38,38)</move>
+    <display_map></display_map>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>pc3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(543,202) - (557,213)}</arrow_button_click>
+    <show_item_info>4</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,204) - (493,213)}</arrow_button_click>
+    <handle_equip_item>4</handle_equip_item>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(529,202) - (543,213)}</arrow_button_click>
+    <handle_drop_item_id>7</handle_drop_item_id>
+    <handle_drop_item_location>(38,38)</handle_drop_item_location>
+    <arrow_button_click>{(529,202) - (543,213)}</arrow_button_click>
+    <handle_drop_item_id>7</handle_drop_item_id>
+    <handle_drop_item_location>(38,38)</handle_drop_item_location>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(529,215) - (543,226)}</arrow_button_click>
+    <handle_drop_item_id>12</handle_drop_item_id>
+    <handle_drop_item_location>(38,38)</handle_drop_item_location>
+    <arrow_button_click>{(529,215) - (543,226)}</arrow_button_click>
+    <handle_drop_item_id>12</handle_drop_item_id>
+    <handle_drop_item_location>(38,38)</handle_drop_item_location>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>12</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>13</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>14</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(515,189) - (529,200)}</arrow_button_click>
+    <handle_give_item>7</handle_give_item>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,204) - (493,213)}</arrow_button_click>
+    <handle_equip_item>9</handle_equip_item>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(529,215) - (543,226)}</arrow_button_click>
+    <handle_drop_item_id>6</handle_drop_item_id>
+    <handle_drop_item_location>(38,38)</handle_drop_item_location>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(515,163) - (529,174)}</arrow_button_click>
+    <handle_give_item>1</handle_give_item>
+    <click_control>
+        <id>pick2</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <arrow_button_click>{(501,150) - (515,161)}</arrow_button_click>
+    <handle_use_item>0</handle_use_item>
+    <arrow_button_click>{(501,150) - (515,161)}</arrow_button_click>
+    <handle_use_item>0</handle_use_item>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(515,202) - (529,213)}</arrow_button_click>
+    <handle_give_item>8</handle_give_item>
+    <arrow_button_click>{(308,28) - (485,40)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,217) - (493,226)}</arrow_button_click>
+    <handle_equip_item>8</handle_equip_item>
+    <arrow_button_click>{(529,202) - (543,213)}</arrow_button_click>
+    <handle_drop_item_id>7</handle_drop_item_id>
+    <handle_drop_item_location>(39,38)</handle_drop_item_location>
+    <field_focus>number</field_focus>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <field_input>
+        <c>0</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(39,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(38,39)</move>
+    <move>(38,40)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(38,39)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(37,40)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(39,40)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <move>(39,40)</move>
+    <move>(40,40)</move>
+    <move>(41,40)</move>
+    <move>(41,40)</move>
+    <move>(42,40)</move>
+    <move>(43,40)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>leave</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(44,40)</move>
+    <move>(44,39)</move>
+    <move>(44,38)</move>
+    <move>(44,37)</move>
+    <move>(44,36)</move>
+    <move>(44,35)</move>
+    <move>(44,34)</move>
+    <move>(44,33)</move>
+    <move>(44,32)</move>
+    <move>(44,31)</move>
+    <move>(44,30)</move>
+    <move>(44,29)</move>
+    <handle_begin_look>true</handle_begin_look>
+    <handle_look>
+        <destination>(43,29)</destination>
+        <mods>0</mods>
+        <right_button>true</right_button>
+    </handle_look>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(43,28)</move>
+    <move>(43,28)</move>
+    <move>(42,28)</move>
+    <move>(41,28)</move>
+    <move>(40,28)</move>
+    <move>(39,28)</move>
+    <move>(39,29)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(39,30)</move>
+    <move>(40,31)</move>
+    <handle_get_items></handle_get_items>
+    <click_control>
+        <id>pc1</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc2</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc3</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item2-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item2-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item2-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc4</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>pc5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item1-key</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(41,31)</move>
+    <move>(42,32)</move>
+    <move>(42,33)</move>
+    <move>(41,34)</move>
+    <move>(40,34)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(39,34)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>32</node>
+        <preset>false</preset>
+        <rect>{(107,44) - (190,58)}</rect>
+        <word>message</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>33</node>
+        <preset>false</preset>
+        <rect>{(6,108) - (78,122)}</rect>
+        <word>wishes</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(41,34)</move>
+    <move>(42,33)</move>
+    <move>(42,32)</move>
+    <move>(41,31)</move>
+    <move>(40,30)</move>
+    <move>(40,31)</move>
+    <move>(39,30)</move>
+    <move>(39,29)</move>
+    <move>(40,28)</move>
+    <move>(41,28)</move>
+    <move>(42,28)</move>
+    <move>(43,28)</move>
+    <move>(44,27)</move>
+    <move>(44,26)</move>
+    <move>(44,25)</move>
+    <move>(44,24)</move>
+    <move>(44,23)</move>
+    <move>(44,22)</move>
+    <move>(44,21)</move>
+    <move>(44,20)</move>
+    <move>(44,19)</move>
+    <move>(43,18)</move>
+    <move>(43,18)</move>
+    <move>(42,17)</move>
+    <move>(41,16)</move>
+    <move>(40,15)</move>
+    <move>(39,14)</move>
+    <move>(38,14)</move>
+    <move>(37,14)</move>
+    <move>(36,13)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(34,16)</handle_talk>
+    <click_talk_rect>
+        <node>44</node>
+        <preset>false</preset>
+        <rect>{(44,124) - (118,140)}</rect>
+        <word>training</word>
+    </click_talk_rect>
+    <click_control>
+        <id>pick6</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>sp-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item-lore-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>item-lore-p</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>keep</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <click_talk_rect>
+        <node>44</node>
+        <preset>false</preset>
+        <rect>{(6,60) - (80,76)}</rect>
+        <word>training</word>
+    </click_talk_rect>
+    <click_control>
+        <id>pick5</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(35,13)</move>
+    <move>(34,13)</move>
+    <move>(33,13)</move>
+    <move>(32,13)</move>
+    <move>(32,14)</move>
+    <move>(31,15)</move>
+    <move>(31,14)</move>
+    <move>(30,14)</move>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(32,15)</move>
+    <move>(32,16)</move>
+    <move>(33,17)</move>
+    <move>(34,17)</move>
+    <move>(35,17)</move>
+    <move>(36,17)</move>
+    <move>(37,17)</move>
+    <move>(38,17)</move>
+    <move>(39,17)</move>
+    <move>(40,17)</move>
+    <move>(41,18)</move>
+    <move>(42,18)</move>
+    <move>(43,18)</move>
+    <move>(44,19)</move>
+    <move>(44,20)</move>
+    <move>(44,21)</move>
+    <move>(44,22)</move>
+    <move>(44,23)</move>
+    <move>(44,24)</move>
+    <move>(44,25)</move>
+    <move>(44,26)</move>
+    <move>(43,26)</move>
+    <move>(43,26)</move>
+    <move>(42,26)</move>
+    <move>(41,26)</move>
+    <move>(40,26)</move>
+    <move>(39,26)</move>
+    <move>(38,26)</move>
+    <move>(37,26)</move>
+    <move>(36,26)</move>
+    <move>(35,26)</move>
+    <move>(34,26)</move>
+    <move>(33,26)</move>
+    <move>(33,25)</move>
+    <move>(32,26)</move>
+    <move>(31,26)</move>
+    <move>(30,26)</move>
+    <move>(29,26)</move>
+    <move>(28,26)</move>
+    <move>(27,25)</move>
+    <move>(26,25)</move>
+    <move>(25,24)</move>
+    <move>(24,24)</move>
+    <move>(23,24)</move>
+    <move>(22,24)</move>
+    <move>(21,24)</move>
+    <move>(20,24)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(19,27)</handle_talk>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>40</node>
+        <preset>false</preset>
+        <rect>{(80,92) - (180,106)}</rect>
+        <word>assistance</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>41</node>
+        <preset>false</preset>
+        <rect>{(164,124) - (242,140)}</rect>
+        <word>package</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>43</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (71,170)}</rect>
+        <word>bundle</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>39</node>
+        <preset>false</preset>
+        <rect>{(6,204) - (79,220)}</rect>
+        <word>magical</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>43</node>
+        <preset>false</preset>
+        <rect>{(159,140) - (224,154)}</rect>
+        <word>wands</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(19,25)</move>
+    <move>(18,25)</move>
+    <move>(17,24)</move>
+    <move>(17,23)</move>
+    <move>(17,22)</move>
+    <move>(16,21)</move>
+    <move>(15,21)</move>
+    <move>(16,21)</move>
+    <move>(17,21)</move>
+    <move>(17,22)</move>
+    <move>(17,22)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(17,22)</handle_talk>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (128,359)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>u</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>n</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (128,359)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <field_input>
+        <c>z</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>a</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>-</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>k</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (128,359)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>i</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>v</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>e</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(18,22)</move>
+    <move>(19,22)</move>
+    <move>(20,22)</move>
+    <move>(21,22)</move>
+    <move>(22,22)</move>
+    <move>(23,22)</move>
+    <move>(24,22)</move>
+    <move>(25,22)</move>
+    <move>(26,22)</move>
+    <move>(27,22)</move>
+    <move>(27,21)</move>
+    <move>(27,20)</move>
+    <move>(27,19)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(26,19)</handle_talk>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (128,359)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>u</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>n</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-16</node>
+        <preset>true</preset>
+        <rect>{(4,343) - (128,359)}</rect>
+        <word>Ask About...</word>
+    </click_talk_rect>
+    <field_focus>response</field_focus>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>i</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>v</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>e</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <field_input>
+        <c>r</c>
+        <mod>0</mod>
+        <spec>false</spec>
+    </field_input>
+    <click_control>
+        <id>okay</id>
+        <mods>0</mods>
+    </click_control>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(26,20)</move>
+    <move>(27,20)</move>
+    <move>(27,21)</move>
+    <move>(28,22)</move>
+    <move>(29,23)</move>
+    <move>(29,24)</move>
+    <move>(29,25)</move>
+    <move>(30,26)</move>
+    <move>(31,26)</move>
+    <move>(32,26)</move>
+    <move>(33,25)</move>
+    <move>(33,24)</move>
+    <move>(32,23)</move>
+    <move>(33,22)</move>
+    <move>(34,22)</move>
+    <move>(35,22)</move>
+    <move>(36,22)</move>
+    <move>(37,22)</move>
+    <move>(36,22)</move>
+    <move>(35,22)</move>
+    <move>(34,22)</move>
+    <move>(33,22)</move>
+    <move>(32,23)</move>
+    <move>(33,24)</move>
+    <move>(33,25)</move>
+    <move>(32,26)</move>
+    <move>(33,26)</move>
+    <move>(32,26)</move>
+    <move>(31,26)</move>
+    <move>(30,26)</move>
+    <move>(29,26)</move>
+    <move>(28,25)</move>
+    <move>(28,24)</move>
+    <move>(28,23)</move>
+    <move>(28,22)</move>
+    <move>(28,22)</move>
+    <move>(27,22)</move>
+    <move>(27,21)</move>
+    <move>(27,20)</move>
+    <move>(27,19)</move>
+    <move>(27,20)</move>
+    <move>(26,21)</move>
+    <move>(25,21)</move>
+    <move>(24,21)</move>
+    <move>(23,20)</move>
+    <move>(23,19)</move>
+    <move>(23,18)</move>
+    <move>(23,17)</move>
+    <move>(23,16)</move>
+    <click_control>
+        <id>btn1</id>
+        <mods>0</mods>
+    </click_control>
+    <move>(23,16)</move>
+    <move>(23,15)</move>
+    <move>(23,14)</move>
+    <move>(23,13)</move>
+    <move>(23,12)</move>
+    <move>(23,11)</move>
+    <move>(23,10)</move>
+    <move>(23,9)</move>
+    <move>(23,8)</move>
+    <move>(24,8)</move>
+    <move>(25,7)</move>
+    <move>(25,6)</move>
+    <move>(26,5)</move>
+    <move>(26,4)</move>
+    <move>(26,3)</move>
+    <move>(19,37)</move>
+    <move>(18,37)</move>
+    <move>(17,36)</move>
+    <move>(17,36)</move>
+    <move>(17,36)</move>
+    <move>(19,36)</move>
+    <move>(19,36)</move>
+    <move>(19,36)</move>
+    <move>(19,36)</move>
+    <move>(19,37)</move>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>

@@ -62,27 +62,76 @@ static void put_pc_spells(cDialog& me, short store_trait_mode) {
 		else cur.setState(led_off);
 	}
 	
+	me["title"].replaceText("{{type}}", store_trait_mode == 0 ? "Mage" : "Priest");
 	me["who"].setText(univ.party[which_pc_displayed].name.c_str());
+}
+
+static bool check_for_spell_changes(cDialog& pcInfo, short pc_num, short mode) {
+	if(mode >= 10) {
+		mode %= 10;
+		for(short i = 0; i < 62; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			if(mode == 0 && univ.party[pc_num].mage_spells[i] != set) return true;
+			else if(mode == 1 && univ.party[pc_num].priest_spells[i] != set) return true;
+		}
+	}
+	return false;
+}
+
+static void keep_pc_spells(cDialog& pcInfo, short pc_num, short mode) {
+	if(mode >= 10) {
+		mode %= 10;
+		for(short i = 0; i < 62; i++) {
+			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
+			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
+			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
+			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
+		}
+	}
+}
+
+static bool confirm_switch_pc_spells(cDialog& me, short pc_num, short mode) {
+	cChoiceDlog dlog("confirm-edit-spells", {"keep","revert","cancel"}, &me);
+	dlog->getControl("keep-msg").replaceText("{{PC}}", univ.party[pc_num].name);
+	std::string choice = dlog.show();
+	if(choice == "keep"){
+		keep_pc_spells(me, pc_num, mode);
+		return true;
+	}else if(choice == "revert"){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 static bool display_pc_event_filter(cDialog& me, std::string item_hit, const short trait_mode) {
 	short pc_num;
 	
 	pc_num = which_pc_displayed;
-	if(item_hit == "done") {
+	if(item_hit == "cancel"){
+		me.toast(false);
+	}else if(item_hit == "done") {
 		me.toast(true);
-	} else if(item_hit == "left") {
-		do {
-			pc_num = (pc_num == 0) ? 5 : pc_num - 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
-	} else if(item_hit == "right") {
-		do {
-			pc_num = (pc_num == 5) ? 0 : pc_num + 1;
-		} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
-		which_pc_displayed = pc_num;
-		put_pc_spells(me, trait_mode);
+		keep_pc_spells(me, pc_num, trait_mode);
+	}else if(item_hit == "left") {
+		// if spells haven't changed, confirmation isn't necessary
+		if(!check_for_spell_changes(me, pc_num, trait_mode) || confirm_switch_pc_spells(me, pc_num, trait_mode)){
+			do {
+				pc_num = (pc_num == 0) ? 5 : pc_num - 1;
+			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+			which_pc_displayed = pc_num;
+			put_pc_spells(me, trait_mode);
+		}
+	}else if(item_hit == "right") {
+		// if spells haven't changed, confirmation isn't necessary
+		if(!check_for_spell_changes(me, pc_num, trait_mode) || confirm_switch_pc_spells(me, pc_num, trait_mode)){
+			do {
+				pc_num = (pc_num == 5) ? 0 : pc_num + 1;
+			} while(univ.party[pc_num].main_status == eMainStatus::ABSENT);
+			which_pc_displayed = pc_num;
+			put_pc_spells(me, trait_mode);
+		}
 	}
 	return true;
 }
@@ -101,30 +150,22 @@ void display_pc(short pc_num,short mode, cDialog* parent) {
 	set_cursor(sword_curs);
 	
 	cDialog pcInfo(*ResMgr::dialogs.get("pc-spell-info"), parent);
-	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right"});
+	pcInfo.attachClickHandlers(std::bind(display_pc_event_filter, _1, _2, mode),{"done","left","right","cancel"});
 	
 	for(short i = 0; i < 62; i++) {
 		std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
 		label_str = get_str("magic-names", i + (mode % 10 == 0 ? 1 : 101));
 		pcInfo[id].setText(label_str);
+		pcInfo[id].recalcRect();
 		if(mode < 10)
 			pcInfo[id].attachClickHandler(&cLed::noAction);
 	}
 	put_pc_spells(pcInfo, mode);
 	
-	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(14 + mode,PIC_DLOG);
+	dynamic_cast<cPict&>(pcInfo["pic"]).setPict(15 + mode,PIC_DLOG); // 15 is explosion, 16 is an ankh
 	
 	pcInfo.run();
 	
-	if(mode >= 10) {
-		mode %= 10;
-		for(short i = 0; i < 62; i++) {
-			std::string id = "spell" + boost::lexical_cast<std::string>(i + 1);
-			bool set = dynamic_cast<cLed&>(pcInfo[id]).getState() != led_off;
-			if(mode == 0) univ.party[pc_num].mage_spells[i] = set;
-			else if(mode == 1) univ.party[pc_num].priest_spells[i] = set;
-		}
-	}
 }
 
 static void display_traits_graphics(cDialog& me) {
@@ -149,43 +190,57 @@ static void display_traits_graphics(cDialog& me) {
 	me["xp"].setTextToNum(store);
 }
 
+static void keep_race_traits(cDialog& me) {
+	cPlayer *pc = store_pc;
+
+	// Set race
+	cLedGroup& grp = dynamic_cast<cLedGroup&>(me["race"]);
+	std::string race_selected = grp.getSelected();
+	eRace race = static_cast<eRace>(race_selected[4] - '1');
+	pc->race = race;
+
+	// 10 advantages
+	for(int i = 0; i < 10; ++i){
+		eTrait trait = eTrait(i);
+		pc->traits[trait] = dynamic_cast<cLed&>(me["good" + std::to_string(i+1)]).getState() == led_red;
+	}
+
+	// 7 disadvantages
+	for(int i = 0; i < 7; ++i){
+		eTrait trait = eTrait(i + 10);
+		pc->traits[trait] = dynamic_cast<cLed&>(me["bad" + std::to_string(i+1)]).getState() == led_red;
+	}
+}
+
 static bool pick_race_select_led(cDialog& me, std::string item_hit, bool, const short store_trait_mode) {
+	// String index for the help message in traits.txt
 	int abil_str = 0;
-	cPlayer *pc;
+	cPlayer *pc = store_pc;
 	
-	pc = store_pc;
 	if(item_hit == "race") {
-		item_hit = dynamic_cast<cLedGroup&>(me["race"]).getSelected();
-		eRace race;
-		switch(item_hit[4] - '1') {
-			case 0: race = eRace::HUMAN; break;
-			case 1: race = eRace::NEPHIL; break;
-			case 2: race = eRace::SLITH; break;
-			case 3: race = eRace::VAHNATAI; break;
-			default: return false;
-		}
-		if(store_trait_mode == 0)
-			pc->race = race;
-		display_traits_graphics(me);
-		abil_str = 36 + int(race) * 2;
+		cLedGroup& grp = dynamic_cast<cLedGroup&>(me["race"]);
+		item_hit = grp.getSelected();
+		abil_str = 36 + (item_hit[4] - '1') * 2;
+		// Can't edit race
+		if(store_trait_mode != 0)
+			grp.setSelected(grp.getPrevSelection());
 	} else if(item_hit.substr(0,3) == "bad") {
 		int hit = item_hit[3] - '1';
-		eTrait trait = eTrait(hit + 10);
-		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
 		abil_str = 22 + hit * 2;
+		// Can't edit
+		if(store_trait_mode == 1)
+			dynamic_cast<cLed&>(me[item_hit]).setState(pc->traits[eTrait(hit + 10)] ? led_red : led_off);
 	} else if(item_hit.substr(0,4) == "good") {
+		// Different from the other calculations because there are more than 9 advantages
 		int hit = boost::lexical_cast<int>(item_hit.substr(4)) - 1;
-		eTrait trait = eTrait(hit);
-		if(store_trait_mode != 1)
-			pc->traits[trait] = !pc->traits[trait];
-		display_traits_graphics(me);
 		abil_str = 2 + hit * 2;
+		// Can't edit
+		if(store_trait_mode == 1)
+			dynamic_cast<cLed&>(me[item_hit]).setState(pc->traits[eTrait(hit)] ? led_red : led_off);
 	}
 	if(abil_str > 0)
 		me["info"].setText(get_str("traits", abil_str));
-	return store_trait_mode == 0;
+	return true;
 }
 
 //mode; // 0 - edit  1 - just display  2 - can't change race
@@ -199,6 +254,12 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	
 	cDialog pickAbil(*ResMgr::dialogs.get("pick-race-abil"),parent);
 	pickAbil["done"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, true));
+	if(mode != 1)
+		pickAbil["cancel"].attachClickHandler(std::bind(&cDialog::toast, &pickAbil, false));
+	else{
+		pickAbil["cancel"].hide();
+		pickAbil.setEscapeButton("done");
+	}
 	auto led_selector = std::bind(pick_race_select_led, _1, _2, _3, mode);
 	pickAbil.attachFocusHandlers(led_selector, {"race", "bad1", "bad2", "bad3", "bad4", "bad5", "bad6", "bad7"});
 	pickAbil.attachFocusHandlers(led_selector, {"good1", "good2", "good3", "good4", "good5"});
@@ -210,6 +271,8 @@ void pick_race_abil(cPlayer *pc,short mode,cDialog* parent) {
 	else pickAbil["info"].setText(start_str2);
 	
 	pickAbil.run();
+	if(pickAbil.accepted() && mode != 1)
+		keep_race_traits(pickAbil);
 }
 
 void display_alchemy(bool allowEdit,cDialog* parent) {
@@ -249,6 +312,7 @@ struct xp_dlog_state {
 	std::map<eSkill,short> skills;
 	int who, mode;
 	int hp, sp, g, skp;
+	int start_skp;
 };
 
 static void do_xp_keep(xp_dlog_state& save) {
@@ -272,18 +336,28 @@ static void do_xp_keep(xp_dlog_state& save) {
 	}
 }
 
+static int get_skill_max(eSkill skill) {
+	switch(skill){
+		case eSkill::MAX_HP:
+			return 250;
+		case eSkill::MAX_SP:
+			return 150;
+		default:
+			return skill_max[skill];
+	}
+}
+
 static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 	unsigned int min_level, max_level, cur_level, orig_level, cost, g_cost;
+	max_level = get_skill_max(skill);
 	if(skill == eSkill::MAX_HP) {
 		min_level = 6;
-		max_level = 250;
 		cur_level = save.hp;
 		orig_level = univ.party[save.who].max_health;
 		cost = 1;
 		g_cost = 10;
 	} else if(skill == eSkill::MAX_SP) {
 		min_level = 0;
-		max_level = 150;
 		cur_level = save.sp;
 		orig_level = univ.party[save.who].max_sp;
 		cost = 1;
@@ -292,7 +366,6 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 		if(skill == eSkill::STRENGTH || skill == eSkill::DEXTERITY || skill == eSkill::INTELLIGENCE)
 			min_level = 1;
 		else min_level = 0;
-		max_level = skill_max[skill];
 		cur_level = save.skills[skill];
 		orig_level = univ.party[save.who].skills[skill];
 		cost = skill_cost[skill];
@@ -316,15 +389,52 @@ static bool can_change_skill(eSkill skill, xp_dlog_state& save, bool increase) {
 }
 
 static void draw_xp_skills(cDialog& me,xp_dlog_state& save) {
-	// TODO: Wouldn't it make more sense for it to be red when you can't buy the skill rather than red when you can?
+	auto add_cost_to_label = [&me, save](std::string skill, int skp, int gold, bool max) {
+		cControl& label = me[skill + "-label"];
+		// If cost is already there, start over
+		if(label.getText().find('(') != std::string::npos){
+			label.setText(label.getText().substr(0, label.getText().find('(') - 1));
+		}
+		if(max){
+			label.appendText (" (MAX)");
+		}else if(save.mode < 2){
+			label.appendText(" (");
+			label.appendText(std::to_string(skp) + " pt");
+			if(skp != 1){
+				label.appendText("s");
+			}
+			label.appendText(".");
+			if(save.mode == 1){
+				label.appendText("/" + std::to_string(gold) + "gp");
+			}
+			label.appendText(")");
+		}
+	};
+
+	add_cost_to_label("hp", 1, 10, univ.party[save.who].max_health == get_skill_max(eSkill::MAX_HP));
+	add_cost_to_label("sp", 1, 15, univ.party[save.who].max_sp == get_skill_max(eSkill::MAX_SP));
 	for(short i = 0; i <= 20; i++) {
 		eSkill skill = eSkill(i);
+		std::string id = boost::lexical_cast<std::string>(skill);
 		cControl& cur = me[boost::lexical_cast<std::string>(skill)];
-		if(can_change_skill(skill, save, true))
+		// White means it can't change.
+		cur.setColour(me.getDefTextClr());
+		me[id + "-m"].hide();
+		// Red means it can be changed, but only down
+		if(can_change_skill(skill, save, false)){
+			me[id + "-m"].show();
 			cur.setColour(Colours::RED);
-		else cur.setColour(me.getDefTextClr());
-		if(i < 19)
+		}
+		// Green means it can still be bumped up!
+		me[id + "-p"].hide();
+		if(can_change_skill(skill, save, true)){
+			me[id + "-p"].show();
+			cur.setColour(Colours::LIGHT_GREEN);
+		}
+		if(i < 19){
 			cur.setTextToNum(save.skills[skill]);
+			add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill], save.skills[skill] == get_skill_max(skill));
+		}
 		else cur.setTextToNum(skill == eSkill::MAX_HP ? save.hp : save.sp);
 	}
 }
@@ -355,6 +465,20 @@ static void do_xp_draw(cDialog& me,xp_dlog_state& save) {
 	update_gold_skills(me, save);
 }
 
+static bool confirm_switch_pc(cDialog& me, xp_dlog_state& save) {
+	cChoiceDlog dlog("confirm-spend-xp", {"keep","revert","cancel"}, &me);
+	dlog->getControl("keep-msg").replaceText("{{PC}}", univ.party[save.who].name);
+	std::string choice = dlog.show();
+	if(choice == "keep"){
+		do_xp_keep(save);
+		return true;
+	}else if(choice == "revert"){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_state& save) {
 	if(item_hit == "cancel") {
 		// TODO: Um, I'm pretty sure this can never happen.
@@ -369,25 +493,23 @@ static bool spend_xp_navigate_filter(cDialog& me, std::string item_hit,xp_dlog_s
 		me.setResult(true);
 		me.toast(true);
 	} else if(item_hit == "left") {
-		// TODO: Try not forcing a commit when using the arrows?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		// If the number of skill points hasn't changed, no confirmation is necessary
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 0) ? 5 : save.who - 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	} else if(item_hit == "right") {
-		// TODO: If they don't work in mode 0, why are they visible?
-		if(save.mode != 0) {
-			do_xp_keep(save);
+		// If the number of skill points hasn't changed, no confirmation is necessary
+		if(save.skp == save.start_skp || confirm_switch_pc(me, save)){
 			do {
 				save.who = (save.who == 5) ? 0 : save.who + 1;
 			} while(univ.party[save.who].main_status != eMainStatus::ALIVE);
 			do_xp_draw(me,save);
-		} else
-			play_sound(1);
+			save.start_skp = save.skp;
+		}
 	}
 	return true;
 }
@@ -408,7 +530,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 				}
 			} else play_sound(1);
 		} else if(item_hit[3] == 'p') {
-			if(can_change_skill(eSkill::MAX_SP, save, true)) {
+			if(can_change_skill(eSkill::MAX_HP, save, true)) {
 				save.hp += 2;
 				if(save.mode < 2) {
 					save.skp -= 1;
@@ -420,7 +542,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 10)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
@@ -455,7 +577,7 @@ static bool spend_xp_event_filter(cDialog& me, std::string item_hit, eKeyMod mod
 					give_help(25,0,me);
 				else if(save.mode == 1 && save.g < 15)
 					give_help(24,0,me);
-				else beep();
+				else play_sound(1);
 			}
 		}
 		
@@ -531,28 +653,16 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 	
 	cDialog xpDlog(*ResMgr::dialogs.get("spend-xp"),parent);
 
-	auto add_cost_to_label = [&xpDlog, mode](std::string skill, int skp, int gold) {
-		if(mode < 2){
-			cControl& label = xpDlog[skill + "-label"];
-			label.appendText(" (");
-			label.appendText(std::to_string(skp) + " pt");
-			if(skp != 1){
-				label.appendText("s");
-			}
-			label.appendText(".");
-			if(mode == 1){
-				label.appendText("/" + std::to_string(gold) + "gp");
-			}
-			label.appendText(")");
-		}
-	};
+	// Making new PC, you can't switch to train other PCs
+	if(mode == 0){
+		xpDlog["left"].hide();
+		xpDlog["right"].hide();
+	}
 
 	const int LABEL_OFFSET_COL1 = 85;
 	const int LABEL_OFFSET_COL2 = 74;
 	xpDlog.addLabelFor("hp","Health",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("hp", 1, 10);
 	xpDlog.addLabelFor("sp","Spell Pts.",LABEL_LEFT,LABEL_OFFSET_COL1,true);
-	add_cost_to_label("sp", 1, 15);
 	auto spend_xp_filter = std::bind(spend_xp_event_filter,_1,_2,_3,std::ref(save));
 	static const std::string minus = "-m", plus = "-p";
 	for(int i = 54; i < 73; i++) {
@@ -560,11 +670,11 @@ bool spend_xp(short pc_num, short mode, cDialog* parent) {
 		eSkill skill = eSkill(i - 54);
 		std::string id = boost::lexical_cast<std::string>(skill);
 		xpDlog.addLabelFor(id,get_str("skills",1 + 2 * (i - 54)),LABEL_LEFT,(i < 63) ? LABEL_OFFSET_COL1 : LABEL_OFFSET_COL2,true);
-		add_cost_to_label(id, skill_cost[skill], skill_g_cost[skill]);
 		xpDlog[id + minus].attachClickHandler(spend_xp_filter);
 		xpDlog[id + plus].attachClickHandler(spend_xp_filter);
 	}
 	do_xp_draw(xpDlog,save);
+	save.start_skp = save.skp;
 	
 	xpDlog.attachClickHandlers(std::bind(spend_xp_navigate_filter,_1,_2,std::ref(save)),{"keep","cancel","left","right","help"});
 	xpDlog.attachClickHandlers(spend_xp_filter,{"sp-m","sp-p","hp-m","hp-p"});

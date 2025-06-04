@@ -36,7 +36,7 @@ extern short which_combat_type;
 extern eItemWinMode stat_window;
 extern location center;
 extern short combat_active_pc;
-extern bool monsters_going,spell_forced;
+extern bool monsters_going,spell_forced,spell_recast;
 extern bool flushingInput;
 extern eSpell store_mage, store_priest;
 extern short store_mage_lev, store_priest_lev,store_item_spell_level;
@@ -2043,6 +2043,30 @@ void combat_run_monst() {
 	
 }
 
+static bool can_drain_pc(const location& source, const cPlayer& pc, short range) {
+	return pc.main_status == eMainStatus::ALIVE && pc.cur_sp > 4 &&
+		(can_see_light(source,pc.combat_pos,sight_obscurity) < 5) &&
+		(dist(source,pc.combat_pos) <= range);
+}
+
+static bool can_drain_monst(const location& source, const cCreature& monst, short range) {
+	return monst.is_alive() && monst.mp > 4 &&
+		(can_see_light(source,monst.cur_loc,sight_obscurity) < 5) &&
+		(dist(source,monst.cur_loc) <= range);
+}
+
+// Get other monsters that are this monster's enemy
+static std::vector<short> list_enemy_monsters(short m_num) {
+	std::vector<short> enemies;
+
+	for(short i = 0; i < univ.town.monst.size(); ++i){
+		if(i == m_num) continue;
+		if(!univ.town.monst[i].is_friendly(univ.town.monst[m_num])) enemies.push_back(i);
+	}
+
+	return enemies;
+}
+
 void do_monster_turn() {
 	bool acted_yet, had_monst = false,printed_poison = false,printed_disease = false,printed_acid = false;
 	bool redraw_not_yet_done = true;
@@ -2286,6 +2310,9 @@ void do_monster_turn() {
 				
 				// Missile (except basic breath weapons)
 				std::pair<eMonstAbil, uAbility> pick_abil;
+				bool any_have_sp = false;
+				short drain_target;
+				location drain_targ_space;
 				if(!acted_yet) {
 					// Go through all the monster's abilities and try to select one that's useable at this time
 					for(auto& abil : cur_monst->abil) {
@@ -2299,18 +2326,50 @@ void do_monster_turn() {
 									break;
 								pick_abil = abil;
 								break;
+							// check if anyone can be drained, make sure the first target can be drained if drain sp is chosen
+							case eMonstAbil::DRAIN_SP:
+								any_have_sp = can_drain_pc(cur_monst->cur_loc, univ.party[target], abil.second.gen.range);
+								if(!any_have_sp){
+									for(int j = 0; j < 6; ++j){
+										if(j == target) continue;
+										if(can_drain_pc(cur_monst->cur_loc, univ.party[j], abil.second.gen.range)){
+											any_have_sp = true;
+											drain_target = j;
+											drain_targ_space = univ.party[j].combat_pos;
+											break;
+										}
+									}
+								}
+								if(!any_have_sp){
+									std::vector<short> enemy_monst = list_enemy_monsters(i);
+									for(short j : enemy_monst){
+										if(can_drain_monst(cur_monst->cur_loc, univ.town.monst[j], abil.second.gen.range)){
+											any_have_sp = true;
+											drain_target = 100 + j;
+											drain_targ_space = univ.town.monst[j].cur_loc;
+											break;
+										}
+									}
+								}
+								// Fallthrough to next case if any enemies have SP to drain
+								if(!any_have_sp) break;
+								BOOST_FALLTHROUGH;
 							case eMonstAbil::DAMAGE: case eMonstAbil::STATUS: case eMonstAbil::STATUS2: case eMonstAbil::FIELD:
-							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_SP: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
+							case eMonstAbil::PETRIFY: case eMonstAbil::DRAIN_XP: case eMonstAbil::KILL:
 							case eMonstAbil::STEAL_FOOD: case eMonstAbil::STEAL_GOLD: case eMonstAbil::STUN: case eMonstAbil::DAMAGE2:
 								if(abil.second.gen.type == eMonstGen::TOUCH)
 									break; // We're looking for ranged attacks
-								if(dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
+								if(abil.first != eMonstAbil::DRAIN_SP && dist(cur_monst->cur_loc, targ_space) > abil.second.gen.range)
 									break; // Target not in range
 								if(abil.second.gen.type == eMonstGen::SPIT && monst_adjacent(targ_space, i))
 									break; // Target adjacent; prefer melee attacks
 								if(get_ran(1,1,1000) >= abil.second.gen.odds)
 									break;
 								pick_abil = abil;
+								if(abil.first == eMonstAbil::DRAIN_SP){
+									target = drain_target;
+									targ_space = drain_targ_space;
+								}
 								break;
 							case eMonstAbil::MISSILE_WEB:
 								if(dist(cur_monst->cur_loc, targ_space) > abil.second.special.extra1)
@@ -2712,7 +2771,7 @@ void monster_attack(short who_att,iLiving* target) {
 						switch(abil.first) {
 							case eMonstAbil::STUN: add_string_to_buf("  Stuns!"); break;
 							case eMonstAbil::PETRIFY: add_string_to_buf("  Petrifying touch!"); break;
-							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break; // TODO: This has no effect on monsters
+							case eMonstAbil::DRAIN_SP: add_string_to_buf("  Drains magic!"); break;
 							case eMonstAbil::DRAIN_XP: add_string_to_buf("  Drains life!"); break;
 							case eMonstAbil::KILL: add_string_to_buf("  Killing touch!"); break;
 							case eMonstAbil::STEAL_FOOD:
@@ -2960,17 +3019,38 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		proxy.gen.dmg = eDamageType::FIRE;
 		monst_basic_abil(m_num, {eMonstAbil::DAMAGE, proxy}, target);
 	} else {
-		if(abil.first == eMonstAbil::DRAIN_SP && pc_target != nullptr && pc_target->cur_sp < 4) {
-			// modify target if target has no sp
-			// TODO: What if it's a monster with no sp?
+		if(abil.first == eMonstAbil::DRAIN_SP &&
+			((pc_target != nullptr && pc_target->cur_sp < 4) ||
+				(m_target != nullptr && m_target->mp < 4))) {
+			// modify target if target has no sp.
+			// The first target should ALWAYS have sp, but multiple attacks on the same turn could drain it
+			bool found_new = false;
+
+			// Roll 8 times to pick a PC who has SP
 			for(short i = 0; i < 8; i++) {
 				int j = get_ran(1,0,5);
 				cPlayer& pc = univ.party[j];
-				if(pc.main_status == eMainStatus::ALIVE && pc.cur_sp > 4 &&
-				   (can_see_light(source,pc.combat_pos,sight_obscurity) < 5) && (dist(source,pc.combat_pos) <= 8)) {
+				if(can_drain_pc(source, pc, abil.second.gen.range)) {
 					target = &pc;
 					targ_space = pc.combat_pos;
+					found_new = true;
 					break;
+				}
+			}
+			if(!found_new){
+				std::vector<short> m_enemies = list_enemy_monsters(m_num);
+				if(!m_enemies.empty()){
+					// Roll N + 2 times to pick an enemy monster who has SP, where N is the number of enemy monsters
+					// (This is inefficient but I'm trying to mirror how PC retargeting happens above.)
+					for(short i = 0; i < m_enemies.size() + 2; ++i){
+						int j = get_ran(1,0,m_enemies.size());
+						cCreature& monst = univ.town.monst[j];
+						if(can_drain_monst(source, monst, abil.second.gen.range)) {
+							target = &monst;
+							targ_space = monst.cur_loc;
+							found_new = true; // not necessary, but might as well
+						}
+					}
 				}
 			}
 		}
@@ -3273,11 +3353,11 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 		spell = emer_spells[level][3];
 	
 	
-	// Anything preventing spell?
-	if(target.x > 64 && area_effects.count(spell) > 0) {
-		r1 = get_ran(1,0,9);
+	// If a target spot for area-of-effect spell couldn't be found, try re-rolling which spell.
+	if(target.x < 0 && area_effects.count(spell) > 0) {
+		r1 = get_ran(1,0,17);
 		spell = caster_array[level][r1];
-		if(target.x > 64 && area_effects.count(spell) > 0)
+		if(target.x < 0 && area_effects.count(spell) > 0)
 			return false;
 	}
 	if(area_effects.count(spell) > 0) {
@@ -3588,11 +3668,11 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 		spell = caster_array[level][r1];
 	}
 	
-	// Anything preventing spell?
-	if(target.x > 64 && area_effects.count(spell) > 0)  {
+	// If a target spot for area-of-effect spell couldn't be found, try re-rolling which spell.
+	if(target.x < 0 &&  area_effects.count(spell) > 0)  {
 		r1 = get_ran(1,0,9);
 		spell = caster_array[level][r1];
-		if(target.x > 64 && area_effects.count(spell) > 0)
+		if(target.x < 0 && area_effects.count(spell) > 0)
 			return false;
 	}
 	if(area_effects.count(spell) > 0)
@@ -4486,37 +4566,26 @@ void end_combat() {
 
 
 bool combat_cast_mage_spell() {
-	short store_sp;
 	eSpell spell_num;
 	cMonster get_monst;
 	
-	if(univ.current_pc().traits[eTrait::ANAMA]) {
-		add_string_to_buf("Cast: You're an Anama!");
-		return false;
-	}
+	short store_sp = univ.current_pc().cur_sp;
 	
-	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
-		add_string_to_buf("  Not in antimagic field.");
-		return false;
-	}
-	store_sp = univ.current_pc().cur_sp;
-	if(univ.current_pc().cur_sp == 0)
-		add_string_to_buf("Cast: No spell points.");
-	else if(univ.current_pc().skill(eSkill::MAGE_SPELLS) == 0)
-		add_string_to_buf("Cast: No mage skill.");
-	else if(univ.current_pc().total_encumbrance(hit_chance) > 1) {
-		add_string_to_buf("Cast: Too encumbered.");
-		take_ap(6);
-		give_help(40,0);
-		return true;
-	}
-	else {
+	eCastStatus status = pc_can_cast_spell(univ.current_pc(), eSkill::MAGE_SPELLS);
+	if(status != CAST_OK){
+		print_cast_status(status, eSkill::MAGE_SPELLS);
 		
-		
+		if(status == NO_CAST_ENCUMBERED){
+			// Oops, trying to cast a mage spell while encumbered takes your AP!
+			take_ap(6);
+			give_help(40,0);
+			return true;
+		}
+	}else{
 		if(!spell_forced)
-			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS);
+			spell_num = pick_spell(univ.cur_pc,eSkill::MAGE_SPELLS, true);
 		else {
-			if(!repeat_cast_ok(eSkill::MAGE_SPELLS))
+			if(spell_recast && !repeat_cast_ok(eSkill::MAGE_SPELLS))
 				return false;
 			spell_num = univ.current_pc().last_cast[eSkill::MAGE_SPELLS];
 		}
@@ -4566,8 +4635,8 @@ bool combat_cast_mage_spell() {
 			draw_terrain(2);
 			combat_immed_mage_cast(univ.cur_pc,spell_num);
 		}
-		put_pc_screen();
 	}
+	put_pc_screen();
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
 	if(store_sp == univ.current_pc().cur_sp)
@@ -4725,60 +4794,51 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 }
 
 bool combat_cast_priest_spell() {
-	short store_sp;
 	eSpell spell_num;
-	
-	if(univ.town.is_antimagic(univ.current_pc().combat_pos.x,univ.current_pc().combat_pos.y)) {
-		add_string_to_buf("  Not in antimagic field.");
-		return false;
-	}
-	if(!spell_forced)
-		spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS);
-	else {
-		if(!repeat_cast_ok(eSkill::PRIEST_SPELLS))
-			return false;
-		spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
-	}
-	
-	store_sp = univ.current_pc().cur_sp;
-	if(univ.current_pc().cur_sp == 0) {
-		add_string_to_buf("Cast: No spell points.");
-		return false;
-	} else if(univ.current_pc().skill(eSkill::PRIEST_SPELLS) == 0) {
-		add_string_to_buf("Cast: No priest skill.");
-		return false;
-	}
-	
-	if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
-		add_string_to_buf("Cast: You're a pacifist!");
-		return false;
-	}
-	
-	if(spell_num == eSpell::NONE) return false;
-	
-	combat_posing_monster = current_working_monster = univ.cur_pc;
-	
-	if(spell_num != eSpell::NONE) {
-		print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
-		if((*spell_num).refer == REFER_YES) {
-			take_ap(5);
-			draw_terrain(2);
-			do_priest_spell(univ.cur_pc,spell_num);
-		}
-		else if((*spell_num).refer == REFER_TARGET) {
-			start_spell_targeting(spell_num);
-		}
-		else if((*spell_num).refer == REFER_FANCY) {
-			start_fancy_spell_targeting(spell_num);
-		}
+	short store_sp = univ.current_pc().cur_sp;
+
+	eCastStatus status = pc_can_cast_spell(univ.current_pc(), eSkill::PRIEST_SPELLS);
+	if(status != CAST_OK){
+		print_cast_status(status, eSkill::PRIEST_SPELLS);
+	}else{
+		if(!spell_forced)
+			spell_num = pick_spell(univ.cur_pc,eSkill::PRIEST_SPELLS, true);
 		else {
-			take_ap(5);
-			draw_terrain(2);
-			combat_immed_priest_cast(univ.cur_pc, spell_num);
+			if(spell_recast && !repeat_cast_ok(eSkill::PRIEST_SPELLS))
+				return false;
+			spell_num = univ.current_pc().last_cast[eSkill::PRIEST_SPELLS];
+		}
+		
+		if(univ.current_pc().traits[eTrait::PACIFIST] && spell_num != eSpell::NONE && !(*spell_num).peaceful) {
+			add_string_to_buf("Cast: You're a pacifist!");
+			return false;
+		}
+	
+		if(spell_num == eSpell::NONE) return false;
+	
+		combat_posing_monster = current_working_monster = univ.cur_pc;
+		
+		if(spell_num != eSpell::NONE) {
+			print_spell_cast(spell_num,eSkill::PRIEST_SPELLS);
+			if((*spell_num).refer == REFER_YES) {
+				take_ap(5);
+				draw_terrain(2);
+				do_priest_spell(univ.cur_pc,spell_num);
+			}
+			else if((*spell_num).refer == REFER_TARGET) {
+				start_spell_targeting(spell_num);
+			}
+			else if((*spell_num).refer == REFER_FANCY) {
+				start_fancy_spell_targeting(spell_num);
+			}
+			else {
+				take_ap(5);
+				draw_terrain(2);
+				combat_immed_priest_cast(univ.cur_pc, spell_num);
+			}
 		}
 		put_pc_screen();
 	}
-	
 	combat_posing_monster = current_working_monster = -1;
 	// Did anything actually get cast?
 	if(store_sp == univ.current_pc().cur_sp)

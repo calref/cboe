@@ -15,6 +15,7 @@
     <exit dir="s" x="21" y="13" />
     <exit dir="e" x="23" y="12" />
     <flags>
+        <chop kills="30000" />
         <tavern>true</tavern>
     </flags>
     <item id="0">

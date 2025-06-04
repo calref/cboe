@@ -13,11 +13,12 @@
 	
 	<text rel-anchor='prev' relative='abs pos' size='large' top='8' left='8' width='142' height='13'>Item special ability:</text>
 	<text name='abilname' rel-anchor='prev' relative='pos pos-in' framed='true' top='0' left='11' width='250' height='13'/>
+	<!-- These fields are called str1 and str2 but I think they can only be for numbers? -->
 	<text name='str1-title' rel-anchor='prev' relative='abs pos' framed='true' top='8' left='8' width='185' height='16'/>
-	<field name='str1' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
+	<field name='str1' type='int' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
 	<button name='str1-choose' rel-anchor='prev' relative='pos pos-in' type='large' top='-4' left='13'>Create/Edit</button>
 	<text name='str2-title' rel-anchor='prev' relative='abs pos' framed='true' top='3' left='8' width='185' height='16'/>
-	<field name='str2' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
+	<field name='str2' type='int' rel-anchor='prev' relative='pos pos-in' top='0' left='7' width='77' height='16'/>
 	<button name='str2-choose1' rel-anchor='prev' relative='pos pos-in' type='regular' top='-4' left='13'>Choose</button>
 	<button name='str2-choose2' rel-anchor='prev' relative='pos pos-in' type='regular' top='0' left='5'>Priest</button>
 	

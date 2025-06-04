@@ -715,3 +715,8 @@ void cControl::restore(storage_t to) {
 	if(to.find("visible") != to.end())
 		boost::any_cast<bool>(to["visible"]) ? show() : hide();
 }
+
+// Translate raw x/y position using the view of the current rendering target
+location cControl::translated_location(const sf::Vector2i point) const {
+	return location { const_cast<cControl*>(this)->getWindow().mapPixelToCoords(point) };
+}

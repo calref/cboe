@@ -13,6 +13,7 @@
 #include "dialogxml/widgets/led.hpp"
 #include "dialogxml/widgets/message.hpp"
 #include "mathutil.hpp"
+#include "tools/cursors.hpp"
 #ifndef MSBUILD_GITREV
 #include "tools/gitrev.hpp"
 #endif
@@ -51,8 +52,7 @@ short store_which_string_dlog;
 short store_page_on,store_num_i;
 rectangle ed_buttons_from[2] = {{0,0,57,57},{0,57,57,114}};
 short current_pressed_button = -1;
-cCustomGraphics spec_scen_g; // not actually needed; just here to silence compiler because it's referenced in fileio.h
-// (actually, it WILL be needed eventually)
+cCustomGraphics spec_scen_g; // Will be needed if PCs can have custom graphics or we show the inventory
 
 void init_main_buttons() {
 	rectangle base_rect;
@@ -210,6 +210,7 @@ void redraw_screen() {
 	drawMenuBar();
 	
 	mainPtr().display();
+	restore_cursor();
 }
 
 static void frame_dlog_rect(sf::RenderWindow& target, rectangle rect) {
@@ -290,7 +291,7 @@ void draw_main_screen() {
 	style.pointSize = 10;
 	style.font = FONT_PLAIN;
 	std::ostringstream sout;
-	sout << "Created in 1997 by Spiderweb Software, Inc. v" << oboeVersionString();
+	sout << "Created 1997, Free Open Source, v" << oboeVersionString();
 #if defined(GIT_REVISION) && defined(GIT_TAG_REVISION)
 	if(strcmp(GIT_REVISION, GIT_TAG_REVISION) != 0) {
 		sout << " [" << GIT_REVISION << "]";
@@ -298,9 +299,9 @@ void draw_main_screen() {
 #endif
 	std::string copyright = sout.str();
 	//dest_rect.offset(270,0);
-	dest_rect.right = mainPtr().getSize().x - 5;
+	dest_rect.right = pc_width - 5;
 	dest_rect.left = dest_rect.right - string_length(copyright, style) - 5;
-	win_draw_string(mainPtr(),dest_rect,copyright,eTextMode::WRAP,style);
+	win_draw_string(mainPtr(),dest_rect,copyright,eTextMode::WRAP,style,true);
 	
 	
 	reg_rect = whole_win_rect;

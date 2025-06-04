@@ -1,0 +1,1027 @@
+<actions SHA="be32e3e" Tag="v0.0.12" Status="modified" Repo="git@github.com:NQNStudios/cboe.git">
+    <load_prefs>
+        <![CDATA[DisplayMode = 5
+EasyMode = false
+GameRunBefore = true
+GameSpeed = 0
+GiveIntroHint = false
+LessWanderingMonsters = false
+PlaySounds = true
+ReceivedHelp = [54 0 47 65 55 0 1 2 48 49 7 8 36 37 38 0 50 0 62 0 5 6 26 27 10 11 20 21 57 0 68 69 35 0 33 0 22 23 25 0 39 0 53 0 30 0 31 0 32 0 59 0 40 0 56 0 44 0 42 43 29 0 28 0 24 0 58 0 60 0 12 0 10 11 61 0 41 0]
+ShowInstantHelp = true
+ShowStartupSplash = false
+UIScale = 1.5
+UIScaleMap = 1.5
+]]>
+</load_prefs>
+    <feature_flags>
+        <debug-enter-town>
+            <version>move-outdoors</version>
+        </debug-enter-town>
+        <debug-kill-party>
+            <version>V2</version>
+        </debug-kill-party>
+        <empty-wandering-monster-bug>
+            <version>fixed</version>
+        </empty-wandering-monster-bug>
+        <file-picker-dialog>
+            <version>V1</version>
+        </file-picker-dialog>
+        <magic-resistance>
+            <version>fixed</version>
+        </magic-resistance>
+        <pacifist-spellcast-check>
+            <version>V2</version>
+        </pacifist-spellcast-check>
+        <resurrection-balm>
+            <version>required</version>
+        </resurrection-balm>
+        <scenario-meta-format>
+            <version>V2</version>
+        </scenario-meta-format>
+        <store-spell-caster>
+            <version>fixed</version>
+        </store-spell-caster>
+        <store-spell-target>
+            <version>fixed</version>
+        </store-spell-target>
+        <talk-go-back>
+            <version>StackV1</version>
+        </talk-go-back>
+        <target-lock>
+            <version>V1</version>
+            <version>V2</version>
+        </target-lock>
+        <too-many-extra-wandering-monsters-bug>
+            <version>fixed</version>
+        </too-many-extra-wandering-monsters-bug>
+    </feature_flags>
+    <srand>1747348749</srand>
+    <startup_button_click>
+        <btn>Load Game</btn>
+        <mods>0</mods>
+    </startup_button_click>
+    <fancy_file_picker>false</fancy_file_picker>
+    <click_control>
+        <id>list</id>
+        <mods>0</mods>
+    </click_control>
+    <click_control>
+        <id>load1</id>
+        <mods>0</mods>
+    </click_control>
+    <load_party>
+        <![CDATA[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
+]]>
+</load_party>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(10,27)</handle_talk>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <move>(10,29)</move>
+    <move>(10,30)</move>
+    <display_map></display_map>
+    <move>(9,31)</move>
+    <move>(8,31)</move>
+    <move>(7,31)</move>
+    <move>(7,31)</move>
+    <move>(6,31)</move>
+    <move>(5,31)</move>
+    <move>(4,30)</move>
+    <handle_begin_talk></handle_begin_talk>
+    <handle_talk>(2,29)</handle_talk>
+    <click_talk_rect>
+        <node>-11</node>
+        <preset>true</preset>
+        <rect>{(70,366) - (125,380)}</rect>
+        <word>Name</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-12</node>
+        <preset>true</preset>
+        <rect>{(136,366) - (170,381)}</rect>
+        <word>Job</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>3</node>
+        <preset>false</preset>
+        <rect>{(6,76) - (72,92)}</rect>
+        <word>ponder</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>4</node>
+        <preset>false</preset>
+        <rect>{(6,156) - (114,172)}</rect>
+        <word>importance</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>5</node>
+        <preset>false</preset>
+        <rect>{(6,220) - (120,233)}</rect>
+        <word>commander</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>6</node>
+        <preset>false</preset>
+        <rect>{(48,108) - (80,122)}</rect>
+        <word>sell</word>
+    </click_talk_rect>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <click_talk_rect>
+        <node>7</node>
+        <preset>false</preset>
+        <rect>{(161,76) - (250,89)}</rect>
+        <word>identified</word>
+    </click_talk_rect>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(308,28) - (485,40)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>4</handle_item_shop_action>
+    <arrow_button_click>{(478,214) - (537,226)}</arrow_button_click>
+    <handle_item_shop_action>5</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>9</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>8</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>9</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>10</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>11</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>15</handle_item_shop_action>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <arrow_button_click>{(478,175) - (537,187)}</arrow_button_click>
+    <handle_item_shop_action>2</handle_item_shop_action>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>4</handle_item_shop_action>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(478,175) - (537,187)}</arrow_button_click>
+    <handle_item_shop_action>2</handle_item_shop_action>
+    <arrow_button_click>{(478,175) - (537,187)}</arrow_button_click>
+    <handle_item_shop_action>2</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>6</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(478,149) - (537,161)}</arrow_button_click>
+    <handle_item_shop_action>0</handle_item_shop_action>
+    <arrow_button_click>{(478,162) - (537,174)}</arrow_button_click>
+    <handle_item_shop_action>1</handle_item_shop_action>
+    <arrow_button_click>{(308,93) - (485,105)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <arrow_button_click>{(478,162) - (537,174)}</arrow_button_click>
+    <handle_item_shop_action>1</handle_item_shop_action>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>4</handle_item_shop_action>
+    <arrow_button_click>{(478,214) - (537,226)}</arrow_button_click>
+    <handle_item_shop_action>5</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,28) - (485,40)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <click_talk_rect>
+        <node>-15</node>
+        <preset>true</preset>
+        <rect>{(190,366) - (272,383)}</rect>
+        <word>Go Back</word>
+    </click_talk_rect>
+    <arrow_button_click>{(543,202) - (557,213)}</arrow_button_click>
+    <show_item_info>4</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>4</handle_item_shop_action>
+    <arrow_button_click>{(543,202) - (557,213)}</arrow_button_click>
+    <show_item_info>4</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(543,202) - (557,213)}</arrow_button_click>
+    <show_item_info>8</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>8</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(478,227) - (537,239)}</arrow_button_click>
+    <handle_item_shop_action>13</handle_item_shop_action>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>7</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>6</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>5</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>4</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(478,214) - (537,226)}</arrow_button_click>
+    <handle_item_shop_action>6</handle_item_shop_action>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>0</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(308,67) - (485,79)}</arrow_button_click>
+    <handle_switch_pc>3</handle_switch_pc>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(308,93) - (485,105)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <arrow_button_click>{(543,150) - (557,161)}</arrow_button_click>
+    <show_item_info>0</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(478,201) - (537,213)}</arrow_button_click>
+    <handle_item_shop_action>4</handle_item_shop_action>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <arrow_button_click>{(478,188) - (537,200)}</arrow_button_click>
+    <handle_item_shop_action>3</handle_item_shop_action>
+    <click_talk_rect>
+        <node>-14</node>
+        <preset>true</preset>
+        <rect>{(210,389) - (261,403)}</rect>
+        <word>Done</word>
+    </click_talk_rect>
+    <arrow_button_click>{(308,152) - (493,161)}</arrow_button_click>
+    <handle_equip_item>0</handle_equip_item>
+    <arrow_button_click>{(515,163) - (529,174)}</arrow_button_click>
+    <handle_give_item>1</handle_give_item>
+    <click_control>
+        <id>cancel</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,41) - (485,53)}</arrow_button_click>
+    <handle_switch_pc>1</handle_switch_pc>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>1</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>2</newPos>
+    </scrollbar_setPosition>
+    <scrollbar_setPosition>
+        <name>inventory-scrollbar</name>
+        <newPos>3</newPos>
+    </scrollbar_setPosition>
+    <arrow_button_click>{(546,41) - (558,53)}</arrow_button_click>
+    <give_pc_info>1</give_pc_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,80) - (485,92)}</arrow_button_click>
+    <handle_switch_pc>4</handle_switch_pc>
+    <arrow_button_click>{(529,163) - (543,174)}</arrow_button_click>
+    <handle_drop_item_id>1</handle_drop_item_id>
+    <handle_drop_item_location>(4,30)</handle_drop_item_location>
+    <arrow_button_click>{(529,176) - (543,187)}</arrow_button_click>
+    <handle_drop_item_id>2</handle_drop_item_id>
+    <handle_drop_item_location>(4,30)</handle_drop_item_location>
+    <arrow_button_click>{(308,54) - (485,66)}</arrow_button_click>
+    <handle_switch_pc>2</handle_switch_pc>
+    <arrow_button_click>{(308,28) - (485,40)}</arrow_button_click>
+    <handle_switch_pc>0</handle_switch_pc>
+    <arrow_button_click>{(543,241) - (557,252)}</arrow_button_click>
+    <show_item_info>7</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <arrow_button_click>{(308,93) - (485,105)}</arrow_button_click>
+    <handle_switch_pc>5</handle_switch_pc>
+    <arrow_button_click>{(543,163) - (557,174)}</arrow_button_click>
+    <show_item_info>1</show_item_info>
+    <click_control>
+        <id>done</id>
+        <mods>0</mods>
+    </click_control>
+    <close_window></close_window>
+    <click_control>
+        <id>quit</id>
+        <mods>0</mods>
+    </click_control>
+</actions>
