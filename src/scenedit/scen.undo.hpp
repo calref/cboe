@@ -169,4 +169,16 @@ public:
 		cAction(name), which(which), before(before), after(after) {}
 };
 
+/// Action which edits or clears an item type
+class aEditClearItem : public cAction {
+	item_num_t which;
+	class cItem before;
+	class cItem after;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearItem(std::string name, mon_num_t which, class cItem before, class cItem after) :
+		cAction(name), which(which), before(before), after(after) {}
+};
+
 #endif

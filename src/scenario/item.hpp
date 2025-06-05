@@ -66,6 +66,11 @@ public:
 	unsigned int treas_class;
 	bool ident, property, magic, contained, held, cursed, concealed, enchanted, unsellable, rechargeable;
 	std::string desc;
+
+	// For detecting actual changes to types in the scenario editor
+	bool operator==(const cItem& other);
+	bool operator!=(const cItem& other) { return !(*this == other); }
+
 	unsigned char rec_treas_class() const;
 	short item_weight() const;
 	std::string interesting_string() const;

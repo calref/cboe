@@ -1407,3 +1407,41 @@ bool cItem::use_magic() const {
 bool cItem::can_use() const {
 	return use_in_town() || use_in_combat() || use_outdoors();
 }
+
+bool cItem::operator==(const cItem& other) {
+	CHECK_EQ(other, variety);
+	CHECK_EQ(other, item_level);
+	CHECK_EQ(other, awkward);
+	CHECK_EQ(other, bonus);
+	CHECK_EQ(other, protection);
+	CHECK_EQ(other, charges);
+	CHECK_EQ(other, max_charges);
+	CHECK_EQ(other, weap_type);
+	CHECK_EQ(other, magic_use_type);
+	CHECK_EQ(other, graphic_num);
+	CHECK_EQ(other, ability);
+	CHECK_EQ(other, abil_strength);
+	CHECK_EQ(other, abil_data.value);
+	CHECK_EQ(other, type_flag);
+	CHECK_EQ(other, is_special);
+	CHECK_EQ(other, value);
+	CHECK_EQ(other, weight);
+	CHECK_EQ(other, special_class);
+	CHECK_EQ(other, missile);
+	CHECK_EQ(other, item_loc);
+	CHECK_EQ(other, full_name);
+	CHECK_EQ(other, name);
+	CHECK_EQ(other, treas_class);
+	CHECK_EQ(other, ident);
+	CHECK_EQ(other, property);
+	CHECK_EQ(other, magic);
+	CHECK_EQ(other, contained);
+	CHECK_EQ(other, held);
+	CHECK_EQ(other, cursed);
+	CHECK_EQ(other, concealed);
+	CHECK_EQ(other, enchanted);
+	CHECK_EQ(other, unsellable);
+	CHECK_EQ(other, rechargeable);
+	CHECK_EQ(other, desc);
+	return true;
+}

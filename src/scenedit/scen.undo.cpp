@@ -134,6 +134,18 @@ bool aEditClearMonster::redo_me() {
 	return true;
 }
 
+bool aEditClearItem::undo_me() {
+	// TODO show the type
+	scenario.scen_items[which] = before;
+	return true;
+}
+
+bool aEditClearItem::redo_me() {
+	// TODO show the type
+	scenario.scen_items[which] = after;
+	return true;
+}
+
 bool aCreateDeleteMonster::undo_me() {
 	// TODO if not in MODE_EDIT_TYPES, show it
 	for(cMonster monst : monsters){

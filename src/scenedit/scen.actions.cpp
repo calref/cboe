@@ -1338,8 +1338,12 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
 								// reset type info
 								else{
-									scenario.scen_items[i] = cItem();
-									scenario.scen_items[i].full_name = "Unused Item";
+									cItem before = scenario.scen_items[i];
+									cItem after;
+									after.full_name = "Unused Item";
+									scenario.scen_items[i] = after;
+									undo_list.add(action_ptr(new aEditClearItem("Clear Item Type", i, before, after)));
+									update_edit_menu();
 								}
 								break;
 						}

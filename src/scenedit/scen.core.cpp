@@ -1625,31 +1625,31 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 			break;
 	}
 	
+	// Even if hidden, the text needs to store the right value so == will work
+	me["missile"].setTextToNum(item.missile);
 	if(missile) {
 		me["missile"].show();
-		me["missile-pic"].show();
+		me["missile-title"].show();
 		me["missile-pic"].show();
 		me["choosemiss"].show();
-		me["missile"].setTextToNum(item.missile);
 		dynamic_cast<cPict&>(me["missile-pic"]).setPict(item.missile);
 	} else {
 		me["missile"].hide();
 		me["missile-title"].hide();
 		me["missile-pic"].hide();
 		me["choosemiss"].hide();
-		me["missile"].setText("0");
 	}
 	
+	// Even if hidden, the text needs to store the right value so == will work
+	me["weap-type"].setTextToNum(int(item.weap_type));
 	if(weapon) {
 		me["skill-title"].show();
 		me["weap-type"].show();
 		me["choosetp"].show();
-		me["weap-type"].setTextToNum(int(item.weap_type));
 	} else {
 		me["skill-title"].hide();
 		me["weap-type"].hide();
 		me["choosetp"].hide();
-		me["weap-type"].setText("0");
 	}
 	
 	me["level"].setTextToNum(item.item_level);
@@ -1730,6 +1730,7 @@ static void save_item_info(cDialog& me, cItem& item) {
 
 static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& item, short& which) {
 	short i;
+	short which_before = which;
 	cItem temp_item;
 	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
 	bool valid = true;
@@ -1739,22 +1740,46 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		return true;
 	}
 	
+	bool commit_changes = false;
+	
 	if(hit == "cancel") {
 		me.toast(false);
 	} else if(hit == "okay") {
 		save_item_info(me, item);
 		if(!me.toast(true)) return true;
-		scenario.scen_items[which] = item;
+		commit_changes = true;
 	} else if(hit == "prev") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		if(item != scenario.scen_items[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{item}}", item.full_name);
+			std::string choice = dlog.show();
+			if(choice == "keep" && me.toast(true)){
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+			me.untoast();
+		}
 		which--;
 		if(which < 0) which = scenario.scen_items.size() - 1;
 		item = scenario.scen_items[which];
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "next") {
 		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		if(item != scenario.scen_items[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{item}}", item.full_name);
+			std::string choice = dlog.show();
+			if(choice == "keep" && me.toast(true)){
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+			me.untoast();
+		}
 		which++;
 		if(which >= scenario.scen_items.size()) which = 0;
 		item = scenario.scen_items[which];
@@ -1829,6 +1854,13 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		value = choose_text_editable(scenario.itf_names, value, &me, "Select item type flag:");
 		me["flag"].setTextToNum(value);
 	}
+
+	if(commit_changes){
+		undo_list.add(action_ptr(new aEditClearItem("Edit Item Type", which_before, scenario.scen_items[which_before], item)));
+		update_edit_menu();
+		scenario.scen_items[which_before] = item;
+	}
+
 	return true;
 }
 
