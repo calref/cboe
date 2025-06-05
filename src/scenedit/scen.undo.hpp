@@ -144,4 +144,16 @@ public:
 		items(items) {}
 };
 
+/// Action which edits or clears a terrain type
+class aEditClearTerrain : public cAction {
+	ter_num_t which;
+	cTerrain before;
+	cTerrain after;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearTerrain(std::string name, ter_num_t which, cTerrain before, cTerrain after) :
+		cAction(name), which(which), before(before), after(after) {}
+};
+
 #endif

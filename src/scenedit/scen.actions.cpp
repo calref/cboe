@@ -1302,8 +1302,12 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
 								// reset type info
 								else{
-									scenario.ter_types[i] = cTerrain();
-									scenario.ter_types[i].name = "Unused Terrain";
+									cTerrain before = scenario.ter_types[i];
+									cTerrain after;
+									after.name = "Unused Terrain";
+									scenario.ter_types[i] = after;
+									undo_list.add(action_ptr(new aEditClearTerrain("Clear Terrain Type", i, before, after)));
+									update_edit_menu();
 								}
 								break;
 							case DRAW_MONST:

@@ -45,6 +45,10 @@ public:
 	pic_num_t map_pic = -1;
 	unsigned short i; // for temporary use in porting
 	
+	// For detecting actual changes to types in the scenario editor
+	bool operator==(const cTerrain& other);
+	bool operator!=(const cTerrain& other) { return !(*this == other); }
+
 	bool blocksMove() const;
 	void import_legacy(legacy::terrain_type_type& old);
 	void writeTo(std::ostream& file) const;

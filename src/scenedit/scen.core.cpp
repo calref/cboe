@@ -53,6 +53,7 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 extern location cur_out;
+extern cUndoList undo_list;
 
 const std::set<eItemAbil> items_no_strength = {
 	eItemAbil::NONE, eItemAbil::HEALING_WEAPON, eItemAbil::RETURNING_MISSILE, eItemAbil::SEEKING_MISSILE, eItemAbil::DRAIN_MISSILES,
@@ -463,8 +464,31 @@ static void fill_ter_info(cDialog& me, short ter){
 }
 
 static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
-	if(!save_ter_info(me, scenario.ter_types[which])) return true;
-	
+	cTerrain after;
+	if(!save_ter_info(me, after)) return true;
+	cTerrain before = scenario.ter_types[which];
+
+	bool changed = (after != before);
+
+	if(changed){
+		if(id == "left" || id == "right"){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-terrain", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{ter}}", after.name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				scenario.ter_types[which] = after;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}else{
+			scenario.ter_types[which] = after;
+		}
+		// Store an undo action
+		undo_list.add(action_ptr(new aEditClearTerrain("Edit Terrain Type", which, before, after)));
+		update_edit_menu();
+	}
+
 	if(!me.toast(true)) return true;
 	if(id == "left") {
 		me.untoast();

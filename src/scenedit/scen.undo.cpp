@@ -110,6 +110,18 @@ bool aCreateDeleteTerrain::redo_me() {
 	return true;
 }
 
+bool aEditClearTerrain::undo_me() {
+	// TODO show the type
+	scenario.ter_types[which] = before;
+	return true;
+}
+
+bool aEditClearTerrain::redo_me() {
+	// TODO show the type
+	scenario.ter_types[which] = after;
+	return true;
+}
+
 bool aCreateDeleteMonster::undo_me() {
 	// TODO if not in MODE_EDIT_TYPES, show it
 	for(cMonster monst : monsters){

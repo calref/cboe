@@ -413,3 +413,35 @@ bool cTerrain::blocksMove() const {
 	int code = (int) blockage;
 	return code > 2;
 }
+
+bool cTerrain::operator==(const cTerrain& other) {
+	CHECK_EQ(other, name);
+	CHECK_EQ(other, picture);
+	CHECK_EQ(other, blockage);
+	CHECK_EQ(other, flag1);
+	CHECK_EQ(other, flag2);
+	CHECK_EQ(other, flag3);
+	CHECK_EQ(other, special);
+	CHECK_EQ(other, trans_to_what);
+	CHECK_EQ(other, fly_over);
+	CHECK_EQ(other, boat_over);
+	CHECK_EQ(other, block_horse);
+	CHECK_EQ(other, is_archetype);
+	CHECK_EQ(other, light_radius);
+	CHECK_EQ(other, step_sound);
+	CHECK_EQ(other, shortcut_key);
+	CHECK_EQ(other, obj_num);
+	CHECK_EQ(other, ground_type);
+	CHECK_EQ(other, trim_type);
+	CHECK_EQ(other, trim_ter);
+	CHECK_EQ(other, frill_for);
+	CHECK_EQ(other, frill_chance);
+	CHECK_EQ(other, combat_arena);
+	CHECK_EQ(other, obj_pos);
+	CHECK_EQ(other, obj_size);
+	CHECK_EQ(other, map_pic);
+	// This field is just temporary for porting. I'm guessing checking it for equality
+	// would actually be *incorrect.*
+	// CHECK_EQ(other, i);
+	return true;
+}
