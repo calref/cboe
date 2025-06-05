@@ -830,10 +830,9 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 
 	if(hit == "okay") {
 		if(save_monst_info(me,monst)) {
-			if(monst != scenario.scen_monsters[which]){
+			if(monst != scenario.scen_monsters[which] && me.toast(true)){
 				commit_changes = true;
 			}
-			me.toast(true);
 		}
 	} else if(hit == "abils") {
 		if(!save_monst_info(me,monst)) return false;
@@ -850,17 +849,17 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		}
 	} else if(hit == "left") {
 		if(!save_monst_info(me,monst)) return false;
-		// TODO run focus handlers!
 		if(monst != scenario.scen_monsters[which]){
 			// Confirm keeping changes
 			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
 			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
 			std::string choice = dlog.show();
-			if(choice == "keep"){
+			if(choice == "keep" && me.toast(true)){
 				commit_changes = true;
 			}else if(choice == "cancel"){
 				return true;
 			}
+			me.untoast();
 		}
 		which--;
 		if(which < 1) which = scenario.scen_monsters.size() - 1;
@@ -868,17 +867,17 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
-		// TODO run focus handlers!
 		if(monst != scenario.scen_monsters[which]){
 			// Confirm keeping changes
 			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
 			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
 			std::string choice = dlog.show();
-			if(choice == "keep"){
+			if(choice == "keep" && me.toast(true)){
 				commit_changes = true;
 			}else if(choice == "cancel"){
 				return true;
 			}
+			me.untoast();
 		}
 		scenario.scen_monsters[which] = monst;
 		which++;
