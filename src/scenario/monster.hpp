@@ -61,7 +61,8 @@ public:
 	mutable std::map<eMonstAbil, uAbility> abil;
 	item_num_t corpse_item;
 	short corpse_item_chance;
-	std::map<eDamageType, int> resist;
+	// HACK: This is only really marked mutable so that I can use operator[] from const methods
+	mutable std::map<eDamageType, int> resist;
 	bool mindless, invuln, invisible, guard, amorphous;
 	unsigned int x_width,y_width;
 	eAttitude default_attitude;
@@ -71,6 +72,10 @@ public:
 	snd_num_t ambient_sound; // has a chance of being played every move
 	spec_num_t see_spec;
 	
+	// For detecting actual changes to types in the scenario editor
+	bool operator==(const cMonster& other);
+	bool operator!=(const cMonster& other) { return !(*this == other); }
+
 	std::map<eMonstAbil,uAbility>::iterator addAbil(eMonstAbilTemplate what, int param = 0);
 	int addAttack(unsigned short dice, unsigned short sides, eMonstMelee type = eMonstMelee::SWING);
 	

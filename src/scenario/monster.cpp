@@ -928,3 +928,110 @@ eMonstAbil uAbility::readFrom(const cTagFile_Page& page) {
 	return key;
 }
 
+bool cMonster::operator==(const cMonster& other) {
+	CHECK_EQ(other, level);
+	CHECK_EQ(other, m_name);
+	CHECK_EQ(other, m_health);
+	CHECK_EQ(other, armor);
+	CHECK_EQ(other, skill);
+	// attacks
+	for(int i = 0; i < a.size(); ++i){
+		CHECK_EQ(other, a[i].dice);
+		CHECK_EQ(other, a[i].sides);
+		CHECK_EQ(other, a[i].type);
+	}
+	CHECK_EQ(other, m_type);
+	CHECK_EQ(other, speed);
+	CHECK_EQ(other, mu);
+	CHECK_EQ(other, cl);
+	CHECK_EQ(other, treasure);
+
+	// abilities
+	CHECK_EQ(other, abil.size()); // TODO will NO_ABIL ever be a key? If so, it should be ignored.
+	for(auto ability : abil){
+		if(other.abil.find(ability.first) == other.abil.end()) return false;
+		uAbility mine = ability.second;
+		uAbility theirs = other.abil[ability.first];
+
+		// compare all ability types
+		switch(getMonstAbilCategory(ability.first)){
+			case eMonstAbilCat::INVALID: break;
+			case eMonstAbilCat::MISSILE:
+				if(mine.missile.active != theirs.missile.active) return false;
+				if(mine.missile.type != theirs.missile.type) return false;
+				if(mine.missile.pic != theirs.missile.pic) return false;
+				if(mine.missile.dice != theirs.missile.dice) return false;
+				if(mine.missile.sides != theirs.missile.sides) return false;
+				if(mine.missile.skill != theirs.missile.skill) return false;
+				if(mine.missile.range != theirs.missile.range) return false;
+				if(mine.missile.odds != theirs.missile.odds) return false;
+				break;
+			case eMonstAbilCat::GENERAL:
+				if(mine.gen.active != theirs.gen.active) return false;
+				if(mine.gen.type != theirs.gen.type) return false;
+				if(mine.gen.pic != theirs.gen.pic) return false;
+				if(mine.gen.strength != theirs.gen.strength) return false;
+				if(mine.gen.range != theirs.gen.range) return false;
+				if(mine.gen.odds != theirs.gen.odds) return false;
+				switch(ability.first){
+					case eMonstAbil::FIELD:
+						if(mine.gen.fld != theirs.gen.fld) return false;
+						break;
+					case eMonstAbil::DAMAGE: case eMonstAbil::DAMAGE2:
+						if(mine.gen.dmg != theirs.gen.dmg) return false;
+						break;
+					case eMonstAbil::STATUS: case eMonstAbil::STATUS2:
+						if(mine.gen.stat != theirs.gen.stat) return false;
+						break;
+					default: break;
+				}
+				break;
+			case eMonstAbilCat::SUMMON:
+				if(mine.summon.active != theirs.summon.active) return false;
+				if(mine.summon.type != theirs.summon.type) return false;
+				if(mine.summon.what != theirs.summon.what) return false;
+				if(mine.summon.min != theirs.summon.min) return false;
+				if(mine.summon.max != theirs.summon.max) return false;
+				if(mine.summon.len != theirs.summon.len) return false;
+				if(mine.summon.chance != theirs.summon.chance) return false;
+				break;
+			case eMonstAbilCat::RADIATE:
+				if(mine.radiate.active != theirs.radiate.active) return false;
+				if(mine.radiate.type != theirs.radiate.type) return false;
+				if(mine.radiate.chance != theirs.radiate.chance) return false;
+				if(mine.radiate.pat != theirs.radiate.pat) return false;
+				break;
+			case eMonstAbilCat::SPECIAL:
+				if(mine.special.active != theirs.special.active) return false;
+				if(mine.special.extra1 != theirs.special.extra1) return false;
+				if(mine.special.extra2 != theirs.special.extra2) return false;
+				if(mine.special.extra3 != theirs.special.extra3) return false;
+				break;
+		}
+	}
+
+	CHECK_EQ(other, corpse_item);
+	CHECK_EQ(other, corpse_item_chance);
+
+	// resistances
+	CHECK_EQ(other, resist.size());
+	for(auto resistance : resist){
+		if(other.resist.find(resistance.first) == other.resist.end()) return false;
+		if(resistance.second != other.resist[resistance.first]) return false;
+	}
+
+	CHECK_EQ(other, mindless);
+	CHECK_EQ(other, invuln);
+	CHECK_EQ(other, invisible);
+	CHECK_EQ(other, guard);
+	CHECK_EQ(other, amorphous);
+	CHECK_EQ(other, x_width);
+	CHECK_EQ(other, y_width);
+	CHECK_EQ(other, default_attitude);
+	CHECK_EQ(other, summon_type);
+	CHECK_EQ(other, default_facial_pic);
+	CHECK_EQ(other, picture_num);
+	CHECK_EQ(other, ambient_sound);
+	CHECK_EQ(other, see_spec);
+	return true;
+}

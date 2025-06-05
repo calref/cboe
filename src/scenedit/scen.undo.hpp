@@ -157,4 +157,16 @@ public:
 		cAction(name), which(which), before(before), after(after) {}
 };
 
+/// Action which edits or clears a monster type
+class aEditClearMonster : public cAction {
+	mon_num_t which;
+	cMonster before;
+	cMonster after;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearMonster(std::string name, mon_num_t which, cMonster before, cMonster after) :
+		cAction(name), which(which), before(before), after(after) {}
+};
+
 #endif

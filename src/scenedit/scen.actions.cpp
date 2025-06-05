@@ -1320,8 +1320,12 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
 								// reset type info
 								else{
-									scenario.scen_monsters[i] = cMonster();
-									scenario.scen_monsters[i].m_name = "Unused Monster";
+									cMonster before = scenario.scen_monsters[i];
+									cMonster after;
+									after.m_name = "Unused Monster";
+									scenario.scen_monsters[i] = after;
+									undo_list.add(action_ptr(new aEditClearMonster("Clear Monster Type", i, before, after)));
+									update_edit_menu();
 								}
 								break;
 							case DRAW_ITEM:

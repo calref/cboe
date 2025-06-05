@@ -823,28 +823,63 @@ static bool save_monst_info(cDialog& me, cMonster& monst) {
 
 static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& monst,short& which) {
 	short i;
+	short which_before = which;
 	cMonster temp_monst;
 	
+	bool commit_changes = false;
+
 	if(hit == "okay") {
 		if(save_monst_info(me,monst)) {
-			scenario.scen_monsters[which] = monst;
+			if(monst != scenario.scen_monsters[which]){
+				commit_changes = true;
+			}
 			me.toast(true);
 		}
 	} else if(hit == "abils") {
 		if(!save_monst_info(me,monst)) return false;
 		temp_monst = edit_monst_abil(monst,which,me);
-		if(temp_monst.level < 255)
+
+		bool abil_changed = (temp_monst != monst);
+
+		// Canceling the monster abilities editor sets the temp monster level to 255 as a flag.
+		// This should be fine unless we ever increase the max monster level (40) by a LOT.
+		if(abil_changed && temp_monst.level < 255){
 			monst = temp_monst;
-		put_monst_info_in_dlog(me,monst,which);
+			put_monst_info_in_dlog(me,monst,which);
+			// TODO should probably show in the monster editor that there are now unsaved ability changes.
+		}
 	} else if(hit == "left") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		// TODO run focus handlers!
+		if(monst != scenario.scen_monsters[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
 		which--;
 		if(which < 1) which = scenario.scen_monsters.size() - 1;
 		monst = scenario.scen_monsters[which];
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
+		// TODO run focus handlers!
+		if(monst != scenario.scen_monsters[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
 		scenario.scen_monsters[which] = monst;
 		which++;
 		if(which >= scenario.scen_monsters.size()) which = 1;
@@ -891,6 +926,13 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		put_monst_info(monstInfo, monst, scenario);
 		monstInfo.run();
 	}
+
+	if(commit_changes){
+		undo_list.add(action_ptr(new aEditClearMonster("Edit Monster Type", which_before, scenario.scen_monsters[which_before], monst)));
+		update_edit_menu();
+		scenario.scen_monsters[which_before] = monst;
+	}
+
 	return true;
 }
 
