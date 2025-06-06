@@ -244,3 +244,19 @@ bool aPlaceEraseCreature::redo_me() {
 	}
 	return true;
 }
+
+bool aEditSignText::undo_me() {
+	cArea* cur_area = get_current_area();
+	auto& signs = cur_area->sign_locs;
+	auto iter = std::find(signs.begin(), signs.end(), area.where);
+	iter->text = old_text;
+	return true;
+}
+
+bool aEditSignText::redo_me() {
+	cArea* cur_area = get_current_area();
+	auto& signs = cur_area->sign_locs;
+	auto iter = std::find(signs.begin(), signs.end(), area.where);
+	iter->text = new_text;
+	return true;
+}

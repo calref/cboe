@@ -35,6 +35,7 @@ class cTerrainAction : public cAction {
 public:
 	cTerrainAction(std::string name, short town_num, location where, bool reversed = false);
 	cTerrainAction(std::string name, location out_sec, location where, bool reversed = false);
+	// Construct cTerrainAction in the current town/outdoor section
 	cTerrainAction(std::string name, location where, bool reversed = false);
 	void undo();
 	void redo();
@@ -43,6 +44,7 @@ public:
 private:
 	/// Show where the change happened
 	void showChangeSite();
+protected:
 	area_ref_t area;
 };
 
@@ -90,6 +92,17 @@ class aPlaceEraseCreature : public cTerrainAction {
 public:
 	aPlaceEraseCreature(std::string name, bool place, creature_changes_t creatures);
 	aPlaceEraseCreature(std::string name, bool place, size_t index, cTownperson creature);
+};
+
+/// Action which edits sign text
+class aEditSignText : public cTerrainAction {
+	std::string old_text;
+	std::string new_text;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditSignText(location loc, std::string old_text, std::string new_text) :
+		cTerrainAction("Edit Sign Text", loc), old_text(old_text), new_text(new_text) {}
 };
 
 /// Action which adds a new town to the end of the list, or deletes the last one

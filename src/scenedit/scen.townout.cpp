@@ -425,16 +425,18 @@ void edit_placed_item(short which_i) {
 
 static bool edit_sign_event_filter(cDialog& me, sign_loc_t& which_sign) {
 	if(!me.toast(true)) return true;
-	which_sign.text = me["text"].getText();
-#if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
-	if(item_hit == 3)
-		which_sign--;
-	else which_sign++;
-	if(which_sign < 0)
-		which_sign = (editing_town) ? 14 : 7;
-	if(which_sign > (editing_town) ? 14 : 7)
-		which_sign = 0;
-#endif
+
+	std::string cur_text = me["text"].getText();
+	if(which_sign.text != cur_text){
+		undo_list.add(action_ptr(new aEditSignText(which_sign, which_sign.text, cur_text)));
+		update_edit_menu();
+		which_sign.text = cur_text;
+	}
+
+	// There used to be left/right buttons in the sign editor dialog, but there shouldn't be,
+	// because left/right is not a meaningful index to let the designer know which sign they're editing.
+	// I removed the unused code.
+
 	return true;
 }
 
