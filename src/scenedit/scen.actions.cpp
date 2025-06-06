@@ -2401,8 +2401,7 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 		auto iter = std::find(signs.begin(), signs.end(), l);
 		if(iter == signs.end()) {
 			iter = std::find_if(signs.begin(), signs.end(), [cur_area](const sign_loc_t& sign) {
-				// TODO x of 100 is no longer a valid way to represent nonexistence
-				if(sign.x == 100) return true;
+				if(sign.x == LOC_UNUSED) return true;
 				ter_num_t ter = cur_area->terrain(sign.x,sign.y);
 				return scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN;
 			});

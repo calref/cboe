@@ -72,8 +72,10 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 	for(short i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		if(old.special_locs[i].x == 100)
+		if(old.special_locs[i].x == 100){
+			special_locs[i].x = LOC_UNUSED;
 			special_locs[i].spec = -1;
+		}
 		else special_locs[i].spec = old.special_id[i];
 	}
 	city_locs.resize(8);
