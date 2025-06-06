@@ -1391,21 +1391,6 @@ void teleport_party(short x,short y,short mode) {
 	draw_map(true);
 }
 
-
-void fade_party() {
-	location l;
-	
-	l = univ.party.town_loc;
-	start_missile_anim();
-	for(short i = 0; i < 14; i++)
-		add_explosion(l,-1,1,1,0,0);
-	do_explosion_anim(5,1);
-	univ.party.town_loc.x = 100;
-	univ.party.town_loc.y = 100;
-	do_explosion_anim(5,2);
-	end_missile_anim();
-}
-
 void change_level(short town_num,short x,short y) {
 	location l(x,y);
 	
