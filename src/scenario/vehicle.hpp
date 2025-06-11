@@ -26,7 +26,7 @@ public:
 	// If they demand different member functions, I'll derive from this class.
 	location loc;
 	location sector;
-	short which_town;
+	short which_town = -1;
 	bool exists;
 	bool property;
 	pic_num_t pic = 0;

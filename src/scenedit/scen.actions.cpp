@@ -1123,8 +1123,14 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					iter->exists = false;
 					if(!editing_town) iter->sector = cur_out;
 				}
-				if(!edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT))
-					all.erase(iter);
+				if(!edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT)){
+					if(iter == (all.end() - 1)){
+						all.erase(iter);
+					}else{
+						*iter = cVehicle();
+						iter->is_boat = (overall_mode == MODE_PLACE_BOAT);
+					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			}
