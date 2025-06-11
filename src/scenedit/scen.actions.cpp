@@ -2296,6 +2296,37 @@ static const std::array<location,5> trim_diffs = {{
 	loc(0,0), loc(-1,0), loc(1,0), loc(0,-1), loc(0,1)
 }};
 
+long get_town_entrance(location l) {
+	auto& city_locs = current_terrain->city_locs;
+	auto iter = std::find(city_locs.begin(), city_locs.end(), l);
+	if(iter != city_locs.end()) return iter->spec;
+	return 0;
+}
+
+// Set, create, or delete the current outdoor section's city_loc for a given location
+// Pass town_num -1 to remove the entrance from city_locs
+void set_town_entrance(location l, long town_num) {
+	auto& city_locs = current_terrain->city_locs;
+	auto iter = std::find(city_locs.begin(), city_locs.end(), l);
+	if(iter != city_locs.end()){
+		// Erase town entrance:
+		if(town_num < 0){
+			city_locs.erase(iter);
+		}
+		// Overwrite town entrance:
+		else{
+			iter->spec = town_num;
+		}
+	}else{
+		// Add new town entrance:
+		if(town_num >= 0){
+			spec_loc_t loc = l;
+			loc.spec = town_num;
+			city_locs.push_back(loc);
+		}
+	}
+}
+
 void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes, bool handle_special) {
 	cArea* cur_area = get_current_area();
 	
@@ -2317,10 +2348,10 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 	if(!editing_town) {
 		// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
 		if(old_ter.special == eTerSpec::TOWN_ENTRANCE && new_ter.special != eTerSpec::TOWN_ENTRANCE){
-			for(short i = current_terrain->city_locs.size() - 1; i >= 0; i--) {
-				if(current_terrain->city_locs[i] == l)
-					current_terrain->city_locs.erase(current_terrain->city_locs.begin() + i);
-			}
+			long old_town_num = get_town_entrance(l);
+			undo_list.add(action_ptr(new aEditTownEntrance(spot_hit, old_town_num, -1)));
+			update_edit_menu();
+			set_town_entrance(l, -1);
 		}
 		// Don't implicitly erase signs, because the designer may have entered text in them
 	}
@@ -2664,44 +2695,13 @@ void town_entry(location spot_hit) {
 		showError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
-	// clean up old town entries
-	for(short i = 0; i < current_terrain->city_locs.size(); i++){
-		if(current_terrain->city_locs[i].spec >= 0) {
-			auto& city_loc = current_terrain->city_locs[i];
-			if(!get_current_area()->is_on_map(city_loc))
-				city_loc.spec = -1;
-			else{
-				ter = current_terrain->terrain[city_loc.x][city_loc.y];
-				if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-					city_loc.spec = -1;
-			}
-		}
-	}
-	auto iter = std::find(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), spot_hit);
-	// Edit existing town entrance
-	if(iter != current_terrain->city_locs.end()) {
-		int town = pick_town_num("select-town-enter",iter->spec,scenario);
-		if(town >= 0) iter->spec = town;
-	} else {
-		iter = std::find_if(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), [](const spec_loc_t& loc) {
-			return loc.spec < 0;
-		});
-		// Find unused town entrance and fill it
-		if(iter != current_terrain->city_locs.end()) {
-			int town = pick_town_num("select-town-enter",0,scenario);
-			if(town >= 0) {
-				*iter = spot_hit;
-				iter->spec = town;
-			}
-		}
-		// Add new town entrance at the back of list
-		else {
-			int town = pick_town_num("select-town-enter",0,scenario);
-			if(town >= 0) {
-				current_terrain->city_locs.emplace_back(spot_hit);
-				current_terrain->city_locs.back().spec = town;
-			}
-		}
+	long old_town_num = get_town_entrance(spot_hit);
+	long town_num = pick_town_num("select-town-enter",old_town_num,scenario);
+
+	if(town_num >= 0 && town_num != old_town_num){
+		undo_list.add(action_ptr(new aEditTownEntrance(spot_hit, old_town_num, town_num)));
+		update_edit_menu();
+		set_town_entrance(spot_hit, town_num);
 	}
 }
 

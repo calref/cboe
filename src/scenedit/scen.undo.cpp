@@ -2,6 +2,7 @@
 
 #include "scenario/scenario.hpp"
 #include "scenario/area.hpp"
+#include "scen.actions.hpp"
 
 extern bool editing_town;
 extern short cur_town;
@@ -258,5 +259,16 @@ bool aEditSignText::redo_me() {
 	auto& signs = cur_area->sign_locs;
 	auto iter = std::find(signs.begin(), signs.end(), area.where);
 	iter->text = new_text;
+	return true;
+}
+
+// cTerrainAction makes sure current_terrain properly references the outdoor section where the edit happened
+bool aEditTownEntrance::undo_me() {
+	set_town_entrance(area.where, old_town);
+	return true;
+}
+
+bool aEditTownEntrance::redo_me() {
+	set_town_entrance(area.where, new_town);
 	return true;
 }

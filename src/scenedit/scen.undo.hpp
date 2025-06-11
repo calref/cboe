@@ -105,6 +105,17 @@ public:
 		cTerrainAction("Edit Sign Text", loc), old_text(old_text), new_text(new_text) {}
 };
 
+/// Action which edits town entrance
+class aEditTownEntrance : public cTerrainAction {
+	long old_town;
+	long new_town;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownEntrance(location loc, long old_town, long new_town) :
+		cTerrainAction("Edit Town Entrance", loc), old_town(old_town), new_town(new_town) {}
+};
+
 /// Action which adds a new town to the end of the list, or deletes the last one
 class aCreateDeleteTown : public cAction {
 	bool created;
