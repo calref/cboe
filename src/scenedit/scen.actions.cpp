@@ -1106,7 +1106,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				auto& all = overall_mode == MODE_PLACE_BOAT ? scenario.boats : scenario.horses;
 				auto iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 					if(editing_town && cur_town != what.which_town) return false;
-					else if(!editing_town && what.which_town != 200) return false;
+					else if(!editing_town && what.sector != cur_out) return false;
 					return what.loc == spot_hit;
 				});
 				if(iter == all.end()) {
