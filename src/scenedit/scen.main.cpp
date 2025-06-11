@@ -693,17 +693,28 @@ void handle_menu_choice(eMenu item_hit) {
 			place_items_in_town();
 			change_made = true;
 			break;
-		case eMenu::TOWN_ITEMS_NOT_PROPERTY:
+		case eMenu::TOWN_ITEMS_NOT_PROPERTY:{
 			if(!town->any_items()){
 				cChoiceDlog("no-items").show();
 				break;
 			}
-			for(int i = 0; i < town->preset_items.size(); i++)
-				town->preset_items[i].property = 0;
-			cChoiceDlog("set-not-owned").show();
+			std::vector<bool> old_property;
+			bool any_were = false;
+			for(cTown::cItem& item: town->preset_items){
+				if(item.property) any_were = true;
+				old_property.push_back(item.property);
+				item.property = false;
+			}
+			if(any_were){
+				undo_list.add(action_ptr(new aClearProperty(old_property)));
+				update_edit_menu();
+				cChoiceDlog("set-not-owned").show();
+			}else{
+				cChoiceDlog("no-items-property").show();
+			}
 			draw_terrain();
 			change_made = true;
-			break;
+		}break;
 		case eMenu::TOWN_ITEMS_CLEAR:{
 			if(!town->any_items()){
 				cChoiceDlog("no-items").show();

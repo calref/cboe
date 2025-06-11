@@ -6,7 +6,7 @@
 
 extern bool editing_town;
 extern short cur_town;
-extern short cur_town;
+extern cTown* town;
 extern location cur_out;
 extern short cen_x;
 extern short cen_y;
@@ -294,5 +294,19 @@ bool aEditTownEntrance::undo_me() {
 
 bool aEditTownEntrance::redo_me() {
 	set_town_entrance(area.where, new_town);
+	return true;
+}
+
+bool aClearProperty::undo_me() {
+	for(size_t i = 0; i < town->preset_items.size(); ++i){
+		town->preset_items[i].property = old_property[i];
+	}
+	return true;
+}
+
+bool aClearProperty::redo_me() {
+	for(cTown::cItem& item : town->preset_items){
+		item.property = false;
+	}
 	return true;
 }

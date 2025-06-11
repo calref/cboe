@@ -10,6 +10,7 @@
 #include "scenario/vehicle.hpp"
 
 extern cScenario scenario;
+extern cTown* town;
 
 struct area_ref_t {
 	bool is_town;
@@ -47,6 +48,16 @@ private:
 	void showChangeSite();
 protected:
 	area_ref_t area;
+};
+
+/// Action that clears the 'not yours' flag from every item in town
+class aClearProperty : public cTerrainAction {
+	std::vector<bool> old_property;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aClearProperty(std::vector<bool> old_property) : cTerrainAction("Set All Items Not Property", town->preset_items[0].loc),
+		old_property(old_property) {}
 };
 
 /// Action that erased a special encounter from a spot
