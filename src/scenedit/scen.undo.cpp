@@ -246,6 +246,18 @@ bool aPlaceEraseCreature::redo_me() {
 	return true;
 }
 
+bool aPlaceEraseVehicle::undo_me() {
+	auto& all = is_boat ? scenario.boats : scenario.horses;
+	all[which] = cVehicle();
+	return true;
+}
+
+bool aPlaceEraseVehicle::redo_me() {
+	auto& all = is_boat ? scenario.boats : scenario.horses;
+	all[which] = vehicle;
+	return true;
+}
+
 bool aEditSignText::undo_me() {
 	cArea* cur_area = get_current_area();
 	auto& signs = cur_area->sign_locs;

@@ -7,6 +7,7 @@
 #include "scenario/scenario.hpp"
 #include "scenario/item.hpp"
 #include "scenario/monster.hpp"
+#include "scenario/vehicle.hpp"
 
 extern cScenario scenario;
 
@@ -92,6 +93,20 @@ class aPlaceEraseCreature : public cTerrainAction {
 public:
 	aPlaceEraseCreature(std::string name, bool place, creature_changes_t creatures);
 	aPlaceEraseCreature(std::string name, bool place, size_t index, cTownperson creature);
+};
+
+/// Action which places or erases vehicles
+class aPlaceEraseVehicle : public cTerrainAction {
+	bool placed;
+	bool is_boat;
+	size_t which;
+	cVehicle vehicle;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceEraseVehicle(bool place, bool is_boat, size_t which, cVehicle vehicle) :
+		cTerrainAction(std::string { place ? "Place " : "Erase " } + (is_boat ? "Boat" : "Horse"), vehicle.loc, !place),
+		is_boat(is_boat), which(which), vehicle(vehicle) {}
 };
 
 /// Action which edits sign text

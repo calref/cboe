@@ -1103,6 +1103,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				change_made = true;
 				break;
 			case MODE_PLACE_BOAT: case MODE_PLACE_HORSE: {
+				bool is_new = false;
 				auto& all = overall_mode == MODE_PLACE_BOAT ? scenario.boats : scenario.horses;
 				auto iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 					if(editing_town && cur_town != what.which_town) return false;
@@ -1117,18 +1118,41 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						all.emplace_back();
 						iter = all.end() - 1;
 					}
+					is_new = true;
 					iter->loc = spot_hit;
 					iter->which_town = editing_town ? cur_town : 200;
 					iter->property = false;
 					iter->exists = false;
 					if(!editing_town) iter->sector = cur_out;
 				}
-				if(!edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT)){
+				if(edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT)){
+					// Created new
+					if(is_new){
+						undo_list.add(action_ptr(new aPlaceEraseVehicle(true, overall_mode == MODE_PLACE_BOAT, iter - all.begin(), *iter)));
+						update_edit_menu();
+					}
+					// Edited
+					else{
+
+					}
+				}
+				else{
+					// Edit existing--delete chosen
+					if(!is_new){
+						undo_list.add(action_ptr(new aPlaceEraseVehicle(false, overall_mode == MODE_PLACE_BOAT, iter - all.begin(), *iter)));
+						update_edit_menu();
+					}
+					// Create new canceled or delete chosen
+					else{
+						// Nothing needs to be recorded
+					}
+					// Vehicle can be deleted completely without offseting other vehicle numbers
 					if(iter == (all.end() - 1)){
 						all.erase(iter);
-					}else{
+					}
+					// Vehicle can't be fully deleted
+					else{
 						*iter = cVehicle();
-						iter->is_boat = (overall_mode == MODE_PLACE_BOAT);
 					}
 				}
 				overall_mode = MODE_DRAWING;
