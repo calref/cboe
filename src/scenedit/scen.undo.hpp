@@ -109,6 +109,20 @@ public:
 		is_boat(is_boat), which(which), vehicle(vehicle) {}
 };
 
+/// Action which edits vehicle
+class aEditVehicle : public cTerrainAction {
+	bool is_boat;
+	size_t which;
+	cVehicle old_vehicle;
+	cVehicle new_vehicle;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditVehicle(bool is_boat, size_t which, cVehicle old_vehicle, cVehicle new_vehicle) :
+		cTerrainAction(std::string { "Edit " } + (is_boat ? "Boat" : "Horse"), new_vehicle.loc),
+		is_boat(is_boat), which(which), old_vehicle(old_vehicle), new_vehicle(new_vehicle) {}
+};
+
 /// Action which edits sign text
 class aEditSignText : public cTerrainAction {
 	std::string old_text;

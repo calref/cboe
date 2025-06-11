@@ -1104,13 +1104,19 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			case MODE_PLACE_BOAT: case MODE_PLACE_HORSE: {
 				bool is_new = false;
+				cVehicle old_vehicle;
 				auto& all = overall_mode == MODE_PLACE_BOAT ? scenario.boats : scenario.horses;
 				auto iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 					if(editing_town && cur_town != what.which_town) return false;
 					else if(!editing_town && what.sector != cur_out) return false;
 					return what.loc == spot_hit;
 				});
-				if(iter == all.end()) {
+				// Edit existing
+				if(iter != all.end()){
+					old_vehicle = *iter;
+				}
+				// Create new
+				else{
 					iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 						return what.which_town < 0;
 					});
@@ -1132,8 +1138,9 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						update_edit_menu();
 					}
 					// Edited
-					else{
-
+					else if(old_vehicle != *iter){
+						undo_list.add(action_ptr(new aEditVehicle(overall_mode == MODE_PLACE_BOAT, iter - all.begin(), old_vehicle, *iter)));
+						update_edit_menu();
 					}
 				}
 				else{

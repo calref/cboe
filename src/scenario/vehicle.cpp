@@ -68,6 +68,7 @@ void cVehicle::readFrom(const cTagFile_Page& page) {
 }
 
 bool operator==(const cVehicle& a, const cVehicle& b) {
+	if(a.name != b.name) return false;
 	if(a.which_town != b.which_town)
 		return false;
 	if(a.exists != b.exists) return false;
