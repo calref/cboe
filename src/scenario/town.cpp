@@ -271,7 +271,7 @@ void cTown::set_item_taken(size_t i, bool val) {
 	item_taken.set(i, val);
 }
 
-bool cTown::any_items() const {
+bool cTown::any_preset_items() const {
 	for(cItem item: preset_items){
 		if(item.code >= 0) return true;
 	}

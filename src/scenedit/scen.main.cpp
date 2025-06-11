@@ -694,7 +694,7 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 			break;
 		case eMenu::TOWN_ITEMS_NOT_PROPERTY:{
-			if(!town->any_items()){
+			if(!town->any_preset_items()){
 				cChoiceDlog("no-items").show();
 				break;
 			}
@@ -716,7 +716,7 @@ void handle_menu_choice(eMenu item_hit) {
 			change_made = true;
 		}break;
 		case eMenu::TOWN_ITEMS_CLEAR:{
-			if(!town->any_items()){
+			if(!town->any_preset_items()){
 				cChoiceDlog("no-items").show();
 				break;
 			}
