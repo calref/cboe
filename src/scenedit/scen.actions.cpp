@@ -1465,6 +1465,8 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 					}
 					switch(draw_mode){
 						case DRAW_TERRAIN:
+							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
+							// could result in unrecordedly deleting a new terrain that was confirmed
 							if(!edit_ter_type(i)){
 								// Canceled editing
 								if(i == size_before){
@@ -1481,6 +1483,8 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 							}
 							break;
 						case DRAW_MONST:
+							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
+							// could result in unrecordedly deleting a new monster that was confirmed
 							if(!edit_monst_type(i)){
 								// Canceled editing
 								if(i == size_before){
@@ -1497,6 +1501,8 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 							}
 							break;
 						case DRAW_ITEM:
+							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
+							// could result in unrecordedly deleting a new item that was confirmed
 							if(!edit_item_type(i)){
 								// Canceled editing
 								if(i == size_before){
