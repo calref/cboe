@@ -422,9 +422,31 @@ void redraw_screen() {
 	mainPtr().display();
 }
 
+void apply_mode_buttons() {
+	right_button_status.clear();
+	int num_options;
+	switch(overall_mode){
+		case MODE_EDIT_SPECIAL_ITEMS:
+			num_options = scenario.special_items.size() + 1;
+			for(int i = 0; i < num_options; i++) {
+				std::string title;
+				if(i == scenario.special_items.size())
+					title = "Create New Special Item";
+				else title = scenario.special_items[i].name;
+				title = std::to_string(i) + " - " + title;
+				set_rb(i,RB_SPEC_ITEM, i, title);
+			}
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+			break;
+		default: break;
+	}
+}
+
 void draw_main_screen() {
 	rectangle draw_rect;
 	
+	apply_mode_buttons();
+
 	draw_lb();
 	
 	// draw right buttons (only when not editing terrain)

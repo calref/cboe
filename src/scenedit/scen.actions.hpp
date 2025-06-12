@@ -38,7 +38,7 @@ void set_up_main_screen();
 void start_town_edit();
 void start_out_edit();
 void start_type_editing(eDrawMode mode);
-void start_special_item_editing(bool just_redo_text);
+void start_special_item_editing();
 void start_quest_editing(bool just_redo_text);
 void start_shops_editing(bool just_redo_text);
 void start_string_editing(eStrMode mode,short just_redo_text);

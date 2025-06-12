@@ -131,7 +131,7 @@ void init_screen_locs() {
 static cursor_type get_edit_cursor() {
 	switch(overall_mode) {
 		case MODE_INTRO_SCREEN: case MODE_MAIN_SCREEN: case MODE_EDIT_TYPES:
-		case MODE_EDIT_SPECIALS:
+		case MODE_EDIT_SPECIALS: case MODE_EDIT_SPECIAL_ITEMS:
 			
 		case MODE_PLACE_CREATURE: case MODE_PLACE_ITEM: case MODE_PLACE_SPECIAL:
 			
@@ -282,7 +282,7 @@ static bool handle_lb_action(int i){
 				start_string_editing(STRS_SCEN,0);
 				break;
 			case LB_EDIT_SPECITEM:
-				start_special_item_editing(false);
+				start_special_item_editing();
 				break;
 			case LB_EDIT_QUEST:
 				start_quest_editing(false);
@@ -491,7 +491,6 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_spec_item(j) && j == size_before)
 							scenario.special_items.pop_back();
 					}
-					start_special_item_editing(size_before == scenario.special_items.size());
 					if(size_before > scenario.special_items.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -1181,6 +1180,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
 			case MODE_EDIT_SPECIALS:
+			case MODE_EDIT_SPECIAL_ITEMS:
 				break; // Nothing to do here, of course.
 			case MODE_COPY_CREATURE:
 				for(short x = 0; x < town->creatures.size(); x++)
@@ -2937,27 +2937,16 @@ void start_type_editing(eDrawMode mode) {
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
-void start_special_item_editing(bool just_redo_text) {
+void start_special_item_editing() {
 	int num_options = scenario.special_items.size() + 1;
 	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(short i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.special_items.size())
-			title = "Create New Special Item";
-		else title = scenario.special_items[i].name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i,RB_SPEC_ITEM, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	handle_close_terrain_view(MODE_EDIT_SPECIAL_ITEMS);
+	right_sbar->show();
+	pal_sbar->hide();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
