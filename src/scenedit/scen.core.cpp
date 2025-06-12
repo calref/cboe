@@ -2168,7 +2168,10 @@ static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
 	dynamic_cast<cLed&>(me["usable"]).setState(item.flags % 10 > 0 ? led_red : led_off);
 }
 
-static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
+static bool save_spec_item(cDialog& me, cSpecItem& item, short which, bool& is_new, bool need_confirm = false) {
+	if(!me.toast(true)) return false;
+	me.untoast();
+
 	item.name = me["name"].getText();
 	item.descr = me["descr"].getText();
 	item.special = me["spec"].getTextAsNum();
@@ -2177,35 +2180,61 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
 		item.flags += 10;
 	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
 		item.flags += 1;
-	scenario.special_items[which] = item;
+
+	if(item != scenario.special_items[which] || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-spec-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{spec-item}}", item.name);
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_spec_item_in_dlog(me, scenario.special_items[which], which);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		// Create new confirmed
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, scenario.special_items.back())));
+			update_edit_menu();
+		}
+		// Special item edited
+		else{
+			undo_list.add(action_ptr(new aEditClearSpecialItem("Edit Special Item", which, scenario.special_items[which], item)));
+			update_edit_menu();
+		}
+		scenario.special_items[which] = item;
+	}
+	is_new = false;
 	return true;
 }
 
-static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short& which) {
+static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short& which, bool& is_new) {
 	if(hit == "cancel") {
 		me.toast(false);
 	} else if(hit == "okay") {
-		if(save_spec_item(me, item, which)) me.toast(true);
+		if(save_spec_item(me, item, which, is_new)) me.toast(true);
 	} else if(hit == "left") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new, true)) return true;
 		which--;
 		if(which < 0) which = scenario.special_items.size() - 1;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "right") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new, true)) return true;
 		which++;
 		if(which >= scenario.special_items.size()) which = 0;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "edit-spec") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new)) return true;
 		short spec = me["spec"].getTextAsNum();
 		if(spec < 0)
 			spec = get_fresh_spec(0);
 		if(edit_spec_enc(spec,0,&me))
 			me["spec"].setTextToNum(spec);
-		save_spec_item(me, item, which);
+		save_spec_item(me, item, which, is_new);
 		
 	}
 	return true;
@@ -2214,17 +2243,22 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 bool edit_spec_item(short which_item) {
 	short first = which_item;
 	using namespace std::placeholders;
+	bool is_new = false;
+	// Create new special item
+	if(which_item == scenario.special_items.size()) {
+		is_new = true;
+		scenario.special_items.emplace_back();
+		scenario.special_items.back().name = "New Special Item";
+	}
 	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-special-item"));
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item), std::ref(is_new)), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
 	if(scenario.special_items.size() == 1) {
 		item_dlg["left"].hide();
 		item_dlg["right"].hide();
-	} else {
-		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"left", "right"});
 	}
 	
 	put_spec_item_in_dlog(item_dlg, item, which_item);

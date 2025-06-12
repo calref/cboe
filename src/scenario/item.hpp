@@ -99,6 +99,10 @@ public:
 	short special = -1;
 	std::string name;
 	std::string descr;
+
+	// For detecting actual changes to special items in the scenario editor
+	bool operator==(const cSpecItem& other);
+	bool operator!=(const cSpecItem& other) { return !(*this == other); }
 };
 
 #endif

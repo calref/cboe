@@ -1445,3 +1445,11 @@ bool cItem::operator==(const cItem& other) {
 	CHECK_EQ(other, desc);
 	return true;
 }
+
+bool cSpecItem::operator==(const cSpecItem& other) {
+	CHECK_EQ(other, flags);
+	CHECK_EQ(other, special);
+	CHECK_EQ(other, name);
+	CHECK_EQ(other, descr);
+	return true;
+}

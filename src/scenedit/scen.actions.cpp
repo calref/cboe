@@ -487,29 +487,17 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							break;
 						// Clear special item (it can't be deleted fully)
 						else {
-							// TODO undo action
-							scenario.special_items[j] = cSpecItem();
-							scenario.special_items[j].name = "Unused Special Item";
+							cSpecItem cleared;
+							cleared.name = "Unused Special Item";
+							undo_list.add(action_ptr(new aEditClearSpecialItem("Clear Special Item", j, scenario.special_items[j], cleared)));
+							update_edit_menu();
+							scenario.special_items[j] = cleared;
 						}
 					} else {
-						bool is_new = false;
-						// Create new special item
-						if(j == size_before) {
-							is_new = true;
-							scenario.special_items.emplace_back();
-							scenario.special_items.back().name = "New Special Item";
-						}
-
+						bool is_new = (j == size_before);
 						if(edit_spec_item(j)){
-							// Create new confirmed
-							if(is_new){
-								undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, scenario.special_items.back())));
-								update_edit_menu();
-							}
-							// Special item edited
-							else{
-								// TODO undo action
-							}
+							// Special item create/edit undo action is added in save_spec_item() because special item editor
+							// has left/right buttons and may someday be launched with create/edit buttons elsewhere.
 						}
 						// Create new canceled
 						else if(is_new){

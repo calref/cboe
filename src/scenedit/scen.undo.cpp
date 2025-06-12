@@ -440,3 +440,23 @@ bool aCreateDeleteShop::redo_me() {
 	scenario.shops.push_back(shop);
 	return true;
 }
+
+bool aEditClearSpecialItem::undo_me() {
+	// If not editing special items, show it
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS){
+		start_special_item_editing();
+		// TODO scroll to show the item
+	}
+	scenario.special_items[which] = before;
+	return true;
+}
+
+bool aEditClearSpecialItem::redo_me() {
+	// If not editing special items, show it
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS){
+		start_special_item_editing();
+		// TODO scroll to show the item
+	}
+	scenario.special_items[which] = after;
+	return true;
+}
