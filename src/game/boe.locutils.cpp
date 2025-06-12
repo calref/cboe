@@ -182,11 +182,6 @@ short sight_obscurity(short x,short y) {
 	
 	what_terrain = coord_to_ter(x,y);
 	
-	// TODO: This should not be hard-coded!
-	// It appears to refer to mountain cave entrances, surface tower, and surface pit. (WHY?)
-	if((what_terrain >= 237) && (what_terrain <= 242))
-		return 1;
-	
 	store = get_blockage(what_terrain);
 	
 	if(is_town()) {
