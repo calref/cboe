@@ -1015,10 +1015,16 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			}
 			case MODE_EDIT_CREATURE: //edit monst
-				for(short x = 0; x < town->creatures.size(); x++)
+				for(short x = 0; x < town->creatures.size(); x++){
 					if(monst_on_space(spot_hit,x)) {
+						cTownperson old_creature = town->creatures[x];
 						edit_placed_monst(x);
+						if(town->creatures[x] != old_creature){
+							undo_list.add(action_ptr(new aEditPlacedCreature(x, old_creature, town->creatures[x])));
+							update_edit_menu();
+						}
 					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_SPECIAL: //make special

@@ -98,6 +98,10 @@ public:
 	short special_on_kill, special_on_talk;
 	pic_num_t facial_pic;
 	
+	// For detecting actual changes to town monsters in the editor
+	bool operator==(const cTownperson& other);
+	bool operator!=(const cTownperson& other) { return !(*this == other); }
+
 	void import_legacy(legacy::creature_start_type old);
 	cTownperson();
 	cTownperson(location loc, mon_num_t num, const cMonster& monst);

@@ -320,3 +320,13 @@ bool aEditPlacedItem::redo_me() {
 	town->preset_items[which] = new_item;
 	return true;
 }
+
+bool aEditPlacedCreature::undo_me() {
+	town->creatures[which] = old_creature;
+	return true;
+}
+
+bool aEditPlacedCreature::redo_me() {
+	town->creatures[which] = new_creature;
+	return true;
+}

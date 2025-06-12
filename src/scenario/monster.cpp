@@ -1035,3 +1035,21 @@ bool cMonster::operator==(const cMonster& other) {
 	CHECK_EQ(other, see_spec);
 	return true;
 }
+
+bool cTownperson::operator==(const cTownperson& other) {
+	CHECK_EQ(other, number);
+	CHECK_EQ(other, start_attitude);
+	CHECK_EQ(other, start_loc);
+	CHECK_EQ(other, mobility);
+	CHECK_EQ(other, time_flag);
+	CHECK_EQ(other, spec1);
+	CHECK_EQ(other, spec2);
+	CHECK_EQ(other, spec_enc_code);
+	CHECK_EQ(other, time_code);
+	CHECK_EQ(other, monster_time);
+	CHECK_EQ(other, personality);
+	CHECK_EQ(other, special_on_kill);
+	CHECK_EQ(other, special_on_talk);
+	CHECK_EQ(other, facial_pic);
+	return true;
+}

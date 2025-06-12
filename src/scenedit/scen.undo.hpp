@@ -108,6 +108,19 @@ public:
 		which(which), old_item(old_item), new_item(new_item) {}
 };
 
+/// Action which edits a creature in a town
+class aEditPlacedCreature : public cTerrainAction {
+	size_t which;
+	cTownperson old_creature;
+	cTownperson new_creature;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditPlacedCreature(size_t which, cTownperson old_creature, cTownperson new_creature) :
+		cTerrainAction("Edit Placed Creature", new_creature.start_loc),
+		which(which), old_creature(old_creature), new_creature(new_creature) {}
+};
+
 /// Action which places or erases creature(s) in a town
 class aPlaceEraseCreature : public cTerrainAction {
 	bool placed;
