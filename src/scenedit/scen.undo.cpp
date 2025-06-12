@@ -16,6 +16,7 @@ extern void start_town_edit();
 extern void start_out_edit();
 extern void redraw_screen();
 extern void set_current_town(int,bool first_restore = false);
+extern eScenMode overall_mode;
 
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
@@ -332,12 +333,13 @@ bool aEditPlacedCreature::redo_me() {
 }
 
 bool aCreateDeleteSpecialItem::undo_me() {
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS) start_special_item_editing();
 	scenario.special_items.pop_back();
-
 	return true;
 }
 
 bool aCreateDeleteSpecialItem::redo_me() {
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS) start_special_item_editing();
 	scenario.special_items.push_back(item);
 	return true;
 }

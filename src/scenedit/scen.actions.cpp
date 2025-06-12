@@ -3133,7 +3133,7 @@ void handle_close_terrain_view(eScenMode new_mode) {
 	scenario.editor_state.overall_mode = new_mode;
 
 	// set up the main screen if needed
-	if(new_mode == MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
+	if(new_mode >= MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
 		set_up_main_screen();
 
 	overall_mode = new_mode;
