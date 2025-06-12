@@ -151,6 +151,9 @@ void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.CloseElement("out-view-state");
 	}
 
+	data.PushElement("overall-mode", scenario.editor_state.overall_mode);
+	data.PushElement("type-editing-mode", scenario.editor_state.type_editing_mode);
+
 	data.CloseElement("editor");
 }
 

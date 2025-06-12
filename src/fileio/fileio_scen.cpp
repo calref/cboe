@@ -1124,6 +1124,10 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 				}
 			}
 			editor_state.out_view_state[section] = {center, viewing_mode};
+		}else if(type == "overall-mode"){
+			elem->GetText(&editor_state.overall_mode);
+		}else if(type == "type-editing-mode"){
+			elem->GetText(&editor_state.type_editing_mode);
 		}
 	}
 }

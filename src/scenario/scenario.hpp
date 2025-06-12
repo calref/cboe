@@ -69,6 +69,10 @@ struct editor_state_t {
 	// When simply shifting over by 1 section we won't want to
 	// use this stored state, we want seamless transition.
 	std::map<location, terrain_view_t, loc_compare> out_view_state;
+
+	// Non-drawing modes will be remembered and reopened when the editor launches.
+	int overall_mode = -1;
+	int type_editing_mode = -1;
 };
 
 class cScenario {

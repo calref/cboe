@@ -2928,6 +2928,9 @@ void start_type_editing(eDrawMode mode) {
 	right_sbar->hide();
 	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
+	// Remember non-drawing modes
+	scenario.editor_state.overall_mode = MODE_EDIT_TYPES;
+	scenario.editor_state.type_editing_mode = mode;
 	draw_mode = mode;
 	set_up_type_buttons(true);
 	place_location();
@@ -3209,6 +3212,16 @@ void restore_editor_state() {
 			start_town_edit();
 		else
 			start_out_edit();
+	}else{
+		switch(scenario.editor_state.overall_mode){
+			case MODE_EDIT_TYPES:
+				start_type_editing(static_cast<eDrawMode>(scenario.editor_state.type_editing_mode));
+				break;
+			case MODE_EDIT_SPECIAL_ITEMS:
+				start_special_item_editing();
+				break;
+			default: break;
+		}
 	}
 }
 
@@ -3216,6 +3229,8 @@ void handle_close_terrain_view(eScenMode new_mode) {
 	// When closing a terrain view, store its view state
 	store_current_terrain_state();
 	scenario.editor_state.drawing = false;
+	// Remember non-drawing modes
+	scenario.editor_state.overall_mode = new_mode;
 
 	// set up the main screen if needed
 	if(new_mode == MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
