@@ -17,6 +17,7 @@ extern void start_out_edit();
 extern void redraw_screen();
 extern void set_current_town(int,bool first_restore = false);
 extern eScenMode overall_mode;
+extern eDrawMode draw_mode;
 
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
@@ -97,7 +98,11 @@ aCreateDeleteTown::~aCreateDeleteTown() {
 }
 
 bool aCreateDeleteTerrain::undo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_TERRAIN)){
+		start_type_editing(DRAW_TERRAIN);
+		// TODO Go to scroll maximum
+	}
 	for(cTerrain ter : terrains){
 		scenario.ter_types.pop_back();
 	}
@@ -105,7 +110,11 @@ bool aCreateDeleteTerrain::undo_me() {
 }
 
 bool aCreateDeleteTerrain::redo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_TERRAIN)){
+		start_type_editing(DRAW_TERRAIN);
+		// TODO Go to scroll maximum
+	}
 	for(cTerrain ter : terrains){
 		scenario.ter_types.push_back(ter);
 	}
@@ -113,43 +122,71 @@ bool aCreateDeleteTerrain::redo_me() {
 }
 
 bool aEditClearTerrain::undo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_TERRAIN)){
+		start_type_editing(DRAW_TERRAIN);
+		// TODO scroll to show the type
+	}
 	scenario.ter_types[which] = before;
 	return true;
 }
 
 bool aEditClearTerrain::redo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_TERRAIN)){
+		start_type_editing(DRAW_TERRAIN);
+		// TODO scroll to show the type
+	}
 	scenario.ter_types[which] = after;
 	return true;
 }
 
 bool aEditClearMonster::undo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_MONST)){
+		start_type_editing(DRAW_MONST);
+		// TODO scroll to show the type
+	}
 	scenario.scen_monsters[which] = before;
 	return true;
 }
 
 bool aEditClearMonster::redo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_MONST)){
+		start_type_editing(DRAW_MONST);
+		// TODO scroll to show the type
+	}
 	scenario.scen_monsters[which] = after;
 	return true;
 }
 
 bool aEditClearItem::undo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_ITEM)){
+		start_type_editing(DRAW_ITEM);
+		// TODO scroll to show the type
+	}
 	scenario.scen_items[which] = before;
 	return true;
 }
 
 bool aEditClearItem::redo_me() {
-	// TODO show the type
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_ITEM)){
+		start_type_editing(DRAW_ITEM);
+		// TODO scroll to show the type
+	}
 	scenario.scen_items[which] = after;
 	return true;
 }
 
 bool aCreateDeleteMonster::undo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_MONST)){
+		start_type_editing(DRAW_MONST);
+		// TODO Go to scroll maximum
+	}
 	for(cMonster monst : monsters){
 		scenario.scen_monsters.pop_back();
 	}
@@ -157,7 +194,11 @@ bool aCreateDeleteMonster::undo_me() {
 }
 
 bool aCreateDeleteMonster::redo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_MONST)){
+		start_type_editing(DRAW_MONST);
+		// TODO Go to scroll maximum
+	}
 	for(cMonster monst : monsters){
 		scenario.scen_monsters.push_back(monst);
 	}
@@ -165,7 +206,11 @@ bool aCreateDeleteMonster::redo_me() {
 }
 
 bool aCreateDeleteItem::undo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_ITEM)){
+		start_type_editing(DRAW_ITEM);
+		// TODO Go to scroll max
+	}
 	for(cItem item : items){
 		scenario.scen_items.pop_back();
 	}
@@ -173,7 +218,11 @@ bool aCreateDeleteItem::undo_me() {
 }
 
 bool aCreateDeleteItem::redo_me() {
-	// TODO if not in MODE_EDIT_TYPES, show it
+	// if not in MODE_EDIT_TYPES, show it
+	if(!(overall_mode == MODE_EDIT_TYPES && draw_mode == DRAW_ITEM)){
+		start_type_editing(DRAW_ITEM);
+		// TODO Go to scroll max
+	}
 	for(cItem item : items){
 		scenario.scen_items.push_back(item);
 	}
@@ -333,13 +382,21 @@ bool aEditPlacedCreature::redo_me() {
 }
 
 bool aCreateDeleteSpecialItem::undo_me() {
-	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS) start_special_item_editing();
+	// If not editing special items, show it
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS){
+		start_special_item_editing();
+		// TODO Go to scroll maximum
+	}
 	scenario.special_items.pop_back();
 	return true;
 }
 
 bool aCreateDeleteSpecialItem::redo_me() {
-	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS) start_special_item_editing();
+	// If not editing special items, show it
+	if(overall_mode != MODE_EDIT_SPECIAL_ITEMS){
+		start_special_item_editing();
+		// TODO Go to scroll maximum
+	}
 	scenario.special_items.push_back(item);
 	return true;
 }
