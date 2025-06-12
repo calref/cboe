@@ -1128,6 +1128,10 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 			elem->GetText(&editor_state.overall_mode);
 		}else if(type == "type-editing-mode"){
 			elem->GetText(&editor_state.type_editing_mode);
+		}else if(type == "string-editing-mode"){
+			elem->GetText(&editor_state.string_editing_mode);
+		}else if(type == "special-editing-mode"){
+			elem->GetText(&editor_state.special_editing_mode);
 		}
 	}
 }

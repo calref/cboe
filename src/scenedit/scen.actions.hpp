@@ -38,12 +38,12 @@ void start_town_edit();
 void start_out_edit();
 void start_type_editing(eDrawMode mode);
 void start_special_item_editing();
-void start_quest_editing(bool just_redo_text);
-void start_shops_editing(bool just_redo_text);
-void start_string_editing(eStrMode mode,short just_redo_text);
-void start_special_editing(short mode,short just_redo_text);
+void start_quest_editing();
+void start_shops_editing();
+void start_string_editing(eStrMode mode);
+void start_special_editing(short mode);
 void town_entry(location spot_hit);
-void start_dialogue_editing(short restoring);
+void start_dialogue_editing();
 void update_mouse_spot(location the_point);
 
 bool monst_on_space(location loc,short m_num);

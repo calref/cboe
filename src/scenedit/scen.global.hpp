@@ -83,7 +83,10 @@ enum eScenMode {
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
 	MODE_EDIT_SPECIALS = 63, // editing a LIST of specials, not to be confused with MODE_EDIT_SPECIAL singular
 	MODE_EDIT_SPECIAL_ITEMS = 64,
-
+	MODE_EDIT_QUESTS = 65,
+	MODE_EDIT_SHOPS = 66,
+	MODE_EDIT_STRINGS = 67,
+	MODE_EDIT_DIALOGUE = 68,
 };
 
 enum eDrawMode {

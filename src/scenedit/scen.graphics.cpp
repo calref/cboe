@@ -422,6 +422,8 @@ void redraw_screen() {
 	mainPtr().display();
 }
 
+extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
+
 void apply_mode_buttons() {
 	right_button_status.clear();
 	int num_options;
@@ -438,6 +440,144 @@ void apply_mode_buttons() {
 			}
 			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
 			break;
+		case MODE_EDIT_QUESTS:
+			num_options = scenario.quests.size() + 1;
+			for(int i = 0; i < num_options; i++) {
+				std::string title;
+				if(i == scenario.quests.size())
+					title = "Create New Quest";
+				else title = scenario.quests[i].name;
+				title = std::to_string(i) + " - " + title;
+				set_rb(i, RB_QUEST, i, title);
+			}
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+			break;
+		case MODE_EDIT_SHOPS:
+			num_options = scenario.shops.size() + 1;
+			for(int i = 0; i < num_options; i++) {
+				std::string title;
+				if(i == scenario.shops.size())
+					title = "Create New Shop";
+				else title = scenario.shops[i].getName();
+				title = std::to_string(i) + " - " + title;
+				set_rb(i, RB_SHOP, i, title);
+			}
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+			break;
+		case MODE_EDIT_STRINGS:{
+			eStrMode mode = static_cast<eStrMode>(scenario.editor_state.string_editing_mode);
+			size_t num_strs = ::num_strs(mode);
+
+			for(size_t i = 0; i < num_strs; i++) {
+				std::ostringstream str;
+				switch(mode) {
+					case 0:
+						str << i << " - " << scenario.spec_strs[i];
+						set_rb(i,RB_SCEN_STR, i,str.str());
+						break;
+					case 1:
+						str << i << " - " << current_terrain->spec_strs[i];
+						set_rb(i,RB_OUT_STR, i,str.str());
+						break;
+					case 2:
+						str << i << " - " << town->spec_strs[i];
+						set_rb(i,RB_TOWN_STR, i,str.str());
+						break;
+					case 3:
+						str << i << " - " << scenario.journal_strs[i];
+						set_rb(i,RB_JOURNAL, i,str.str());
+						break;
+					case 4:
+						str << i << " - " << current_terrain->sign_locs[i];
+						set_rb(i,RB_OUT_SIGN, i,str.str());
+						break;
+					case 5:
+						str << i << " - " << town->sign_locs[i].text;
+						set_rb(i,RB_TOWN_SIGN, i,str.str());
+						break;
+					case 6:
+						str << i << " - " << current_terrain->area_desc[i];
+						set_rb(i,RB_OUT_RECT, i,str.str());
+						break;
+					case 7:
+						str << i << " - " << town->area_desc[i].descr;
+						set_rb(i,RB_TOWN_RECT, i,str.str());
+						break;
+				}
+			}
+			if(mode <= STRS_JOURNAL) {
+				// Signs and area rects don't get a Create New option – you create a new one on the map.
+				std::string make_new = std::to_string(num_strs) + " - Create New String";
+				switch(mode) {
+					case 0: set_rb(num_strs, RB_SCEN_STR, num_strs, make_new); break;
+					case 1: set_rb(num_strs, RB_OUT_STR, num_strs, make_new); break;
+					case 2: set_rb(num_strs, RB_TOWN_STR, num_strs, make_new); break;
+					case 3: set_rb(num_strs, RB_JOURNAL, num_strs, make_new); break;
+					case 4: set_rb(num_strs, RB_OUT_SIGN, num_strs, make_new); break;
+					case 5: set_rb(num_strs, RB_TOWN_SIGN, num_strs, make_new); break;
+					case 6: set_rb(num_strs, RB_OUT_RECT, num_strs, make_new); break;
+					case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
+				}
+			}
+
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+		}break;
+		case MODE_EDIT_SPECIALS:{
+			size_t num_specs;
+			short mode = scenario.editor_state.special_editing_mode;
+			switch(mode) {
+				case 0: num_specs = scenario.scen_specials.size(); break;
+				case 1: num_specs = current_terrain->specials.size(); break;
+				case 2: num_specs = town->specials.size(); break;
+			}
+
+			for(size_t i = 0; i < num_specs; i++) {
+				std::ostringstream strb;
+				switch(mode) {
+					case 0:
+						strb << i << " - " << (*scenario.scen_specials[i].type).name();
+						set_rb(i,RB_SCEN_SPEC, i, strb.str());
+						break;
+					case 1:
+						strb << i << " - " << (*current_terrain->specials[i].type).name();
+						set_rb(i,RB_OUT_SPEC, i, strb.str());
+						break;
+					case 2:
+						strb << i << " - " << (*town->specials[i].type).name();
+						set_rb(i,RB_TOWN_SPEC, i, strb.str());
+						break;
+				}
+			}
+			std::string make_new = std::to_string(num_specs) + " - Create New Special";
+			switch(mode) {
+				case 0: set_rb(num_specs, RB_SCEN_SPEC, num_specs, make_new); break;
+				case 1: set_rb(num_specs, RB_OUT_SPEC, num_specs, make_new); break;
+				case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
+			}
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+		}break;
+		case MODE_EDIT_DIALOGUE:{
+			// TODO use stringstream and give more readable info
+			char s[15] = "    ,      ";
+			for(short i = 0; i < 10; i++) {
+				std::ostringstream strb;
+				strb << "Personality " << (i + cur_town * 10) << " - " << town->talking.people[i].title;
+				set_rb(i,RB_PERSONALITY, i, strb.str());
+			}
+			size_t n_nodes = town->talking.talk_nodes.size();
+			for(short i = 0; i < n_nodes; i++) {
+				for(short j = 0; j < 4; j++) {
+					s[j] = town->talking.talk_nodes[i].link1[j];
+					s[j + 6] = town->talking.talk_nodes[i].link2[j];
+				}
+				std::ostringstream strb;
+				strb << "Node " << i << " - Per. " << town->talking.talk_nodes[i].personality << ", " << s;
+				set_rb(10 + i,RB_DIALOGUE, i, strb.str());
+			}
+			set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
+			right_sbar->setMaximum((11 + n_nodes) - NRSONPAGE);
+			set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
+		}break;
 		default: break;
 	}
 }

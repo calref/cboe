@@ -73,6 +73,8 @@ struct editor_state_t {
 	// Non-drawing modes will be remembered and reopened when the editor launches.
 	int overall_mode = -1;
 	int type_editing_mode = -1;
+	int string_editing_mode = -1;
+	int special_editing_mode = -1;
 };
 
 class cScenario {

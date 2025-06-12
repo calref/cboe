@@ -602,15 +602,15 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::SCEN_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(0,0);
+			start_special_editing(0);
 			break;
 		case eMenu::SCEN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_SCEN,0);
+			start_string_editing(STRS_SCEN);
 			break;
 		case eMenu::SCEN_JOURNALS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_JOURNAL,0);
+			start_string_editing(STRS_JOURNAL);
 			break;
 		case eMenu::TOWN_IMPORT:
 			if(cTown* town = pick_import_town()) {
@@ -685,7 +685,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_AREAS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN_RECT,0);
+			start_string_editing(STRS_TOWN_RECT);
 			break;
 		case eMenu::TOWN_ITEMS_RANDOM:
 			if(cChoiceDlog("add-random-items", {"okay", "cancel"}).show() == "cancel")
@@ -737,15 +737,15 @@ void handle_menu_choice(eMenu item_hit) {
 		}break;
 		case eMenu::TOWN_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(2,0);
+			start_special_editing(2);
 			break;
 		case eMenu::TOWN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN,0);
+			start_string_editing(STRS_TOWN);
 			break;
 		case eMenu::TOWN_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN_SIGN,0);
+			start_string_editing(STRS_TOWN_SIGN);
 			break;
 		case eMenu::TOWN_ADVANCED:
 			edit_advanced_town();
@@ -769,19 +769,19 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OUT_AREAS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT_RECT,0);
+			start_string_editing(STRS_OUT_RECT);
 			break;
 		case eMenu::OUT_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(1,0);
+			start_special_editing(1);
 			break;
 		case eMenu::OUT_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT,0);
+			start_string_editing(STRS_OUT);
 			break;
 		case eMenu::OUT_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT_SIGN,0);
+			start_string_editing(STRS_OUT_SIGN);
 			break;
 		case eMenu::ABOUT:
 			helpDlog = "about-scened";
