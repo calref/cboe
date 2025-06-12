@@ -234,6 +234,17 @@ public:
 		items(items) {}
 };
 
+/// Action which adds new special item to the end of the list, or deletes from the end of the list
+class aCreateDeleteSpecialItem : public cAction {
+	cSpecItem item;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteSpecialItem(bool create, cSpecItem item) :
+		cAction(create ? "Create Special Item" : "Delete Special Item", !create),
+		item(item) {}
+};
+
 /// Action which edits or clears a terrain type
 class aEditClearTerrain : public cAction {
 	ter_num_t which;

@@ -330,3 +330,14 @@ bool aEditPlacedCreature::redo_me() {
 	town->creatures[which] = new_creature;
 	return true;
 }
+
+bool aCreateDeleteSpecialItem::undo_me() {
+	scenario.special_items.pop_back();
+
+	return true;
+}
+
+bool aCreateDeleteSpecialItem::redo_me() {
+	scenario.special_items.push_back(item);
+	return true;
+}

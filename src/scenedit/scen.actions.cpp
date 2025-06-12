@@ -475,21 +475,44 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_SPEC_ITEM:
 					size_before = scenario.special_items.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						// Delete last special item
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aCreateDeleteSpecialItem(false, scenario.special_items.back())));
+							update_edit_menu();
 							scenario.special_items.pop_back();
+						}
 						else if(j == size_before)
 							break;
+						// Clear special item (it can't be deleted fully)
 						else {
+							// TODO undo action
 							scenario.special_items[j] = cSpecItem();
 							scenario.special_items[j].name = "Unused Special Item";
 						}
 					} else {
+						bool is_new = false;
+						// Create new special item
 						if(j == size_before) {
+							is_new = true;
 							scenario.special_items.emplace_back();
 							scenario.special_items.back().name = "New Special Item";
 						}
-						if(!edit_spec_item(j) && j == size_before)
+
+						if(edit_spec_item(j)){
+							// Create new confirmed
+							if(is_new){
+								undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, scenario.special_items.back())));
+								update_edit_menu();
+							}
+							// Special item edited
+							else{
+								// TODO undo action
+							}
+						}
+						// Create new canceled
+						else if(is_new){
 							scenario.special_items.pop_back();
+						}
 					}
 					if(size_before > scenario.special_items.size())
 						pos_before--;
