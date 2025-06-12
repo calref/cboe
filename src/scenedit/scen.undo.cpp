@@ -400,3 +400,43 @@ bool aCreateDeleteSpecialItem::redo_me() {
 	scenario.special_items.push_back(item);
 	return true;
 }
+
+bool aCreateDeleteQuest::undo_me() {
+	// If not editing quests, show it
+	if(overall_mode != MODE_EDIT_QUESTS){
+		start_quest_editing();
+		// TODO Go to scroll maximum
+	}
+	scenario.quests.pop_back();
+	return true;
+}
+
+bool aCreateDeleteQuest::redo_me() {
+	// If not editing quests, show it
+	if(overall_mode != MODE_EDIT_QUESTS){
+		start_quest_editing();
+		// TODO Go to scroll maximum
+	}
+	scenario.quests.push_back(quest);
+	return true;
+}
+
+bool aCreateDeleteShop::undo_me() {
+	// If not editing shops, show it
+	if(overall_mode != MODE_EDIT_SHOPS){
+		start_shops_editing();
+		// TODO Go to scroll maximum
+	}
+	scenario.shops.pop_back();
+	return true;
+}
+
+bool aCreateDeleteShop::redo_me() {
+	// If not editing shops, show it
+	if(overall_mode != MODE_EDIT_SHOPS){
+		start_shops_editing();
+		// TODO Go to scroll maximum
+	}
+	scenario.shops.push_back(shop);
+	return true;
+}

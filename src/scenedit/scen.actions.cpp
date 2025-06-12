@@ -639,15 +639,34 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_QUEST:
 					size_before = scenario.quests.size();
 					if(option_hit) {
-						if(j == scenario.quests.size() - 1)
+						// Delete last quest
+						if(j == scenario.quests.size() - 1){
+							undo_list.add(action_ptr(new aCreateDeleteQuest(false, scenario.quests.back())));
+							update_edit_menu();
 							scenario.quests.pop_back();
+						}
+						// Clear quest (it can't be deleted fully)
 						else {
 							scenario.quests[j] = cQuest();
 							scenario.quests[j].name = "Unused Quest";
 						}
 					} else {
-						if(!edit_quest(j) && j == size_before && scenario.quests[j].name == "New Quest")
+						bool is_new = (j == scenario.quests.size());
+						if(edit_quest(j)){
+							// Create new confirmed
+							if(is_new){
+								undo_list.add(action_ptr(new aCreateDeleteQuest(true, scenario.quests.back())));
+								update_edit_menu();
+							}
+							// Quest edited
+							else{
+								// TODO undo action
+							}
+						}
+						// Create new canceled
+						else if(is_new){
 							scenario.quests.pop_back();
+						}
 					}
 					if(size_before > scenario.quests.size())
 						pos_before--;
@@ -656,12 +675,31 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_SHOP:
 					size_before = scenario.shops.size();
 					if(option_hit) {
-						if(j == scenario.shops.size() - 1)
+						// Delete last shop
+						if(j == scenario.shops.size() - 1){
+							undo_list.add(action_ptr(new aCreateDeleteShop(false, scenario.shops.back())));
+							update_edit_menu();
 							scenario.shops.pop_back();
+						}
+						// Clear shop (it can't be fully deleted)
 						else scenario.shops[j] = cShop("Unused Shop");
 					} else {
-						if(!edit_shop(j) && j == size_before && scenario.shops[j].getName() == "New Shop")
+						bool is_new = (j == scenario.shops.size());
+						if(edit_shop(j)){
+							// Create new confirmed
+							if(is_new){
+								undo_list.add(action_ptr(new aCreateDeleteShop(true, scenario.shops.back())));
+								update_edit_menu();
+							}
+							// Shop edited
+							else{
+								// TODO undo action
+							}
+						}
+						// Create new canceled
+						else if(is_new){
 							scenario.shops.pop_back();
+						}
 					}
 					start_shops_editing();
 					if(size_before > scenario.shops.size())

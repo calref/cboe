@@ -2305,7 +2305,7 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 
 bool edit_quest(size_t which_quest) {
 	using namespace std::placeholders;
-	if(which_quest == scenario.quests.size()) {
+	if(which_quest == scenario.quests.size()){
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
@@ -2667,8 +2667,7 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 
 bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
-	if(which_shop == scenario.shops.size())
-		scenario.shops.emplace_back("New Shop");
+	if(which_shop == scenario.shops.size()) scenario.shops.emplace_back("New Shop");
 	cShop shop = scenario.shops[which_shop];
 	if(shop.size() == 0 && (shop.getName() == "New Shop" || shop.getName() == "Unused Shop")) {
 		cChoiceDlog new_shop_dlg("new-shop", {"magic", "heal", "custom", "cancel"});

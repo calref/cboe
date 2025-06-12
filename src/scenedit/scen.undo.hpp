@@ -6,6 +6,7 @@
 #include "scenario/town.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/item.hpp"
+#include "scenario/quest.hpp"
 #include "scenario/monster.hpp"
 #include "scenario/vehicle.hpp"
 
@@ -243,6 +244,28 @@ public:
 	aCreateDeleteSpecialItem(bool create, cSpecItem item) :
 		cAction(create ? "Create Special Item" : "Delete Special Item", !create),
 		item(item) {}
+};
+
+/// Action which adds new quest to the end of the list, or deletes from the end of the list
+class aCreateDeleteQuest : public cAction {
+	cQuest quest;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteQuest(bool create, cQuest quest) :
+		cAction(create ? "Create Quest" : "Delete Quest", !create),
+		quest(quest) {}
+};
+
+/// Action which adds new shop to the end of the list, or deletes from the end of the list
+class aCreateDeleteShop : public cAction {
+	cShop shop;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteShop(bool create, cShop shop) :
+		cAction(create ? "Create Shop" : "Delete Shop", !create),
+		shop(shop) {}
 };
 
 /// Action which edits or clears a terrain type
