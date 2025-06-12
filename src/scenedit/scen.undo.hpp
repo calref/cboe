@@ -300,7 +300,7 @@ class aEditClearItem : public cAction {
 	bool undo_me() override;
 	bool redo_me() override;
 public:
-	aEditClearItem(std::string name, mon_num_t which, class cItem before, class cItem after) :
+	aEditClearItem(std::string name, item_num_t which, class cItem before, class cItem after) :
 		cAction(name), which(which), before(before), after(after) {}
 };
 
