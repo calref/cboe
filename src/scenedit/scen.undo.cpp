@@ -460,3 +460,23 @@ bool aEditClearSpecialItem::redo_me() {
 	scenario.special_items[which] = after;
 	return true;
 }
+
+bool aEditClearQuest::undo_me() {
+	// If not editing quests, show it
+	if(overall_mode != MODE_EDIT_QUESTS){
+		start_quest_editing();
+		// TODO scroll to show the quest
+	}
+	scenario.quests[which] = before;
+	return true;
+}
+
+bool aEditClearQuest::redo_me() {
+	// If not editing quests, show it
+	if(overall_mode != MODE_EDIT_QUESTS){
+		start_quest_editing();
+		// TODO scroll to show the quest
+	}
+	scenario.quests[which] = after;
+	return true;
+}

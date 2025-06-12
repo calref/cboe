@@ -316,4 +316,16 @@ public:
 		cAction(name), which(which), before(before), after(after) {}
 };
 
+/// Action which edits or clears a quest
+class aEditClearQuest : public cAction {
+	size_t which;
+	cQuest before;
+	cQuest after;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearQuest(std::string name, size_t which, cQuest before, cQuest after) :
+		cAction(name), which(which), before(before), after(after) {}
+};
+
 #endif

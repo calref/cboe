@@ -635,21 +635,17 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						}
 						// Clear quest (it can't be deleted fully)
 						else {
-							scenario.quests[j] = cQuest();
-							scenario.quests[j].name = "Unused Quest";
+							cQuest cleared;
+							cleared.name = "Unused Quest";
+							undo_list.add(action_ptr(new aEditClearQuest("Clear Quest", j, scenario.quests[j], cleared)));
+							update_edit_menu();
+							scenario.quests[j] = cleared;
 						}
 					} else {
 						bool is_new = (j == scenario.quests.size());
 						if(edit_quest(j)){
-							// Create new confirmed
-							if(is_new){
-								undo_list.add(action_ptr(new aCreateDeleteQuest(true, scenario.quests.back())));
-								update_edit_menu();
-							}
-							// Quest edited
-							else{
-								// TODO undo action
-							}
+							// Quest create/edit undo action is added in save_quest_from_dlog() because quest editor
+							// has left/right buttons and can be launched with create/edit buttons elsewhere.
 						}
 						// Create new canceled
 						else if(is_new){

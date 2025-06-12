@@ -21,6 +21,10 @@ public:
 	short bank1 = -1, bank2 = -1; // which job bank(s) this quest is in; -1 for none
 	std::string name;
 	std::string descr;
+
+	// For detecting actual changes to quests in the scenario editor
+	bool operator==(const cQuest& other);
+	bool operator!=(const cQuest& other) { return !(*this == other); }
 };
 
 class cJob {

@@ -2296,7 +2296,7 @@ static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_que
 	}
 }
 
-static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest, bool close) {
+static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest, bool& is_new, bool need_confirm, bool close) {
 	if(!me.toast(true)) return false;
 	
 	quest.name = me["name"].getText();
@@ -2313,13 +2313,37 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 		quest.bank2 = me["bank2"].getTextAsNum();
 	} else quest.bank1 = quest.bank2 = -1;
 	
-	scenario.quests[which_quest] = quest;
+	// Edit confirmed and real changes made:
+	if(scenario.quests[which_quest] != quest || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-quest", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{quest}}", quest.name);
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_quest_in_dlog(me, scenario.quests[which_quest], which_quest);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteQuest(true, scenario.quests.back())));
+			update_edit_menu();
+		}else{
+			undo_list.add(action_ptr(new aEditClearQuest("Edit Quest", which_quest, scenario.quests[which_quest], quest)));
+			update_edit_menu();
+		}
+		scenario.quests[which_quest] = quest;
+		is_new = false;
+	}
+
 	if(!close) me.untoast();
 	return true;
 }
 
-static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, size_t& which_quest) {
-	if(!save_quest_from_dlog(me, quest, which_quest, false))
+static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, size_t& which_quest, bool& is_new) {
+	if(!save_quest_from_dlog(me, quest, which_quest, is_new, true, false))
 		return true;
 	
 	if(dir == "left") {
@@ -2338,8 +2362,11 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 }
 
 bool edit_quest(size_t which_quest) {
+	short first = which_quest;
 	using namespace std::placeholders;
+	bool is_new = false;
 	if(which_quest == scenario.quests.size()){
+		is_new = true;
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
@@ -2347,7 +2374,7 @@ bool edit_quest(size_t which_quest) {
 	
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
-	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
+	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), std::ref(is_new), false, true));
 	quest_dlg.attachClickHandlers([](cDialog& me, std::string item_hit, eKeyMod) {
 		std::string field_id = item_hit.substr(7);
 		std::string title = field_id == "evt" ? "Select an event:" : "Select a job board:";
@@ -2378,12 +2405,12 @@ bool edit_quest(size_t which_quest) {
 		quest_dlg["left"].hide();
 		quest_dlg["right"].hide();
 	} else {
-		quest_dlg.attachClickHandlers(std::bind(change_quest_dlog_page, _1, _2, std::ref(quest), std::ref(which_quest)), {"left", "right"});
+		quest_dlg.attachClickHandlers(std::bind(change_quest_dlog_page, _1, _2, std::ref(quest), std::ref(which_quest), std::ref(is_new)), {"left", "right"});
 	}
 	
 	put_quest_in_dlog(quest_dlg, quest, which_quest);
 	quest_dlg.run();
-	return quest_dlg.accepted();
+	return quest_dlg.accepted() || first != which_quest;
 }
 
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
