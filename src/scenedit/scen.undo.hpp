@@ -77,7 +77,6 @@ public:
 	aDrawTerrain(std::string name, stroke_ter_changes_t stroke_changes) :
 		cTerrainAction(name, stroke_changes.begin()->first), // Use arbitrary changed tile as site of change
 		changes(stroke_changes) {}
-	// TODO store another boost::optional action that happens at the same as placing town entrance, sign
 	bool undo_me() override;
 	bool redo_me() override;
 private:
