@@ -2472,7 +2472,7 @@ static void put_shop_in_dlog(cDialog& me, const cShop& shop, size_t which_shop) 
 	}
 }
 
-static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool close) {
+static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool& is_new, bool need_confirm, bool close) {
 	if(!me.toast(true)) return false;
 	
 	shop.setName(me["name"].getText());
@@ -2481,13 +2481,38 @@ static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, boo
 	shop.setFace(dynamic_cast<cPict&>(me["face"]).getPicNum());
 	// Items are filled in as they're added by the dialog, so that's all we need to do here
 	
-	scenario.shops[which_shop] = shop;
+	if(shop != scenario.shops[which_shop] || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-shop", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{shop}}", shop.getName());
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_shop_in_dlog(me, scenario.shops[which_shop], which_shop);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		// Create new confirmed
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteShop(true, shop)));
+			update_edit_menu();
+		}
+		// Shop edited
+		else{
+			undo_list.add(action_ptr(new aEditClearShop("Edit Shop", which_shop, scenario.shops[which_shop], shop)));
+			update_edit_menu();
+		}
+
+		scenario.shops[which_shop] = shop;
+	}
 	if(!close) me.untoast();
 	return true;
 }
 
-static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, size_t& which_shop) {
-	if(!save_shop_from_dlog(me, shop, which_shop, false))
+static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, size_t& which_shop, bool& is_new) {
+	if(!save_shop_from_dlog(me, shop, which_shop, is_new, true, false))
 		return true;
 	
 	if(dir == "left") {
@@ -2728,7 +2753,12 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 
 bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
-	if(which_shop == scenario.shops.size()) scenario.shops.emplace_back("New Shop");
+	bool is_new = false;
+	if(which_shop == scenario.shops.size()){
+		is_new = true;
+		scenario.shops.emplace_back("New Shop");
+	}
+	bool was_new = is_new;
 	cShop shop = scenario.shops[which_shop];
 	if(shop.size() == 0 && (shop.getName() == "New Shop" || shop.getName() == "Unused Shop")) {
 		cChoiceDlog new_shop_dlg("new-shop", {"magic", "heal", "custom", "cancel"});
@@ -2744,7 +2774,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	
 	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
-	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), true));
+	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), std::ref(is_new), false, true));
 	shop_dlg["pickface"].attachClickHandler(std::bind(pick_picture, PIC_TALK, _1, "", "face"));
 	shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_items_page, _1, _2, std::ref(shop)), {"up", "down"});
 	shop_dlg.attachClickHandlers(std::bind(delete_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"del1", "del2", "del3", "del4", "del5"});
@@ -2755,12 +2785,12 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 		shop_dlg["left"].hide();
 		shop_dlg["right"].hide();
 	} else {
-		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop)), {"left", "right"});
+		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop), std::ref(is_new)), {"left", "right"});
 	}
 	
 	put_shop_in_dlog(shop_dlg, shop, which_shop);
 	shop_dlg.run();
-	return shop_dlg.accepted();
+	return shop_dlg.accepted() || was_new != is_new;
 }
 
 static void put_vehicle_area(cDialog& me, const cVehicle& what) {

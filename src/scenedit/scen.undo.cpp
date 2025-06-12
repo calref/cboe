@@ -480,3 +480,23 @@ bool aEditClearQuest::redo_me() {
 	scenario.quests[which] = after;
 	return true;
 }
+
+bool aEditClearShop::undo_me() {
+	// If not editing shops, show it
+	if(overall_mode != MODE_EDIT_SHOPS){
+		start_shops_editing();
+		// TODO scroll to show the shop
+	}
+	scenario.shops[which] = before;
+	return true;
+}
+
+bool aEditClearShop::redo_me() {
+	// If not editing shops, show it
+	if(overall_mode != MODE_EDIT_SHOPS){
+		start_shops_editing();
+		// TODO scroll to show the shop
+	}
+	scenario.shops[which] = after;
+	return true;
+}

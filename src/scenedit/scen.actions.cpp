@@ -666,19 +666,17 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.shops.pop_back();
 						}
 						// Clear shop (it can't be fully deleted)
-						else scenario.shops[j] = cShop("Unused Shop");
+						else{
+							cShop cleared("Unused Shop");
+							undo_list.add(action_ptr(new aEditClearShop("Clear Shop", j, scenario.shops[j], cleared)));
+							update_edit_menu();
+							scenario.shops[j] = cleared;
+						}
 					} else {
 						bool is_new = (j == scenario.shops.size());
 						if(edit_shop(j)){
-							// Create new confirmed
-							if(is_new){
-								undo_list.add(action_ptr(new aCreateDeleteShop(true, scenario.shops.back())));
-								update_edit_menu();
-							}
-							// Shop edited
-							else{
-								// TODO undo action
-							}
+							// Shop create/edit undo action is added in save_shop_from_dlog() because shop editor
+							// has left/right buttons and can be launched with create/edit buttons elsewhere.
 						}
 						// Create new canceled
 						else if(is_new){

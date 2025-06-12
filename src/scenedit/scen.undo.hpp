@@ -328,4 +328,16 @@ public:
 		cAction(name), which(which), before(before), after(after) {}
 };
 
+/// Action which edits or clears a shop
+class aEditClearShop : public cAction {
+	size_t which;
+	cShop before;
+	cShop after;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearShop(std::string name, size_t which, cShop before, cShop after) :
+		cAction(name), which(which), before(before), after(after) {}
+};
+
 #endif
