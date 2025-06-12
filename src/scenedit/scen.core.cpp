@@ -2196,7 +2196,7 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which, bool& is_n
 		}
 		// Create new confirmed
 		if(is_new){
-			undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, scenario.special_items.back())));
+			undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, item)));
 			update_edit_menu();
 		}
 		// Special item edited
@@ -2241,7 +2241,6 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 }
 
 bool edit_spec_item(short which_item) {
-	short first = which_item;
 	using namespace std::placeholders;
 	bool is_new = false;
 	// Create new special item
@@ -2250,6 +2249,7 @@ bool edit_spec_item(short which_item) {
 		scenario.special_items.emplace_back();
 		scenario.special_items.back().name = "New Special Item";
 	}
+	bool was_new = is_new;
 	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-special-item"));
@@ -2266,7 +2266,8 @@ bool edit_spec_item(short which_item) {
 	
 	item_dlg.run();
 	
-	return item_dlg.accepted() || first != which_item;
+	// The return value is used to decide whether to pop_back() if creating a new spec item was canceled
+	return item_dlg.accepted() || (was_new != is_new);
 }
 
 static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_quest) {
@@ -2328,7 +2329,7 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 			}
 		}
 		if(is_new){
-			undo_list.add(action_ptr(new aCreateDeleteQuest(true, scenario.quests.back())));
+			undo_list.add(action_ptr(new aCreateDeleteQuest(true, quest)));
 			update_edit_menu();
 		}else{
 			undo_list.add(action_ptr(new aEditClearQuest("Edit Quest", which_quest, scenario.quests[which_quest], quest)));
@@ -2362,7 +2363,6 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 }
 
 bool edit_quest(size_t which_quest) {
-	short first = which_quest;
 	using namespace std::placeholders;
 	bool is_new = false;
 	if(which_quest == scenario.quests.size()){
@@ -2370,6 +2370,7 @@ bool edit_quest(size_t which_quest) {
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
+	bool was_new = is_new;
 	cQuest quest = scenario.quests[which_quest];
 	
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
@@ -2410,7 +2411,8 @@ bool edit_quest(size_t which_quest) {
 	
 	put_quest_in_dlog(quest_dlg, quest, which_quest);
 	quest_dlg.run();
-	return quest_dlg.accepted() || first != which_quest;
+	// The return value is used to decide whether to pop_back() if creating a new quest was canceled
+	return quest_dlg.accepted() || was_new != is_new;
 }
 
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
