@@ -4,7 +4,7 @@
 #include "scen.undo.hpp"
 
 void handle_close_terrain_view(eScenMode new_mode);
-void restore_editor_state(bool first_time = false);
+void restore_editor_state();
 void init_screen_locs();
 void handle_action(location the_point,sf::Event event);
 void flash_rect(rectangle to_flash);

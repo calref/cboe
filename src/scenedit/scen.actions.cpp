@@ -255,7 +255,7 @@ static bool handle_lb_action(int i){
 				file_to_load = nav_get_scenario();
 				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 					set_pref("LastScenario", file_to_load.string());
-					restore_editor_state(true);
+					restore_editor_state();
 				} else if(!file_to_load.empty())
 					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 					set_up_start_screen();
@@ -3201,10 +3201,10 @@ bool monst_on_space(location loc,short m_num) {
 // Restore the state of the editor when the designer last saved this scenario.
 // This state is serialized in scen.fileio.cpp: writeEditorStateToXml()
 // and parsed in fileio_scen.cpp: readEditorStateFromXml().
-void restore_editor_state(bool first_time) {
-	set_current_town(scenario.editor_state.last_town_edited, first_time);
-	set_current_out(scenario.editor_state.last_out_edited, false, first_time);
-	if(first_time && scenario.editor_state.drawing){
+void restore_editor_state() {
+	set_current_town(scenario.editor_state.last_town_edited, true);
+	set_current_out(scenario.editor_state.last_out_edited, false, true);
+	if(scenario.editor_state.drawing){
 		if(scenario.editor_state.editing_town)
 			start_town_edit();
 		else
