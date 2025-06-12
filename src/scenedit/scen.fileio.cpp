@@ -122,6 +122,8 @@ namespace ticpp {
 	}
 }
 
+// This state is parsed in fileio_scen.cpp: readEditorStateFromXml()
+// and re-applied at editor launch in scen.actions.cpp: restore_editor_state()
 void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 	editor_state_t editor_state = scenario.editor_state;
 

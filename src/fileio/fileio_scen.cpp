@@ -1074,6 +1074,8 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		throw xMissingElem("scenario", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
+// This state is serialized in scen.fileio.cpp: writeEditorStateToXml()
+// and re-applied at editor launch in scen.actions.cpp: restore_editor_state()
 void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;

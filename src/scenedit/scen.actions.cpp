@@ -3198,6 +3198,9 @@ bool monst_on_space(location loc,short m_num) {
 	
 }
 
+// Restore the state of the editor when the designer last saved this scenario.
+// This state is serialized in scen.fileio.cpp: writeEditorStateToXml()
+// and parsed in fileio_scen.cpp: readEditorStateFromXml().
 void restore_editor_state(bool first_time) {
 	set_current_town(scenario.editor_state.last_town_edited, first_time);
 	set_current_out(scenario.editor_state.last_out_edited, false, first_time);
