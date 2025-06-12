@@ -95,6 +95,19 @@ public:
 	aPlaceEraseItem(std::string name, bool place, size_t index, cTown::cItem item);
 };
 
+/// Action which edits an item in a town
+class aEditPlacedItem : public cTerrainAction {
+	size_t which;
+	cTown::cItem old_item;
+	cTown::cItem new_item;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditPlacedItem(size_t which, cTown::cItem old_item, cTown::cItem new_item) :
+		cTerrainAction("Edit Placed Item", new_item.loc),
+		which(which), old_item(old_item), new_item(new_item) {}
+};
+
 /// Action which places or erases creature(s) in a town
 class aPlaceEraseCreature : public cTerrainAction {
 	bool placed;

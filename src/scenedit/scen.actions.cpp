@@ -856,11 +856,17 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				}
 				break;
 			case MODE_EDIT_ITEM:
-				for(short x = 0; x < town->preset_items.size(); x++)
-					if((spot_hit.x == town->preset_items[x].loc.x) &&
-					   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+				for(short x = 0; x < town->preset_items.size(); x++){
+					cTown::cItem old_item = town->preset_items[x];
+					if((spot_hit.x == old_item.loc.x) &&
+					   (spot_hit.y == old_item.loc.y) && (old_item.code >= 0)) {
 						edit_placed_item(x);
+						if(town->preset_items[x] != old_item){
+							undo_list.add(action_ptr(new aEditPlacedItem(x, old_item, town->preset_items[x])));
+							update_edit_menu();
+						}
 					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PASTE:

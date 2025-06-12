@@ -277,3 +277,14 @@ bool cTown::any_preset_items() const {
 	}
 	return false;
 }
+
+bool cTown::cItem::operator==(const cTown::cItem& other) {
+	CHECK_EQ(other, loc);
+	CHECK_EQ(other, code);
+	CHECK_EQ(other, ability);
+	CHECK_EQ(other, charges);
+	CHECK_EQ(other, always_there);
+	CHECK_EQ(other, property);
+	CHECK_EQ(other, contained);
+	return true;
+}

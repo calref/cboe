@@ -310,3 +310,13 @@ bool aClearProperty::redo_me() {
 	}
 	return true;
 }
+
+bool aEditPlacedItem::undo_me() {
+	town->preset_items[which] = old_item;
+	return true;
+}
+
+bool aEditPlacedItem::redo_me() {
+	town->preset_items[which] = new_item;
+	return true;
+}
