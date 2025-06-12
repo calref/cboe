@@ -28,7 +28,6 @@ void set_town_entrance(location l, long town_num);
 void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes,bool handle_special=true);
 void adjust_space(location l,stroke_ter_changes_t& stroke_changes);
 void commit_stroke();
-bool is_lava(short x,short y);
 ter_num_t coord_to_ter(short x,short y);
 bool place_item(location spot_hit,short which_item,bool property,bool always,short odds,item_changes_t& items_placed);
 void place_items_in_town();

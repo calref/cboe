@@ -3197,12 +3197,6 @@ bool save_check(std::string which_dlog, bool allow_no) {
 	return true;
 }
 
-bool is_lava(short x,short y) {
-	if((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
-		return true;
-	else return false;
-}
-
 ter_num_t coord_to_ter(short x,short y) {
 	if(!get_current_area()->is_on_map(loc(x,y))) return 0;
 	return get_current_area()->terrain(x,y);
