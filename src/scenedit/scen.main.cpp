@@ -350,6 +350,13 @@ void init_scened(int argc, char* argv[]) {
 	init_snd_tool();
 #ifdef SFML_SYSTEM_MACOS
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
+
+	cDialog::onHandleEvents = [](sf::RenderWindow&) {
+		if (menuChoiceId>=0) {
+			handle_menu_choice(eMenu(menuChoiceId), true);
+			menuChoiceId=-1;
+		}
+	};
 #endif
 	mainPtr().clear(sf::Color::Black);
 	mainPtr().display();

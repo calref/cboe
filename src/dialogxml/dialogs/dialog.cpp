@@ -45,6 +45,7 @@ cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
 std::function<void(sf::RenderWindow& win)> cDialog::onLostFocus;
 std::function<void(sf::RenderWindow& win)> cDialog::onGainedFocus;
+std::function<void(sf::RenderWindow& win)> cDialog::onHandleEvents;
 
 extern std::map<std::string,sf::Color> colour_map;
 
@@ -545,6 +546,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	animTimer.restart();
 
 	has_focus = true;
+	topWindow = this;
 	handle_events();
 
 	win.setVisible(false);
@@ -606,6 +608,7 @@ void cDialog::handle_events() {
 			std::string line =  std::to_string(next_action_line());
 			throw std::string { "Replaying a dialog, have the wrong replay action: " + type + " on line " + line};
 		}else{
+			if(has_focus && onHandleEvents) onHandleEvents(win);
 			while(pollEvent(win, currentEvent)){
 				handle_one_event(currentEvent, fps_limiter);
 			}

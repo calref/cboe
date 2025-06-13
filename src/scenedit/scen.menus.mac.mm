@@ -23,6 +23,7 @@ extern cUndoList undo_list;
 
 @interface MenuHandler : NSObject
 -(void) menuChoice:(id) sender;
+-(bool) worksWhenModal;
 @end
 
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
@@ -176,5 +177,8 @@ void update_edit_menu() {
 -(void) menuChoice:(id) sender {
 	menuChoiceId=short([[sender representedObject] intValue]);
 	//handle_menu_choice(eMenu([[sender representedObject] intValue]));
+}
+-(bool) worksWhenModal {
+	return YES;
 }
 @end
