@@ -329,7 +329,7 @@ void OpenBoESceneditMenu::update_for_mode_4() {
 void OpenBoESceneditMenu::update_edit_menu(cUndoList const & undo_list) {
 	auto menubar = this->get_menubar_ptr();
 
-	menubar->setMenuItemEnabled({ "Edit", "Undo Ctrl-Z" }, !undo_list.noUndo());
-	menubar->setMenuItemEnabled({ "Edit", "Redo Ctrl-Y" }, !undo_list.noRedo());
+	menubar->setMenuItemEnabled({ "Edit", "Undo Ctrl-Z" }, !(undo_list.noUndo() || cDialog::anyOpen()));
+	menubar->setMenuItemEnabled({ "Edit", "Redo Ctrl-Y" }, !(undo_list.noRedo() || cDialog::anyOpen()));
 }
 

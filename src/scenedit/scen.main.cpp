@@ -348,13 +348,22 @@ void init_scened(int argc, char* argv[]) {
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
+
+	// When a dialog is open, scenario action undo/redo needs to be disabled for 2 reasons:
+	// 1. it is very unsafe to pop from the stack while any edit operation is underway
+	// 2. the menu item must be disabled for cDialog to receive undo/redo keyboard shortcuts
+	//    for text field editing
+	cDialog::onOpen = cDialog::onClose = [](const cDialog& dialog) {
+		update_edit_menu();
+	};
 #ifdef SFML_SYSTEM_MACOS
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
 
 	cDialog::onHandleEvents = [](sf::RenderWindow&) {
-		if (menuChoiceId>=0) {
-			handle_menu_choice(eMenu(menuChoiceId), true);
+		if(menuChoiceId>=0) {
+			short wasChoice = menuChoiceId;
 			menuChoiceId=-1;
+			handle_menu_choice(eMenu(wasChoice));
 		}
 	};
 #endif
@@ -399,8 +408,9 @@ void handle_events() {
 
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
-			handle_menu_choice(eMenu(menuChoiceId));
+			short wasChoice = menuChoiceId;
 			menuChoiceId=-1;
+			handle_menu_choice(eMenu(wasChoice));
 		}
 #endif
 		while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent);
@@ -470,12 +480,29 @@ static void show_outdated_warning() {
 	showWarning(outdated_help1, outdated_help2);
 }
 
+// When any dialog is open, only allow menu items that work with text fields.
+// NOTE: EDIT_UNDO and EDIT_REDO are included, even though currently, those menu items will be
+// disabled (only the keyboard shortcuts work for undo/redo on text editing).
+// Someday, update_edit_menu() could keep them enabled but change their text to show
+// the undo action of the active text field--but that would be complicated to do, and require
+// changing update_edit_menu() for all 3 platforms right now.
+std::set<eMenu> dialog_allowed_menu_choices = {
+	eMenu::NONE, eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::EDIT_CUT, eMenu::EDIT_COPY,
+	eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
+};
+
 void handle_menu_choice(eMenu item_hit) {
 	extern cUndoList undo_list;
 	bool isEdit = false, isHelp = false, isOutdated = false;
 	std::string helpDlog;
 	fs::path file_to_load;
 	cKey editKey = {true};
+
+	if(cDialog::anyOpen() && !dialog_allowed_menu_choices.count(item_hit)){
+		showWarning("You must confirm or cancel what you're currently doing first.");
+		return;
+	}
+
 	switch(item_hit) {
 		case eMenu::NONE: return;
 		case eMenu::FILE_OPEN:

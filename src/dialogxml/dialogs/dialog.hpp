@@ -82,7 +82,11 @@ class cDialog : public iComponent, public iNameGiver {
 	bool doAnimations;
 	bool has_focus = false;
 public:
+	static bool anyOpen() { return topWindow != nullptr; }
 	static void (*redraw_everything)();
+	// Global onOpen and onClose events are for tracking things, not for modifying the dialogs.
+	static std::function<void(const cDialog&)> onOpen;
+	static std::function<void(const cDialog&)> onClose;
 	static std::function<void(sf::RenderWindow& win)> onLostFocus;
 	static std::function<void(sf::RenderWindow& win)> onGainedFocus;
 	// Attach a handler here for any update/input logic that uses target-specific code

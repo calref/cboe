@@ -43,6 +43,8 @@ const short cDialog::BG_DARK = 5, cDialog::BG_LIGHT = 16;
 short cDialog::defaultBackground = cDialog::BG_DARK;
 cDialog* cDialog::topWindow = nullptr;
 void (*cDialog::redraw_everything)() = nullptr;
+std::function<void(const cDialog&)> cDialog::onOpen;
+std::function<void(const cDialog&)> cDialog::onClose;
 std::function<void(sf::RenderWindow& win)> cDialog::onLostFocus;
 std::function<void(sf::RenderWindow& win)> cDialog::onGainedFocus;
 std::function<void(sf::RenderWindow& win)> cDialog::onHandleEvents;
@@ -502,7 +504,7 @@ bool cDialog::sendInput(cKey key) {
 void cDialog::run(std::function<void(cDialog&)> onopen){
 	cPict::resetAnim();
 	cDialog* formerTop = topWindow;
-	// TODO: The introduction of the static topWindow means I may be able to use this instead of parent->win; do I still need parent?
+
 	sf::RenderWindow* parentWin = &(parent ? parent->win : mainPtr());
 	auto parentPos = parentWin->getPosition();
 	auto parentSz = parentWin->getSize();
@@ -542,11 +544,16 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	// but it does prevent editing other dialogs, and it also keeps this window on top
 	// even when it loses focus.
 	ModalSession dlog(win, *parentWin);
-	if(onopen) onopen(*this);
 	animTimer.restart();
 
 	has_focus = true;
 	topWindow = this;
+
+	// Run the static onOpen event first
+	if(cDialog::onOpen) cDialog::onOpen(*this);
+	// Run this dialog's onOpen event
+	if(onopen) onopen(*this);
+
 	handle_events();
 
 	win.setVisible(false);
@@ -555,6 +562,7 @@ void cDialog::run(std::function<void(cDialog&)> onopen){
 	set_cursor(former_curs);
 	topWindow = formerTop;
 	stackWindowsCorrectly();
+	if(cDialog::onClose) cDialog::onClose(*this);
 }
 
 void cDialog::runWithHelp(short help1, short help2, bool help_forced) {
