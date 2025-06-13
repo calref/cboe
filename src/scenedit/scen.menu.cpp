@@ -3,6 +3,7 @@
 #include "scen.menu.hpp"
 #include "scen.menus.hpp"
 #include "scen.graphics.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 #include <stdexcept>
 

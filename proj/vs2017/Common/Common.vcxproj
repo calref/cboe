@@ -403,6 +403,7 @@
     <ClCompile Include="..\..\..\src\scenario\item.cpp" />
     <ClCompile Include="..\..\..\src\scenario\monster.cpp" />
     <ClCompile Include="..\..\..\src\scenario\outdoors.cpp" />
+    <ClCompile Include="..\..\..\src\scenario\quest.cpp" />
     <ClCompile Include="..\..\..\src\scenario\scenario.cpp" />
     <ClCompile Include="..\..\..\src\scenario\shop.cpp" />
     <ClCompile Include="..\..\..\src\scenario\special.cpp" />

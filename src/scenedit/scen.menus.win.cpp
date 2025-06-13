@@ -7,6 +7,7 @@
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"
 #include "undo.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.

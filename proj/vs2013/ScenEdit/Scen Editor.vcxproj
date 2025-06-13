@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\..\src\scenedit\scen.menus.win.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.sdfpicker.cpp" />
     <ClCompile Include="..\..\..\src\scenedit\scen.townout.cpp" />
+    <ClCompile Include="..\..\..\src\scenedit\scen.undo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\scenedit\scen.actions.hpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="..\..\..\src\scenedit\scen.sdfpicker.hpp" />
     <ClInclude Include="..\..\..\src\scenedit\scen.townout.hpp" />
     <ClInclude Include="..\..\..\rsrc\menus\scenresource.h" />
+    <ClInclude Include="..\..\..\src\scenedit\scen.undo.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
