@@ -1446,8 +1446,10 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						}
 					}
 				} else {
+					bool is_new = false;
 					// Click the plus button: create a new type and edit it immediately
 					if(i == size_before) {
+						is_new = true;
 						switch(draw_mode){
 							case DRAW_TERRAIN:
 								scenario.ter_types.emplace_back();
@@ -1465,58 +1467,34 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 					}
 					switch(draw_mode){
 						case DRAW_TERRAIN:
-							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
-							// could result in unrecordedly deleting a new terrain that was confirmed
-							if(!edit_ter_type(i)){
-								// Canceled editing
-								if(i == size_before){
-									// Canceled creating new:
+							if(!edit_ter_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
 									scenario.ter_types.pop_back();
 								}
 							}
-							// Created new:
-							else if(i == size_before){
-								undo_list.add(action_ptr(new aCreateDeleteTerrain(true, scenario.ter_types.back())));
-								update_edit_menu();
-							}else{
-								// TODO edited existing (if different)
-							}
+							// Editing/creating terrain records its own undo actions because the
+							// left/right buttons make it complicated.
 							break;
 						case DRAW_MONST:
-							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
-							// could result in unrecordedly deleting a new monster that was confirmed
-							if(!edit_monst_type(i)){
-								// Canceled editing
-								if(i == size_before){
-									// Canceled creating new:
+							if(!edit_monst_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
 									scenario.scen_monsters.pop_back();
 								}
 							}
-							// Created new:
-							else if(i == size_before){
-								undo_list.add(action_ptr(new aCreateDeleteMonster(true, scenario.scen_monsters.back())));
-								update_edit_menu();
-							}else{
-								// TODO edited existing (if different)
-							}
+							// Editing/creating monster records its own undo actions because the
+							// left/right buttons make it complicated.
 							break;
 						case DRAW_ITEM:
-							// TODO this is wrong--left/right buttons followed by cancel with the new one selected
-							// could result in unrecordedly deleting a new item that was confirmed
-							if(!edit_item_type(i)){
-								// Canceled editing
-								if(i == size_before){
-									// Canceled creating new:
+							if(!edit_item_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
 									scenario.scen_items.pop_back();
 								}
 							}
-							// Created new:
-							else if(i == size_before){
-								undo_list.add(action_ptr(new aCreateDeleteItem(true, scenario.scen_items.back())));
-								update_edit_menu();
-							}else{
-								// TODO edited existing (if different)
-							}
+							// Editing/creating item records its own undo actions because the
+							// left/right buttons make it complicated.
 							break;
 					}
 				}
