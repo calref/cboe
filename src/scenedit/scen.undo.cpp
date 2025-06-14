@@ -20,6 +20,7 @@ extern eScenMode overall_mode;
 extern eDrawMode draw_mode;
 extern void apply_outdoor_shift(rectangle mod);
 extern void clamp_current_section();
+extern void clamp_view_center(cTown* town);
 
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
@@ -556,12 +557,16 @@ aImportTown::~aImportTown() {
 
 bool aImportTown::undo_me() {
 	scenario.towns[which] = old_town;
+	clamp_view_center(old_town);
 	set_current_town(which);
+	start_town_edit();
 	return true;
 }
 
 bool aImportTown::redo_me() {
 	scenario.towns[which] = new_town;
+	clamp_view_center(new_town);
 	set_current_town(which);
+	start_town_edit();
 	return true;
 }

@@ -97,6 +97,8 @@ rectangle search_field_rect;
 
 extern void set_up_apple_events();
 
+extern void clamp_view_center(cTown* town);
+
 // TODO: these should be members of some global entity instead of being here
 std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
@@ -654,6 +656,7 @@ void handle_menu_choice(eMenu item_hit) {
 				scenario.towns[cur_town] = town;
 				::town = town;
 				change_made = true;
+				clamp_view_center(town);
 				redraw_screen();
 			}
 			break;

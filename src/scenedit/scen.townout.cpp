@@ -1896,3 +1896,9 @@ cOutdoors* pick_import_out() {
 	temp_scenario.outdoors[sector.x][sector.y] = nullptr;
 	return out;
 }
+
+// after importing a town, the view center might be out-of-bounds
+void clamp_view_center(cTown* town) {
+	cen_x = min(cen_x, town->max_dim - 5);
+	cen_y = min(cen_y, town->max_dim - 5);
+}
