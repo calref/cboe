@@ -1019,17 +1019,19 @@ static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 			std::string id = base_id + std::to_string(j + 1);
 			town->wandering[i].monst[j] = me[id].getTextAsNum();
 		}
+		town->wandering_locs[i] = boost::lexical_cast<location>(me["group" + std::to_string(i+1) + "-loc"].getText());
 	}
 	return true;
 }
 
 static void put_town_wand_in_dlog(cDialog& me) {
 	for(int i = 0; i < town->wandering.size(); i++) {
-		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
+		std::string base_id = "group" + std::to_string(i + 1);
 		for(int j = 0; j < 4; j++) {
-			std::string id = base_id + std::to_string(j + 1);
+			std::string id = base_id + "-monst" + std::to_string(j + 1);
 			me[id].setTextToNum(town->wandering[i].monst[j]);
 		}
+		me[base_id + "-loc"].setText(boost::lexical_cast<std::string>(town->wandering_locs[i]));
 	}
 }
 
@@ -1040,12 +1042,17 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 		"Choose Third Monster: (1 appears)",
 		"Choose Fourth Monster: (1-2 appears)",
 	};
-	short group = item_hit[6] - '0';
-	std::string base_id = "group" + std::to_string(group) + "-monst";
-	for(int i = 0; i < 4; i++) {
-		std::string id = base_id + std::to_string(i + 1);
+	short group = item_hit[4] - '0';
+	std::string base_id = "group" + std::to_string(group);
+	if(item_hit.substr(5) == "-loc"){
+		std::string id = base_id + "-loc";
+		location current = boost::lexical_cast<location>(me[id].getText());
+		current = cLocationPicker(current, *town, "Choose wandering group " + std::to_string(group) + " location", &me).run();
+		me[id].setText(boost::lexical_cast<std::string>(current));
+	}else{
+		short i = item_hit[11] - '1';
+		std::string id = base_id + "-monst" + std::to_string(i + 1);
 		short n = choose_text(STRT_MONST, town->wandering[group].monst[i] - 1, &me, titles[i]) + 1;
-		if(n == town->wandering[group].monst[i]) break;
 		me[id].setTextToNum(n);
 	}
 	return true;
@@ -1055,17 +1062,17 @@ void edit_town_wand() {
 	using namespace std::placeholders;
 	
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
-	wand_dlg["okay"].attachClickHandler(save_town_wand);
-	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
 	// There's 16 of them, so this is kinda the easiest way to do it.
 	wand_dlg.forEach([&check_monst](std::string, cControl& ctrl) {
 		if(ctrl.getType() == CTRL_FIELD)
 			ctrl.attachFocusHandler(check_monst);
-		else if(ctrl.getText() == "Choose")
+		else if(ctrl.getType() == CTRL_BTN)
 			ctrl.attachClickHandler(edit_town_wand_event_filter);
 	});
+	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
 	put_town_wand_in_dlog(wand_dlg);
 	

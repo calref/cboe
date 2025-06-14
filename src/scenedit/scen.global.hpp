@@ -29,6 +29,7 @@ const int TYPE_ROWS_EDITING = 23;
 enum eScenMode {
 	MODE_DRAWING = 0,
 	MODE_TOGGLE_ROAD = 1,
+	// Deprecated. Use the location picker in the encounter editor dialog.
 	MODE_SET_WANDER_POINTS = 2,
 	MODE_ROOM_RECT = 3,
 	MODE_PLACE_ITEM = 4,
