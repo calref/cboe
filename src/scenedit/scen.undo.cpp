@@ -44,15 +44,19 @@ cTerrainAction::cTerrainAction(std::string name, location where, bool reversed) 
 
 void cTerrainAction::showChangeSite() {
 	if(area.is_town){
-		cur_town = area.town_num;
+		set_current_town(area.town_num);
+		start_town_edit();
 	}else{
-		cur_out = area.out_sec;
+		set_current_out(area.out_sec);
+		start_out_edit();
 	}
-	editing_town = area.is_town;
 
-	// TODO this isn't working and I don't know why:
-	cen_x = area.where.x;
-	cen_y = area.where.y;
+	// If the last stored view location of this town/section can't see the change site,
+	// move the view center
+	if(!((abs((short) (cen_x - area.where.x)) <=4) && (abs((short) (cen_y - area.where.y)) <= 4))){
+		cen_x = area.where.x;
+		cen_y = area.where.y;
+	}
 	redraw_screen();
 }
 
