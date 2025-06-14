@@ -460,7 +460,7 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	sign_dlg.run();
 }
 
-static bool save_town_num(cDialog& me, std::string, eKeyMod) {
+static bool save_town_num(cDialog& me, std::string, eKeyMod, cScenario& scenario) {
 	using namespace std::placeholders;
 	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
@@ -492,12 +492,13 @@ static bool create_town_num(cDialog& me, std::string, eKeyMod) {
 }
 
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
+	using namespace std::placeholders;
 	
 	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
 	town_dlg["prompt"].replaceText("{{max-num}}", std::to_string(scenario.towns.size() - 1));
 	town_dlg["prompt"].replaceText("{{next-num}}", std::to_string(scenario.towns.size()));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
-	town_dlg["okay"].attachClickHandler(save_town_num);
+	town_dlg["okay"].attachClickHandler(std::bind(save_town_num, _1, _2, _3, std::ref(scenario)));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
