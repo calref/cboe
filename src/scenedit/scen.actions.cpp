@@ -719,6 +719,8 @@ void commit_stroke() {
 	}
 }
 
+const std::vector<std::string> entrance_names = {"North", "East", "South", "West"};
+
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	cArea* cur_area = get_current_area();
 	std::shared_ptr<cAction> undo_action = nullptr;
@@ -972,6 +974,10 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				
 			case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
 			case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
+				undo_list.add(action_ptr(new aPlaceTownEntrance(
+					std::string {"Place "} + entrance_names[overall_mode - 10] + " Entrance",
+					overall_mode - 10, town->start_locs[overall_mode - 10], spot_hit)));
+				update_edit_menu();
 				town->start_locs[overall_mode - 10].x = spot_hit.x;
 				town->start_locs[overall_mode - 10].y = spot_hit.y;
 				overall_mode = MODE_DRAWING;

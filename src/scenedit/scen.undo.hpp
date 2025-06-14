@@ -382,4 +382,16 @@ public:
 	~aImportOutdoors();
 };
 
+/// Action which places one of the four entrance locations inside a town
+class aPlaceTownEntrance : public cTerrainAction {
+	int which_entrance;
+	location old_loc;
+	location new_loc;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceTownEntrance(std::string name, int which, location old_loc, location new_loc) :
+		cTerrainAction(name, new_loc), which_entrance(which), old_loc(old_loc), new_loc(new_loc) {}
+};
+
 #endif

@@ -599,3 +599,15 @@ bool aImportOutdoors::redo_me() {
 	start_out_edit();
 	return true;
 }
+
+bool aPlaceTownEntrance::undo_me() {
+	town->start_locs[which_entrance].x = old_loc.x;
+	town->start_locs[which_entrance].y = old_loc.y;
+	return true;
+}
+
+bool aPlaceTownEntrance::redo_me() {
+	town->start_locs[which_entrance].x = new_loc.x;
+	town->start_locs[which_entrance].y = new_loc.y;
+	return true;
+}
