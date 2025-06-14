@@ -293,7 +293,7 @@ static bool handle_lb_action(int i){
 				start_shops_editing();
 				break;
 			case LB_LOAD_OUT:
-				spot_hit = pick_out(cur_out, scenario);
+				spot_hit = pick_out(cur_out, scenario, "Edit");
 				if(spot_hit != cur_out) {
 					set_current_out(spot_hit, false);
 					if(overall_mode == MODE_EDIT_SPECIALS){

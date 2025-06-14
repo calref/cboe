@@ -1586,7 +1586,7 @@ static bool finish_pick_out(cDialog& me, bool okay, location& cur_loc, location 
 	return true;
 }
 
-location pick_out(location default_loc,cScenario& scenario) {
+location pick_out(location default_loc,cScenario& scenario,std::string action) {
 	using namespace std::placeholders;
 	location prev_loc = default_loc;
 	if(default_loc.x < 0)
@@ -1595,6 +1595,7 @@ location pick_out(location default_loc,cScenario& scenario) {
 		default_loc.y = 0;
 	
 	cDialog out_dlg(*ResMgr::dialogs.get("select-sector"));
+	out_dlg["prompt"].replaceText("{{Action}}", action);
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
 	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc), std::ref(scenario)), {"xplus", "xminus", "yplus", "yminus", "choose"});
@@ -1889,7 +1890,7 @@ cOutdoors* pick_import_out() {
 	fs::path path = nav_get_scenario();
 	if(path.empty()) return nullptr;
 	load_scenario(path, temp_scenario);
-	location sector = pick_out({-1,-1},temp_scenario);
+	location sector = pick_out({-1,-1},temp_scenario,"Import");
 	if(sector.x < 0 && sector.y < 0)
 		return nullptr;
 	cOutdoors* out = temp_scenario.outdoors[sector.x][sector.y];
