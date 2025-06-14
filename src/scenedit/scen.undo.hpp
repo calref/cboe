@@ -41,10 +41,8 @@ public:
 	cTerrainAction(std::string name, location out_sec, location where, bool reversed = false);
 	// Construct cTerrainAction in the current town/outdoor section
 	cTerrainAction(std::string name, location where, bool reversed = false);
-	void undo();
-	void redo();
-	bool undo_me() = 0;
-	bool redo_me() = 0;
+	void undo() override;
+	void redo() override;
 private:
 	/// Show where the change happened
 	void showChangeSite();

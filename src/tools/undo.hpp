@@ -29,10 +29,10 @@ protected:
 public:
 	/// Undoes this action if it has not already been undone.
 	/// If it has already been undone, does nothing.
-	void undo();
+	virtual void undo();
 	/// Redoes this action if it has been undone.
 	/// If it has not been undone, does nothing.
-	void redo();
+	virtual void redo();
 	/// Cchecks to see whether the action has been undone.
 	/// @return false if it the action has been undone.
 	bool isDone() {return done;};
