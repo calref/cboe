@@ -634,6 +634,7 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 	me["onflee"].setTextToNum(wand.spec_on_flee);
 	me["endy"].setTextToNum(wand.end_spec1);
 	me["endx"].setTextToNum(wand.end_spec2);
+	me["location"].setText(boost::lexical_cast<std::string>(current_terrain->wandering_locs[which]));
 }
 
 static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand, short mode) {
@@ -649,6 +650,7 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 	switch(mode) {
 		case 0:
 			current_terrain->wandering[which] = wand;
+			current_terrain->wandering_locs[which] = boost::lexical_cast<location>(me["location"].getText());
 			break;
 		case 1:
 			current_terrain->special_enc[which] = wand;
@@ -729,9 +731,19 @@ void edit_out_wand(short mode) {
 		me["endy"].setTextToNum(sdf.y);
 		return true;
 	});
+	wand_dlg["choose-location"].attachClickHandler([&which](cDialog& me, std::string, eKeyMod) {
+		location current = boost::lexical_cast<location>(me["location"].getText());
+		current = cLocationPicker(current, *town, "Choose wandering encounter " + std::to_string(which) + " location", &me).run();
+		me["location"].setText(boost::lexical_cast<std::string>(current));
+		return true;
+	});
 	
-	if(mode == 1)
+	if(mode == 1){
 		wand_dlg["title"].setText("Outdoor Special Encounter:");
+		wand_dlg["loc-label"].hide();
+		wand_dlg["location"].hide();
+		wand_dlg["choose-location"].hide();
+	}
 	
 	put_out_wand_in_dlog(wand_dlg, which, wand);
 	
