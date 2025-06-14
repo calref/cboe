@@ -1787,29 +1787,8 @@ static bool resize_outdoors_filter(cDialog& me, std::string btn, rectangle& mod,
 	return true;
 }
 
-bool resize_outdoors() {
-	using namespace std::placeholders;
-	loc_set del;
-	rectangle mod;
-	cDialog size_dlg(*ResMgr::dialogs.get("resize-outdoors"));
-	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
-	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
-	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);
-	
-	size_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, true));
-	size_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, false));
-	size_dlg.attachClickHandlers(std::bind(resize_outdoors_filter, _1, _2, std::ref(mod), std::ref(del)), {
-		"top-p", "top-m", "left-p", "left-m", "right-p", "right-m", "bottom-p", "bottom-m"
-	});
-	
-	size_dlg.run();
-	if(!size_dlg.accepted()) return false;
-	
-	for(location l : del) {
-		delete scenario.outdoors[l.x][l.y];
-		scenario.outdoors[l.x][l.y] = nullptr;
-	}
-	
+// When the outdoors resize, sometimes the whole grid needs to shift.
+void apply_outdoor_shift(rectangle mod) {
 	size_t old_w = scenario.outdoors.width(), old_h = scenario.outdoors.height();
 	size_t new_w = old_w + mod.left + mod.right, new_h = old_h + mod.top + mod.bottom;
 	
@@ -1818,44 +1797,88 @@ bool resize_outdoors() {
 	if(new_h > old_h)
 		scenario.outdoors.resize(scenario.outdoors.width(), new_h);
 	
+	// Sections added at the top -- shift existing sections down
 	if(mod.top > 0) {
 		int y = new_h - mod.top;
 		while(y--) {
 			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
-	} else if(mod.top < 0) {
+	}
+	// Sections removed at the top -- shift existing sections up
+	else if(mod.top < 0) {
 		for(int y = -mod.top; y < old_h; y++) {
 			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
 	}
 	
+	// Sections added at the left -- shift existing sections right
 	if(mod.left > 0) {
 		int x = new_w - mod.left;
 		while(x--) {
 			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
-	} else if(mod.left < 0) {
+	}
+	// Sections removed at the left -- shift existing sections left
+	else if(mod.left < 0) {
 		for(int x = -mod.left; x < old_w; x++) {
 			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
 	}
 	
 	scenario.outdoors.resize(new_w, new_h);
-	for(int y = 0; y < new_h; y++) {
-		for(int x = 0; x < new_w; x++) {
-			if(scenario.outdoors[x][y] == nullptr)
+}
+
+void clamp_current_section() {
+	cur_out.x = minmax(0, scenario.outdoors.width() - 1, cur_out.x);
+	cur_out.y = minmax(0, scenario.outdoors.height() - 1, cur_out.y);
+	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+}
+
+bool resize_outdoors() {
+	using namespace std::placeholders;
+	loc_set del;
+	rectangle mod;
+	cDialog size_dlg(*ResMgr::dialogs.get("resize-outdoors"));
+	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
+	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
+	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);
+
+	size_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, true));
+	size_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, false));
+	size_dlg.attachClickHandlers(std::bind(resize_outdoors_filter, _1, _2, std::ref(mod), std::ref(del)), {
+		"top-p", "top-m", "left-p", "left-m", "right-p", "right-m", "bottom-p", "bottom-m"
+	});
+
+	size_dlg.run();
+	if(!size_dlg.accepted()) return false;
+
+	// Store the removed sections for undo/redo
+	outdoor_sections_t sections_removed;
+	for(location l : del) {
+		sections_removed[l] = scenario.outdoors[l.x][l.y];
+		scenario.outdoors[l.x][l.y] = nullptr;
+	}
+
+	apply_outdoor_shift(mod);
+
+	outdoor_sections_t sections_added;
+	for(int y = 0; y < scenario.outdoors.height(); y++) {
+		for(int x = 0; x < scenario.outdoors.width(); x++) {
+			if(scenario.outdoors[x][y] == nullptr){
 				scenario.outdoors[x][y] = new cOutdoors(scenario);
+				// Store the created sections for undo/redo
+				sections_added[loc(x,y)] = scenario.outdoors[x][y];
+			}
 		}
 	}
 	
 	// Update current location - point to same sector if possible
 	cur_out.x += mod.left;
 	cur_out.y += mod.top;
-	if(cur_out.x >= new_w || cur_out.x < 0)
-		cur_out.x = 0;
-	if(cur_out.y >= new_h || cur_out.y < 0)
-		cur_out.y = 0;
-	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+	clamp_current_section();
+
+	undo_list.add(action_ptr(new aResizeOutdoors(mod, sections_removed, sections_added)));
+	update_edit_menu();
 	
 	return true;
 }

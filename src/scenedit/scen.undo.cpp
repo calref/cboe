@@ -18,6 +18,8 @@ extern void redraw_screen();
 extern void set_current_town(int,bool first_restore = false);
 extern eScenMode overall_mode;
 extern eDrawMode draw_mode;
+extern void apply_outdoor_shift(rectangle mod);
+extern void clamp_current_section();
 
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
@@ -93,6 +95,8 @@ bool aCreateDeleteTown::redo_me() {
 	return true;
 }
 
+// If the town isn't part of the scenario when this action gets discarded,
+// delete the object
 aCreateDeleteTown::~aCreateDeleteTown() {
 	if(isDone() == reversed) delete theTown;
 }
@@ -498,5 +502,42 @@ bool aEditClearShop::redo_me() {
 		// TODO scroll to show the shop
 	}
 	scenario.shops[which] = after;
+	return true;
+}
+
+// The action is cleared from the tree, so erase objects it owns
+aResizeOutdoors::~aResizeOutdoors() {
+	// If the resize happened, delete sections it deleted
+	if(isDone()){
+		for(auto sec : sections_removed) delete sec.second;
+	}
+	// If it was undone, delete sections it created
+	else{
+		for(auto sec : sections_added) delete sec.second;
+	}
+}
+
+bool aResizeOutdoors::undo_me() {
+	rectangle reverse_mod = { -mod.top, -mod.left, -mod.bottom, -mod.right };
+	apply_outdoor_shift(reverse_mod);
+	for(auto sec : sections_removed){
+		scenario.outdoors[sec.first.x][sec.first.y] = sec.second;
+	}
+	// Update current location - point to same sector if possible
+	cur_out.x += reverse_mod.left;
+	cur_out.y += reverse_mod.top;
+	clamp_current_section();
+	return true;
+}
+
+bool aResizeOutdoors::redo_me() {
+	apply_outdoor_shift(mod);
+	for(auto sec : sections_added){
+		scenario.outdoors[sec.first.x][sec.first.y] = sec.second;
+	}
+	// Update current location - point to same sector if possible
+	cur_out.x += mod.left;
+	cur_out.y += mod.top;
+	clamp_current_section();
 	return true;
 }

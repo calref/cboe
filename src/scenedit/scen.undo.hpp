@@ -32,6 +32,7 @@ typedef std::map<size_t, cTownperson> creature_changes_t;
 typedef std::vector<cTerrain> terrain_type_changes_t;
 typedef std::vector<cMonster> monst_type_changes_t;
 typedef std::vector<class cItem> item_type_changes_t;
+typedef std::map<location,cOutdoors*,loc_compare> outdoor_sections_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
@@ -338,6 +339,21 @@ class aEditClearShop : public cAction {
 public:
 	aEditClearShop(std::string name, size_t which, cShop before, cShop after) :
 		cAction(name), which(which), before(before), after(after) {}
+};
+
+/// Action which resizes the outdoors
+class aResizeOutdoors : public cAction {
+	rectangle mod;
+	// Sections removed when the resize happened, coordinates relative to original size
+	std::map<location,cOutdoors*,loc_compare> sections_removed;
+	// Sections added when the resize happened, coordinates relative to new size
+	std::map<location,cOutdoors*,loc_compare> sections_added;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aResizeOutdoors(rectangle mod, outdoor_sections_t removed, outdoor_sections_t added) :
+		cAction("Resize/Shift Outdoors"), mod(mod), sections_removed(removed), sections_added(added) {}
+	~aResizeOutdoors();
 };
 
 #endif
