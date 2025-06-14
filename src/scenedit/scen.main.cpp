@@ -649,7 +649,8 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::TOWN_IMPORT:
 			if(cTown* town = pick_import_town()) {
 				town->reattach(scenario);
-				delete scenario.towns[cur_town];
+				undo_list.add(action_ptr(new aImportTown(cur_town, scenario.towns[cur_town], town)));
+				update_edit_menu();
 				scenario.towns[cur_town] = town;
 				::town = town;
 				change_made = true;

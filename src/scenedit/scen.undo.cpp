@@ -541,3 +541,27 @@ bool aResizeOutdoors::redo_me() {
 	clamp_current_section();
 	return true;
 }
+
+// The action is cleared from the tree, so erase objects it owns
+aImportTown::~aImportTown() {
+	// If the import happened, delete the old town
+	if(isDone()){
+		delete old_town;
+	}
+	// If it was undone, delete the new town
+	else{
+		delete new_town;
+	}
+}
+
+bool aImportTown::undo_me() {
+	scenario.towns[which] = old_town;
+	set_current_town(which);
+	return true;
+}
+
+bool aImportTown::redo_me() {
+	scenario.towns[which] = new_town;
+	set_current_town(which);
+	return true;
+}

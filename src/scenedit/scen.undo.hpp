@@ -356,4 +356,17 @@ public:
 	~aResizeOutdoors();
 };
 
+/// Action which imports a town from another scenario
+class aImportTown : public cAction {
+	size_t which;
+	cTown* old_town;
+	cTown* new_town;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aImportTown(size_t which, cTown* old_town, cTown* new_town) :
+		cAction("Import Town"), which(which), old_town(old_town), new_town(new_town) {}
+	~aImportTown();
+};
+
 #endif
