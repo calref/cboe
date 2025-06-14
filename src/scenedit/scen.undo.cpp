@@ -23,6 +23,8 @@ extern void apply_outdoor_shift(rectangle mod);
 extern void clamp_current_section();
 extern void clamp_view_center(cTown* town);
 
+cTerrainAction::cTerrainAction(std::string name, area_ref_t area, bool reversed) : cAction(name, reversed),
+	area(area) {}
 cTerrainAction::cTerrainAction(std::string name, short town_num, location where, bool reversed) : cAction(name, reversed) {
 	area.is_town = true;
 	area.town_num = town_num;
@@ -613,5 +615,27 @@ bool aPlaceTownEntrance::undo_me() {
 bool aPlaceTownEntrance::redo_me() {
 	town->start_locs[which_entrance].x = new_loc.x;
 	town->start_locs[which_entrance].y = new_loc.y;
+	return true;
+}
+
+bool aPlaceStartLocation::undo_me() {
+	if(old_where.is_town){
+		scenario.which_town_start = old_where.town_num;
+		scenario.where_start = old_where.where;
+	}else{
+		scenario.out_sec_start = old_where.out_sec;
+		scenario.out_start = old_where.where;
+	}
+	return true;
+}
+
+bool aPlaceStartLocation::redo_me() {
+	if(old_where.is_town){
+		scenario.which_town_start = area.town_num;
+		scenario.where_start = area.where;
+	}else{
+		scenario.out_sec_start = area.out_sec;
+		scenario.out_start = area.where;
+	}
 	return true;
 }

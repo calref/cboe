@@ -1120,17 +1120,21 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				town_entry(spot_hit);
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_SET_OUT_START:
+			case MODE_SET_OUT_START:{
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
 					showError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 					break;
 				}
+				area_ref_t old_start = { false, 0, scenario.out_sec_start, scenario.out_start };
 				scenario.out_sec_start.x = cur_out.x;
 				scenario.out_sec_start.y = cur_out.y;
 				scenario.out_start = spot_hit;
+				area_ref_t new_start = { false, 0, scenario.out_sec_start, scenario.out_start };
+				undo_list.add(action_ptr(new aPlaceStartLocation(old_start, new_start)));
+				update_edit_menu();
 				overall_mode = MODE_DRAWING;
 				change_made = true;
-				break;
+			}break;
 			case MODE_ERASE_CREATURE: //delete monst
 				for(short x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
@@ -1153,16 +1157,20 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					}
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_SET_TOWN_START:
+			case MODE_SET_TOWN_START:{
 				if(!town->in_town_rect.contains(spot_hit)) {
 					showError("You can't put the starting location outside the town boundaries.");
 					break;
 				}
+				area_ref_t old_start = { true, scenario.which_town_start, {}, scenario.where_start };
 				scenario.which_town_start = cur_town;
 				scenario.where_start = spot_hit;
+				area_ref_t new_start = { true, scenario.which_town_start, {}, scenario.where_start };
+				undo_list.add(action_ptr(new aPlaceStartLocation(old_start, new_start)));
+				update_edit_menu();
 				overall_mode = MODE_DRAWING;
 				change_made = true;
-				break;
+			}break;
 			case MODE_PLACE_BOAT: case MODE_PLACE_HORSE: {
 				bool is_new = false;
 				cVehicle old_vehicle;

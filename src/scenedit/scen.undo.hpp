@@ -16,7 +16,7 @@ extern cTown* town;
 struct area_ref_t {
 	bool is_town;
 	// Can't just make the next two a union for compiler reasons.
-	short town_num;
+	size_t town_num;
 	location out_sec;
 	location where;
 };
@@ -37,6 +37,7 @@ typedef std::map<location,cOutdoors*,loc_compare> outdoor_sections_t;
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
 public:
+	cTerrainAction(std::string name, area_ref_t area, bool reversed = false);
 	cTerrainAction(std::string name, short town_num, location where, bool reversed = false);
 	cTerrainAction(std::string name, location out_sec, location where, bool reversed = false);
 	// Construct cTerrainAction in the current town/outdoor section
@@ -390,6 +391,16 @@ class aPlaceTownEntrance : public cTerrainAction {
 public:
 	aPlaceTownEntrance(std::string name, int which, location old_loc, location new_loc) :
 		cTerrainAction(name, new_loc), which_entrance(which), old_loc(old_loc), new_loc(new_loc) {}
+};
+
+/// Action which places the scenario's town or outdoor start location
+class aPlaceStartLocation : public cTerrainAction {
+	area_ref_t old_where;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceStartLocation(area_ref_t old_where, area_ref_t new_where) :
+		cTerrainAction(std::string { "Place Scenario Start Loc " } + (old_where.is_town ? "(Town)" : "(Outdoors)"), new_where), old_where(old_where) {}
 };
 
 #endif
