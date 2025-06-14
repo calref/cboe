@@ -16,6 +16,7 @@ extern void start_town_edit();
 extern void start_out_edit();
 extern void redraw_screen();
 extern void set_current_town(int,bool first_restore = false);
+extern void set_current_out(location,bool continuous_shift = false,bool first_restore = false);
 extern eScenMode overall_mode;
 extern eDrawMode draw_mode;
 extern void apply_outdoor_shift(rectangle mod);
@@ -528,6 +529,7 @@ bool aResizeOutdoors::undo_me() {
 	cur_out.x += reverse_mod.left;
 	cur_out.y += reverse_mod.top;
 	clamp_current_section();
+	start_out_edit();
 	return true;
 }
 
@@ -540,6 +542,7 @@ bool aResizeOutdoors::redo_me() {
 	cur_out.x += mod.left;
 	cur_out.y += mod.top;
 	clamp_current_section();
+	start_out_edit();
 	return true;
 }
 
@@ -568,5 +571,31 @@ bool aImportTown::redo_me() {
 	clamp_view_center(new_town);
 	set_current_town(which);
 	start_town_edit();
+	return true;
+}
+
+// The action is cleared from the tree, so erase objects it owns
+aImportOutdoors::~aImportOutdoors() {
+	// If the import happened, delete the old section
+	if(isDone()){
+		delete old_out;
+	}
+	// If it was undone, delete the new section
+	else{
+		delete new_out;
+	}
+}
+
+bool aImportOutdoors::undo_me() {
+	scenario.outdoors[which.x][which.y] = old_out;
+	set_current_out(which);
+	start_out_edit();
+	return true;
+}
+
+bool aImportOutdoors::redo_me() {
+	scenario.outdoors[which.x][which.y] = new_out;
+	set_current_out(which);
+	start_out_edit();
 	return true;
 }

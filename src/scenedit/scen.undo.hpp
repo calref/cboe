@@ -369,4 +369,17 @@ public:
 	~aImportTown();
 };
 
+/// Action which imports an outdoor section from another scenario
+class aImportOutdoors : public cAction {
+	location which;
+	cOutdoors* old_out;
+	cOutdoors* new_out;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aImportOutdoors(location which, cOutdoors* old_out, cOutdoors* new_out) :
+		cAction("Import Outdoor Sector"), which(which), old_out(old_out), new_out(new_out) {}
+	~aImportOutdoors();
+};
+
 #endif

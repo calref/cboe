@@ -663,7 +663,8 @@ void handle_menu_choice(eMenu item_hit) {
 		case eMenu::OUT_IMPORT:
 			if(cOutdoors* out = pick_import_out()) {
 				out->reattach(scenario);
-				delete scenario.outdoors[cur_out.x][cur_out.y];
+				undo_list.add(action_ptr(new aImportOutdoors(cur_out, scenario.outdoors[cur_out.x][cur_out.y], out)));
+				update_edit_menu();
 				scenario.outdoors[cur_out.x][cur_out.y] = out;
 				current_terrain = out;
 				change_made = true;
