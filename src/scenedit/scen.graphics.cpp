@@ -1893,9 +1893,11 @@ bool is_field_type(short i,short j,eFieldType field_type) {
 	return false;
 }
 
-void make_field_type(short i,short j,eFieldType field_type) {
+void make_field_type(short i,short j,eFieldType field_type,field_stroke_t& stroke) {
 	if(is_field_type(i,j,field_type))
 		return;
+	stroke.insert(loc(i,j));
+
 	for(short k = 0; k < town->preset_fields.size(); k++)
 		if(town->preset_fields[k].type == 0) {
 			town->preset_fields[k].loc.x = i;
@@ -1911,12 +1913,13 @@ void make_field_type(short i,short j,eFieldType field_type) {
 }
 
 
-void take_field_type(short i,short j,eFieldType field_type) {
+void take_field_type(short i,short j,eFieldType field_type,clear_field_stroke_t& stroke) {
 	for(short k = 0; k < town->preset_fields.size(); k++)
 		if((town->preset_fields[k].type == field_type) &&
 			(town->preset_fields[k].loc.x == i) &&
 			(town->preset_fields[k].loc.y == j)) {
 			town->preset_fields[k].type = FIELD_DISPEL;
+			stroke[loc(i,j)].push_back(field_type);
 			return;
 		}
 }

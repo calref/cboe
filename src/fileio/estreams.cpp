@@ -353,13 +353,27 @@ cEnumLookup field_names = {
 	"explored", "wall-force", "wall-fire", "field-antimagic", "cloud-stink", "wall-ice", "wall-blades", "cloud-sleep",
 	"obj-block", "spec-spot", "field-web", "obj-crate", "obj-barrel", "barr-fire", "barr-force", "field-quickfire",
 	"sfx-sm-bld", "sfx-med-bld", "sfx-lg-bld", "sfx-sm-slm", "sfx-lg-slm", "sfx-ash", "sfx-bone", "sfx-rock",
-	"barr-cage", "", "", "", "", "", "", "",
+	"barr-cage", "spec-road", "", "", "", "", "", "",
 	"dispel", "smash",
+};
+// Field names that can be printed in the editor
+cEnumLookup field_names_editor = {
+	"", "", "", "", "", "", "", "",
+	"Block", "Special Spot", "Web", "Crate", "Barrel", "Fire Barrier", "Force Barrier", "Quickfire",
+	"Small Blood", "Medium Blood", "Large Blood", "Small Slime", "Large Slime", "Ash", "Bones", "Rocks",
+	"", "Road", "", "", "", "", "", "",
+	"", "",
 };
 
 std::ostream& operator << (std::ostream& out, eFieldType e) {
 	writeEnum(out, e, field_names, "dispel");
 	return out;
+}
+
+std::string get_editor_field_name(eFieldType e){
+	std::ostringstream sstr;
+	writeEnum(sstr, e, field_names_editor);
+	return sstr.str();
 }
 
 std::istream& operator >> (std::istream& in, eFieldType& e) {

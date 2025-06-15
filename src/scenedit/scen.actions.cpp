@@ -702,6 +702,11 @@ std::string current_stroke_type;
 item_changes_t current_items_placed;
 creature_changes_t current_creatures_placed;
 
+clear_field_stroke_t current_fields_cleared;
+field_stroke_t current_fields_placed;
+field_stroke_t current_fields_toggled;
+eFieldType current_field_type;
+
 void commit_stroke() {
 	if(!current_stroke_changes.empty()){
 		undo_list.add(action_ptr(new aDrawTerrain("Draw Terrain (" + current_stroke_type + ")", current_stroke_changes)));
@@ -716,6 +721,18 @@ void commit_stroke() {
 		undo_list.add(action_ptr(new aPlaceEraseCreature(current_creatures_placed.size() > 1 ? "Place Creatures" : "Place Creature", true, current_creatures_placed)));
 		update_edit_menu();
 		current_items_placed.clear();
+	}else if(!current_fields_cleared.empty()){
+		undo_list.add(action_ptr(new aClearFields(current_fields_cleared)));
+		update_edit_menu();
+		current_fields_cleared.clear();
+	}else if(!current_fields_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceFields(current_field_type, current_fields_placed)));
+		update_edit_menu();
+		current_fields_placed.clear();
+	}else if(!current_fields_toggled.empty()){
+		undo_list.add(action_ptr(new aToggleOutFields(current_field_type == SPECIAL_ROAD, mode_count, current_fields_toggled)));
+		update_edit_menu();
+		current_fields_toggled.clear();
 	}
 }
 
@@ -984,66 +1001,83 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_WEB:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
+				current_field_type = FIELD_WEB;
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_CRATE:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
+				current_field_type = OBJECT_CRATE;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_BARREL:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
+				current_field_type = OBJECT_BARREL;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FIRE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
+				current_field_type = BARRIER_FIRE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
+				current_field_type = BARRIER_FORCE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_QUICKFIRE:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
+				current_field_type = FIELD_QUICKFIRE;
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_STONE_BLOCK:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
+				current_field_type = OBJECT_BLOCK;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCECAGE:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
+				current_field_type = BARRIER_CAGE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
+				current_field_type = SPECIAL_SPOT;
 				if(editing_town){
-					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT,current_fields_placed);
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
+
+					current_fields_toggled.insert(spot_hit);
+
 					current_terrain->special_spot[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
 				}
 				break;
 			case MODE_TOGGLE_ROAD:
+				current_field_type = SPECIAL_ROAD;
 				if(editing_town){
-					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD);
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD, current_fields_placed);
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->roads[spot_hit.x][spot_hit.y];
+
+					current_fields_toggled.insert(spot_hit);
+
 					current_terrain->roads[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
 				}
 				break;
 			case MODE_CLEAR_FIELDS:
 				for(int i = 8; i <= SPECIAL_ROAD; i++)
-					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
+					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i), current_fields_cleared);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_SFX:
-				make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
+				current_field_type = eFieldType(SFX_SMALL_BLOOD + mode_count);
+				make_field_type(spot_hit.x,spot_hit.y, current_field_type, current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_EYEDROPPER:

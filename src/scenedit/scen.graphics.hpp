@@ -2,6 +2,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "fields.hpp"
 #include "location.hpp"
+#include "scen.undo.hpp"
 
 void Set_up_win ();
 void run_startup_g();
@@ -29,8 +30,8 @@ void take_special(short i,short j);
 void make_special(short i,short j);
 void sort_specials();
 bool is_field_type(short i,short j,eFieldType field_type);
-void make_field_type(short i,short j,eFieldType field_type);
-void take_field_type(short i,short j,eFieldType field_type);
+void make_field_type(short i,short j,eFieldType field_type,field_stroke_t& stroke);
+void take_field_type(short i,short j,eFieldType field_type,clear_field_stroke_t& stroke);
 bool container_there(location l);
 bool is_spot(short i,short j);
 bool is_road(short i,short j);

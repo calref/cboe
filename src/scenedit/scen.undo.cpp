@@ -12,6 +12,7 @@ extern short cen_x;
 extern short cen_y;
 extern cScenario scenario;
 extern cArea* get_current_area();
+extern cOutdoors* current_terrain;
 extern void start_town_edit();
 extern void start_out_edit();
 extern void redraw_screen();
@@ -22,6 +23,8 @@ extern eDrawMode draw_mode;
 extern void apply_outdoor_shift(rectangle mod);
 extern void clamp_current_section();
 extern void clamp_view_center(cTown* town);
+extern void make_field_type(short i,short j,eFieldType field_type,field_stroke_t& stroke);
+extern void take_field_type(short i,short j,eFieldType field_type,clear_field_stroke_t& stroke);
 
 cTerrainAction::cTerrainAction(std::string name, area_ref_t area, bool reversed) : cAction(name, reversed),
 	area(area) {}
@@ -636,6 +639,64 @@ bool aPlaceStartLocation::redo_me() {
 	}else{
 		scenario.out_sec_start = area.out_sec;
 		scenario.out_start = area.where;
+	}
+	return true;
+}
+
+bool aClearFields::undo_me() {
+	field_stroke_t discard_stroke;
+	for(auto& space : stroke){
+		for(eFieldType field_type : space.second){
+			make_field_type(space.first.x, space.first.y, field_type, discard_stroke);
+		}
+	}
+
+	return true;
+}
+
+bool aClearFields::redo_me() {
+	clear_field_stroke_t discard_stroke;
+	for(auto& space : stroke){
+		for(eFieldType field_type : space.second){
+			take_field_type(space.first.x, space.first.y, field_type, discard_stroke);
+		}
+	}
+
+	return true;
+}
+
+bool aPlaceFields::undo_me() {
+	clear_field_stroke_t discard_stroke;
+	for(auto& space : stroke){
+		take_field_type(space.x, space.y, type, discard_stroke);
+	}
+	return true;
+}
+
+bool aPlaceFields::redo_me() {
+	field_stroke_t discard_stroke;
+	for(auto& space : stroke){
+		make_field_type(space.x, space.y, type, discard_stroke);
+	}
+	return true;
+}
+
+bool aToggleOutFields::undo_me() {
+	for(auto& space : stroke){
+		if(is_road)
+			current_terrain->roads[space.x][space.y] = !on;
+		else
+			current_terrain->special_spot[space.x][space.y] = !on;
+	}
+	return true;
+}
+
+bool aToggleOutFields::redo_me() {
+	for(auto& space : stroke){
+		if(is_road)
+			current_terrain->roads[space.x][space.y] = on;
+		else
+			current_terrain->special_spot[space.x][space.y] = on;
 	}
 	return true;
 }

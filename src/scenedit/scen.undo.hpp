@@ -33,6 +33,8 @@ typedef std::vector<cTerrain> terrain_type_changes_t;
 typedef std::vector<cMonster> monst_type_changes_t;
 typedef std::vector<class cItem> item_type_changes_t;
 typedef std::map<location,cOutdoors*,loc_compare> outdoor_sections_t;
+typedef std::map<location,std::vector<eFieldType>,loc_compare> clear_field_stroke_t;
+typedef std::set<location,loc_compare> field_stroke_t;
 
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
@@ -401,6 +403,41 @@ class aPlaceStartLocation : public cTerrainAction {
 public:
 	aPlaceStartLocation(area_ref_t old_where, area_ref_t new_where) :
 		cTerrainAction(std::string { "Place Scenario Start Loc " } + (old_where.is_town ? "(Town)" : "(Outdoors)"), new_where), old_where(old_where) {}
+};
+
+/// Action that clears all fields from tiles within a stroke
+class aClearFields : public cTerrainAction {
+	clear_field_stroke_t stroke;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aClearFields(clear_field_stroke_t stroke) : cTerrainAction("Clear Fields", stroke.begin()->first),
+		stroke(stroke) {}
+};
+
+extern std::string get_editor_field_name(eFieldType e);
+
+/// Action that draws a field on tiles within a stroke
+class aPlaceFields : public cTerrainAction {
+	eFieldType type;
+	field_stroke_t stroke;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aPlaceFields(eFieldType type, field_stroke_t stroke) : cTerrainAction(std::string{"Place "} + get_editor_field_name(type), *(stroke.begin())),
+		type(type), stroke(stroke) {}
+};
+
+/// Action that toggles a road or special spot outdoors within a stroke
+class aToggleOutFields : public cTerrainAction {
+	bool is_road;
+	bool on;
+	field_stroke_t stroke;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aToggleOutFields(bool is_road, bool on, field_stroke_t stroke): cTerrainAction(std::string{"Toggle "} + (is_road ? "Road" : "Special Spot"), *(stroke.begin())),
+		is_road(is_road), on(on), stroke(stroke) {}
 };
 
 #endif
