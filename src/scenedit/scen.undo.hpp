@@ -63,10 +63,12 @@ public:
 		old_property(old_property) {}
 };
 
-/// Action that erased a special encounter from a spot
-class aEraseSpecial : public cTerrainAction {
+/// Action that places or erases a special encounter from a spot
+class aPlaceEraseSpecial : public cTerrainAction {
 public:
-	aEraseSpecial(spec_loc_t special) : cTerrainAction("Erase Special Encounter", special), for_redo(special) {}
+	aPlaceEraseSpecial(std::string name, bool place, spec_loc_t special) :
+		cTerrainAction(name, special, !place),
+		for_redo(special) {}
 	bool undo_me() override;
 	bool redo_me() override;
 private:

@@ -945,6 +945,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 							if(specials[x].spec < 0) {
 								specials[x] = spot_hit;
 								specials[x].spec = spec->first;
+								undo_list.add(action_ptr(new aPlaceEraseSpecial("Paste Special Encounter", true, specials[x])));
+								update_edit_menu();
 								break;
 							}
 						}
@@ -1141,7 +1143,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 								specials.pop_back();
 							} while(!specials.empty() && specials.back().spec < 0);
 						}
-						undo_action.reset(new aEraseSpecial(for_redo));
+						undo_action.reset(new aPlaceEraseSpecial("Erase Special", false, for_redo));
 						break;
 					}
 				overall_mode = MODE_DRAWING;
@@ -2774,6 +2776,7 @@ void place_edit_special(location loc) {
 	for(short i = 0; i < specials.size(); i++)
 		if(specials[i] == loc && specials[i].spec >= 0) {
 			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
+			// TODO add the edit specials actions
 			return;
 		}
 	// new special
@@ -2785,6 +2788,9 @@ void place_edit_special(location loc) {
 			if(edit_spec_enc(spec, editing_town ? 2: 1, nullptr)) {
 				specials[i] = loc;
 				specials[i].spec = spec;
+				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[i])));
+				// TODO add the edit specials actions
+				update_edit_menu();
 			}
 			break;
 		}
@@ -2813,6 +2819,9 @@ void set_special(location spot_hit) {
 			if(spec >= 0) {
 				specials[x] = spot_hit;
 				specials[x].spec = spec;
+				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[x])));
+				// TODO if create/edit was used, add those actions
+				update_edit_menu();
 			}
 			break;
 		}

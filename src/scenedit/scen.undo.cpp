@@ -76,16 +76,17 @@ void cTerrainAction::redo() {
 
 // Undo/Redo implementations for actions:
 
-bool aEraseSpecial::undo_me() {
+bool aPlaceEraseSpecial::undo_me() {
+	cArea* cur_area = get_current_area();
+	auto& specials = cur_area->special_locs;
+	specials.erase(std::remove(specials.begin(), specials.end(), for_redo));
+	return true;
+}
+
+bool aPlaceEraseSpecial::redo_me() {
 	cArea* cur_area = get_current_area();
 	auto& specials = cur_area->special_locs;
 	specials.push_back(for_redo);
-	return true;
-}
-bool aEraseSpecial::redo_me() {
-	cArea* cur_area = get_current_area();
-	auto& specials = cur_area->special_locs;
-	specials.pop_back();
 	return true;
 }
 
