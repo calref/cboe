@@ -76,6 +76,17 @@ private:
 	bool editing_town;
 };
 
+/// Action that sets the number of an existing special encounter
+class aSetSpecial : public cTerrainAction {
+	short old_num;
+	short new_num;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aSetSpecial(location where, short old_num, short new_num) :
+		cTerrainAction("Edit Special Encounter", where), old_num(old_num), new_num(new_num) {}
+};
+
 /// Action which modifies terrain tiles (i.e. paintbrush, pencil, eraser)
 class aDrawTerrain : public cTerrainAction {
 public:

@@ -90,6 +90,24 @@ bool aPlaceEraseSpecial::redo_me() {
 	return true;
 }
 
+bool aSetSpecial::undo_me() {
+	cArea* cur_area = get_current_area();
+	auto& specials = cur_area->special_locs;
+	for(spec_loc_t& special : specials){
+		if(special == area.where) special.spec = old_num;
+	}
+	return true;
+}
+
+bool aSetSpecial::redo_me() {
+	cArea* cur_area = get_current_area();
+	auto& specials = cur_area->special_locs;
+	for(spec_loc_t& special : specials){
+		if(special == area.where) special.spec = new_num;
+	}
+	return true;
+}
+
 aCreateDeleteTown::aCreateDeleteTown(bool create, cTown* t)
 	: cAction(create ? "Create Town" : "Delete Last Town", !create)
 	, theTown(t)

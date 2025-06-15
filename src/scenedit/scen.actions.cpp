@@ -2807,7 +2807,12 @@ void set_special(location spot_hit) {
 		// Edit the node of the encounter already on the space
 		if(specials[x] == spot_hit && specials[x].spec >= 0) {
 			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
-			if(spec >= 0) specials[x].spec = spec;
+			if(spec >= 0 && spec != specials[x].spec){
+				undo_list.add(action_ptr(new aSetSpecial(spot_hit, specials[x].spec, spec)));
+				// TODO if create/edit was used, add those actions
+				update_edit_menu();
+				specials[x].spec = spec;
+			}
 			return;
 		}
 	for(short x = 0; x <= specials.size(); x++) {
