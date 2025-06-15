@@ -59,6 +59,9 @@ public:
 		eEnchant ability;
 		int charges = -1;
 		bool always_there = false, property = false, contained = false;
+		// For detecting actual changes to town items in the editor
+		bool operator==(const cItem& other);
+		bool operator!=(const cItem& other) { return !(*this == other); }
 		
 		void import_legacy(legacy::preset_item_type old);
 		cItem();
@@ -115,6 +118,7 @@ public:
 	void set_up_lights();
 	short light_obscurity(short x,short y) const; // Obscurity function used for calculating lighting
 	bool is_cleaned_out() const;
+	bool any_preset_items() const;
 	
 	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);

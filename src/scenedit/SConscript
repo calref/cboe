@@ -12,6 +12,7 @@ scened_sources = Split("""
 	scen.main.cpp
 	scen.sdfpicker.cpp
 	scen.townout.cpp
+	scen.undo.cpp
 	../view_dialogs.cpp
 	../fileio/fileio_party.cpp
 	../damage.cpp

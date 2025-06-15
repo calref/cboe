@@ -1380,6 +1380,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 }
 
 // mode - 0 scen 1 - out 2 - town
+// TODO collect a list of undo actions that can be committed to undo_list by the calling code
 bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	using namespace std::placeholders;
 	cSpecial the_node;
@@ -1653,7 +1654,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
 
-	size_t num_specs = 0;
+	short num_specs = 0;
 	switch(mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
 		case 1: num_specs = current_terrain->specials.size(); break;

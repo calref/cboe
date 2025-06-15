@@ -20,6 +20,7 @@
 #include "scen.keydlgs.hpp"
 #include "scen.townout.hpp"
 #include "scen.menus.hpp"
+#include "scen.undo.hpp"
 #include "mathutil.hpp"
 #include "fileio/fileio.hpp"
 #include "tools/keymods.hpp"
@@ -49,7 +50,7 @@ cUndoList undo_list;
 
 short flood_count = 0;
 
-rectangle terrain_rects[256],terrain_rect_base = {0,0,16,16},command_rects[21];
+rectangle terrain_rects[16*TYPE_ROWS_EDITING],terrain_rect_base = {0,0,16,16},command_rects[21];
 extern rectangle terrain_buttons_rect;
 
 extern short cen_x, cen_y, cur_town;
@@ -76,7 +77,7 @@ extern short right_button_hovered;
 
 ePalBtn out_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
-	{PAL_EDIT_TOWN, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_START, PAL_ZOOM},
+	{PAL_EDIT_TOWN, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_BLANK, PAL_START, PAL_ZOOM},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BOAT, PAL_HORSE, PAL_COPY_TER, PAL_CHANGE, PAL_PASTE},
 	{PAL_ROAD, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
 	{PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK, PAL_BLANK},
@@ -85,7 +86,7 @@ ePalBtn out_buttons[6][10] = {
 
 ePalBtn town_buttons[6][10] = {
 	{PAL_PENCIL, PAL_BRUSH_LG, PAL_BRUSH_SM, PAL_SPRAY_LG, PAL_SPRAY_SM, PAL_ERASER, PAL_RECT_HOLLOW, PAL_RECT_FILLED, PAL_BUCKET, PAL_DROPPER},
-	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_TOWN_BORDER, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_WANDER, PAL_START, PAL_ZOOM},
+	{PAL_ENTER_N, PAL_ENTER_W, PAL_ENTER_S, PAL_ENTER_E, PAL_TOWN_BORDER, PAL_EDIT_SIGN, PAL_TEXT_AREA, PAL_BLANK, PAL_START, PAL_ZOOM},
 	{PAL_SPEC, PAL_COPY_SPEC, PAL_ERASE_SPEC, PAL_EDIT_SPEC, PAL_SPEC_SPOT, PAL_BOAT, PAL_HORSE, PAL_COPY_TER, PAL_CHANGE, PAL_TERRAIN},
 	{PAL_ROAD, PAL_WEB, PAL_CRATE, PAL_BARREL, PAL_BLOCK, PAL_EDIT_STORAGE, PAL_EDIT_ITEM, PAL_COPY_ITEM, PAL_ERASE_ITEM, PAL_ITEM},
 	{PAL_FIRE_BARR, PAL_FORCE_BARR, PAL_QUICKFIRE, PAL_FORCECAGE, PAL_BLANK, PAL_PASTE, PAL_EDIT_MONST, PAL_COPY_MONST, PAL_ERASE_MONST, PAL_MONST},
@@ -120,7 +121,7 @@ void init_screen_locs() {
 	border_rect[2].top = border_rect[2].bottom - 8;
 	border_rect[3].left = border_rect[3].right - 8;
 	
-	for(short i = 0; i < 256; i++) {
+	for(short i = 0; i < 16 * TYPE_ROWS_EDITING; i++) {
 		terrain_rects[i] = terrain_rect_base;
 		terrain_rects[i].offset(3 + (i % 16) * (terrain_rect_base.right + 1),
 			3 + (i / 16) * (terrain_rect_base.bottom + 1));
@@ -130,7 +131,9 @@ void init_screen_locs() {
 static cursor_type get_edit_cursor() {
 	switch(overall_mode) {
 		case MODE_INTRO_SCREEN: case MODE_MAIN_SCREEN: case MODE_EDIT_TYPES:
-		case MODE_EDIT_SPECIALS:
+		case MODE_EDIT_SPECIALS: case MODE_EDIT_SPECIAL_ITEMS:
+		case MODE_EDIT_QUESTS: case MODE_EDIT_SHOPS: case MODE_EDIT_STRINGS:
+		case MODE_EDIT_DIALOGUE:
 			
 		case MODE_PLACE_CREATURE: case MODE_PLACE_ITEM: case MODE_PLACE_SPECIAL:
 			
@@ -254,19 +257,19 @@ static bool handle_lb_action(int i){
 				file_to_load = nav_get_scenario();
 				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 					set_pref("LastScenario", file_to_load.string());
-					restore_editor_state(true);
+					restore_editor_state();
 				} else if(!file_to_load.empty())
 					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 					set_up_start_screen();
 				break;
 			case LB_EDIT_TER:
-				start_terrain_editing();
+				start_type_editing(DRAW_TERRAIN);
 				break;
 			case LB_EDIT_MONST:
-				start_monster_editing(0);
+				start_type_editing(DRAW_MONST);
 				break;
 			case LB_EDIT_ITEM:
-				start_item_editing(0);
+				start_type_editing(DRAW_ITEM);
 				break;
 			case LB_NEW_TOWN:
 				if(scenario.towns.size() >= 200) {
@@ -278,23 +281,23 @@ static bool handle_lb_action(int i){
 				break;
 			case LB_EDIT_TEXT:
 				right_sbar->setPosition(0);
-				start_string_editing(STRS_SCEN,0);
+				start_string_editing(STRS_SCEN);
 				break;
 			case LB_EDIT_SPECITEM:
-				start_special_item_editing(false);
+				start_special_item_editing();
 				break;
 			case LB_EDIT_QUEST:
-				start_quest_editing(false);
+				start_quest_editing();
 				break;
 			case LB_EDIT_SHOPS:
-				start_shops_editing(false);
+				start_shops_editing();
 				break;
 			case LB_LOAD_OUT:
-				spot_hit = pick_out(cur_out, scenario);
+				spot_hit = pick_out(cur_out, scenario, "Edit");
 				if(spot_hit != cur_out) {
 					set_current_out(spot_hit, false);
 					if(overall_mode == MODE_EDIT_SPECIALS){
-						start_special_editing(1, false);
+						start_special_editing(1);
 					}
 				}
 				break;
@@ -309,7 +312,7 @@ static bool handle_lb_action(int i){
 					town = scenario.towns[cur_town];
 					set_up_main_screen();
 					if(overall_mode == MODE_EDIT_SPECIALS){
-						start_special_editing(2, false);
+						start_special_editing(2);
 					}
 				}
 				break;
@@ -318,7 +321,7 @@ static bool handle_lb_action(int i){
 				mouse_button_held = false;
 				break;
 			case LB_EDIT_TALK:
-				start_dialogue_editing(0);
+				start_dialogue_editing();
 				break;
 		}
 	}
@@ -360,62 +363,6 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 			switch(right_button_status[i + right_top].action) {
 				case RB_CLEAR:
 					break;
-				case RB_MONST:
-					size_before = scenario.scen_monsters.size();
-					if(option_hit) {
-						if(j == size_before - 1 && !scenario.is_monst_used(j))
-							scenario.scen_monsters.pop_back();
-						else if(j == size_before) {
-							scenario.scen_monsters.resize(size_before + 8);
-							for(; j < scenario.scen_monsters.size(); j++)
-								scenario.scen_monsters[j].m_name = "New Monster";
-						} else {
-							scenario.scen_monsters[j] = cMonster();
-							scenario.scen_monsters[j].m_name = "Unused Monster";
-						}
-					} else {
-						if(j == size_before) {
-							scenario.scen_monsters.emplace_back();
-							scenario.scen_monsters.back().m_name = "New Monster";
-						}
-						if(!edit_monst_type(j) && j == size_before && scenario.scen_monsters.back().m_name == "New Monster")
-							scenario.scen_monsters.pop_back();
-					}
-					start_monster_editing(size_before == scenario.scen_monsters.size());
-					if(size_before > scenario.scen_monsters.size())
-						pos_before--;
-					right_sbar->setPosition(pos_before);
-					break;
-				case RB_ITEM:
-					size_before = scenario.scen_items.size();
-					if(option_hit) {
-						if(j == size_before - 1 && !scenario.is_item_used(j))
-							scenario.scen_items.pop_back();
-						else if(j == size_before) {
-							scenario.scen_items.resize(size_before + 8);
-							for(; j < scenario.scen_items.size(); j++) {
-								scenario.scen_items[j].full_name = "New Item";
-								scenario.scen_items[j].name = "Item";
-							}
-						} else {
-							scenario.scen_items[j] = cItem();
-							scenario.scen_items[j].full_name = "Unused Item";
-							scenario.scen_items[j].name = "Item";
-						}
-					} else {
-						if(j == size_before) {
-							scenario.scen_items.emplace_back();
-							scenario.scen_items.back().full_name = "New Item";
-							scenario.scen_items.back().name = "Item";
-						}
-						if(!edit_item_type(j) && j == size_before && scenario.scen_items.back().name == "New Item")
-							scenario.scen_items.pop_back();
-					}
-					start_item_editing(size_before == scenario.scen_items.size());
-					if(size_before > scenario.scen_items.size())
-						pos_before--;
-					right_sbar->setPosition(pos_before);
-					break;
 				case RB_SCEN_SPEC:
 					size_before = scenario.scen_specials.size();
 					if(option_hit) {
@@ -429,7 +376,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.scen_specials.emplace_back();
 						edit_spec_enc(j,0,nullptr);
 					}
-					start_special_editing(0,size_before == scenario.scen_specials.size());
+					start_special_editing(0);
 					if(size_before > scenario.scen_specials.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -447,7 +394,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->specials.emplace_back();
 						edit_spec_enc(j,1,nullptr);
 					}
-					start_special_editing(1,size_before == current_terrain->specials.size());
+					start_special_editing(1);
 					if(size_before > current_terrain->specials.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -465,7 +412,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->specials.emplace_back();
 						edit_spec_enc(j,2,nullptr);
 					}
-					start_special_editing(2,size_before == town->specials.size());
+					start_special_editing(2);
 					if(size_before > town->specials.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -484,7 +431,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_SCEN) && j == size_before && scenario.spec_strs[j] == "*")
 							scenario.spec_strs.pop_back();
 					}
-					start_string_editing(STRS_SCEN,size_before == scenario.spec_strs.size());
+					start_string_editing(STRS_SCEN);
 					if(size_before > scenario.spec_strs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -503,7 +450,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_OUT) && j == size_before && current_terrain->spec_strs[j] == "*")
 							current_terrain->spec_strs.pop_back();
 					}
-					start_string_editing(STRS_OUT,size_before == current_terrain->spec_strs.size());
+					start_string_editing(STRS_OUT);
 					if(size_before > current_terrain->spec_strs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -522,7 +469,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_TOWN) && j == size_before && town->spec_strs[j] == "*")
 							town->spec_strs.pop_back();
 					}
-					start_string_editing(STRS_TOWN,size_before == town->spec_strs.size());
+					start_string_editing(STRS_TOWN);
 					if(size_before > town->spec_strs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -530,23 +477,33 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_SPEC_ITEM:
 					size_before = scenario.special_items.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						// Delete last special item
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aCreateDeleteSpecialItem(false, scenario.special_items.back())));
+							update_edit_menu();
 							scenario.special_items.pop_back();
+						}
 						else if(j == size_before)
 							break;
+						// Clear special item (it can't be deleted fully)
 						else {
-							scenario.special_items[j] = cSpecItem();
-							scenario.special_items[j].name = "Unused Special Item";
+							cSpecItem cleared;
+							cleared.name = "Unused Special Item";
+							undo_list.add(action_ptr(new aEditClearSpecialItem("Clear Special Item", j, scenario.special_items[j], cleared)));
+							update_edit_menu();
+							scenario.special_items[j] = cleared;
 						}
 					} else {
-						if(j == size_before) {
-							scenario.special_items.emplace_back();
-							scenario.special_items.back().name = "New Special Item";
+						bool is_new = (j == size_before);
+						if(edit_spec_item(j)){
+							// Special item create/edit undo action is added in save_spec_item() because special item editor
+							// has left/right buttons and may someday be launched with create/edit buttons elsewhere.
 						}
-						if(!edit_spec_item(j) && j == size_before)
+						// Create new canceled
+						else if(is_new){
 							scenario.special_items.pop_back();
+						}
 					}
-					start_special_item_editing(size_before == scenario.special_items.size());
 					if(size_before > scenario.special_items.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -565,7 +522,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_JOURNAL) && j == size_before && scenario.journal_strs[j] == "*")
 							scenario.journal_strs.pop_back();
 					}
-					start_string_editing(STRS_JOURNAL,size_before == scenario.journal_strs.size());
+					start_string_editing(STRS_JOURNAL);
 					if(size_before > scenario.journal_strs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -582,14 +539,14 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if((j = edit_talk_node(j)) >= 0 && town->talking.talk_nodes[j].personality == -1)
 							town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
 					}
-					start_dialogue_editing(size_before == town->talking.talk_nodes.size());
+					start_dialogue_editing();
 					if(size_before > town->talking.talk_nodes.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
 					break;
 				case RB_PERSONALITY:
 					edit_basic_dlog(j);
-					start_dialogue_editing(1);
+					start_dialogue_editing();
 					break;
 				case RB_OUT_SIGN:
 					size_before = current_terrain->sign_locs.size();
@@ -605,7 +562,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_OUT_SIGN) && j == size_before && current_terrain->sign_locs[j].text == "*")
 							current_terrain->sign_locs.pop_back();
 					}
-					start_string_editing(STRS_OUT_SIGN,size_before == current_terrain->sign_locs.size());
+					start_string_editing(STRS_OUT_SIGN);
 					if(size_before > current_terrain->sign_locs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -624,7 +581,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_TOWN_SIGN) && j == size_before && town->sign_locs[j].text == "*")
 							town->sign_locs.pop_back();
 					}
-					start_string_editing(STRS_TOWN_SIGN,size_before == town->sign_locs.size());
+					start_string_editing(STRS_TOWN_SIGN);
 					if(size_before > town->sign_locs.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -643,7 +600,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->area_desc[j].descr == "*")
 							current_terrain->area_desc.pop_back();
 					}
-					start_string_editing(STRS_OUT_RECT,size_before == current_terrain->area_desc.size());
+					start_string_editing(STRS_OUT_RECT);
 					if(size_before > current_terrain->area_desc.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -662,7 +619,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->area_desc[j].descr == "*")
 							town->area_desc.pop_back();
 					}
-					start_string_editing(STRS_TOWN_RECT,size_before == town->area_desc.size());
+					start_string_editing(STRS_TOWN_RECT);
 					if(size_before > town->area_desc.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -670,17 +627,31 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_QUEST:
 					size_before = scenario.quests.size();
 					if(option_hit) {
-						if(j == scenario.quests.size() - 1)
+						// Delete last quest
+						if(j == scenario.quests.size() - 1){
+							undo_list.add(action_ptr(new aCreateDeleteQuest(false, scenario.quests.back())));
+							update_edit_menu();
 							scenario.quests.pop_back();
+						}
+						// Clear quest (it can't be deleted fully)
 						else {
-							scenario.quests[j] = cQuest();
-							scenario.quests[j].name = "Unused Quest";
+							cQuest cleared;
+							cleared.name = "Unused Quest";
+							undo_list.add(action_ptr(new aEditClearQuest("Clear Quest", j, scenario.quests[j], cleared)));
+							update_edit_menu();
+							scenario.quests[j] = cleared;
 						}
 					} else {
-						if(!edit_quest(j) && j == size_before && scenario.quests[j].name == "New Quest")
+						bool is_new = (j == scenario.quests.size());
+						if(edit_quest(j)){
+							// Quest create/edit undo action is added in save_quest_from_dlog() because quest editor
+							// has left/right buttons and can be launched with create/edit buttons elsewhere.
+						}
+						// Create new canceled
+						else if(is_new){
 							scenario.quests.pop_back();
+						}
 					}
-					start_quest_editing(size_before == scenario.quests.size());
 					if(size_before > scenario.quests.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -688,14 +659,31 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_SHOP:
 					size_before = scenario.shops.size();
 					if(option_hit) {
-						if(j == scenario.shops.size() - 1)
+						// Delete last shop
+						if(j == scenario.shops.size() - 1){
+							undo_list.add(action_ptr(new aCreateDeleteShop(false, scenario.shops.back())));
+							update_edit_menu();
 							scenario.shops.pop_back();
-						else scenario.shops[j] = cShop("Unused Shop");
+						}
+						// Clear shop (it can't be fully deleted)
+						else{
+							cShop cleared("Unused Shop");
+							undo_list.add(action_ptr(new aEditClearShop("Clear Shop", j, scenario.shops[j], cleared)));
+							update_edit_menu();
+							scenario.shops[j] = cleared;
+						}
 					} else {
-						if(!edit_shop(j) && j == size_before && scenario.shops[j].getName() == "New Shop")
+						bool is_new = (j == scenario.shops.size());
+						if(edit_shop(j)){
+							// Shop create/edit undo action is added in save_shop_from_dlog() because shop editor
+							// has left/right buttons and can be launched with create/edit buttons elsewhere.
+						}
+						// Create new canceled
+						else if(is_new){
 							scenario.shops.pop_back();
+						}
 					}
-					start_shops_editing(size_before == scenario.shops.size());
+					start_shops_editing();
 					if(size_before > scenario.shops.size())
 						pos_before--;
 					right_sbar->setPosition(pos_before);
@@ -708,8 +696,51 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 	return false;
 }
 
+stroke_ter_changes_t current_stroke_changes;
+std::string current_stroke_type;
+
+item_changes_t current_items_placed;
+creature_changes_t current_creatures_placed;
+
+clear_field_stroke_t current_fields_cleared;
+field_stroke_t current_fields_placed;
+field_stroke_t current_fields_toggled;
+eFieldType current_field_type;
+
+void commit_stroke() {
+	if(!current_stroke_changes.empty()){
+		undo_list.add(action_ptr(new aDrawTerrain("Draw Terrain (" + current_stroke_type + ")", current_stroke_changes)));
+		update_edit_menu();
+		current_stroke_changes.clear();
+		current_stroke_type = "";
+	}else if(!current_items_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseItem(current_items_placed.size() > 1 ? "Place Items" : "Place Item", true, current_items_placed)));
+		update_edit_menu();
+		current_items_placed.clear();
+	}else if(!current_creatures_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseCreature(current_creatures_placed.size() > 1 ? "Place Creatures" : "Place Creature", true, current_creatures_placed)));
+		update_edit_menu();
+		current_items_placed.clear();
+	}else if(!current_fields_cleared.empty()){
+		undo_list.add(action_ptr(new aClearFields(current_fields_cleared)));
+		update_edit_menu();
+		current_fields_cleared.clear();
+	}else if(!current_fields_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceFields(current_field_type, current_fields_placed)));
+		update_edit_menu();
+		current_fields_placed.clear();
+	}else if(!current_fields_toggled.empty()){
+		undo_list.add(action_ptr(new aToggleOutFields(current_field_type == SPECIAL_ROAD, mode_count, current_fields_toggled)));
+		update_edit_menu();
+		current_fields_toggled.clear();
+	}
+}
+
+const std::vector<std::string> entrance_names = {"North", "East", "South", "West"};
+
 static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 	cArea* cur_area = get_current_area();
+	std::shared_ptr<cAction> undo_action = nullptr;
 	if(mouse_spot.x >= 0 && mouse_spot.y >= 0) {
 		if(cur_viewing_mode == 0) {
 			spot_hit.x = cen_x + mouse_spot.x - 4;
@@ -749,19 +780,16 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					erasing_mode = terrain_matches(spot_hit.x, spot_hit.y, current_terrain_type);
 					mouse_button_held = true;
 				}
-				if(!editing_town) {
-					// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
-					const cTerrain& paint_ter = scenario.ter_types[current_terrain_type];
-					const cTerrain& erase_ter = scenario.ter_types[current_ground];
-					const cTerrain& cur_ter = scenario.ter_types[cur_area->terrain(spot_hit.x, spot_hit.y)];
-					if(cur_ter.special == eTerSpec::TOWN_ENTRANCE && (erasing_mode ? erase_ter : paint_ter).special != eTerSpec::TOWN_ENTRANCE)
-						for(short i = current_terrain->city_locs.size() - 1; i >= 0; i--) {
-							if(current_terrain->city_locs[i] == spot_hit)
-								current_terrain->city_locs.erase(current_terrain->city_locs.begin() + i);
-						}
+				if(erasing_mode){
+					stroke_ter_changes_t changes;
+					set_terrain(spot_hit,current_ground,changes);
+					undo_action.reset(new aDrawTerrain("Erase Terrain", changes));
 				}
-				if(erasing_mode) set_terrain(spot_hit,current_ground);
-				else set_terrain(spot_hit,current_terrain_type);
+				else{
+					// This could be an ongoing stroke
+					current_stroke_type = "Pencil";
+					set_terrain(spot_hit,current_terrain_type,current_stroke_changes);
+				}
 				break;
 				
 			case MODE_ROOM_RECT: case MODE_SET_TOWN_RECT: case MODE_HOLLOW_RECT: case MODE_FILLED_RECT:
@@ -823,6 +851,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				}
 				overall_mode = MODE_DRAWING;
 				break;
+			// Deprecated:
 			case MODE_SET_WANDER_POINTS:
 				if(mouse_button_held)
 					break;
@@ -853,22 +882,27 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				
 			case MODE_LARGE_PAINTBRUSH:
 				mouse_button_held = true;
+				current_stroke_type = "Lg. Paintbrush";
 				change_circle_terrain(spot_hit,4,current_terrain_type,20);
 				break;
 			case MODE_SMALL_PAINTBRUSH:
 				mouse_button_held = true;
+				current_stroke_type = "Sm. Paintbrush";
 				change_circle_terrain(spot_hit,1,current_terrain_type,20);
 				break;
 			case MODE_LARGE_SPRAYCAN:
 				mouse_button_held = true;
+				current_stroke_type = "Lg. Spraycan";
 				change_circle_terrain(spot_hit,4,current_terrain_type,1);
 				break;
 			case MODE_SMALL_SPRAYCAN:
 				mouse_button_held = true;
+				current_stroke_type = "Sm. Spraycan";
 				change_circle_terrain(spot_hit,2,current_terrain_type,1);
 				break;
 			case MODE_ERASER: // erase
 				change_circle_terrain(spot_hit,2,current_ground,20);
+				current_stroke_type = "Eraser";
 				mouse_button_held = true;
 				break;
 			case MODE_FLOOD_FILL:
@@ -880,25 +914,22 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				// If we just placed this item there, forget it
 				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
-					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
-						return item.code < 0;
-					});
-					if(iter != town->preset_items.end()) {
-						*iter = {spot_hit, mode_count, scenario.scen_items[mode_count]};
-						if(container_there(spot_hit)) iter->contained = true;
-					} else {
-						town->preset_items.push_back({spot_hit, mode_count, scenario.scen_items[mode_count]});
-						if(container_there(spot_hit)) town->preset_items.back().contained = true;
-					}
+					place_item(spot_hit, mode_count, false, false, 100, current_items_placed);
 					last_placement = spot_hit;
 				}
 				break;
 			case MODE_EDIT_ITEM:
-				for(short x = 0; x < town->preset_items.size(); x++)
-					if((spot_hit.x == town->preset_items[x].loc.x) &&
-					   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+				for(short x = 0; x < town->preset_items.size(); x++){
+					cTown::cItem old_item = town->preset_items[x];
+					if((spot_hit.x == old_item.loc.x) &&
+					   (spot_hit.y == old_item.loc.y) && (old_item.code >= 0)) {
 						edit_placed_item(x);
+						if(town->preset_items[x] != old_item){
+							undo_list.add(action_ptr(new aEditPlacedItem(x, old_item, town->preset_items[x])));
+							update_edit_menu();
+						}
 					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PASTE:
@@ -914,6 +945,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 							if(specials[x].spec < 0) {
 								specials[x] = spot_hit;
 								specials[x].spec = spec->first;
+								undo_list.add(action_ptr(new aPlaceEraseSpecial("Paste Special Encounter", true, specials[x])));
+								update_edit_menu();
 								break;
 							}
 						}
@@ -923,37 +956,28 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						set_string("Paste monster","Not while outdoors.");
 						break;
 					}
-					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
-						return who.number == 0;
-					});
-					if(iter != town->creatures.end()) {
-						*iter = *monst;
-						iter->start_loc = spot_hit;
-					} else { // Placement failed
-						town->creatures.push_back(*monst);
-						town->creatures.back().start_loc = spot_hit;
-					}
+					place_creature(spot_hit, static_cast<mon_num_t>(mode_count), current_creatures_placed);
+					undo_list.add(action_ptr(new aPlaceEraseCreature("Paste Creature", true, current_creatures_placed)));
+					update_edit_menu();
+					current_creatures_placed.clear();
 				} else if(auto item = boost::get<cTown::cItem>(&clipboard)) {
 					if(!editing_town) {
 						set_string("Paste item","Not while outdoors.");
 						break;
 					}
-					auto iter = std::find_if(town->preset_items.begin(), town->preset_items.end(), [](const cTown::cItem& item) {
-						return item.code < 0;
-					});
-					if(iter != town->preset_items.end()) {
-						*iter = *item;
-						iter->loc = spot_hit;
-						iter->contained = container_there(spot_hit);
-					} else {
-						town->preset_items.push_back(*item);
-						town->preset_items.back().loc = spot_hit;
-						town->preset_items.back().contained = container_there(spot_hit);
-					}
+					place_item(spot_hit, mode_count, false, false, 100, current_items_placed);
+					undo_list.add(action_ptr(new aPlaceEraseItem("Paste Item", true, current_items_placed)));
+					update_edit_menu();
+					current_items_placed.clear();
 				} else if(auto patch = boost::get<vector2d<ter_num_t>>(&clipboard)) {
 					for(int x = 0; x < patch->width(); x++)
 						for(int y = 0; y < patch->height(); y++)
-							cur_area->terrain(spot_hit.x + x, spot_hit.y + y) = (*patch)[x][y];
+							set_terrain(loc(spot_hit.x + x, spot_hit.y + y), (*patch)[x][y], current_stroke_changes, false);
+					if(!current_stroke_changes.empty()){
+						undo_list.add(action_ptr(new aDrawTerrain("Paste Terrain", current_stroke_changes)));
+						update_edit_menu();
+						current_stroke_changes.clear();
+					}
 				} else {
 					showError("Nothing to paste. Try copying something first.");
 				}
@@ -963,85 +987,99 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				// If we just placed this same creature here, forget it
 				if(!mouse_button_held || last_placement != spot_hit) {
 					mouse_button_held = true;
-					auto iter = std::find_if(town->creatures.begin(), town->creatures.end(), [](const cTownperson& who) {
-						return who.number == 0;
-					});
-					if(iter != town->creatures.end()) {
-						*iter = {spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]};
-					} else { // Placement failed
-						town->creatures.push_back({spot_hit, static_cast<mon_num_t>(mode_count), scenario.scen_monsters[mode_count]});
-					}
+					place_creature(spot_hit, static_cast<mon_num_t>(mode_count), current_creatures_placed);
 					last_placement = spot_hit;
 				}
 				break;
 				
 			case MODE_PLACE_NORTH_ENTRANCE: case MODE_PLACE_EAST_ENTRANCE:
 			case MODE_PLACE_SOUTH_ENTRANCE: case MODE_PLACE_WEST_ENTRANCE:
+				undo_list.add(action_ptr(new aPlaceTownEntrance(
+					std::string {"Place "} + entrance_names[overall_mode - 10] + " Entrance",
+					overall_mode - 10, town->start_locs[overall_mode - 10], spot_hit)));
+				update_edit_menu();
 				town->start_locs[overall_mode - 10].x = spot_hit.x;
 				town->start_locs[overall_mode - 10].y = spot_hit.y;
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_PLACE_WEB:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB);
+				current_field_type = FIELD_WEB;
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_WEB,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_CRATE:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE);
+				current_field_type = OBJECT_CRATE;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_CRATE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_BARREL:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL);
+				current_field_type = OBJECT_BARREL;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BARREL,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FIRE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE);
+				current_field_type = BARRIER_FIRE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FIRE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCE_BARRIER:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE);
+				current_field_type = BARRIER_FORCE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_FORCE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_QUICKFIRE:
-				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE);
+				current_field_type = FIELD_QUICKFIRE;
+				make_field_type(spot_hit.x,spot_hit.y,FIELD_QUICKFIRE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_STONE_BLOCK:
-				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK);
+				current_field_type = OBJECT_BLOCK;
+				make_field_type(spot_hit.x,spot_hit.y,OBJECT_BLOCK,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_FORCECAGE:
-				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE);
+				current_field_type = BARRIER_CAGE;
+				make_field_type(spot_hit.x,spot_hit.y,BARRIER_CAGE,current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_TOGGLE_SPECIAL_DOT:
+				current_field_type = SPECIAL_SPOT;
 				if(editing_town){
-					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT);
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_SPOT,current_fields_placed);
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->special_spot[spot_hit.x][spot_hit.y];
+
+					current_fields_toggled.insert(spot_hit);
+
 					current_terrain->special_spot[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
 				}
 				break;
 			case MODE_TOGGLE_ROAD:
+				current_field_type = SPECIAL_ROAD;
 				if(editing_town){
-					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD);
+					make_field_type(spot_hit.x, spot_hit.y, SPECIAL_ROAD, current_fields_placed);
 					mouse_button_held = true;
 				} else {
 					if(!mouse_button_held)
 						mode_count = !current_terrain->roads[spot_hit.x][spot_hit.y];
+
+					current_fields_toggled.insert(spot_hit);
+
 					current_terrain->roads[spot_hit.x][spot_hit.y] = mode_count;
 					mouse_button_held = true;
 				}
 				break;
 			case MODE_CLEAR_FIELDS:
 				for(int i = 8; i <= SPECIAL_ROAD; i++)
-					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i));
+					take_field_type(spot_hit.x,spot_hit.y, eFieldType(i), current_fields_cleared);
 				mouse_button_held = true;
 				break;
 			case MODE_PLACE_SFX:
-				make_field_type(spot_hit.x,spot_hit.y,eFieldType(SFX_SMALL_BLOOD + mode_count));
+				current_field_type = eFieldType(SFX_SMALL_BLOOD + mode_count);
+				make_field_type(spot_hit.x,spot_hit.y, current_field_type, current_fields_placed);
 				mouse_button_held = true;
 				break;
 			case MODE_EYEDROPPER:
@@ -1063,10 +1101,16 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				break;
 			}
 			case MODE_EDIT_CREATURE: //edit monst
-				for(short x = 0; x < town->creatures.size(); x++)
+				for(short x = 0; x < town->creatures.size(); x++){
 					if(monst_on_space(spot_hit,x)) {
+						cTownperson old_creature = town->creatures[x];
 						edit_placed_monst(x);
+						if(town->creatures[x] != old_creature){
+							undo_list.add(action_ptr(new aEditPlacedCreature(x, old_creature, town->creatures[x])));
+							update_edit_menu();
+						}
 					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_EDIT_SPECIAL: //make special
@@ -1090,6 +1134,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				auto& specials = cur_area->special_locs;
 				for(short x = 0; x < specials.size(); x++)
 					if(specials[x] == spot_hit && specials[x].spec >= 0) {
+						spec_loc_t for_redo = specials[x];
 						specials[x] = {-1,-1};
 						specials[x].spec = -1;
 						if(x == specials.size() - 1) {
@@ -1098,6 +1143,7 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 								specials.pop_back();
 							} while(!specials.empty() && specials.back().spec < 0);
 						}
+						undo_action.reset(new aPlaceEraseSpecial("Erase Special", false, for_redo));
 						break;
 					}
 				overall_mode = MODE_DRAWING;
@@ -1111,56 +1157,72 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 				town_entry(spot_hit);
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_SET_OUT_START:
+			case MODE_SET_OUT_START:{
 				if((spot_hit.x != minmax(4,43,spot_hit.x)) || (spot_hit.y != minmax(4,43,spot_hit.y))) {
 					showError("You can't put the starting location this close to the edge of an outdoor section. It has to be at least 4 spaces away.");
 					break;
 				}
+				area_ref_t old_start = { false, 0, scenario.out_sec_start, scenario.out_start };
 				scenario.out_sec_start.x = cur_out.x;
 				scenario.out_sec_start.y = cur_out.y;
 				scenario.out_start = spot_hit;
+				area_ref_t new_start = { false, 0, scenario.out_sec_start, scenario.out_start };
+				undo_list.add(action_ptr(new aPlaceStartLocation(old_start, new_start)));
+				update_edit_menu();
 				overall_mode = MODE_DRAWING;
 				change_made = true;
-				break;
+			}break;
 			case MODE_ERASE_CREATURE: //delete monst
 				for(short x = 0; x < town->creatures.size(); x++)
 					if(monst_on_space(spot_hit,x)) {
+						undo_list.add(action_ptr(new aPlaceEraseCreature("Erase Creature", false, x, town->creatures[x])));
+						update_edit_menu();
 						town->creatures[x].number = 0;
 						break;
 					}
-				while(!town->creatures.empty() && town->creatures.back().number == 0)
-					town->creatures.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
 			case MODE_ERASE_ITEM: // delete item
 				for(short x = 0; x < town->preset_items.size(); x++)
 					if((spot_hit.x == town->preset_items[x].loc.x) &&
 					   (spot_hit.y == town->preset_items[x].loc.y) && (town->preset_items[x].code >= 0)) {
+
+						undo_list.add(action_ptr(new aPlaceEraseItem("Erase Item", false, x, town->preset_items[x])));
+						update_edit_menu();
 						town->preset_items[x].code = -1;
 						break;
 					}
-				while(!town->preset_items.empty() && town->preset_items.back().code == -1)
-					town->preset_items.pop_back();
 				overall_mode = MODE_DRAWING;
 				break;
-			case MODE_SET_TOWN_START:
+			case MODE_SET_TOWN_START:{
 				if(!town->in_town_rect.contains(spot_hit)) {
 					showError("You can't put the starting location outside the town boundaries.");
 					break;
 				}
+				area_ref_t old_start = { true, scenario.which_town_start, {}, scenario.where_start };
 				scenario.which_town_start = cur_town;
 				scenario.where_start = spot_hit;
+				area_ref_t new_start = { true, scenario.which_town_start, {}, scenario.where_start };
+				undo_list.add(action_ptr(new aPlaceStartLocation(old_start, new_start)));
+				update_edit_menu();
 				overall_mode = MODE_DRAWING;
 				change_made = true;
-				break;
+			}break;
 			case MODE_PLACE_BOAT: case MODE_PLACE_HORSE: {
+				bool is_new = false;
+				cVehicle old_vehicle;
 				auto& all = overall_mode == MODE_PLACE_BOAT ? scenario.boats : scenario.horses;
 				auto iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 					if(editing_town && cur_town != what.which_town) return false;
-					else if(!editing_town && what.which_town != 200) return false;
+					else if(!editing_town && what.sector != cur_out) return false;
 					return what.loc == spot_hit;
 				});
-				if(iter == all.end()) {
+				// Edit existing
+				if(iter != all.end()){
+					old_vehicle = *iter;
+				}
+				// Create new
+				else{
 					iter = std::find_if(all.begin(), all.end(), [](const cVehicle& what) {
 						return what.which_town < 0;
 					});
@@ -1168,14 +1230,44 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						all.emplace_back();
 						iter = all.end() - 1;
 					}
+					is_new = true;
 					iter->loc = spot_hit;
 					iter->which_town = editing_town ? cur_town : 200;
 					iter->property = false;
 					iter->exists = false;
 					if(!editing_town) iter->sector = cur_out;
 				}
-				if(!edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT))
-					all.erase(iter);
+				if(edit_vehicle(*iter, iter - all.begin(), overall_mode == MODE_PLACE_BOAT)){
+					// Created new
+					if(is_new){
+						undo_list.add(action_ptr(new aPlaceEraseVehicle(true, overall_mode == MODE_PLACE_BOAT, iter - all.begin(), *iter)));
+						update_edit_menu();
+					}
+					// Edited
+					else if(old_vehicle != *iter){
+						undo_list.add(action_ptr(new aEditVehicle(overall_mode == MODE_PLACE_BOAT, iter - all.begin(), old_vehicle, *iter)));
+						update_edit_menu();
+					}
+				}
+				else{
+					// Edit existing--delete chosen
+					if(!is_new){
+						undo_list.add(action_ptr(new aPlaceEraseVehicle(false, overall_mode == MODE_PLACE_BOAT, iter - all.begin(), *iter)));
+						update_edit_menu();
+					}
+					// Create new canceled or delete chosen
+					else{
+						// Nothing needs to be recorded
+					}
+					// Vehicle can be deleted completely without offseting other vehicle numbers
+					if(iter == (all.end() - 1)){
+						all.erase(iter);
+					}
+					// Vehicle can't be fully deleted
+					else{
+						*iter = cVehicle();
+					}
+				}
 				overall_mode = MODE_DRAWING;
 				break;
 			}
@@ -1183,6 +1275,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			case MODE_EDIT_TYPES:
 			case MODE_MAIN_SCREEN:
 			case MODE_EDIT_SPECIALS:
+			case MODE_EDIT_SPECIAL_ITEMS:
+			case MODE_EDIT_QUESTS:
+			case MODE_EDIT_SHOPS:
+			case MODE_EDIT_STRINGS:
+			case MODE_EDIT_DIALOGUE:
 				break; // Nothing to do here, of course.
 			case MODE_COPY_CREATURE:
 				for(short x = 0; x < town->creatures.size(); x++)
@@ -1204,6 +1301,11 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 		if((overall_mode == MODE_DRAWING) && (old_mode != MODE_DRAWING))
 			set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 		draw_terrain();
+
+		if(undo_action != nullptr){
+			undo_list.add(undo_action);
+			update_edit_menu();
+		}
 		return true;
 	}
 	bool need_redraw = false;
@@ -1251,7 +1353,9 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 }
 
 static bool handle_terpal_action(location cur_point, bool option_hit) {
-	for(int i = 0; i < 256; i++)
+	int rows = TYPE_ROWS_DRAWING;
+	if(overall_mode == MODE_EDIT_TYPES) rows = TYPE_ROWS_EDITING;
+	for(int i = 0; i < 16 * rows; i++)
 		if(cur_point.in(terrain_rects[i])) {
 			int k = pal_sbar->getPosition() * 16 + i;
 			rectangle temp_rect = terrain_rects[i];
@@ -1282,37 +1386,176 @@ static bool handle_terpal_action(location cur_point, bool option_hit) {
 						break;
 				}
 			}
+			// MODE_EDIT_TYPES:
 			else {
-				short size_before = scenario.ter_types.size(), pos_before = pal_sbar->getPosition();
+				short pos_before = pos_before = pal_sbar->getPosition();
 				i += pos_before * 16;
+				short size_before = scenario.ter_types.size();
+				if(draw_mode == DRAW_MONST) size_before = scenario.scen_monsters.size(), i++;
+				else if(draw_mode == DRAW_ITEM) size_before = scenario.scen_items.size();
 				if(i > size_before) return true;
-				if(i == 90){
+
+				if(draw_mode == DRAW_TERRAIN && i == 90){
 					showWarning("The pit/barrier terrain cannot be changed.");
 					return true;
 				}
 				if(option_hit) {
-					if(i == size_before - 1 && !scenario.is_ter_used(i))
-						scenario.ter_types.pop_back();
-					else if(i == size_before) {
-						scenario.ter_types.resize(size_before + 16);
-						for(; i < scenario.ter_types.size(); i++)
-							scenario.ter_types[i].name = "New Terrain";
-					} else {
-						scenario.ter_types[i] = cTerrain();
-						scenario.ter_types[i].name = "Unused Terrain";
+					// option-click the plus button: create a new row of types
+					if(i == size_before){
+						switch(draw_mode){
+							case DRAW_TERRAIN:{
+								terrain_type_changes_t terrains;
+								scenario.ter_types.resize(size_before + 16);
+								for(; i < scenario.ter_types.size(); i++){
+									scenario.ter_types[i].name = "New Terrain";
+									terrains.push_back(scenario.ter_types[i]);
+								}
+
+								undo_list.add(action_ptr(new aCreateDeleteTerrain(terrains)));
+								update_edit_menu();
+							}break;
+							case DRAW_MONST:{
+								monst_type_changes_t monsts;
+								scenario.scen_monsters.resize(size_before + 16);
+								for(; i < scenario.scen_monsters.size(); i++){
+									scenario.scen_monsters[i].m_name = "New Monster";
+									monsts.push_back(scenario.scen_monsters[i]);
+								}
+
+								undo_list.add(action_ptr(new aCreateDeleteMonster(monsts)));
+								update_edit_menu();
+							}break;
+							case DRAW_ITEM:{
+								item_type_changes_t items;
+								scenario.scen_items.resize(size_before + 16);
+								for(; i < scenario.scen_items.size(); i++){
+									scenario.scen_items[i].full_name = "New Item";
+									items.push_back(scenario.scen_items[i]);
+								}
+
+								undo_list.add(action_ptr(new aCreateDeleteItem(items)));
+								update_edit_menu();
+							}break;
+						}
+					}
+					else{
+						switch(draw_mode){
+							case DRAW_TERRAIN:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_ter_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteTerrain(false, scenario.ter_types.back())));
+									update_edit_menu();
+									scenario.ter_types.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									cTerrain before = scenario.ter_types[i];
+									cTerrain after;
+									after.name = "Unused Terrain";
+									scenario.ter_types[i] = after;
+									undo_list.add(action_ptr(new aEditClearTerrain("Clear Terrain Type", i, before, after)));
+									update_edit_menu();
+								}
+								break;
+							case DRAW_MONST:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_monst_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteMonster(false, scenario.scen_monsters.back())));
+									update_edit_menu();
+									scenario.scen_monsters.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									cMonster before = scenario.scen_monsters[i];
+									cMonster after;
+									after.m_name = "Unused Monster";
+									scenario.scen_monsters[i] = after;
+									undo_list.add(action_ptr(new aEditClearMonster("Clear Monster Type", i, before, after)));
+									update_edit_menu();
+								}
+								break;
+							case DRAW_ITEM:
+								// option-click the last one and it's safe to delete: delete it
+								if(i == size_before - 1 && !scenario.is_item_used(i)){
+									undo_list.add(action_ptr(new aCreateDeleteItem(false, scenario.scen_items.back())));
+									update_edit_menu();
+									scenario.scen_items.pop_back();
+								}
+								// option-click type that can't be deleted (because it would break other types' numbers, or is in use somewhere):
+								// reset type info
+								else{
+									cItem before = scenario.scen_items[i];
+									cItem after;
+									after.full_name = "Unused Item";
+									scenario.scen_items[i] = after;
+									undo_list.add(action_ptr(new aEditClearItem("Clear Item Type", i, before, after)));
+									update_edit_menu();
+								}
+								break;
+						}
 					}
 				} else {
+					bool is_new = false;
+					// Click the plus button: create a new type and edit it immediately
 					if(i == size_before) {
-						scenario.ter_types.emplace_back();
-						scenario.ter_types.back().name = "New Terrain";
+						is_new = true;
+						switch(draw_mode){
+							case DRAW_TERRAIN:
+								scenario.ter_types.emplace_back();
+								scenario.ter_types.back().name = "New Terrain";
+								break;
+							case DRAW_MONST:
+								scenario.scen_monsters.emplace_back();
+								scenario.scen_monsters.back().m_name = "New Monster";
+								break;
+							case DRAW_ITEM:
+								scenario.scen_items.emplace_back();
+								scenario.scen_items.back().full_name = "New Item";
+								break;
+						}
 					}
-					if(!edit_ter_type(i) && i == size_before && scenario.ter_types.back().name == "New Terrain")
-						scenario.ter_types.pop_back();
+					switch(draw_mode){
+						case DRAW_TERRAIN:
+							if(!edit_ter_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
+									scenario.ter_types.pop_back();
+								}
+							}
+							// Editing/creating terrain records its own undo actions because the
+							// left/right buttons make it complicated.
+							break;
+						case DRAW_MONST:
+							if(!edit_monst_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
+									scenario.scen_monsters.pop_back();
+								}
+							}
+							// Editing/creating monster records its own undo actions because the
+							// left/right buttons make it complicated.
+							break;
+						case DRAW_ITEM:
+							if(!edit_item_type(i, is_new)){
+								// Canceled creating new:
+								if(is_new){
+									scenario.scen_items.pop_back();
+								}
+							}
+							// Editing/creating item records its own undo actions because the
+							// left/right buttons make it complicated.
+							break;
+					}
 				}
-				if(size_before / 16 > scenario.ter_types.size() / 16)
-					pos_before--;
+				short size_after = scenario.ter_types.size();
+				if(draw_mode == DRAW_MONST) size_after = scenario.scen_monsters.size(), i++;
+				else if(draw_mode == DRAW_ITEM) size_after = scenario.scen_items.size();
+				pos_before += (size_after / 16 - size_before / 16);
+				pal_sbar->setMaximum(max(pos_before, pal_sbar->getMaximum()));
 				pal_sbar->setPosition(pos_before);
-				set_up_terrain_buttons(false);
+				set_up_type_buttons(false);
 				change_made = true;
 			}
 			place_location();
@@ -1589,15 +1832,15 @@ static bool handle_toolpal_action(location cur_point2) {
 						break;
 					case PAL_TERRAIN: // Terrain palette
 						draw_mode = DRAW_TERRAIN;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_ITEM: // Item palette
 						draw_mode = DRAW_ITEM;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_MONST: // Monster palette
 						draw_mode = DRAW_MONST;
-						set_up_terrain_buttons(true);
+						set_up_type_buttons(true);
 						break;
 					case PAL_BOAT:
 						set_string("Place/edit boat","Select boat location");
@@ -1691,17 +1934,24 @@ void swap_terrain() {
 	short a,b,c;
 	ter_num_t ter;
 	
+	// Prompt the designer for which terrain to change and how likely:
 	if(!change_ter(a,b,c)) return;
+
+	// Make the changes:
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
 			ter = cur_area->terrain(i,j);
 			if((ter == a) && (get_ran(1,1,100) <= c)) {
-				cur_area->terrain(i,j) = b;
+				set_terrain(loc(i,j), b, changes);
 			}
 		}
 	
+
+	undo_list.add(action_ptr(new aDrawTerrain("Change Terrain Randomly", changes)));
+	update_edit_menu();
 }
 
 void set_new_terrain(ter_num_t selected_terrain) {
@@ -2033,6 +2283,7 @@ void handle_scroll(const sf::Event& event) {
 	}
 }
 
+// This is used by various paintbrushes/the spraycans
 void change_circle_terrain(location center,short radius,ter_num_t terrain_type,short probability) {
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
@@ -2043,7 +2294,7 @@ void change_circle_terrain(location center,short radius,ter_num_t terrain_type,s
 			l.x = i;
 			l.y = j;
 			if((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
-				set_terrain(l,terrain_type);
+				set_terrain(l,terrain_type,current_stroke_changes);
 		}
 }
 
@@ -2051,6 +2302,7 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 	// prob is 0 - 20, 0 no, 20 always
 	location l;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2059,8 +2311,11 @@ void change_rect_terrain(rectangle r,ter_num_t terrain_type,short probability,bo
 			if((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
 				&& (!hollow || (i == r.left) || (i == r.right) || (j == r.top) || (j == r.bottom))
 				&& ((hollow) || (get_ran(1,1,20) <= probability)))
-				set_terrain(l,terrain_type);
+				set_terrain(l,terrain_type,changes);
 		}
+
+	undo_list.add(action_ptr(new aDrawTerrain("Change Rectangle Terrain", changes)));
+	update_edit_menu();
 }
 
 void flood_fill_terrain(location start, ter_num_t terrain_type) {
@@ -2071,6 +2326,7 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 	std::stack<location> to_visit;
 	std::set<location, loc_compare> visited;
 	to_visit.push(start);
+	stroke_ter_changes_t changes;
 	
 	while(!to_visit.empty()) {
 		location this_loc = to_visit.top();
@@ -2086,13 +2342,17 @@ void flood_fill_terrain(location start, ter_num_t terrain_type) {
 			if(check == to_replace && !visited.count(adj_loc))
 				to_visit.push(adj_loc);
 		}
-		cur_area->terrain(this_loc.x, this_loc.y) = terrain_type;
+		set_terrain(this_loc, terrain_type, changes);
 	}
+
+	undo_list.add(action_ptr(new aDrawTerrain("Fill Terrain", changes)));
+	update_edit_menu();
 }
 
 void frill_up_terrain() {
 	ter_num_t terrain_type;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2105,14 +2365,17 @@ void frill_up_terrain() {
 					terrain_type = k;
 			}
 			
-			cur_area->terrain(i,j) = terrain_type;
+			set_terrain(loc(i, j), terrain_type, changes);
 		}
+	undo_list.add(action_ptr(new aDrawTerrain("Frill Up Terrain", changes)));
+	update_edit_menu();
 	draw_terrain();
 }
 
 void unfrill_terrain() {
 	ter_num_t terrain_type;
 	cArea* cur_area = get_current_area();
+	stroke_ter_changes_t changes;
 	
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
@@ -2122,8 +2385,10 @@ void unfrill_terrain() {
 			if(ter.frill_for >= 0)
 				terrain_type = ter.frill_for;
 			
-			cur_area->terrain(i,j) = terrain_type;
+			set_terrain(loc(i, j), terrain_type, changes);
 		}
+	undo_list.add(action_ptr(new aDrawTerrain("Remove Terrain Frills", changes)));
+	update_edit_menu();
 	draw_terrain();
 }
 
@@ -2163,63 +2428,124 @@ static const std::array<location,5> trim_diffs = {{
 	loc(0,0), loc(-1,0), loc(1,0), loc(0,-1), loc(0,1)
 }};
 
-void set_terrain(location l,ter_num_t terrain_type) {
+long get_town_entrance(location l) {
+	auto& city_locs = current_terrain->city_locs;
+	auto iter = std::find(city_locs.begin(), city_locs.end(), l);
+	if(iter != city_locs.end()) return iter->spec;
+	return 0;
+}
+
+// Set, create, or delete the current outdoor section's city_loc for a given location
+// Pass town_num -1 to remove the entrance from city_locs
+void set_town_entrance(location l, long town_num) {
+	auto& city_locs = current_terrain->city_locs;
+	auto iter = std::find(city_locs.begin(), city_locs.end(), l);
+	if(iter != city_locs.end()){
+		// Erase town entrance:
+		if(town_num < 0){
+			city_locs.erase(iter);
+		}
+		// Overwrite town entrance:
+		else{
+			iter->spec = town_num;
+		}
+	}else{
+		// Add new town entrance:
+		if(town_num >= 0){
+			spec_loc_t loc = l;
+			loc.spec = town_num;
+			city_locs.push_back(loc);
+		}
+	}
+}
+
+void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_changes, bool handle_special) {
 	cArea* cur_area = get_current_area();
 	
 	if(!cur_area->is_on_map(l)) return;
 	
 	ter_num_t old = cur_area->terrain(l.x,l.y);
-	auto revert = [&cur_area, l, old]() {
+	if(stroke_changes.find(l) != stroke_changes.end()){
+		// Don't successively overwrite the original terrain value of a tile in one stroke
+		old = stroke_changes[l].old_num;
+	}
+	stroke_changes[l] = {old, terrain_type};
+	auto revert = [&cur_area, &stroke_changes, l, old]() {
 		cur_area->terrain(l.x,l.y) = old;
+		stroke_changes.erase(l);
 	};
+
+	const cTerrain& new_ter = scenario.ter_types[terrain_type];
+	const cTerrain& old_ter = scenario.ter_types[old];
+	if(!editing_town) {
+		// Implicitly erase town entrances when a space is set from a town terrain to a non-town terrain
+		if(old_ter.special == eTerSpec::TOWN_ENTRANCE && new_ter.special != eTerSpec::TOWN_ENTRANCE){
+			long old_town_num = get_town_entrance(l);
+			undo_list.add(action_ptr(new aEditTownEntrance(spot_hit, old_town_num, -1)));
+			update_edit_menu();
+			set_town_entrance(l, -1);
+		}
+		// Don't implicitly erase signs, because the designer may have entered text in them
+	}
 
 	cur_area->terrain(l.x,l.y) = terrain_type;
 	location l2 = l;
 	
-	// Large objects (eg rubble)
-	if(scenario.ter_types[terrain_type].obj_num > 0){
-		int q = scenario.ter_types[terrain_type].obj_num;
-		location obj_loc = scenario.ter_types[terrain_type].obj_pos;
-		location obj_dim = scenario.ter_types[terrain_type].obj_size;
-		while(obj_loc.x > 0) l2.x-- , obj_loc.x--;
-		while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
-		for(short i = 0; i < obj_dim.x; i++)
-			for(short j = 0; j < obj_dim.y; j++){
-				if(!cur_area->is_on_map(loc(l2.x + i, l2.y + j))) continue;
-				cur_area->terrain(l2.x + i,l2.y + j) = find_object_part(q,i,j,terrain_type);
-			}
-	}
+	if(handle_special){
+		// Large objects (eg rubble)
+		if(scenario.ter_types[terrain_type].obj_num > 0){
+			int q = scenario.ter_types[terrain_type].obj_num;
+			location obj_loc = scenario.ter_types[terrain_type].obj_pos;
+			location obj_dim = scenario.ter_types[terrain_type].obj_size;
+			while(obj_loc.x > 0) l2.x-- , obj_loc.x--;
+			while(obj_loc.y > 0) l2.y-- , obj_loc.y--;
+			for(short i = 0; i < obj_dim.x; i++)
+				for(short j = 0; j < obj_dim.y; j++){
+					location temp = loc(l2.x + i, l2.y + j);
+					if(!cur_area->is_on_map(temp)) continue;
+
+					ter_num_t object_part = find_object_part(q,i,j,terrain_type);
+					ter_num_t part_old = cur_area->terrain(temp.x, temp.y);
+					if(stroke_changes.find(temp) != stroke_changes.end()){
+						part_old = stroke_changes[temp].old_num;
+					}
+					stroke_changes[temp] = {part_old, object_part};
+					cur_area->terrain(temp.x,temp.y) = object_part;
+				}
+		}
 	
-	// First make sure surrounding spaces have the correct ground types.
-	// This should handle the case of placing hills around mountains.
-	unsigned int main_ground = scenario.ter_types[terrain_type].ground_type;
-	long trim_ground = scenario.ter_types[terrain_type].trim_ter;
-	for(int x = -1; x <= 1; x++) {
-		for(int y = -1; y <= 1; y++) {
-			location l3(l.x+x,l.y+y);
-			if(!cur_area->is_on_map(l3)) continue;
-			ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
-			unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
-			if(ground_there != main_ground && ground_there != trim_ground) {
-				ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
-				if(new_ter > scenario.ter_types.size()) continue;
-				cTerrain& ter_type = scenario.ter_types[new_ter];
-				// We need to be very cautious here.
-				// Only make the change if the terrain already there is the archetype for the ground type
-				// that is the trim terrain of the terrain we're trying to place.
-				// Otherwise it might overwrite important things, like buildings or forests.
-				if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
-					continue;
-				cur_area->terrain(l3.x,l3.y) = new_ter;
+		// First make sure surrounding spaces have the correct ground types.
+		// This should handle the case of placing hills around mountains.
+		unsigned int main_ground = scenario.ter_types[terrain_type].ground_type;
+		long trim_ground = scenario.ter_types[terrain_type].trim_ter;
+		for(int x = -1; x <= 1; x++) {
+			for(int y = -1; y <= 1; y++) {
+				location l3(l.x+x,l.y+y);
+				if(!cur_area->is_on_map(l3)) continue;
+				ter_num_t ter_there = cur_area->terrain(l3.x,l3.y);
+				unsigned int ground_there = scenario.ter_types[ter_there].ground_type;
+				if(ground_there != main_ground && ground_there != trim_ground) {
+					ter_num_t new_ter = scenario.get_ter_from_ground(trim_ground);
+					if(new_ter > scenario.ter_types.size()) continue;
+					cTerrain& ter_type = scenario.ter_types[new_ter];
+					// We need to be very cautious here.
+					// Only make the change if the terrain already there is the archetype for the ground type
+					// that is the trim terrain of the terrain we're trying to place.
+					// Otherwise it might overwrite important things, like buildings or forests.
+					if(ter_there != scenario.get_ter_from_ground(ter_type.trim_ter))
+						continue;
+					stroke_changes[l3] = {ter_there, new_ter};
+					cur_area->terrain(l3.x,l3.y) = new_ter;
+				}
 			}
 		}
-	}
 	
-	// Adjusting terrains with trim
-	for(location d : trim_diffs) {
-		location l3(l.x+d.x, l.y+d.y);
-		if(!cur_area->is_on_map(l3)) continue;
-		adjust_space(l3);
+		// Adjusting terrains with trim
+		for(location d : trim_diffs) {
+			location l3(l.x+d.x, l.y+d.y);
+			if(!cur_area->is_on_map(l3)) continue;
+			adjust_space(l3, stroke_changes);
+		}
 	}
 
 	cTerrain& ter = scenario.ter_types[terrain_type];
@@ -2233,12 +2559,12 @@ void set_terrain(location l,ter_num_t terrain_type) {
 			mouse_button_held = false;
 			return;
 		}
+		if(!handle_special) return;
 		auto& signs = cur_area->sign_locs;
 		auto iter = std::find(signs.begin(), signs.end(), l);
 		if(iter == signs.end()) {
 			iter = std::find_if(signs.begin(), signs.end(), [cur_area](const sign_loc_t& sign) {
-				// TODO x of 100 is no longer a valid way to represent nonexistence
-				if(sign.x == 100) return true;
+				if(sign.x == LOC_UNUSED) return true;
 				ter_num_t ter = cur_area->terrain(sign.x,sign.y);
 				return scenario.ter_types[ter].special != eTerSpec::IS_A_SIGN;
 			});
@@ -2258,6 +2584,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	}
 	// Town entrances in the outdoors:
 	else if(ter.special == eTerSpec::TOWN_ENTRANCE && !editing_town){
+		if(!handle_special) return;
 		// Let the designer know the terrain was placed:
 		draw_terrain();
 		redraw_screen();
@@ -2267,7 +2594,7 @@ void set_terrain(location l,ter_num_t terrain_type) {
 	}
 }
 
-void adjust_space(location l) {
+void adjust_space(location l, stroke_ter_changes_t& stroke_changes) {
 	bool needed_change = false;
 	location l2;
 	cArea* cur_area = get_current_area();
@@ -2353,6 +2680,11 @@ void adjust_space(location l) {
 		ter_num_t replace = scenario.get_trim_terrain(main_ground, trim_ground, need_trim);
 		if(replace != 90) { // If we got 90 back, the required trim doesn't exist.
 			needed_change = true;
+			ter_change_t change = {cur_area->terrain(l.x, l.y), replace};
+			if(stroke_changes.find(l) != stroke_changes.end()){
+				change.old_num = stroke_changes[l].old_num;
+			}
+			stroke_changes[l] = change;
 			cur_area->terrain(l.x,l.y) = replace;
 		}
 	}
@@ -2361,13 +2693,12 @@ void adjust_space(location l) {
 		for(location d : trim_diffs) {
 			if(d.x == 0 && d.y == 0) continue;
 			location l2(l.x+d.x, l.y+d.y);
-			adjust_space(l2);
+			adjust_space(l2, stroke_changes);
 		}
 	}
-	
 }
 
-bool place_item(location spot_hit,short which_item,bool property,bool always,short odds)  {
+bool place_item(location spot_hit,short which_item,bool property,bool always,short odds,std::map<size_t,cTown::cItem>& items_placed) {
 	// odds 0 - 100, with 100 always
 	if((which_item < 0) || (which_item >= scenario.scen_items.size()))
 		return true;
@@ -2375,23 +2706,28 @@ bool place_item(location spot_hit,short which_item,bool property,bool always,sho
 		return true;
 	if(get_ran(1,1,100) > odds)
 		return false;
-	for(short x = 0; x < town->preset_items.size(); x++)
+	for(short x = 0; x <= town->preset_items.size(); x++){
+		if(x == town->preset_items.size()){
+			town->preset_items.resize(x+1);
+			town->preset_items[x].code = -1;
+		}
 		if(town->preset_items[x].code < 0) {
 			town->preset_items[x] = {spot_hit, which_item, scenario.scen_items[which_item]};
 			town->preset_items[x].contained = container_there(spot_hit);
 			town->preset_items[x].property = property;
 			town->preset_items[x].always_there = always;
+			items_placed[x] = town->preset_items[x];
+
 			return true;
 		}
-	town->preset_items.push_back({spot_hit, which_item, scenario.scen_items[which_item]});
-	town->preset_items.back().contained = container_there(spot_hit);
-	town->preset_items.back().property = property;
-	town->preset_items.back().always_there = always;
-	return true;
+	}
+	// Shouldn't be reached:
+	return false;
 }
 
 void place_items_in_town() {
 	location l;
+	std::map<size_t, cTown::cItem> items_placed;
 	for(short i = 0; i < town->max_dim; i++)
 		for(short j = 0; j < town->max_dim; j++) {
 			l.x = i;
@@ -2402,10 +2738,33 @@ void place_items_in_town() {
 					for(short x = 0; x < 10; x++)
 						place_item(l,scenario.storage_shortcuts[k].item_num[x],
 								   scenario.storage_shortcuts[k].property,false,
-								   scenario.storage_shortcuts[k].item_odds[x]);
+								   scenario.storage_shortcuts[k].item_odds[x],items_placed);
 				}
 		}
+
+	if(!items_placed.empty()){
+		undo_list.add(action_ptr(new aPlaceEraseItem("Add Random Items", true, items_placed)));
+		update_edit_menu();
+	}else{
+		cChoiceDlog("no-items-added").show();
+	}
 	draw_terrain();
+}
+
+bool place_creature(location spot_hit, mon_num_t which, creature_changes_t& creatures_placed) {
+	for(short x = 0; x <= town->creatures.size(); x++){
+		if(x == town->creatures.size()){
+			town->creatures.resize(x+1);
+			town->creatures[x].number = 0;
+		}
+		if(town->creatures[x].number == 0) {
+			town->creatures[x] = {spot_hit, which, scenario.scen_monsters[which]};
+			creatures_placed[x] = town->creatures[x];
+			return true;
+		}
+	}
+	// Shouldn't be reached:
+	return false;
 }
 
 void place_edit_special(location loc) {
@@ -2417,6 +2776,7 @@ void place_edit_special(location loc) {
 	for(short i = 0; i < specials.size(); i++)
 		if(specials[i] == loc && specials[i].spec >= 0) {
 			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
+			// TODO add the edit specials actions
 			return;
 		}
 	// new special
@@ -2428,6 +2788,9 @@ void place_edit_special(location loc) {
 			if(edit_spec_enc(spec, editing_town ? 2: 1, nullptr)) {
 				specials[i] = loc;
 				specials[i].spec = spec;
+				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[i])));
+				// TODO add the edit specials actions
+				update_edit_menu();
 			}
 			break;
 		}
@@ -2441,12 +2804,19 @@ void set_special(location spot_hit) {
 	}
 	auto& specials = get_current_area()->special_locs;
 	for(short x = 0; x < specials.size(); x++)
+		// Edit the node of the encounter already on the space
 		if(specials[x] == spot_hit && specials[x].spec >= 0) {
 			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
-			if(spec >= 0) specials[x].spec = spec;
+			if(spec >= 0 && spec != specials[x].spec){
+				undo_list.add(action_ptr(new aSetSpecial(spot_hit, specials[x].spec, spec)));
+				// TODO if create/edit was used, add those actions
+				update_edit_menu();
+				specials[x].spec = spec;
+			}
 			return;
 		}
 	for(short x = 0; x <= specials.size(); x++) {
+		// Find/create an empty encounter spot
 		if(x == specials.size())
 			specials.emplace_back(-1,-1,-1);
 		if(specials[x].spec < 0) {
@@ -2454,6 +2824,9 @@ void set_special(location spot_hit) {
 			if(spec >= 0) {
 				specials[x] = spot_hit;
 				specials[x].spec = spec;
+				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[x])));
+				// TODO if create/edit was used, add those actions
+				update_edit_menu();
 			}
 			break;
 		}
@@ -2466,44 +2839,13 @@ void town_entry(location spot_hit) {
 		showError("This space isn't a town entrance. Town entrances are marked by a small brown castle icon.");
 		return;
 	}
-	// clean up old town entries
-	for(short i = 0; i < current_terrain->city_locs.size(); i++){
-		if(current_terrain->city_locs[i].spec >= 0) {
-			auto& city_loc = current_terrain->city_locs[i];
-			if(!get_current_area()->is_on_map(city_loc))
-				city_loc.spec = -1;
-			else{
-				ter = current_terrain->terrain[city_loc.x][city_loc.y];
-				if(scenario.ter_types[ter].special != eTerSpec::TOWN_ENTRANCE)
-					city_loc.spec = -1;
-			}
-		}
-	}
-	auto iter = std::find(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), spot_hit);
-	// Edit existing town entrance
-	if(iter != current_terrain->city_locs.end()) {
-		int town = pick_town_num("select-town-enter",iter->spec,scenario);
-		if(town >= 0) iter->spec = town;
-	} else {
-		iter = std::find_if(current_terrain->city_locs.begin(), current_terrain->city_locs.end(), [](const spec_loc_t& loc) {
-			return loc.spec < 0;
-		});
-		// Find unused town entrance and fill it
-		if(iter != current_terrain->city_locs.end()) {
-			int town = pick_town_num("select-town-enter",0,scenario);
-			if(town >= 0) {
-				*iter = spot_hit;
-				iter->spec = town;
-			}
-		}
-		// Add new town entrance at the back of list
-		else {
-			int town = pick_town_num("select-town-enter",0,scenario);
-			if(town >= 0) {
-				current_terrain->city_locs.emplace_back(spot_hit);
-				current_terrain->city_locs.back().spec = town;
-			}
-		}
+	long old_town_num = get_town_entrance(spot_hit);
+	long town_num = pick_town_num("select-town-enter",old_town_num,scenario);
+
+	if(town_num >= 0 && town_num != old_town_num){
+		undo_list.add(action_ptr(new aEditTownEntrance(spot_hit, old_town_num, town_num)));
+		update_edit_menu();
+		set_town_entrance(spot_hit, town_num);
 	}
 }
 
@@ -2612,7 +2954,7 @@ void start_town_edit() {
 	scenario.editor_state.editing_town = editing_town = true;
 	scenario.editor_state.drawing = true;
 	restore_current_town_state();
-	set_up_terrain_buttons(true);
+	set_up_type_buttons(true);
 	shut_down_menus(4);
 	shut_down_menus(2);
 	right_sbar->hide();
@@ -2659,7 +3001,7 @@ void start_out_edit() {
 	scenario.editor_state.editing_town = editing_town = false;
 	scenario.editor_state.drawing = true;
 	restore_current_out_state();
-	set_up_terrain_buttons(true);
+	set_up_type_buttons(true);
 	right_sbar->hide();
 	pal_sbar->show();
 	shut_down_menus(4);
@@ -2677,135 +3019,59 @@ void start_out_edit() {
 	redraw_screen();
 }
 
-void start_terrain_editing() {
+void start_type_editing(eDrawMode mode) {
 	right_sbar->hide();
 	pal_sbar->show();
 	overall_mode = MODE_EDIT_TYPES;
-	draw_mode = DRAW_TERRAIN;
-	set_up_terrain_buttons(true);
+	// Remember non-drawing modes
+	scenario.editor_state.overall_mode = MODE_EDIT_TYPES;
+	scenario.editor_state.type_editing_mode = mode;
+	draw_mode = mode;
+	set_up_type_buttons(true);
 	place_location();
 	
 	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete/clear",true);
+	set_lb(NLS - 2,LB_TEXT,LB_NO_ACTION,"Alt-click '+' to add many",true);
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 }
 
-void start_monster_editing(bool just_redo_text) {
-	int num_options = scenario.scen_monsters.size() + 1;
-	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		right_sbar->setPosition(0);
-		
-		reset_rb();
-		right_sbar->setMaximum(num_options - 1 - NRSONPAGE);
-	}
-	for(short i = 1; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.scen_monsters.size())
-			title = "Create New Monster";
-		else title = scenario.scen_monsters[i].m_name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i - 1,RB_MONST, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
-	redraw_screen();
-}
-
-void start_item_editing(bool just_redo_text) {
-	int num_options = scenario.scen_items.size() + 1;
-	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(short i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.scen_items.size())
-			title = "Create New Item";
-		else title = scenario.scen_items[i].full_name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i,RB_ITEM, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
-	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
-	redraw_screen();
-}
-
-void start_special_item_editing(bool just_redo_text) {
+void start_special_item_editing() {
 	int num_options = scenario.special_items.size() + 1;
 	
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(short i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.special_items.size())
-			title = "Create New Special Item";
-		else title = scenario.special_items[i].name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i,RB_SPEC_ITEM, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	handle_close_terrain_view(MODE_EDIT_SPECIAL_ITEMS);
+	right_sbar->show();
+	pal_sbar->hide();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
-void start_quest_editing(bool just_redo_text) {
+void start_quest_editing() {
 	int num_options = scenario.quests.size() + 1;
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(int i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.quests.size())
-			title = "Create New Quest";
-		else title = scenario.quests[i].name;
-		title = std::to_string(i) + " - " + title;
-		set_rb(i, RB_QUEST, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+
+	handle_close_terrain_view(MODE_EDIT_QUESTS);
+	right_sbar->show();
+	pal_sbar->hide();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
-void start_shops_editing(bool just_redo_text) {
+void start_shops_editing() {
 	int num_options = scenario.shops.size() + 1;
-	if(!just_redo_text) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		right_sbar->setPosition(0);
-		reset_rb();
-		right_sbar->setMaximum(num_options - NRSONPAGE);
-	}
-	for(int i = 0; i < num_options; i++) {
-		std::string title;
-		if(i == scenario.shops.size())
-			title = "Create New Shop";
-		else title = scenario.shops[i].getName();
-		title = std::to_string(i) + " - " + title;
-		set_rb(i, RB_SHOP, i, title);
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	handle_close_terrain_view(MODE_EDIT_SHOPS);
+	right_sbar->show();
+	pal_sbar->hide();
+	right_sbar->setPosition(0);
+	reset_rb();
+	right_sbar->setMaximum(num_options - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
@@ -2813,77 +3079,22 @@ void start_shops_editing(bool just_redo_text) {
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 
 // mode 0 - scen 1 - out 2 - town 3 - journal
-// if just_redo_text not 0, simply need to update text portions
-void start_string_editing(eStrMode mode,short just_redo_text) {
-	if(just_redo_text == 0) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		reset_rb();
-		right_sbar->setMaximum(num_strs(mode) + 1 - NRSONPAGE);
-	}
-	size_t num_strs = ::num_strs(mode);
-	for(size_t i = 0; i < num_strs; i++) {
-		std::ostringstream str;
-		switch(mode) {
-			case 0:
-				str << i << " - " << scenario.spec_strs[i];
-				set_rb(i,RB_SCEN_STR, i,str.str());
-				break;
-			case 1:
-				str << i << " - " << current_terrain->spec_strs[i];
-				set_rb(i,RB_OUT_STR, i,str.str());
-				break;
-			case 2:
-				str << i << " - " << town->spec_strs[i];
-				set_rb(i,RB_TOWN_STR, i,str.str());
-				break;
-			case 3:
-				str << i << " - " << scenario.journal_strs[i];
-				set_rb(i,RB_JOURNAL, i,str.str());
-				break;
-			case 4:
-				str << i << " - " << current_terrain->sign_locs[i];
-				set_rb(i,RB_OUT_SIGN, i,str.str());
-				break;
-			case 5:
-				str << i << " - " << town->sign_locs[i].text;
-				set_rb(i,RB_TOWN_SIGN, i,str.str());
-				break;
-			case 6:
-				str << i << " - " << current_terrain->area_desc[i];
-				set_rb(i,RB_OUT_RECT, i,str.str());
-				break;
-			case 7:
-				str << i << " - " << town->area_desc[i].descr;
-				set_rb(i,RB_TOWN_RECT, i,str.str());
-				break;
-		}
-	}
-	if(mode <= STRS_JOURNAL) {
-		// Signs and area rects don't get a Create New option – you create a new one on the map.
-		std::string make_new = std::to_string(num_strs) + " - Create New String";
-		switch(mode) {
-			case 0: set_rb(num_strs, RB_SCEN_STR, num_strs, make_new); break;
-			case 1: set_rb(num_strs, RB_OUT_STR, num_strs, make_new); break;
-			case 2: set_rb(num_strs, RB_TOWN_STR, num_strs, make_new); break;
-			case 3: set_rb(num_strs, RB_JOURNAL, num_strs, make_new); break;
-			case 4: set_rb(num_strs, RB_OUT_SIGN, num_strs, make_new); break;
-			case 5: set_rb(num_strs, RB_TOWN_SIGN, num_strs, make_new); break;
-			case 6: set_rb(num_strs, RB_OUT_RECT, num_strs, make_new); break;
-			case 7: set_rb(num_strs, RB_TOWN_RECT, num_strs, make_new); break;
-		}
-	}
+void start_string_editing(eStrMode mode) {
+	handle_close_terrain_view(MODE_EDIT_STRINGS);
+	scenario.editor_state.string_editing_mode = mode;
+
+	right_sbar->show();
+	pal_sbar->hide();
 	
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	reset_rb();
+	right_sbar->setMaximum(num_strs(mode) + 1 - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
 // mode 0 - scen 1 - out 2 - town
-// if just_redo_text not 0, simply need to update text portions
-void start_special_editing(short mode,short just_redo_text) {
+void start_special_editing(short mode) {
 	size_t num_specs;
 	switch(mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
@@ -2891,74 +3102,26 @@ void start_special_editing(short mode,short just_redo_text) {
 		case 2: num_specs = town->specials.size(); break;
 	}
 	
-	if(just_redo_text == 0) {
-		handle_close_terrain_view(MODE_MAIN_SCREEN);
-		right_sbar->show();
-		pal_sbar->hide();
-		
-		reset_rb();
-		right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
-	}
-	overall_mode = MODE_EDIT_SPECIALS;
+	handle_close_terrain_view(MODE_EDIT_SPECIALS);
+	scenario.editor_state.special_editing_mode = mode;
+	right_sbar->show();
+	pal_sbar->hide();
 	
-	for(size_t i = 0; i < num_specs; i++) {
-		std::ostringstream strb;
-		switch(mode) {
-			case 0:
-				strb << i << " - " << (*scenario.scen_specials[i].type).name();
-				set_rb(i,RB_SCEN_SPEC, i, strb.str());
-				break;
-			case 1:
-				strb << i << " - " << (*current_terrain->specials[i].type).name();
-				set_rb(i,RB_OUT_SPEC, i, strb.str());
-				break;
-			case 2:
-				strb << i << " - " << (*town->specials[i].type).name();
-				set_rb(i,RB_TOWN_SPEC, i, strb.str());
-				break;
-		}
-	}
-	std::string make_new = std::to_string(num_specs) + " - Create New Special";
-	switch(mode) {
-		case 0: set_rb(num_specs, RB_SCEN_SPEC, num_specs, make_new); break;
-		case 1: set_rb(num_specs, RB_OUT_SPEC, num_specs, make_new); break;
-		case 2: set_rb(num_specs, RB_TOWN_SPEC, num_specs, make_new); break;
-	}
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click to delete",true);
+	reset_rb();
+	right_sbar->setMaximum(num_specs + 1 - NRSONPAGE);
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
 
-// if restoring is 1, this is just a redraw, so don't move scroll bar position
-void start_dialogue_editing(short restoring) {
-	char s[15] = "    ,      ";
-	
-	handle_close_terrain_view(MODE_MAIN_SCREEN);
+void start_dialogue_editing() {
+	handle_close_terrain_view(MODE_EDIT_DIALOGUE);
 	right_sbar->show();
 	pal_sbar->hide();
 	
-	if(restoring == 0) {
-		right_sbar->setPosition(0);
-		reset_rb();
-	}
-	for(short i = 0; i < 10; i++) {
-		std::ostringstream strb;
-		strb << "Personality " << (i + cur_town * 10) << " - " << town->talking.people[i].title;
-		set_rb(i,RB_PERSONALITY, i, strb.str());
-	}
-	size_t n_nodes = town->talking.talk_nodes.size();
-	for(short i = 0; i < n_nodes; i++) {
-		for(short j = 0; j < 4; j++) {
-			s[j] = town->talking.talk_nodes[i].link1[j];
-			s[j + 6] = town->talking.talk_nodes[i].link2[j];
-		}
-		std::ostringstream strb;
-		strb << "Node " << i << " - Per. " << town->talking.talk_nodes[i].personality << ", " << s;
-		set_rb(10 + i,RB_DIALOGUE, i, strb.str());
-	}
-	set_rb(10 + n_nodes, RB_DIALOGUE, n_nodes, "Create New Node");
-	right_sbar->setMaximum((11 + n_nodes) - NRSONPAGE);
-	set_lb(NLS - 3,LB_TEXT,LB_NO_ACTION,"Alt-click node to delete",true);
+	right_sbar->setPosition(0);
+	reset_rb();
+
 	update_mouse_spot(translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr())));
 	redraw_screen();
 }
@@ -2984,12 +3147,6 @@ bool save_check(std::string which_dlog, bool allow_no) {
 	return true;
 }
 
-bool is_lava(short x,short y) {
-	if((coord_to_ter(x,y) == 75) || (coord_to_ter(x,y) == 76))
-		return true;
-	else return false;
-}
-
 ter_num_t coord_to_ter(short x,short y) {
 	if(!get_current_area()->is_on_map(loc(x,y))) return 0;
 	return get_current_area()->terrain(x,y);
@@ -3011,14 +3168,27 @@ bool monst_on_space(location loc,short m_num) {
 	
 }
 
-void restore_editor_state(bool first_time) {
-	set_current_town(scenario.editor_state.last_town_edited, first_time);
-	set_current_out(scenario.editor_state.last_out_edited, false, first_time);
-	if(first_time && scenario.editor_state.drawing){
+// Restore the state of the editor when the designer last saved this scenario.
+// This state is serialized in scen.fileio.cpp: writeEditorStateToXml()
+// and parsed in fileio_scen.cpp: readEditorStateFromXml().
+void restore_editor_state() {
+	set_current_town(scenario.editor_state.last_town_edited, true);
+	set_current_out(scenario.editor_state.last_out_edited, false, true);
+	if(scenario.editor_state.drawing){
 		if(scenario.editor_state.editing_town)
 			start_town_edit();
 		else
 			start_out_edit();
+	}else{
+		switch(scenario.editor_state.overall_mode){
+			case MODE_EDIT_TYPES:
+				start_type_editing(static_cast<eDrawMode>(scenario.editor_state.type_editing_mode));
+				break;
+			case MODE_EDIT_SPECIAL_ITEMS:
+				start_special_item_editing();
+				break;
+			default: break;
+		}
 	}
 }
 
@@ -3026,9 +3196,11 @@ void handle_close_terrain_view(eScenMode new_mode) {
 	// When closing a terrain view, store its view state
 	store_current_terrain_state();
 	scenario.editor_state.drawing = false;
+	// Remember non-drawing modes
+	scenario.editor_state.overall_mode = new_mode;
 
 	// set up the main screen if needed
-	if(new_mode == MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
+	if(new_mode >= MODE_MAIN_SCREEN && overall_mode <= MODE_MAIN_SCREEN)
 		set_up_main_screen();
 
 	overall_mode = new_mode;

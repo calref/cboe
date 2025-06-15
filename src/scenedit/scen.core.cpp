@@ -53,6 +53,7 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cCustomGraphics spec_scen_g;
 extern location cur_out;
+extern cUndoList undo_list;
 
 const std::set<eItemAbil> items_no_strength = {
 	eItemAbil::NONE, eItemAbil::HEALING_WEAPON, eItemAbil::RETURNING_MISSILE, eItemAbil::SEEKING_MISSILE, eItemAbil::DRAIN_MISSILES,
@@ -66,6 +67,10 @@ cArea* get_current_area() {
 }
 
 static bool save_ter_info(cDialog& me, cTerrain& ter) {
+	bool focus_result = me.toast(true);
+	me.untoast();
+	if(!focus_result) return false;
+
 	eTerSpec prop = eTerSpec(boost::lexical_cast<short>(dynamic_cast<cLedGroup&>(me["prop"]).getSelected().substr(4)));
 	int spec_type = me["flag2"].getTextAsNum();
 	int num_town = (**std::min_element(scenario.towns.begin(), scenario.towns.end(), [](cTown* a,cTown* b){
@@ -462,18 +467,45 @@ static void fill_ter_info(cDialog& me, short ter){
 	me["arena"].setTextToNum(ter_type.combat_arena);
 }
 
-static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which) {
-	if(!save_ter_info(me, scenario.ter_types[which])) return true;
-	
-	if(!me.toast(true)) return true;
+static bool finish_editing_ter(cDialog& me, std::string id, ter_num_t& which, bool& is_new) {
+	cTerrain after;
+	if(!save_ter_info(me, after)) return true;
+	cTerrain before = scenario.ter_types[which];
+
+	bool changed = (after != before);
+
+	if(changed || is_new){
+		if(id == "left" || id == "right"){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-terrain", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{ter}}", after.name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				scenario.ter_types[which] = after;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}else{
+			scenario.ter_types[which] = after;
+		}
+		// We actually can't make these actions undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteTerrain(true, after)));
+		}else{
+			undo_list.add(action_ptr(new aEditClearTerrain("Edit Terrain Type", which, before, after)));
+		}
+		is_new = false;
+	}
+
+	if(id == "done"){
+		me.toast(true);
+	}
 	if(id == "left") {
-		me.untoast();
 		if(which == 0)
 			which = scenario.ter_types.size() - 1;
 		else which--;
 		fill_ter_info(me, which);
 	} else if(id == "right") {
-		me.untoast();
 		which++;
 		if(which >= scenario.ter_types.size())
 			which = 0;
@@ -580,9 +612,9 @@ static bool play_ter_step_sound(cDialog& me, std::string id, bool losing) {
 	return true;
 }
 
-bool edit_ter_type(ter_num_t which) {
+bool edit_ter_type(ter_num_t which, bool is_new) {
 	using namespace std::placeholders;
-	ter_num_t first = which;
+	bool was_new = is_new;
 	cDialog ter_dlg(*ResMgr::dialogs.get("edit-terrain"));
 	// Attach handlers
 	ter_dlg["pict"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,2999,"terrain graphic"));
@@ -599,7 +631,7 @@ bool edit_ter_type(ter_num_t which) {
 	ter_dlg["arena"].attachFocusHandler(std::bind(check_range,_1,_2,_3,0,999 + scenario.towns.size(),"combat areana"));
 	// TODO: Add focus handler for key
 	ter_dlg["object"].attachClickHandler(std::bind(edit_ter_obj, _1, std::ref(which)));
-	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which)), {"left", "right", "done"});
+	ter_dlg.attachClickHandlers(std::bind(finish_editing_ter,_1,_2,std::ref(which), std::ref(is_new)), {"left", "right", "done"});
 	ter_dlg["picktrim"].attachClickHandler(std::bind(pick_string,"trim-names", _1, "trim", ""));
 	ter_dlg["pickarena"].attachClickHandler(std::bind(pick_string,"arena-names", _1, "arena", ""));
 	ter_dlg["help"].attachClickHandler([](cDialog&, std::string, eKeyMod) -> bool {
@@ -617,7 +649,12 @@ bool edit_ter_type(ter_num_t which) {
 	});
 	fill_ter_info(ter_dlg,which);
 	ter_dlg.run();
-	return ter_dlg.accepted() || which != first;
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
+
+	// The return value is used to decide whether to pop_back() if creating a new terrain type was canceled
+	return ter_dlg.accepted() || was_new != is_new;
 }
 
 static void put_monst_pic(cPict& pict, pic_num_t num) {
@@ -769,6 +806,10 @@ static bool check_monst_pic(cDialog& me, std::string id, bool losing, cMonster& 
 }
 
 static bool save_monst_info(cDialog& me, cMonster& monst) {
+	// Run focus handlers:
+	bool focus_result = me.toast(true);
+	me.untoast();
+	if(!focus_result) return false;
 	
 	monst.m_name = me["name"].getText();
 	monst.picture_num = me["pic"].getTextAsNum();
@@ -797,30 +838,67 @@ static bool save_monst_info(cDialog& me, cMonster& monst) {
 	return true;
 }
 
-static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& monst,short& which) {
+static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& monst,short& which,bool& is_new) {
 	short i;
+	short which_before = which;
+	// temp_monst is used for editing monster abilities, and for storing the edited version
+	// of a monster that needs to be committed, because when left/right was clicked, monst
+	// will change
 	cMonster temp_monst;
 	
+	bool commit_changes = false;
+
 	if(hit == "okay") {
-		if(save_monst_info(me,monst)) {
-			scenario.scen_monsters[which] = monst;
+		if(save_monst_info(me,monst)){
+			commit_changes = true;
+			temp_monst = monst;
 			me.toast(true);
 		}
 	} else if(hit == "abils") {
 		if(!save_monst_info(me,monst)) return false;
 		temp_monst = edit_monst_abil(monst,which,me);
-		if(temp_monst.level < 255)
+
+		bool abil_changed = (temp_monst != monst);
+
+		// Canceling the monster abilities editor sets the temp monster level to 255 as a flag.
+		// This should be fine unless we ever increase the max monster level (40) by a LOT.
+		if(abil_changed && temp_monst.level < 255){
 			monst = temp_monst;
-		put_monst_info_in_dlog(me,monst,which);
+			put_monst_info_in_dlog(me,monst,which);
+			// TODO should probably show in the monster editor that there are now unsaved ability changes.
+		}
 	} else if(hit == "left") {
 		if(!save_monst_info(me,monst)) return false;
-		scenario.scen_monsters[which] = monst;
+		if(monst != scenario.scen_monsters[which] || is_new){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				commit_changes = true;
+				temp_monst = monst;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
 		which--;
 		if(which < 1) which = scenario.scen_monsters.size() - 1;
 		monst = scenario.scen_monsters[which];
 		put_monst_info_in_dlog(me,monst,which);
 	} else if(hit == "right") {
 		if(!save_monst_info(me,monst)) return false;
+		if(monst != scenario.scen_monsters[which] || is_new){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-monst", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{monst}}", monst.m_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				commit_changes = true;
+				temp_monst = monst;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
 		scenario.scen_monsters[which] = monst;
 		which++;
 		if(which >= scenario.scen_monsters.size()) which = 1;
@@ -867,6 +945,18 @@ static bool edit_monst_type_event_filter(cDialog& me,std::string hit,cMonster& m
 		put_monst_info(monstInfo, monst, scenario);
 		monstInfo.run();
 	}
+
+	if(commit_changes){
+		// We actually can't make the action undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteMonster(true, temp_monst)));
+		}else if(temp_monst != scenario.scen_monsters[which_before]){
+			undo_list.add(action_ptr(new aEditClearMonster("Edit Monster Type", which_before, scenario.scen_monsters[which_before], monst)));
+		}
+		is_new = false;
+		scenario.scen_monsters[which_before] = temp_monst;
+	}
+
 	return true;
 }
 
@@ -883,10 +973,10 @@ static bool pick_monst_picture(cDialog& me) {
 	return result;
 }
 
-bool edit_monst_type(short which) {
+bool edit_monst_type(short which, bool is_new) {
 	using namespace std::placeholders;
-	mon_num_t first = which;
 	cMonster monst = scenario.scen_monsters[which];
+	bool was_new = is_new;
 	
 	cDialog monst_dlg(*ResMgr::dialogs.get("edit-monster"));
 	monst_dlg["pickicon"].attachClickHandler(std::bind(pick_monst_picture,_1));
@@ -902,19 +992,22 @@ bool edit_monst_type(short which) {
 	monst_dlg["priest"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 7, "priest spells"));
 	monst_dlg["treas"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 4, "treasure"));
 	monst_dlg.attachFocusHandlers(check_monst_dice,{"dice1","dice2","dice3","sides1","sides2","sides3"});
-	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"okay","abils","picktype","picktype1","picktype2","picktype3","preview"});
+	monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which),std::ref(is_new)),{"okay","abils","picktype","picktype1","picktype2","picktype3","preview","left","right"});
 	
 	if(scenario.scen_monsters.size() == 1){
 		monst_dlg["left"].hide();
 		monst_dlg["right"].hide();
-	} else {
-		monst_dlg.attachClickHandlers(std::bind(edit_monst_type_event_filter,_1,_2,std::ref(monst),std::ref(which)),{"left","right"});
 	}
 	
 	put_monst_info_in_dlog(monst_dlg, monst, which);
 	
 	monst_dlg.run();
-	return monst_dlg.accepted() || first != which;
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
+
+	// The return value is used to decide whether to pop_back() if creating a new monster type was canceled
+	return monst_dlg.accepted() || was_new != is_new;
 }
 
 static void put_monst_abils_in_dlog(cDialog& me, cMonster& monst) {
@@ -1560,31 +1653,31 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 			break;
 	}
 	
+	// Even if hidden, the text needs to store the right value so == will work
+	me["missile"].setTextToNum(item.missile);
 	if(missile) {
 		me["missile"].show();
-		me["missile-pic"].show();
+		me["missile-title"].show();
 		me["missile-pic"].show();
 		me["choosemiss"].show();
-		me["missile"].setTextToNum(item.missile);
 		dynamic_cast<cPict&>(me["missile-pic"]).setPict(item.missile);
 	} else {
 		me["missile"].hide();
 		me["missile-title"].hide();
 		me["missile-pic"].hide();
 		me["choosemiss"].hide();
-		me["missile"].setText("0");
 	}
 	
+	// Even if hidden, the text needs to store the right value so == will work
+	me["weap-type"].setTextToNum(int(item.weap_type));
 	if(weapon) {
 		me["skill-title"].show();
 		me["weap-type"].show();
 		me["choosetp"].show();
-		me["weap-type"].setTextToNum(int(item.weap_type));
 	} else {
 		me["skill-title"].hide();
 		me["weap-type"].hide();
 		me["choosetp"].hide();
-		me["weap-type"].setText("0");
 	}
 	
 	me["level"].setTextToNum(item.item_level);
@@ -1603,7 +1696,11 @@ static void put_item_info_in_dlog(cDialog& me, cItem& item, short which) {
 	me["abilname"].setText(abil);
 }
 
-static void save_item_info(cDialog& me, cItem& item) {
+static bool save_item_info(cDialog& me, cItem& item) {
+	bool focus_result = me.toast(true);
+	me.untoast();
+	if(!focus_result) return false;
+
 	item.full_name = me["full"].getText();
 	item.name = me["short"].getText();
 	item.graphic_num = me["picnum"].getTextAsNum();
@@ -1661,10 +1758,15 @@ static void save_item_info(cDialog& me, cItem& item) {
 		item.charges = 1;
 	if(was_charges != item.charges)
 		showError("Due to either the selected special ability or the presence of a type flag, this item's charges have been set to 1.", &me);
+	return true;
 }
 
-static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& item, short& which) {
+static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& item, short& which, bool& is_new) {
 	short i;
+	short which_before = which;
+	// temp_item is used for editing item abilities, and storing the edited version of an
+	// item which needs to be stored when changes are committed, because prev/next will
+	// change item
 	cItem temp_item;
 	std::string variety = dynamic_cast<cLedGroup&>(me["variety"]).getSelected();
 	bool valid = true;
@@ -1674,22 +1776,47 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		return true;
 	}
 	
+	bool commit_changes = false;
+	
 	if(hit == "cancel") {
 		me.toast(false);
 	} else if(hit == "okay") {
-		save_item_info(me, item);
-		if(!me.toast(true)) return true;
-		scenario.scen_items[which] = item;
+		if(!save_item_info(me, item)) return true;
+		commit_changes = true;
+		me.toast(true);
 	} else if(hit == "prev") {
-		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		if(!save_item_info(me, item)) return true;
+		if(item != scenario.scen_items[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{item}}", item.full_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				temp_item = item;
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
 		which--;
 		if(which < 0) which = scenario.scen_items.size() - 1;
 		item = scenario.scen_items[which];
 		put_item_info_in_dlog(me, item, which);
 	} else if(hit == "next") {
-		save_item_info(me, item);
-		scenario.scen_items[which] = item;
+		if(!save_item_info(me, item)) return true;
+		if(item != scenario.scen_items[which]){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{item}}", item.full_name);
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				temp_item = item;
+				commit_changes = true;
+			}else if(choice == "cancel"){
+				return true;
+			}
+			me.untoast();
+		}
 		which++;
 		if(which >= scenario.scen_items.size()) which = 0;
 		item = scenario.scen_items[which];
@@ -1764,6 +1891,18 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 		value = choose_text_editable(scenario.itf_names, value, &me, "Select item type flag:");
 		me["flag"].setTextToNum(value);
 	}
+
+	if(commit_changes){
+		// We actually can't make the action undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteItem(true, temp_item)));
+		}else if(temp_item != scenario.scen_items[which_before]){
+			undo_list.add(action_ptr(new aEditClearItem("Edit Item Type", which_before, scenario.scen_items[which_before], temp_item)));
+		}
+		is_new = false;
+		scenario.scen_items[which_before] = temp_item;
+	}
+
 	return true;
 }
 
@@ -1799,7 +1938,7 @@ static bool change_item_variety(cDialog& me, std::string group, const cItem& ite
 	return true;
 }
 
-bool edit_item_type(short which) {
+bool edit_item_type(short which, bool is_new) {
 	using namespace std::placeholders;
 	if(which == scenario.scen_items.size())
 		scenario.scen_items.resize(which + 1);
@@ -1816,18 +1955,19 @@ bool edit_item_type(short which) {
 	item_dlg["weight"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 250, "Weight"));
 	item_dlg["class"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, 100, "Special Class"));
 	item_dlg["variety"].attachFocusHandler(std::bind(change_item_variety, _1, _2, std::ref(item)));
-	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview", "edit-ic", "edit-flag"});
+	item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which), std::ref(is_new)), {"okay", "cancel", "abils", "choosepic", "choosetp", "choosemiss", "desc", "preview", "edit-ic", "edit-flag", "prev", "next"});
 	
 	if(scenario.scen_items.size() == 1) {
 		item_dlg["prev"].hide();
 		item_dlg["next"].hide();
-	} else {
-		item_dlg.attachClickHandlers(std::bind(edit_item_type_event_filter, _1, _2, std::ref(item), std::ref(which)), {"prev", "next"});
 	}
-	
 	put_item_info_in_dlog(item_dlg, item, which);
 	
 	item_dlg.run();
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
+
 	return item_dlg.accepted();
 }
 
@@ -2071,7 +2211,10 @@ static void put_spec_item_in_dlog(cDialog& me, cSpecItem& item, short which) {
 	dynamic_cast<cLed&>(me["usable"]).setState(item.flags % 10 > 0 ? led_red : led_off);
 }
 
-static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
+static bool save_spec_item(cDialog& me, cSpecItem& item, short which, bool& is_new, bool need_confirm = false) {
+	if(!me.toast(true)) return false;
+	me.untoast();
+
 	item.name = me["name"].getText();
 	item.descr = me["descr"].getText();
 	item.special = me["spec"].getTextAsNum();
@@ -2080,62 +2223,94 @@ static bool save_spec_item(cDialog& me, cSpecItem& item, short which) {
 		item.flags += 10;
 	if(dynamic_cast<cLed&>(me["usable"]).getState() != led_off)
 		item.flags += 1;
-	scenario.special_items[which] = item;
+
+	if(item != scenario.special_items[which] || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-spec-item", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{spec-item}}", item.name);
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_spec_item_in_dlog(me, scenario.special_items[which], which);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		// We actually can't make these actions undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteSpecialItem(true, item)));
+		}
+		else{
+			undo_list.add(action_ptr(new aEditClearSpecialItem("Edit Special Item", which, scenario.special_items[which], item)));
+		}
+		scenario.special_items[which] = item;
+	}
+	is_new = false;
 	return true;
 }
 
-static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short& which) {
+static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem& item, short& which, bool& is_new) {
 	if(hit == "cancel") {
 		me.toast(false);
 	} else if(hit == "okay") {
-		if(save_spec_item(me, item, which)) me.toast(true);
+		if(save_spec_item(me, item, which, is_new)) me.toast(true);
 	} else if(hit == "left") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new, true)) return true;
 		which--;
 		if(which < 0) which = scenario.special_items.size() - 1;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "right") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new, true)) return true;
 		which++;
 		if(which >= scenario.special_items.size()) which = 0;
 		item = scenario.special_items[which];
 		put_spec_item_in_dlog(me, item, which);
 	} else if(hit == "edit-spec") {
-		if(!save_spec_item(me, item, which)) return true;
+		if(!save_spec_item(me, item, which, is_new)) return true;
 		short spec = me["spec"].getTextAsNum();
 		if(spec < 0)
 			spec = get_fresh_spec(0);
 		if(edit_spec_enc(spec,0,&me))
 			me["spec"].setTextToNum(spec);
-		save_spec_item(me, item, which);
+		save_spec_item(me, item, which, is_new);
 		
 	}
 	return true;
 }
 
 bool edit_spec_item(short which_item) {
-	short first = which_item;
 	using namespace std::placeholders;
+	bool is_new = false;
+	// Create new special item
+	if(which_item == scenario.special_items.size()) {
+		is_new = true;
+		scenario.special_items.emplace_back();
+		scenario.special_items.back().name = "New Special Item";
+	}
+	bool was_new = is_new;
 	cSpecItem item = scenario.special_items[which_item];
 	
 	cDialog item_dlg(*ResMgr::dialogs.get("edit-special-item"));
 	item_dlg["spec"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, scenario.scen_specials.size(), "Scenario special node called", "-1 for no special"));
-	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"okay", "cancel", "clear", "edit-spec"});
+	item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item), std::ref(is_new)), {"okay", "cancel", "clear", "edit-spec", "left", "right"});
 	
 	if(scenario.special_items.size() == 1) {
 		item_dlg["left"].hide();
 		item_dlg["right"].hide();
-	} else {
-		item_dlg.attachClickHandlers(std::bind(edit_spec_item_event_filter, _1, _2, std::ref(item), std::ref(which_item)), {"left", "right"});
 	}
 	
 	put_spec_item_in_dlog(item_dlg, item, which_item);
 	item_dlg["clear"].hide();
 	
 	item_dlg.run();
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
 	
-	return item_dlg.accepted() || first != which_item;
+	// The return value is used to decide whether to pop_back() if creating a new spec item was canceled
+	return item_dlg.accepted() || (was_new != is_new);
 }
 
 static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_quest) {
@@ -2165,7 +2340,7 @@ static void put_quest_in_dlog(cDialog& me, const cQuest& quest, size_t which_que
 	}
 }
 
-static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest, bool close) {
+static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest, bool& is_new, bool need_confirm, bool close) {
 	if(!me.toast(true)) return false;
 	
 	quest.name = me["name"].getText();
@@ -2182,13 +2357,36 @@ static bool save_quest_from_dlog(cDialog& me, cQuest& quest, size_t which_quest,
 		quest.bank2 = me["bank2"].getTextAsNum();
 	} else quest.bank1 = quest.bank2 = -1;
 	
-	scenario.quests[which_quest] = quest;
+	// Edit confirmed and real changes made:
+	if(scenario.quests[which_quest] != quest || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-quest", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{quest}}", quest.name);
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_quest_in_dlog(me, scenario.quests[which_quest], which_quest);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		// We actually can't make these actions undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteQuest(true, quest)));
+		}else{
+			undo_list.add(action_ptr(new aEditClearQuest("Edit Quest", which_quest, scenario.quests[which_quest], quest)));
+		}
+		scenario.quests[which_quest] = quest;
+		is_new = false;
+	}
+
 	if(!close) me.untoast();
 	return true;
 }
 
-static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, size_t& which_quest) {
-	if(!save_quest_from_dlog(me, quest, which_quest, false))
+static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, size_t& which_quest, bool& is_new) {
+	if(!save_quest_from_dlog(me, quest, which_quest, is_new, true, false))
 		return true;
 	
 	if(dir == "left") {
@@ -2208,15 +2406,18 @@ static bool change_quest_dlog_page(cDialog& me, std::string dir, cQuest& quest, 
 
 bool edit_quest(size_t which_quest) {
 	using namespace std::placeholders;
-	if(which_quest == scenario.quests.size()) {
+	bool is_new = false;
+	if(which_quest == scenario.quests.size()){
+		is_new = true;
 		scenario.quests.resize(which_quest + 1);
 		scenario.quests[which_quest].name = "New Quest";
 	}
+	bool was_new = is_new;
 	cQuest quest = scenario.quests[which_quest];
 	
 	cDialog quest_dlg(*ResMgr::dialogs.get("edit-quest"));
 	quest_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
-	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), true));
+	quest_dlg["okay"].attachClickHandler(std::bind(save_quest_from_dlog, _1, std::ref(quest), std::ref(which_quest), std::ref(is_new), false, true));
 	quest_dlg.attachClickHandlers([](cDialog& me, std::string item_hit, eKeyMod) {
 		std::string field_id = item_hit.substr(7);
 		std::string title = field_id == "evt" ? "Select an event:" : "Select a job board:";
@@ -2247,12 +2448,17 @@ bool edit_quest(size_t which_quest) {
 		quest_dlg["left"].hide();
 		quest_dlg["right"].hide();
 	} else {
-		quest_dlg.attachClickHandlers(std::bind(change_quest_dlog_page, _1, _2, std::ref(quest), std::ref(which_quest)), {"left", "right"});
+		quest_dlg.attachClickHandlers(std::bind(change_quest_dlog_page, _1, _2, std::ref(quest), std::ref(which_quest), std::ref(is_new)), {"left", "right"});
 	}
 	
 	put_quest_in_dlog(quest_dlg, quest, which_quest);
 	quest_dlg.run();
-	return quest_dlg.accepted();
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
+
+	// The return value is used to decide whether to pop_back() if creating a new quest was canceled
+	return quest_dlg.accepted() || was_new != is_new;
 }
 
 static bool put_shop_item_in_dlog(cPict& pic, cControl& num, cControl& title, const cShop& shop, int which) {
@@ -2314,7 +2520,7 @@ static void put_shop_in_dlog(cDialog& me, const cShop& shop, size_t which_shop) 
 	}
 }
 
-static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool close) {
+static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, bool& is_new, bool need_confirm, bool close) {
 	if(!me.toast(true)) return false;
 	
 	shop.setName(me["name"].getText());
@@ -2323,13 +2529,36 @@ static bool save_shop_from_dlog(cDialog& me, cShop& shop, size_t which_shop, boo
 	shop.setFace(dynamic_cast<cPict&>(me["face"]).getPicNum());
 	// Items are filled in as they're added by the dialog, so that's all we need to do here
 	
-	scenario.shops[which_shop] = shop;
+	if(shop != scenario.shops[which_shop] || is_new){
+		if(need_confirm){
+			// Confirm keeping changes
+			cChoiceDlog dlog("confirm-edit-shop", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{shop}}", shop.getName());
+			std::string choice = dlog.show();
+			if(choice == "revert"){
+				put_shop_in_dlog(me, scenario.shops[which_shop], which_shop);
+				return false;
+			}else if(choice == "cancel"){
+				return false;
+			}
+		}
+		// We actually can't make these action undoable while the dialog is still open
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteShop(true, shop)));
+		}
+		// Shop edited
+		else{
+			undo_list.add(action_ptr(new aEditClearShop("Edit Shop", which_shop, scenario.shops[which_shop], shop)));
+		}
+
+		scenario.shops[which_shop] = shop;
+	}
 	if(!close) me.untoast();
 	return true;
 }
 
-static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, size_t& which_shop) {
-	if(!save_shop_from_dlog(me, shop, which_shop, false))
+static bool change_shop_dlog_page(cDialog& me, std::string dir, cShop& shop, size_t& which_shop, bool& is_new) {
+	if(!save_shop_from_dlog(me, shop, which_shop, is_new, true, false))
 		return true;
 	
 	if(dir == "left") {
@@ -2570,8 +2799,12 @@ static bool add_shop_entry(cDialog& me, std::string type, cShop& shop, size_t wh
 
 bool edit_shop(size_t which_shop, cDialog* parent) {
 	using namespace std::placeholders;
-	if(which_shop == scenario.shops.size())
+	bool is_new = false;
+	if(which_shop == scenario.shops.size()){
+		is_new = true;
 		scenario.shops.emplace_back("New Shop");
+	}
+	bool was_new = is_new;
 	cShop shop = scenario.shops[which_shop];
 	if(shop.size() == 0 && (shop.getName() == "New Shop" || shop.getName() == "Unused Shop")) {
 		cChoiceDlog new_shop_dlg("new-shop", {"magic", "heal", "custom", "cancel"});
@@ -2587,7 +2820,7 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 	
 	cDialog shop_dlg(*ResMgr::dialogs.get("edit-shop"), parent);
 	shop_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
-	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), true));
+	shop_dlg["okay"].attachClickHandler(std::bind(save_shop_from_dlog, _1, std::ref(shop), std::ref(which_shop), std::ref(is_new), false, true));
 	shop_dlg["pickface"].attachClickHandler(std::bind(pick_picture, PIC_TALK, _1, "", "face"));
 	shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_items_page, _1, _2, std::ref(shop)), {"up", "down"});
 	shop_dlg.attachClickHandlers(std::bind(delete_shop_entry, _1, _2, std::ref(shop), std::ref(which_shop)), {"del1", "del2", "del3", "del4", "del5"});
@@ -2598,12 +2831,15 @@ bool edit_shop(size_t which_shop, cDialog* parent) {
 		shop_dlg["left"].hide();
 		shop_dlg["right"].hide();
 	} else {
-		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop)), {"left", "right"});
+		shop_dlg.attachClickHandlers(std::bind(change_shop_dlog_page, _1, _2, std::ref(shop), std::ref(which_shop), std::ref(is_new)), {"left", "right"});
 	}
 	
 	put_shop_in_dlog(shop_dlg, shop, which_shop);
 	shop_dlg.run();
-	return shop_dlg.accepted();
+
+	// Because of the left/right buttons, multiple undo actions could become available when the dialog closes:
+	update_edit_menu();
+	return shop_dlg.accepted() || was_new != is_new;
 }
 
 static void put_vehicle_area(cDialog& me, const cVehicle& what) {

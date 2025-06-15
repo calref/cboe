@@ -23,13 +23,13 @@ cAction::~cAction() {}
 
 void cAction::undo() {
 	UNDO_LOG("Undoing " + actname);
-	if(done && undo_me())
+	if(done && reversed ? redo_me() : undo_me())
 		done = false;
 }
 
 void cAction::redo() {
 	UNDO_LOG("Redoing " + actname);
-	if(!done && redo_me())
+	if(!done && reversed ? undo_me() : redo_me())
 		done = true;
 }
 
@@ -87,10 +87,8 @@ void cUndoList::add(action_ptr what){
 	UNDO_LOG("Performing " + what->getActionName());
 	theList.erase(theList.begin(), cur);
 	theList.push_front(what);
-	num_actions++;
-	while(num_actions > maxUndoSize) {
+	while(theList.size() > maxUndoSize) {
 		theList.pop_back();
-		num_actions--;
 	}
 	cur = theList.begin();
 }

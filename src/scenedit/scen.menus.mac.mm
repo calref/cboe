@@ -11,6 +11,7 @@
 #include <Cocoa/Cocoa.h>
 #include "tools/winutil.hpp"
 #include "tools/undo.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 extern short menuChoiceId;
 
@@ -23,6 +24,7 @@ extern cUndoList undo_list;
 
 @interface MenuHandler : NSObject
 -(void) menuChoice:(id) sender;
+-(bool) worksWhenModal;
 @end
 
 static void setMenuCallback(NSMenuItem* item, id targ, SEL selector, int num) {
@@ -153,7 +155,7 @@ void shut_down_menus(short mode) {
 
 void update_edit_menu() {
 	NSMenuItem* mi_undo = [edit_menu itemAtIndex: 0];
-	if(undo_list.noUndo()) {
+	if(undo_list.noUndo() || cDialog::anyOpen()) {
 		[mi_undo setTitle: @"Can't Undo"];
 		[mi_undo setEnabled: NO];
 	} else {
@@ -162,7 +164,7 @@ void update_edit_menu() {
 		[mi_undo setEnabled: YES];
 	}
 	NSMenuItem* mi_redo = [edit_menu itemAtIndex: 1];
-	if(undo_list.noRedo()) {
+	if(undo_list.noRedo() || cDialog::anyOpen()) {
 		[mi_redo setTitle: @"Can't Redo"];
 		[mi_redo setEnabled: NO];
 	} else {
@@ -176,5 +178,8 @@ void update_edit_menu() {
 -(void) menuChoice:(id) sender {
 	menuChoiceId=short([[sender representedObject] intValue]);
 	//handle_menu_choice(eMenu([[sender representedObject] intValue]));
+}
+-(bool) worksWhenModal {
+	return YES;
 }
 @end

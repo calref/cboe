@@ -6,7 +6,7 @@
 	<button name='okay' type='regular' top='136' left='229'>OK</button>
 	<button name='cancel' type='regular' top='136' left='164'>Cancel</button>
 	<pict type='dlog' num='16' top='8' left='8'/>
-	<text size='large' top='6' left='50' width='188' height='16'>Edit Which Outdoor Section?</text>
+	<text name='prompt' size='large' top='6' left='50' width='188' height='16'>{{Action}} Which Outdoor Section?</text>
 	<text top='25' left='68' width='111' height='14'>World width:</text>
 	<text name='width' top='25' left='186' width='37'/>
 	<text name='x' framed='true' top='63' left='142' width='75' height='16'/>

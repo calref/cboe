@@ -97,6 +97,8 @@ rectangle search_field_rect;
 
 extern void set_up_apple_events();
 
+extern void clamp_view_center(cTown* town);
+
 // TODO: these should be members of some global entity instead of being here
 std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
@@ -331,7 +333,7 @@ static void process_args(int argc, char* argv[]) {
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
 			set_pref("LastScenario", file);
-			restore_editor_state(true);
+			restore_editor_state();
 			change_made = false;
 			ae_loading = true;
 		} else {
@@ -348,8 +350,24 @@ void init_scened(int argc, char* argv[]) {
 	init_shaders();
 	init_tiling();
 	init_snd_tool();
+
+	// When a dialog is open, scenario action undo/redo needs to be disabled for 2 reasons:
+	// 1. it is very unsafe to pop from the stack while any edit operation is underway
+	// 2. the menu item must be disabled for cDialog to receive undo/redo keyboard shortcuts
+	//    for text field editing
+	cDialog::onOpen = cDialog::onClose = [](const cDialog& dialog) {
+		update_edit_menu();
+	};
 #ifdef SFML_SYSTEM_MACOS
 	init_menubar(); // This is called twice because Windows and Mac have different ordering requirements
+
+	cDialog::onHandleEvents = [](sf::RenderWindow&) {
+		if(menuChoiceId>=0) {
+			short wasChoice = menuChoiceId;
+			menuChoiceId=-1;
+			handle_menu_choice(eMenu(wasChoice));
+		}
+	};
 #endif
 	mainPtr().clear(sf::Color::Black);
 	mainPtr().display();
@@ -392,8 +410,9 @@ void handle_events() {
 
 #ifdef __APPLE__
 		if (menuChoiceId>=0) {
-			handle_menu_choice(eMenu(menuChoiceId));
+			short wasChoice = menuChoiceId;
 			menuChoiceId=-1;
+			handle_menu_choice(eMenu(wasChoice));
 		}
 #endif
 		while(pollEvent(mainPtr(), currentEvent)) handle_one_event(currentEvent);
@@ -436,6 +455,7 @@ void handle_one_event(const sf::Event& event) {
 			break;
 			
 		case sf::Event::MouseButtonReleased:
+			commit_stroke();
 			mouse_button_held = false;
 			break;
 			
@@ -462,12 +482,29 @@ static void show_outdated_warning() {
 	showWarning(outdated_help1, outdated_help2);
 }
 
+// When any dialog is open, only allow menu items that work with text fields.
+// NOTE: EDIT_UNDO and EDIT_REDO are included, even though currently, those menu items will be
+// disabled (only the keyboard shortcuts work for undo/redo on text editing).
+// Someday, update_edit_menu() could keep them enabled but change their text to show
+// the undo action of the active text field--but that would be complicated to do, and require
+// changing update_edit_menu() for all 3 platforms right now.
+std::set<eMenu> dialog_allowed_menu_choices = {
+	eMenu::NONE, eMenu::EDIT_UNDO, eMenu::EDIT_REDO, eMenu::EDIT_CUT, eMenu::EDIT_COPY,
+	eMenu::EDIT_PASTE, eMenu::EDIT_DELETE, eMenu::EDIT_SELECT_ALL,
+};
+
 void handle_menu_choice(eMenu item_hit) {
 	extern cUndoList undo_list;
 	bool isEdit = false, isHelp = false, isOutdated = false;
 	std::string helpDlog;
 	fs::path file_to_load;
 	cKey editKey = {true};
+
+	if(cDialog::anyOpen() && !dialog_allowed_menu_choices.count(item_hit)){
+		showWarning("You must confirm or cancel what you're currently doing first.");
+		return;
+	}
+
 	switch(item_hit) {
 		case eMenu::NONE: return;
 		case eMenu::FILE_OPEN:
@@ -480,7 +517,7 @@ void handle_menu_choice(eMenu item_hit) {
 			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 				set_pref("LastScenario", file_to_load.string());
-				restore_editor_state(true);
+				restore_editor_state();
 				change_made = false;
 			} else if(!file_to_load.empty())
 				set_up_start_screen(); // Failed to load file, dump to start
@@ -601,30 +638,33 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::SCEN_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(0,0);
+			start_special_editing(0);
 			break;
 		case eMenu::SCEN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_SCEN,0);
+			start_string_editing(STRS_SCEN);
 			break;
 		case eMenu::SCEN_JOURNALS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_JOURNAL,0);
+			start_string_editing(STRS_JOURNAL);
 			break;
 		case eMenu::TOWN_IMPORT:
 			if(cTown* town = pick_import_town()) {
 				town->reattach(scenario);
-				delete scenario.towns[cur_town];
+				undo_list.add(action_ptr(new aImportTown(cur_town, scenario.towns[cur_town], town)));
+				update_edit_menu();
 				scenario.towns[cur_town] = town;
 				::town = town;
 				change_made = true;
+				clamp_view_center(town);
 				redraw_screen();
 			}
 			break;
 		case eMenu::OUT_IMPORT:
 			if(cOutdoors* out = pick_import_out()) {
 				out->reattach(scenario);
-				delete scenario.outdoors[cur_out.x][cur_out.y];
+				undo_list.add(action_ptr(new aImportOutdoors(cur_out, scenario.outdoors[cur_out.x][cur_out.y], out)));
+				update_edit_menu();
 				scenario.outdoors[cur_out.x][cur_out.y] = out;
 				current_terrain = out;
 				change_made = true;
@@ -644,7 +684,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_DELETE:
 			if(scenario.towns.size() == 1) {
-				showError("You can't delete the last town in a scenario. All scenarios must have at least 1 town.");
+				showError("You can't delete the only town in a scenario. All scenarios must have at least 1 town.");
 				return;
 			}
 			if(scenario.towns.size() - 1 == cur_town) {
@@ -652,7 +692,7 @@ void handle_menu_choice(eMenu item_hit) {
 				return;
 			}
 			if(scenario.towns.size() - 1 == scenario.which_town_start) {
-				showError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the parties starting point and try this again.");
+				showError("You can't delete the last town in a scenario while it's the town the party starts the scenario in. Change the party's starting point and try this again.");
 				return;
 			}
 			if(cChoiceDlog("delete-town-confirm", {"okay", "cancel"}).show() == "okay")
@@ -684,7 +724,7 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::TOWN_AREAS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN_RECT,0);
+			start_string_editing(STRS_TOWN_RECT);
 			break;
 		case eMenu::TOWN_ITEMS_RANDOM:
 			if(cChoiceDlog("add-random-items", {"okay", "cancel"}).show() == "cancel")
@@ -692,31 +732,59 @@ void handle_menu_choice(eMenu item_hit) {
 			place_items_in_town();
 			change_made = true;
 			break;
-		case eMenu::TOWN_ITEMS_NOT_PROPERTY:
-			for(int i = 0; i < town->preset_items.size(); i++)
-				town->preset_items[i].property = 0;
-			cChoiceDlog("set-not-owned").show();
+		case eMenu::TOWN_ITEMS_NOT_PROPERTY:{
+			if(!town->any_preset_items()){
+				cChoiceDlog("no-items").show();
+				break;
+			}
+			std::vector<bool> old_property;
+			bool any_were = false;
+			for(cTown::cItem& item: town->preset_items){
+				if(item.property) any_were = true;
+				old_property.push_back(item.property);
+				item.property = false;
+			}
+			if(any_were){
+				undo_list.add(action_ptr(new aClearProperty(old_property)));
+				update_edit_menu();
+				cChoiceDlog("set-not-owned").show();
+			}else{
+				cChoiceDlog("no-items-property").show();
+			}
 			draw_terrain();
 			change_made = true;
-			break;
-		case eMenu::TOWN_ITEMS_CLEAR:
+		}break;
+		case eMenu::TOWN_ITEMS_CLEAR:{
+			if(!town->any_preset_items()){
+				cChoiceDlog("no-items").show();
+				break;
+			}
 			if(cChoiceDlog("clear-items-confirm", {"okay", "cancel"}).show() == "cancel")
 				break;
-			town->preset_items.clear();
+			item_changes_t changes;
+			auto& town_items = town->preset_items;
+			for(size_t i = 0; i < town_items.size(); ++i){
+				if(town_items[i].code < 0) continue;
+				changes[i] = town_items[i];
+				town_items[i].code = -1;
+			}
+			undo_list.add(action_ptr(new aPlaceEraseItem("Clear Items", false, changes)));
+			update_edit_menu();
+
 			draw_terrain();
 			change_made = true;
-			break;
+		}break;
 		case eMenu::TOWN_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(2,0);
+			start_special_editing(2);
 			break;
 		case eMenu::TOWN_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN,0);
+			start_string_editing(STRS_TOWN);
 			break;
 		case eMenu::TOWN_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_TOWN_SIGN,0);
+			start_string_editing(STRS_TOWN_SIGN);
 			break;
 		case eMenu::TOWN_ADVANCED:
 			edit_advanced_town();
@@ -740,19 +808,19 @@ void handle_menu_choice(eMenu item_hit) {
 			break;
 		case eMenu::OUT_AREAS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT_RECT,0);
+			start_string_editing(STRS_OUT_RECT);
 			break;
 		case eMenu::OUT_SPECIALS:
 			right_sbar->setPosition(0);
-			start_special_editing(1,0);
+			start_special_editing(1);
 			break;
 		case eMenu::OUT_TEXT:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT,0);
+			start_string_editing(STRS_OUT);
 			break;
 		case eMenu::OUT_SIGNS:
 			right_sbar->setPosition(0);
-			start_string_editing(STRS_OUT_SIGN,0);
+			start_string_editing(STRS_OUT_SIGN);
 			break;
 		case eMenu::ABOUT:
 			helpDlog = "about-scened";

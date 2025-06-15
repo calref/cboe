@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\..\src\scenedit\scen.actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\scenedit\scen.undo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\rsrc\menus\scenresource.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\scenedit\scen.actions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\scenedit\scen.undo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

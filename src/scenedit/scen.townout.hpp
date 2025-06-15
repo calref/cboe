@@ -13,7 +13,7 @@ void edit_town_events();
 void edit_advanced_town();
 void edit_basic_dlog(short which_node);
 short edit_talk_node(short which_node);
-location pick_out(location default_loc,cScenario& scenario);
+location pick_out(location default_loc,cScenario& scenario,std::string action);
 cTown* pick_import_town();
 cOutdoors* pick_import_out();
 bool new_town();

@@ -9,13 +9,11 @@
 	<text size='large' top='6' left='50' width='175' height='17'>Importing a town</text>
 	<text name='prompt' top='143' left='50' width='162' height='27'>What town do you wish to import? (0 - {{max-num}})</text>
 	<text top='27' left='50' width='301' height='54'>
-		Enter a town number and hit OK, and you will be asked to select a scenario file.
-		The town with that number in the selected scenario will then be loaded in over the current town.
+		The town with this number in the selected scenario be imported.
 	</text>
 	<button name='cancel' type='regular' top='181' left='212'>Cancel</button>
 	<text top='83' left='50' width='301' height='54'>
-		Warning: This will write over the town currently in memory.
-		Also, the town you select must be the same size (large/medium/small) as the town currently in memory.
+		Warning: This will overwrite over the town currently in memory.
 	</text>
 	<button name='choose' type='regular' top='146' left='281'>Choose</button>
 </dialog>

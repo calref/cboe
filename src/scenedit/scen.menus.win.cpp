@@ -7,6 +7,7 @@
 #include "winutil.hpp"
 #include "menu_accel.win.hpp"
 #include "undo.hpp"
+#include "dialogxml/dialogs/dialog.hpp"
 
 // Include this last because some #defines in the Windows headers cause compile errors in my headers.
 // Fortunately they're on symbols not used in this file, so this should work.
@@ -190,7 +191,7 @@ void shut_down_menus(short mode) {
 void update_edit_menu() {
 	if(menuHandle == NULL) return;
 	HMENU edit_menu = GetSubMenu(menuHandle, EDIT_MENU_POS);
-	if(undo_list.noUndo()) {
+	if(undo_list.noUndo() || cDialog::anyOpen()) {
 		ModifyMenuA(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND, IDM_EDIT_UNDO, "Can't Undo\tCtrl+Z");
 		EnableMenuItem(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_GRAYED);
 	} else {
@@ -198,7 +199,7 @@ void update_edit_menu() {
 		ModifyMenuA(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND, IDM_EDIT_UNDO, title.c_str());
 		EnableMenuItem(edit_menu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED);
 	}
-	if(undo_list.noRedo()) {
+	if(undo_list.noRedo() || cDialog::anyOpen()) {
 		ModifyMenuA(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND, IDM_EDIT_REDO, "Can't Redo\tCtrl+Y");
 		EnableMenuItem(edit_menu, IDM_EDIT_REDO, MF_BYCOMMAND | MF_GRAYED);
 	} else {

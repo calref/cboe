@@ -49,6 +49,10 @@ struct cShopItem {
 	size_t quantity, index;
 	cItem item{ITEM_SHOP};
 	int getCost(int adj) const;
+
+	// For detecting actual changes to shops in the scenario editor
+	bool operator==(const cShopItem& other);
+	bool operator!=(const cShopItem& other) { return !(*this == other); }
 };
 
 enum eShopPreset {SHOP_HEALING, SHOP_JUNK};
@@ -92,6 +96,10 @@ public:
 	void takeOne(size_t i);
 	void clearItem(size_t i);
 	void clear();
+
+	// For detecting actual changes to shops in the scenario editor
+	bool operator==(const cShop& other);
+	bool operator!=(const cShop& other) { return !(*this == other); }
 };
 
 std::istream& operator>>(std::istream& in, eShopType& type);

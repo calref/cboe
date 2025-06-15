@@ -821,6 +821,9 @@
     <ClCompile Include="..\..\..\src\tools\profile.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\scenario\quest.cpp">
+      <Filter>Scenario</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\scenario\town_import.tpp">

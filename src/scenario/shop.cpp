@@ -328,3 +328,24 @@ int cShopItem::getCost(int adj) const {
 	cost /= 10;
 	return cost;
 }
+
+bool cShopItem::operator==(const cShopItem& other) {
+	CHECK_EQ(other, type);
+	CHECK_EQ(other, quantity);
+	CHECK_EQ(other, index);
+	CHECK_EQ(other, item);
+	return true;
+}
+
+bool cShop::operator==(const cShop& other) {
+	CHECK_EQ(other, items.size());
+	for(size_t i = 0; i < items.size(); ++i){
+		if(items[i] != other.items[i]) return false;
+	}
+	CHECK_EQ(other, cost_adj);
+	CHECK_EQ(other, name);
+	CHECK_EQ(other, type);
+	CHECK_EQ(other, prompt);
+	CHECK_EQ(other, face);
+	return true;
+}

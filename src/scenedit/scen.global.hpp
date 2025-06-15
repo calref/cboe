@@ -22,9 +22,14 @@ const int TER_RECT_UL_Y = 19;
 const int UI_LAYER_DEFAULT = 1000;
 const int UI_LAYER_MENUBAR = 1200;
 
+// When editing types, several more rows can fit because the tool palette isn't there
+const int TYPE_ROWS_DRAWING = 16;
+const int TYPE_ROWS_EDITING = 23;
+
 enum eScenMode {
 	MODE_DRAWING = 0,
 	MODE_TOGGLE_ROAD = 1,
+	// Deprecated. Use the location picker in the encounter editor dialog.
 	MODE_SET_WANDER_POINTS = 2,
 	MODE_ROOM_RECT = 3,
 	MODE_PLACE_ITEM = 4,
@@ -78,6 +83,11 @@ enum eScenMode {
 	MODE_INTRO_SCREEN = 61,
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
 	MODE_EDIT_SPECIALS = 63, // editing a LIST of specials, not to be confused with MODE_EDIT_SPECIAL singular
+	MODE_EDIT_SPECIAL_ITEMS = 64,
+	MODE_EDIT_QUESTS = 65,
+	MODE_EDIT_SHOPS = 66,
+	MODE_EDIT_STRINGS = 67,
+	MODE_EDIT_DIALOGUE = 68,
 };
 
 enum eDrawMode {

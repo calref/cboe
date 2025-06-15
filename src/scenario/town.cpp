@@ -38,8 +38,10 @@ void cTown::import_legacy(legacy::town_record_type& old){
 	for(short i = 0; i < 50; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		if(old.special_locs[i].x == 100)
+		if(old.special_locs[i].x == 100){
+			special_locs[i].x = LOC_UNUSED;
 			special_locs[i].spec = -1;
+		}
 		else special_locs[i].spec = old.spec_id[i];
 		cField temp;
 		temp.import_legacy(old.preset_fields[i]);
@@ -83,13 +85,13 @@ cTown::cTown(cScenario& scenario, size_t dim) : cArea(dim), scenario(&scenario),
 	town_chop_key = -1;
 	for(short i = 0; i < wandering.size(); i++) {
 		wandering[i] = d_wan;
-		// x of 100 indicates an unset wandering monster location
-		wandering_locs[i].x = 100;
+		// unset wandering monster location
+		wandering_locs[i].x = LOC_UNUSED;
 	}
 	lighting_type = LIGHT_NORMAL;
 	for(short i = 0; i < 4; i++) {
-		// x of 100 indicates an unset starting location
-		start_locs[i].x = 100;
+		// unset starting location
+		start_locs[i].x = LOC_UNUSED;
 		exits[i].spec = -1;
 		exits[i].x = -1;
 		exits[i].y = -1;
@@ -267,4 +269,22 @@ void cTown::clear_items_taken() {
 void cTown::set_item_taken(size_t i, bool val) {
 	if(i >= item_taken.size()) item_taken.resize(i + 1);
 	item_taken.set(i, val);
+}
+
+bool cTown::any_preset_items() const {
+	for(cItem item: preset_items){
+		if(item.code >= 0) return true;
+	}
+	return false;
+}
+
+bool cTown::cItem::operator==(const cTown::cItem& other) {
+	CHECK_EQ(other, loc);
+	CHECK_EQ(other, code);
+	CHECK_EQ(other, ability);
+	CHECK_EQ(other, charges);
+	CHECK_EQ(other, always_there);
+	CHECK_EQ(other, property);
+	CHECK_EQ(other, contained);
+	return true;
 }

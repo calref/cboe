@@ -17,6 +17,7 @@
 #include "scen.sdfpicker.hpp"
 #include "scen.fileio.hpp"
 #include "scen.core.hpp"
+#include "scen.undo.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/widgets/button.hpp"
 #include "dialogxml/widgets/field.hpp"
@@ -47,6 +48,7 @@ extern cUndoList undo_list;
 extern std::string help_text_rsrc;
 extern bool editing_town;
 extern bool last_shift_continuous;
+extern void update_edit_menu();
 
 const char *day_str_1[] = {"Unused","Day creature appears","Day creature disappears",
 	"Unused","Unused","Unused","Unused","Unused","Unused"};
@@ -89,6 +91,8 @@ static bool edit_placed_monst_event_filter(cDialog& me, std::string hit, cTownpe
 		me.toast(false);
 	} else if(hit == "del") {
 		me.toast(false);
+		undo_list.add(action_ptr(new aPlaceEraseCreature("Delete Creature", false, which, town->creatures[which])));
+		update_edit_menu();
 		town->creatures[which].number = 0;
 	} else if(hit == "type-edit") {
 		get_placed_monst_in_dlog(me, monst);
@@ -388,6 +392,8 @@ static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem
 
 static bool edit_placed_item_delete(cDialog& me, const short which) {
 	me.toast(false);
+	undo_list.add(action_ptr(new aPlaceEraseItem("Delete Item", false, which, town->preset_items[which])));
+	update_edit_menu();
 	town->preset_items[which].code = -1;
 	return true;
 }
@@ -419,16 +425,18 @@ void edit_placed_item(short which_i) {
 
 static bool edit_sign_event_filter(cDialog& me, sign_loc_t& which_sign) {
 	if(!me.toast(true)) return true;
-	which_sign.text = me["text"].getText();
-#if 0 // TODO: Apparently there used to be left/right buttons on this dialog.
-	if(item_hit == 3)
-		which_sign--;
-	else which_sign++;
-	if(which_sign < 0)
-		which_sign = (editing_town) ? 14 : 7;
-	if(which_sign > (editing_town) ? 14 : 7)
-		which_sign = 0;
-#endif
+
+	std::string cur_text = me["text"].getText();
+	if(which_sign.text != cur_text){
+		undo_list.add(action_ptr(new aEditSignText(which_sign, which_sign.text, cur_text)));
+		update_edit_menu();
+		which_sign.text = cur_text;
+	}
+
+	// There used to be left/right buttons in the sign editor dialog, but there shouldn't be,
+	// because left/right is not a meaningful index to let the designer know which sign they're editing.
+	// I removed the unused code.
+
 	return true;
 }
 
@@ -452,7 +460,7 @@ void edit_sign(sign_loc_t& which_sign,short num,short picture) {
 	sign_dlg.run();
 }
 
-static bool save_town_num(cDialog& me, std::string, eKeyMod) {
+static bool save_town_num(cDialog& me, std::string, eKeyMod, cScenario& scenario) {
 	using namespace std::placeholders;
 	me["town"].attachFocusHandler(std::bind(check_range, _1, _2, _3, 0, scenario.towns.size() - 1, "Town number"));
 	if(me.toast(true)) me.setResult<short>(me["town"].getTextAsNum());
@@ -484,12 +492,13 @@ static bool create_town_num(cDialog& me, std::string, eKeyMod) {
 }
 
 short pick_town_num(std::string which_dlog,short def,cScenario& scenario) {
+	using namespace std::placeholders;
 	
 	cDialog town_dlg(*ResMgr::dialogs.get(which_dlog));
 	town_dlg["prompt"].replaceText("{{max-num}}", std::to_string(scenario.towns.size() - 1));
 	town_dlg["prompt"].replaceText("{{next-num}}", std::to_string(scenario.towns.size()));
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
-	town_dlg["okay"].attachClickHandler(save_town_num);
+	town_dlg["okay"].attachClickHandler(std::bind(save_town_num, _1, _2, _3, std::ref(scenario)));
 	town_dlg["choose"].attachClickHandler([&scenario](cDialog& me, std::string, eKeyMod) -> bool {
 		int i = me["town"].getTextAsNum();
 		if(&scenario != &::scenario)
@@ -625,6 +634,7 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 	me["onflee"].setTextToNum(wand.spec_on_flee);
 	me["endy"].setTextToNum(wand.end_spec1);
 	me["endx"].setTextToNum(wand.end_spec2);
+	me["location"].setText(boost::lexical_cast<std::string>(current_terrain->wandering_locs[which]));
 }
 
 static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand, short mode) {
@@ -640,6 +650,7 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 	switch(mode) {
 		case 0:
 			current_terrain->wandering[which] = wand;
+			current_terrain->wandering_locs[which] = boost::lexical_cast<location>(me["location"].getText());
 			break;
 		case 1:
 			current_terrain->special_enc[which] = wand;
@@ -720,9 +731,19 @@ void edit_out_wand(short mode) {
 		me["endy"].setTextToNum(sdf.y);
 		return true;
 	});
+	wand_dlg["choose-location"].attachClickHandler([&which](cDialog& me, std::string, eKeyMod) {
+		location current = boost::lexical_cast<location>(me["location"].getText());
+		current = cLocationPicker(current, *town, "Choose wandering encounter " + std::to_string(which) + " location", &me).run();
+		me["location"].setText(boost::lexical_cast<std::string>(current));
+		return true;
+	});
 	
-	if(mode == 1)
+	if(mode == 1){
 		wand_dlg["title"].setText("Outdoor Special Encounter:");
+		wand_dlg["loc-label"].hide();
+		wand_dlg["location"].hide();
+		wand_dlg["choose-location"].hide();
+	}
 	
 	put_out_wand_in_dlog(wand_dlg, which, wand);
 	
@@ -1010,17 +1031,19 @@ static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 			std::string id = base_id + std::to_string(j + 1);
 			town->wandering[i].monst[j] = me[id].getTextAsNum();
 		}
+		town->wandering_locs[i] = boost::lexical_cast<location>(me["group" + std::to_string(i+1) + "-loc"].getText());
 	}
 	return true;
 }
 
 static void put_town_wand_in_dlog(cDialog& me) {
 	for(int i = 0; i < town->wandering.size(); i++) {
-		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
+		std::string base_id = "group" + std::to_string(i + 1);
 		for(int j = 0; j < 4; j++) {
-			std::string id = base_id + std::to_string(j + 1);
+			std::string id = base_id + "-monst" + std::to_string(j + 1);
 			me[id].setTextToNum(town->wandering[i].monst[j]);
 		}
+		me[base_id + "-loc"].setText(boost::lexical_cast<std::string>(town->wandering_locs[i]));
 	}
 }
 
@@ -1031,12 +1054,17 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 		"Choose Third Monster: (1 appears)",
 		"Choose Fourth Monster: (1-2 appears)",
 	};
-	short group = item_hit[6] - '0';
-	std::string base_id = "group" + std::to_string(group) + "-monst";
-	for(int i = 0; i < 4; i++) {
-		std::string id = base_id + std::to_string(i + 1);
+	short group = item_hit[4] - '0';
+	std::string base_id = "group" + std::to_string(group);
+	if(item_hit.substr(5) == "-loc"){
+		std::string id = base_id + "-loc";
+		location current = boost::lexical_cast<location>(me[id].getText());
+		current = cLocationPicker(current, *town, "Choose wandering group " + std::to_string(group) + " location", &me).run();
+		me[id].setText(boost::lexical_cast<std::string>(current));
+	}else{
+		short i = item_hit[11] - '1';
+		std::string id = base_id + "-monst" + std::to_string(i + 1);
 		short n = choose_text(STRT_MONST, town->wandering[group].monst[i] - 1, &me, titles[i]) + 1;
-		if(n == town->wandering[group].monst[i]) break;
 		me[id].setTextToNum(n);
 	}
 	return true;
@@ -1046,17 +1074,17 @@ void edit_town_wand() {
 	using namespace std::placeholders;
 	
 	cDialog wand_dlg(*ResMgr::dialogs.get("edit-town-wandering"));
-	wand_dlg["okay"].attachClickHandler(save_town_wand);
-	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	auto check_monst = std::bind(check_range_msg, _1, _2, _3, 0, 255, "Wandering monsters", "0 means no monster");
 	// Just go through and attach the same focus handler to ALL text fields.
 	// There's 16 of them, so this is kinda the easiest way to do it.
 	wand_dlg.forEach([&check_monst](std::string, cControl& ctrl) {
 		if(ctrl.getType() == CTRL_FIELD)
 			ctrl.attachFocusHandler(check_monst);
-		else if(ctrl.getText() == "Choose")
+		else if(ctrl.getType() == CTRL_BTN)
 			ctrl.attachClickHandler(edit_town_wand_event_filter);
 	});
+	wand_dlg["okay"].attachClickHandler(save_town_wand);
+	wand_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &wand_dlg, false));
 	
 	put_town_wand_in_dlog(wand_dlg);
 	
@@ -1577,7 +1605,7 @@ static bool finish_pick_out(cDialog& me, bool okay, location& cur_loc, location 
 	return true;
 }
 
-location pick_out(location default_loc,cScenario& scenario) {
+location pick_out(location default_loc,cScenario& scenario,std::string action) {
 	using namespace std::placeholders;
 	location prev_loc = default_loc;
 	if(default_loc.x < 0)
@@ -1586,6 +1614,7 @@ location pick_out(location default_loc,cScenario& scenario) {
 		default_loc.y = 0;
 	
 	cDialog out_dlg(*ResMgr::dialogs.get("select-sector"));
+	out_dlg["prompt"].replaceText("{{Action}}", action);
 	out_dlg["okay"].attachClickHandler(std::bind(finish_pick_out, _1, true, std::ref(default_loc), prev_loc));
 	out_dlg["cancel"].attachClickHandler(std::bind(finish_pick_out, _1, false, std::ref(default_loc), prev_loc));
 	out_dlg.attachClickHandlers(std::bind(pick_out_event_filter, _1, _2, std::ref(default_loc), std::ref(scenario)), {"xplus", "xminus", "yplus", "yminus", "choose"});
@@ -1642,27 +1671,6 @@ void set_current_out(location out_sec, bool continuous_shift, bool first_restore
 	set_up_main_screen();
 }
 
-aNewTown::aNewTown(cTown* t)
-	: cAction("add town")
-	, theTown(t)
-{}
-
-bool aNewTown::undo_me() {
-	scenario.towns.resize(scenario.towns.size() - 1);
-	set_current_town(scenario.towns.size() - 1);
-	return true;
-}
-
-bool aNewTown::redo_me() {
-	scenario.towns.push_back(theTown);
-	set_current_town(scenario.towns.size() - 1);
-	return true;
-}
-
-aNewTown::~aNewTown() {
-	if(!isDone()) delete theTown;
-}
-
 bool new_town() {
 	ter_num_t preset = 0;
 	cChoiceDlog new_dlg("new-town", {"okay", "cancel"});
@@ -1691,7 +1699,8 @@ bool new_town() {
 		for(short j = 0; j < town->max_dim; j++)
 			town->terrain(i,j) = preset;
 
-	undo_list.add(action_ptr(new aNewTown(scenario.towns.back())));
+	undo_list.add(action_ptr(new aCreateDeleteTown(true, scenario.towns.back())));
+	update_edit_menu();
 	change_made = true;
 	
 	return true;
@@ -1699,9 +1708,10 @@ bool new_town() {
 
 // before calling this, be sure to do all checks to make sure it's safe.
 void delete_last_town() {
-	cTown* last_town = scenario.towns.back();
+	undo_list.add(action_ptr(new aCreateDeleteTown(false, scenario.towns.back())));
+	update_edit_menu();
+
 	scenario.towns.pop_back();
-	delete last_town;
 	change_made = true;
 }
 
@@ -1798,29 +1808,8 @@ static bool resize_outdoors_filter(cDialog& me, std::string btn, rectangle& mod,
 	return true;
 }
 
-bool resize_outdoors() {
-	using namespace std::placeholders;
-	loc_set del;
-	rectangle mod;
-	cDialog size_dlg(*ResMgr::dialogs.get("resize-outdoors"));
-	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
-	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
-	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);
-	
-	size_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, true));
-	size_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, false));
-	size_dlg.attachClickHandlers(std::bind(resize_outdoors_filter, _1, _2, std::ref(mod), std::ref(del)), {
-		"top-p", "top-m", "left-p", "left-m", "right-p", "right-m", "bottom-p", "bottom-m"
-	});
-	
-	size_dlg.run();
-	if(!size_dlg.accepted()) return false;
-	
-	for(location l : del) {
-		delete scenario.outdoors[l.x][l.y];
-		scenario.outdoors[l.x][l.y] = nullptr;
-	}
-	
+// When the outdoors resize, sometimes the whole grid needs to shift.
+void apply_outdoor_shift(rectangle mod) {
 	size_t old_w = scenario.outdoors.width(), old_h = scenario.outdoors.height();
 	size_t new_w = old_w + mod.left + mod.right, new_h = old_h + mod.top + mod.bottom;
 	
@@ -1829,44 +1818,88 @@ bool resize_outdoors() {
 	if(new_h > old_h)
 		scenario.outdoors.resize(scenario.outdoors.width(), new_h);
 	
+	// Sections added at the top -- shift existing sections down
 	if(mod.top > 0) {
 		int y = new_h - mod.top;
 		while(y--) {
 			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
-	} else if(mod.top < 0) {
+	}
+	// Sections removed at the top -- shift existing sections up
+	else if(mod.top < 0) {
 		for(int y = -mod.top; y < old_h; y++) {
 			scenario.outdoors.row(y + mod.top) = scenario.outdoors.row(y);
 		}
 	}
 	
+	// Sections added at the left -- shift existing sections right
 	if(mod.left > 0) {
 		int x = new_w - mod.left;
 		while(x--) {
 			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
-	} else if(mod.left < 0) {
+	}
+	// Sections removed at the left -- shift existing sections left
+	else if(mod.left < 0) {
 		for(int x = -mod.left; x < old_w; x++) {
 			scenario.outdoors.col(x + mod.left) = scenario.outdoors.col(x);
 		}
 	}
 	
 	scenario.outdoors.resize(new_w, new_h);
-	for(int y = 0; y < new_h; y++) {
-		for(int x = 0; x < new_w; x++) {
-			if(scenario.outdoors[x][y] == nullptr)
+}
+
+void clamp_current_section() {
+	cur_out.x = minmax(0, scenario.outdoors.width() - 1, cur_out.x);
+	cur_out.y = minmax(0, scenario.outdoors.height() - 1, cur_out.y);
+	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+}
+
+bool resize_outdoors() {
+	using namespace std::placeholders;
+	loc_set del;
+	rectangle mod;
+	cDialog size_dlg(*ResMgr::dialogs.get("resize-outdoors"));
+	size_dlg["w-old"].setTextToNum(scenario.outdoors.width());
+	size_dlg["h-old"].setTextToNum(scenario.outdoors.height());
+	fill_resize_outdoors(size_dlg, mod.top, mod.left, mod.right, mod.bottom, del);
+
+	size_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, true));
+	size_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &size_dlg, false));
+	size_dlg.attachClickHandlers(std::bind(resize_outdoors_filter, _1, _2, std::ref(mod), std::ref(del)), {
+		"top-p", "top-m", "left-p", "left-m", "right-p", "right-m", "bottom-p", "bottom-m"
+	});
+
+	size_dlg.run();
+	if(!size_dlg.accepted()) return false;
+
+	// Store the removed sections for undo/redo
+	outdoor_sections_t sections_removed;
+	for(location l : del) {
+		sections_removed[l] = scenario.outdoors[l.x][l.y];
+		scenario.outdoors[l.x][l.y] = nullptr;
+	}
+
+	apply_outdoor_shift(mod);
+
+	outdoor_sections_t sections_added;
+	for(int y = 0; y < scenario.outdoors.height(); y++) {
+		for(int x = 0; x < scenario.outdoors.width(); x++) {
+			if(scenario.outdoors[x][y] == nullptr){
 				scenario.outdoors[x][y] = new cOutdoors(scenario);
+				// Store the created sections for undo/redo
+				sections_added[loc(x,y)] = scenario.outdoors[x][y];
+			}
 		}
 	}
 	
 	// Update current location - point to same sector if possible
 	cur_out.x += mod.left;
 	cur_out.y += mod.top;
-	if(cur_out.x >= new_w || cur_out.x < 0)
-		cur_out.x = 0;
-	if(cur_out.y >= new_h || cur_out.y < 0)
-		cur_out.y = 0;
-	current_terrain = scenario.outdoors[cur_out.x][cur_out.y];
+	clamp_current_section();
+
+	undo_list.add(action_ptr(new aResizeOutdoors(mod, sections_removed, sections_added)));
+	update_edit_menu();
 	
 	return true;
 }
@@ -1876,10 +1909,16 @@ cOutdoors* pick_import_out() {
 	fs::path path = nav_get_scenario();
 	if(path.empty()) return nullptr;
 	load_scenario(path, temp_scenario);
-	location sector = pick_out({-1,-1},temp_scenario);
+	location sector = pick_out({-1,-1},temp_scenario,"Import");
 	if(sector.x < 0 && sector.y < 0)
 		return nullptr;
 	cOutdoors* out = temp_scenario.outdoors[sector.x][sector.y];
 	temp_scenario.outdoors[sector.x][sector.y] = nullptr;
 	return out;
+}
+
+// after importing a town, the view center might be out-of-bounds
+void clamp_view_center(cTown* town) {
+	cen_x = min(cen_x, town->max_dim - 5);
+	cen_y = min(cen_y, town->max_dim - 5);
 }

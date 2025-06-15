@@ -53,7 +53,7 @@ void set_up_apple_events() {
 	
 	if(load_scenario(fileName, scenario)) {
 		set_pref("LastScenario", fileName);
-		restore_editor_state(true);
+		restore_editor_state();
 		change_made = false;
 		ae_loading = true;
 	}
