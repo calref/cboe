@@ -1037,6 +1037,7 @@ void draw_terrain(){
 				sf::Texture& fields_gworld = *ResMgr::graphics.get("fields");
 				sf::Texture& vehicle_gworld = *ResMgr::graphics.get("vehicle");
 				
+				// TODO this doesn't work for the 1 row/column of adjacent outdoor sections drawn
 				if(is_road(cen_x + q - 4,cen_y + r - 4))
 					rect_draw_some_item(fields_gworld, calc_rect(0, 2), mainPtr(), destrec, sf::BlendAlpha);
 				if(is_spot(cen_x + q - 4,cen_y + r - 4))
@@ -1429,7 +1430,16 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	destrec.bottom = destrec.top + BITMAP_HEIGHT;
 	destrec.offset(TER_RECT_UL_X,TER_RECT_UL_Y);
 	
-	rect_draw_some_item(*source_gworld, source_rect, mainPtr(), destrec);
+	sf::Color colour = Colours::WHITE;
+	// We render one row/column from the neighboring outdoor section.
+	// Make it slightly transparent because you can't edit it.
+	int x = cen_x + i - 4;
+	int y = cen_y + j - 4;
+	if(!editing_town && x == -1 || x == 48 || y == -1 || y == 48){
+		colour.a = 128;
+	}
+
+	rect_draw_some_item(*source_gworld, source_rect, mainPtr(), destrec, sf::BlendAlpha, colour);
 }
 
 void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short size,bool road) {
