@@ -1435,7 +1435,7 @@ void draw_one_terrain_spot (short i,short j,ter_num_t terrain_to_draw) {
 	// Make it slightly transparent because you can't edit it.
 	int x = cen_x + i - 4;
 	int y = cen_y + j - 4;
-	if(!editing_town && x == -1 || x == 48 || y == -1 || y == 48){
+	if(!editing_town && (x == -1 || x == 48 || y == -1 || y == 48)){
 		colour.a = 128;
 	}
 
