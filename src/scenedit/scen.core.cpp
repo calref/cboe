@@ -3647,6 +3647,8 @@ void edit_custom_sheets() {
 			all_pics.push_back(this_pic);
 		}
 	}
+	// Iterating through the graphics folder is not deterministic
+	std::sort(all_pics.begin(), all_pics.end());
 	
 	// First, make sure we even have custom graphics! Also make sure they're not legacy format.
 	bool must_init_spec_g = false;
