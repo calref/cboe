@@ -3675,6 +3675,9 @@ void edit_custom_sheets() {
 		spec_scen_g.sheets[0]->copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
 		all_pics.insert(all_pics.begin(), 0);
 		ResMgr::graphics.pushPath(pic_dir);
+
+		// We'll update the edit menu after this dialog closes
+		undo_list.add(action_ptr(new aCreateGraphicsSheet(0)));
 	}
 	
 	set_cursor(watch_curs);
@@ -3780,6 +3783,10 @@ void edit_custom_sheets() {
 		me["left"].show();
 		me["right"].show();
 		set_dlg_custom_sheet(me, all_pics[cur]);
+
+
+		// We'll update the edit menu after this dialog closes
+		undo_list.add(action_ptr(new aCreateGraphicsSheet(newSheet)));
 		return true;
 	});
 	pic_dlg["del"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
@@ -3863,6 +3870,8 @@ void edit_custom_sheets() {
 	if(overall_mode <= MODE_MAIN_SCREEN)
 		shut_down_menus(editing_town ? 2 : 1);
 	else shut_down_menus(3);
+
+	update_edit_menu();
 }
 
 static bool edit_custom_sound_action(cDialog& me, std::string action, std::vector<std::string>& snd_names, int curPage, int& max_snd) {

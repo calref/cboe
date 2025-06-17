@@ -1,5 +1,9 @@
 #include "scen.undo.hpp"
 
+#include <boost/filesystem.hpp>
+
+#include "gfx/gfxsheets.hpp"
+
 #include "scenario/scenario.hpp"
 #include "scenario/area.hpp"
 #include "scen.actions.hpp"
@@ -716,6 +720,42 @@ bool aToggleOutFields::redo_me() {
 			current_terrain->roads[space.x][space.y] = on;
 		else
 			current_terrain->special_spot[space.x][space.y] = on;
+	}
+	return true;
+}
+
+fs::path get_pic_dir() {
+	extern fs::path tempDir;
+	extern std::string scenario_temp_dir_name;
+	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
+	if(!scenario.scen_file.has_extension()) // It's an unpacked scenario
+		pic_dir = scenario.scen_file/"graphics";
+	return pic_dir;
+}
+
+extern cCustomGraphics spec_scen_g;
+
+bool aCreateGraphicsSheet::undo_me() {
+	fs::path sheetPath = get_pic_dir()/("sheet" + std::to_string(index) + ".png");
+	fs::remove(sheetPath);
+	if(index == spec_scen_g.numSheets - 1) {
+		spec_scen_g.sheets.pop_back();
+		spec_scen_g.numSheets--;
+	}
+	return true;
+}
+
+bool aCreateGraphicsSheet::redo_me() {
+	fs::path sheetPath = get_pic_dir()/("sheet" + std::to_string(index) + ".png");
+	if(index == spec_scen_g.numSheets) {
+		spec_scen_g.sheets.emplace_back();
+		spec_scen_g.init_sheet(index);
+		spec_scen_g.sheets[index]->copyToImage().saveToFile(sheetPath.string().c_str());
+		spec_scen_g.numSheets++;
+	}else{
+		sf::Image img;
+		img.create(280, 360);
+		img.saveToFile(sheetPath.string().c_str());
 	}
 	return true;
 }

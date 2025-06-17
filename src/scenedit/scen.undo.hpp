@@ -453,4 +453,14 @@ public:
 		is_road(is_road), on(on), stroke(stroke) {}
 };
 
+/// Action that creates a custom graphics sheet
+class aCreateGraphicsSheet : public cAction {
+	size_t index;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateGraphicsSheet(size_t index) :
+		cAction("Create Custom Graphics Sheet"), index(index) {}
+};
+
 #endif
