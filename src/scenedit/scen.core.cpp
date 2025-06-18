@@ -3706,7 +3706,7 @@ void edit_custom_sheets() {
 		set_clipboard_img(sheets[cur]);
 		return true;
 	});
-	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
 		auto img = get_clipboard_img();
 		if(img == nullptr) {
 			beep();
@@ -3717,13 +3717,15 @@ void edit_custom_sheets() {
 			fs::path toPath = pic_dir/(resName + ".png");
 			img->saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
+			set_dlg_custom_sheet(me, all_pics[cur]);
 			return true;
 		}
 		sheets[cur] = *img;
 		spec_scen_g.replace_sheet(cur, *img);
+		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	});
-	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
 		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
 		if(fpath.empty()) return true;
 		sf::Image img;
@@ -3736,10 +3738,12 @@ void edit_custom_sheets() {
 			fs::path toPath = pic_dir/(resName + ".png");
 			img.saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
+			set_dlg_custom_sheet(me, all_pics[cur]);
 			return true;
 		}
 		sheets[cur] = img;
 		spec_scen_g.replace_sheet(cur, img);
+		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	});
 	pic_dlg["save"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
