@@ -3820,6 +3820,8 @@ void edit_custom_sheets() {
 				spec_scen_g.sheets.resize(which_pic);
 				ResMgr::graphics.free("sheet" + std::to_string(which_pic));
 			}
+		}else{
+			all_pics.erase(all_pics.begin() + cur);
 		}
 		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
 		if(fs::exists(fpath)) fs::remove(fpath);
