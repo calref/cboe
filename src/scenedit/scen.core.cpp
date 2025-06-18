@@ -3915,6 +3915,47 @@ void edit_custom_sheets() {
 	update_edit_menu();
 }
 
+fs::path get_snd_path(size_t index) {
+	extern fs::path tempDir;
+	extern std::string scenario_temp_dir_name;
+	fs::path sndpath = tempDir/scenario_temp_dir_name/"sounds";
+	std::string sndbasenm = "SND" + std::to_string(index);
+	fs::path sndfile = sndpath/(sndbasenm + ".wav");
+
+	return sndfile;
+}
+
+static bool edit_custom_sound_action(cDialog& me, std::string action, std::vector<std::string>& snd_names, int curPage, int& max_snd);
+
+static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
+	for(int i = 0; i < 10; i++) {
+		int which_snd = (curPage + 1) * 100 + i;
+		std::string id = std::to_string(i);
+		if(firstTime) {
+			using namespace std::placeholders;
+			std::vector<std::string> buttons = {
+				"play" + id, "del" + id,
+				"open" + id, "save" + id,
+			};
+			me.attachClickHandlers(std::bind(edit_custom_sound_action, _1, _2, std::ref(snd_names), std::ref(curPage), std::ref(max_snd)), buttons);
+		}
+		if(fs::exists(get_snd_path(which_snd))){
+			me["play" + id].show();
+			me["save" + id].show();
+			me["del" + id].show();
+		}else{
+			me["play" + id].hide();
+			me["save" + id].hide();
+			me["del" + id].hide();
+		}
+
+		me["num" + id].setTextToNum(which_snd);
+		me["name" + id].setText("");
+		if(which_snd - 100 < snd_names.size())
+			me["name" + id].setText(snd_names[which_snd - 100]);
+	}
+}
+
 static bool edit_custom_sound_action(cDialog& me, std::string action, std::vector<std::string>& snd_names, int curPage, int& max_snd) {
 	size_t a_len = action.length();
 	int which_snd = (curPage + 1) * 100 + (action[a_len-1] - '0');
@@ -3954,26 +3995,11 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 		if(fpath.empty()) return true;
 		fs::copy_file(sndfile, fpath, fs::copy_options::overwrite_existing);
 	}
+
+	fill_custom_sounds_page(me, snd_names, curPage, max_snd, false);
 	return true;
 }
 
-static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
-	for(int i = 0; i < 10; i++) {
-		int which_snd = (curPage + 1) * 100 + i;
-		std::string id = std::to_string(i);
-		if(firstTime) {
-			using namespace std::placeholders;
-			std::vector<std::string> buttons = {
-				"play" + id, "del" + id,
-				"open" + id, "save" + id,
-			};
-			me.attachClickHandlers(std::bind(edit_custom_sound_action, _1, _2, std::ref(snd_names), std::ref(curPage), std::ref(max_snd)), buttons);
-		}
-		me["num" + id].setTextToNum(which_snd);
-		if(which_snd - 100 < snd_names.size())
-			me["name" + id].setText(snd_names[which_snd - 100]);
-	}
-}
 
 static void get_sound_names_from_dlg(cDialog& me, std::vector<std::string>& snd_names, int curPage) {
 	for(int i = 9; i >= 0; i--) {
