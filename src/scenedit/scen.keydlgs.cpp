@@ -1039,9 +1039,25 @@ static short choose_boom_type(short cur, cDialog* parent) {
 }
 
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
+	extern fs::path tempDir;
+	extern std::string scenario_temp_dir_name;
+
 	if(cur < 0) cur = 0;
 	StringList snd_names = *ResMgr::strings.get("sound-names");
 	std::copy(scenario.snd_names.begin(), scenario.snd_names.end(), std::back_inserter(snd_names));
+
+	if(fs::is_directory(tempDir/scenario_temp_dir_name/"sounds")) {
+		for(fs::directory_iterator iter(tempDir/scenario_temp_dir_name/"sounds"); iter != fs::directory_iterator(); iter++) {
+			std::string fname = iter->path().filename().string();
+			int num = std::stoi(fname.substr(3));
+			if(snd_names.size() <= num){
+				snd_names.resize(num + 1);
+			}
+			if(snd_names[num].empty())
+				snd_names[num] = fname + " (unnamed)";
+		}
+	}
+
 	cStringChoice snd_dlg(snd_names, title, parent);
 	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
 		force_play_sound(-n);
