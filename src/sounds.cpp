@@ -82,9 +82,9 @@ void init_snd_tool(){
 	atexit(exit_snd_tool);
 }
 
-void play_sound(snd_num_t which, sf::Time delay) { // if < 0, play asynch
+void play_sound(snd_num_t which, sf::Time delay, bool force) { // if which < 0, play asynch
 	std::shared_ptr<const sf::SoundBuffer> sndhandle;
-	if(!get_bool_pref("PlaySounds", true)) {
+	if(!get_bool_pref("PlaySounds", true) && !force) {
 		if(which >= 0)
 			sf::sleep(delay);
 		return;

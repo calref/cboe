@@ -3968,7 +3968,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 		return true;
 	}
 	if(action == "play") {
-		play_sound(-which_snd);
+		force_play_sound(-which_snd);
 	} else if(action == "del") {
 		if(which_snd - 100 < snd_names.size())
 			snd_names[which_snd - 100].clear();

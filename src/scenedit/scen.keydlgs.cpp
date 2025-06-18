@@ -1044,7 +1044,7 @@ snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
 	std::copy(scenario.snd_names.begin(), scenario.snd_names.end(), std::back_inserter(snd_names));
 	cStringChoice snd_dlg(snd_names, title, parent);
 	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
-		play_sound(-n);
+		force_play_sound(-n);
 	});
 	short sel = snd_dlg.show(cur);
 	if(snd_dlg->accepted()) return sel;
