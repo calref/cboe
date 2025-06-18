@@ -500,4 +500,16 @@ public:
 		index(index), sound(sound) {}
 };
 
+class aReplaceSound : public cAction {
+	size_t index;
+	sf::SoundBuffer old_sound;
+	sf::SoundBuffer new_sound;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aReplaceSound(size_t index, sf::SoundBuffer old_sound, sf::SoundBuffer new_sound) :
+		cAction("Replace Custom Sound"),
+		index(index), old_sound(old_sound), new_sound(new_sound) {}
+};
+
 #endif

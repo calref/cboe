@@ -849,3 +849,13 @@ bool aCreateDeleteSound::redo_me() {
 	ResMgr::sounds.free(sound_to_fname(index));
 	return sound.saveToFile(get_snd_path(index).string());
 }
+
+bool aReplaceSound::undo_me() {
+	ResMgr::sounds.free(sound_to_fname(index));
+	return old_sound.saveToFile(get_snd_path(index).string());
+}
+
+bool aReplaceSound::redo_me() {
+	ResMgr::sounds.free(sound_to_fname(index));
+	return new_sound.saveToFile(get_snd_path(index).string());
+}

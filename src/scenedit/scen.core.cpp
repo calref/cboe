@@ -3927,7 +3927,7 @@ fs::path get_snd_path(size_t index) {
 
 static bool edit_custom_sound_action(cDialog& me, std::string action, std::vector<std::string>& snd_names, int curPage, int& max_snd);
 
-static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime) {
+static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_names, int& curPage, int& max_snd, bool firstTime, bool newPage) {
 	for(int i = 0; i < 10; i++) {
 		int which_snd = (curPage + 1) * 100 + i;
 		std::string id = std::to_string(i);
@@ -3950,9 +3950,11 @@ static void fill_custom_sounds_page(cDialog& me, std::vector<std::string>& snd_n
 		}
 
 		me["num" + id].setTextToNum(which_snd);
-		me["name" + id].setText("");
-		if(which_snd - 100 < snd_names.size())
-			me["name" + id].setText(snd_names[which_snd - 100]);
+		if(firstTime || newPage){
+			me["name" + id].setText("");
+			if(which_snd - 100 < snd_names.size())
+				me["name" + id].setText(snd_names[which_snd - 100]);
+		}
 	}
 }
 
@@ -3988,7 +3990,9 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 		}
 		// Replace custom sound
 		if(fs::exists(sndfile)){
-
+			sf::SoundBuffer sound_for_undo;
+			sound_for_undo.loadFromFile(sndfile.string());
+			undo_list.add(action_ptr(new aReplaceSound(which_snd, sound_for_undo, snd)));
 		}
 		// First import
 		else{
@@ -4008,7 +4012,7 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 		fs::copy_file(sndfile, fpath, fs::copy_options::overwrite_existing);
 	}
 
-	fill_custom_sounds_page(me, snd_names, curPage, max_snd, false);
+	fill_custom_sounds_page(me, snd_names, curPage, max_snd, false, false);
 	return true;
 }
 
@@ -4044,7 +4048,7 @@ void edit_custom_sounds() {
 	
 	int curPage = 0;
 	auto snd_names = scenario.snd_names;
-	fill_custom_sounds_page(snd_dlg, snd_names, curPage, max_snd, true);
+	fill_custom_sounds_page(snd_dlg, snd_names, curPage, max_snd, true, true);
 	
 	if(max_snd < 110) {
 		snd_dlg["left"].hide();
@@ -4061,7 +4065,7 @@ void edit_custom_sounds() {
 			if(curPage > max_snd / 10 - 10)
 				curPage = 0;
 		} else return true;
-		fill_custom_sounds_page(me, snd_names, curPage, max_snd, false);
+		fill_custom_sounds_page(me, snd_names, curPage, max_snd, false, true);
 		return true;
 	}, {"left", "right"});
 	
