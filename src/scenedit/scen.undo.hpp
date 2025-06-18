@@ -1,6 +1,8 @@
 #ifndef BoE_scen_undo_h
 #define BoE_scen_undo_h
 
+#include <SFML/Audio/SoundBuffer.hpp>
+
 #include "location.hpp"
 #include "tools/undo.hpp"
 #include "scenario/town.hpp"
@@ -485,6 +487,17 @@ class aReplaceGraphicsSheet : public cAction {
 public:
 	aReplaceGraphicsSheet(std::string name, size_t index, sf::Image old_image, sf::Image new_image) :
 		cAction(name), index(index), old_image(old_image), new_image(new_image) {}
+};
+
+class aCreateDeleteSound : public cAction {
+	size_t index;
+	sf::SoundBuffer sound;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteSound(bool create, size_t index, sf::SoundBuffer sound) :
+		cAction(create ? "Import Custom Sound" : "Delete Custom Sound", !create),
+		index(index), sound(sound) {}
 };
 
 #endif

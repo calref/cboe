@@ -4,6 +4,8 @@
 
 #include "gfx/gfxsheets.hpp"
 #include "fileio/resmgr/res_image.hpp"
+#include "fileio/resmgr/res_sound.hpp"
+#include "sounds.hpp"
 
 #include "scenario/scenario.hpp"
 #include "scenario/area.hpp"
@@ -834,4 +836,16 @@ bool aReplaceGraphicsSheet::redo_me() {
 	}
 
 	return true;
+}
+
+extern fs::path get_snd_path(size_t index);
+
+bool aCreateDeleteSound::undo_me() {
+	fs::remove(get_snd_path(index).string());
+	return true;
+}
+
+bool aCreateDeleteSound::redo_me() {
+	ResMgr::sounds.free(sound_to_fname(index));
+	return sound.saveToFile(get_snd_path(index).string());
 }

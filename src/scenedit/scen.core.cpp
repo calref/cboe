@@ -3972,8 +3972,12 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 	} else if(action == "del") {
 		if(which_snd - 100 < snd_names.size())
 			snd_names[which_snd - 100].clear();
+		sf::SoundBuffer sound_for_undo;
+		sound_for_undo.loadFromFile(sndfile.string());
 		fs::remove(sndfile);
 		me["name" + std::to_string(which_snd % 10)].setText("");
+
+		undo_list.add(action_ptr(new aCreateDeleteSound(false, which_snd, sound_for_undo)));
 	} else if(action == "open") {
 		fs::path fpath = nav_get_rsrc({"wav"});
 		if(fpath.empty()) return true;
@@ -3981,6 +3985,14 @@ static bool edit_custom_sound_action(cDialog& me, std::string action, std::vecto
 		if(!snd.loadFromFile(fpath.string().c_str())) {
 			beep();
 			return true;
+		}
+		// Replace custom sound
+		if(fs::exists(sndfile)){
+
+		}
+		// First import
+		else{
+			undo_list.add(action_ptr(new aCreateDeleteSound(true, which_snd, snd)));
 		}
 		fs::copy_file(fpath, sndfile, fs::copy_options::overwrite_existing);
 		ResMgr::sounds.free(sound_to_fname(which_snd));
@@ -4058,6 +4070,8 @@ void edit_custom_sounds() {
 		get_sound_names_from_dlg(snd_dlg, snd_names, curPage);
 		snd_names.swap(scenario.snd_names);
 	}
+
+	update_edit_menu();
 }
 
 fs::path run_file_picker(bool saving){
