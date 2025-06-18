@@ -463,4 +463,16 @@ public:
 		cAction("Create Custom Graphics Sheet"), index(index) {}
 };
 
+/// Action that deletes a custom graphics sheet
+class aDeleteGraphicsSheet : public cAction {
+	size_t index;
+	bool move_others;
+	sf::Image image;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aDeleteGraphicsSheet(size_t index, bool move_others, sf::Image image) :
+		cAction("Delete Custom Graphics Sheet"), index(index), image(image), move_others(move_others) {}
+};
+
 #endif

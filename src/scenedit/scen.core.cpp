@@ -3791,12 +3791,19 @@ void edit_custom_sheets() {
 	});
 	pic_dlg["del"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
 		int which_pic = all_pics[cur];
+
+		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
+		bool moved = false;
+		sf::Image image_for_undo;
+		image_for_undo.loadFromFile(fpath.string());
+
 		if(which_pic < spec_scen_g.numSheets) {
 			std::string choice = "del";
 			if(which_pic < spec_scen_g.numSheets - 1)
 				choice = cChoiceDlog("must-delete-in-order", {"cancel", "del", "move"}, &me).show();
 			if(choice == "cancel") return true;
 			if(choice == "move") {
+				moved = true;
 				spec_scen_g.sheets.erase(spec_scen_g.sheets.begin() + which_pic);
 				spec_scen_g.numSheets--;
 				for(; which_pic < spec_scen_g.numSheets; which_pic++) {
@@ -3823,8 +3830,8 @@ void edit_custom_sheets() {
 		}else{
 			all_pics.erase(all_pics.begin() + cur);
 		}
-		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
 		if(fs::exists(fpath)) fs::remove(fpath);
+		undo_list.add(action_ptr(new aDeleteGraphicsSheet(which_pic, moved, image_for_undo)));
 		if(all_pics.size() == 1) {
 			me["left"].hide();
 			me["right"].hide();

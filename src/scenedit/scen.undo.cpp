@@ -3,6 +3,7 @@
 #include <boost/filesystem.hpp>
 
 #include "gfx/gfxsheets.hpp"
+#include "fileio/resmgr/res_image.hpp"
 
 #include "scenario/scenario.hpp"
 #include "scenario/area.hpp"
@@ -737,10 +738,11 @@ extern cCustomGraphics spec_scen_g;
 
 bool aCreateGraphicsSheet::undo_me() {
 	fs::path sheetPath = get_pic_dir()/("sheet" + std::to_string(index) + ".png");
-	fs::remove(sheetPath);
+	if(fs::exists(sheetPath)) fs::remove(sheetPath);
 	if(index == spec_scen_g.numSheets - 1) {
 		spec_scen_g.sheets.pop_back();
 		spec_scen_g.numSheets--;
+		ResMgr::graphics.free("sheet" + std::to_string(index));
 	}
 	return true;
 }
@@ -757,5 +759,51 @@ bool aCreateGraphicsSheet::redo_me() {
 		img.create(280, 360);
 		img.saveToFile(sheetPath.string().c_str());
 	}
+	return true;
+}
+
+bool aDeleteGraphicsSheet::undo_me() {
+	fs::path sheetPath = get_pic_dir()/("sheet" + std::to_string(index) + ".png");
+	// Undo shifting other sheets left
+	if(move_others && fs::exists(sheetPath)){
+		for(int other_index = spec_scen_g.numSheets - 1; other_index >= index; --other_index){
+			int old_index = other_index + 1;
+			fs::path from = get_pic_dir()/("sheet" + std::to_string(other_index) + ".png");
+			fs::path to = get_pic_dir()/("sheet" + std::to_string(old_index) + ".png");
+			if(!fs::exists(from)) continue; // Just in case
+			fs::remove(to);
+			fs::rename(from, to);
+		}
+	}
+
+	image.saveToFile(sheetPath.string().c_str());
+	if(index <= spec_scen_g.numSheets) spec_scen_g.numSheets++;
+	return true;
+}
+
+bool aDeleteGraphicsSheet::redo_me() {
+	fs::path sheetPath = get_pic_dir()/("sheet" + std::to_string(index) + ".png");
+
+	if(index < spec_scen_g.numSheets){
+		if(move_others){
+			spec_scen_g.sheets.erase(spec_scen_g.sheets.begin() + index);
+			spec_scen_g.numSheets--;
+			for(int which_pic = index; which_pic < spec_scen_g.numSheets; which_pic++) {
+				fs::path from = get_pic_dir()/("sheet" + std::to_string(which_pic + 1) + ".png");
+				fs::path to = get_pic_dir()/("sheet" + std::to_string(which_pic) + ".png");
+				if(!fs::exists(from)) continue; // Just in case
+				fs::remove(to);
+				fs::rename(from, to);
+				ResMgr::graphics.free("sheet" + std::to_string(which_pic));
+			}
+		}else{
+			spec_scen_g.numSheets = index;
+			spec_scen_g.sheets.resize(index);
+			ResMgr::graphics.free("sheet" + std::to_string(index));
+		}
+	}
+
+	if(fs::exists(sheetPath)) fs::remove(sheetPath);
+
 	return true;
 }
