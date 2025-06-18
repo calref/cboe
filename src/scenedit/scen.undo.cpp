@@ -807,3 +807,31 @@ bool aDeleteGraphicsSheet::redo_me() {
 
 	return true;
 }
+
+bool aReplaceGraphicsSheet::undo_me() {
+	if(index >= spec_scen_g.numSheets) {
+		std::string resName = "sheet" + std::to_string(index);
+		fs::path toPath = get_pic_dir()/(resName + ".png");
+
+		old_image.saveToFile(toPath.string().c_str());
+		ResMgr::graphics.free(resName);
+	}else{
+		spec_scen_g.replace_sheet(index, old_image);
+	}
+
+	return true;
+}
+
+bool aReplaceGraphicsSheet::redo_me() {
+	if(index >= spec_scen_g.numSheets) {
+		std::string resName = "sheet" + std::to_string(index);
+		fs::path toPath = get_pic_dir()/(resName + ".png");
+
+		new_image.saveToFile(toPath.string().c_str());
+		ResMgr::graphics.free(resName);
+	}else{
+		spec_scen_g.replace_sheet(index, new_image);
+	}
+
+	return true;
+}

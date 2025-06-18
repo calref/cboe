@@ -475,4 +475,16 @@ public:
 		cAction("Delete Custom Graphics Sheet"), index(index), image(image), move_others(move_others) {}
 };
 
+/// Action that changes a custom graphics sheet
+class aReplaceGraphicsSheet : public cAction {
+	size_t index;
+	sf::Image old_image;
+	sf::Image new_image;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aReplaceGraphicsSheet(std::string name, size_t index, sf::Image old_image, sf::Image new_image) :
+		cAction(name), index(index), old_image(old_image), new_image(new_image) {}
+};
+
 #endif

@@ -3632,6 +3632,10 @@ extern fs::path tempDir;
 extern std::string scenario_temp_dir_name;
 
 void edit_custom_sheets() {
+	// Creating and deleting graphics sheets happens immediately. Replacing graphics sheets, all actions
+	// are committed when you hit okay.
+	std::vector<action_ptr> deferred_actions;
+
 	int max_pic = -1;
 	std::vector<int> all_pics;
 	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
@@ -3706,26 +3710,34 @@ void edit_custom_sheets() {
 		set_clipboard_img(sheets[cur]);
 		return true;
 	});
-	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
 		auto img = get_clipboard_img();
 		if(img == nullptr) {
 			beep();
 			return true;
 		}
+		sf::Image new_image = *img;
 		if(cur >= spec_scen_g.numSheets) {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
+
+			sf::Image image_for_undo;
+			image_for_undo.loadFromFile(toPath.string());
+			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Paste Graphics Sheet", all_pics[cur], image_for_undo, new_image)));
+
 			img->saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
 			set_dlg_custom_sheet(me, all_pics[cur]);
 			return true;
 		}
+		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Paste Graphics Sheet", cur, sheets[cur], new_image)));
+
 		sheets[cur] = *img;
 		spec_scen_g.replace_sheet(cur, *img);
 		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	});
-	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
 		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
 		if(fpath.empty()) return true;
 		sf::Image img;
@@ -3736,11 +3748,18 @@ void edit_custom_sheets() {
 		if(cur >= spec_scen_g.numSheets) {
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
+
+			sf::Image image_for_undo;
+			image_for_undo.loadFromFile(toPath.string());
+			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], image_for_undo, img)));
+
 			img.saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
 			set_dlg_custom_sheet(me, all_pics[cur]);
 			return true;
 		}
+		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], sheets[cur], img)));
+
 		sheets[cur] = img;
 		spec_scen_g.replace_sheet(cur, img);
 		set_dlg_custom_sheet(me, all_pics[cur]);
@@ -3835,7 +3854,10 @@ void edit_custom_sheets() {
 			all_pics.erase(all_pics.begin() + cur);
 		}
 		if(fs::exists(fpath)) fs::remove(fpath);
+
+		// We'll update the edit menu after this dialog closes
 		undo_list.add(action_ptr(new aDeleteGraphicsSheet(which_pic, moved, image_for_undo)));
+
 		if(all_pics.size() == 1) {
 			me["left"].hide();
 			me["right"].hide();
@@ -3871,8 +3893,14 @@ void edit_custom_sheets() {
 	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
 	pic_dlg.run();
 	
+	// Commit undo actions for the cancelable operations
+	if(pic_dlg.accepted()){
+		for(action_ptr action : deferred_actions){
+			undo_list.add(action);
+		}
+	}
 	// Now, we need to restore the sheets if they pressed cancel
-	if(!pic_dlg.accepted()) {
+	else{
 		for(auto p : sheetsSave) {
 			spec_scen_g.replace_sheet(p.first, p.second);
 		}
