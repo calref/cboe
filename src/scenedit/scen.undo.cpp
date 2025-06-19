@@ -889,3 +889,13 @@ bool aClassifyGraphics::redo_me() {
 	scenario.custom_graphics = new_types;
 	return true;
 }
+
+bool aEditAdvancedDetails::undo_me() {
+	scen_set_advanced(scenario, old_advanced);
+	return true;
+}
+
+bool aEditAdvancedDetails::redo_me() {
+	scen_set_advanced(scenario, new_advanced);
+	return true;
+}

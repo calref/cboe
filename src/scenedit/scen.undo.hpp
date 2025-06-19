@@ -542,4 +542,14 @@ public:
 		cAction("Classify Custom Graphics"), old_types(old_types), new_types(new_types) {}
 };
 
+class aEditAdvancedDetails : public cAction {
+	scen_advanced_t old_advanced;
+	scen_advanced_t new_advanced;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditAdvancedDetails(scen_advanced_t old_advanced, scen_advanced_t new_advanced) :
+		cAction("Edit Advanced Details"), old_advanced(old_advanced), new_advanced(new_advanced) {}
+};
+
 #endif

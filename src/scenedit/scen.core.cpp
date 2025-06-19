@@ -3184,14 +3184,23 @@ void edit_scen_adv_details() {
 	info_dlg.run();
 
 	if(info_dlg.accepted()){
-		scenario.adjust_diff = dynamic_cast<cLed&>(info_dlg["adjust"]).getState() != led_red;
+		scen_advanced_t old_advanced = advanced_from_scen(scenario);
+		scen_advanced_t new_advanced;
 
-		scenario.campaign_id = info_dlg["cpnid"].getText();
-		scenario.bg_out = boost::lexical_cast<int>(info_dlg["bg-out"].getText().substr(10));
-		scenario.bg_town = boost::lexical_cast<int>(info_dlg["bg-town"].getText().substr(10));
-		scenario.bg_dungeon = boost::lexical_cast<int>(info_dlg["bg-dungeon"].getText().substr(13));
-		scenario.bg_fight = boost::lexical_cast<int>(info_dlg["bg-fight"].getText().substr(11));
-		scenario.init_spec = info_dlg["oninit"].getTextAsNum();
+		new_advanced.adjust_diff = dynamic_cast<cLed&>(info_dlg["adjust"]).getState() == led_red;
+
+		new_advanced.campaign_id = info_dlg["cpnid"].getText();
+		new_advanced.bg_out = boost::lexical_cast<int>(info_dlg["bg-out"].getText().substr(10));
+		new_advanced.bg_town = boost::lexical_cast<int>(info_dlg["bg-town"].getText().substr(10));
+		new_advanced.bg_dungeon = boost::lexical_cast<int>(info_dlg["bg-dungeon"].getText().substr(13));
+		new_advanced.bg_fight = boost::lexical_cast<int>(info_dlg["bg-fight"].getText().substr(11));
+		new_advanced.init_spec = info_dlg["oninit"].getTextAsNum();
+
+		if(old_advanced != new_advanced){
+			scen_set_advanced(scenario, new_advanced);
+			undo_list.add(action_ptr(new aEditAdvancedDetails(old_advanced, new_advanced)));
+			update_edit_menu();
+		}
 	}
 }
 

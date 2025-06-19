@@ -219,7 +219,7 @@ inline scen_details_t details_from_scen(cScenario& scen) {
 	};
 }
 
-inline void scen_set_details(cScenario& scen, scen_details_t details) {
+inline void scen_set_details(cScenario& scen, const scen_details_t& details) {
 	scen.difficulty = details.difficulty;
 	scen.rating = details.rating;
 	scen.scen_name = details.scen_name;
@@ -252,9 +252,56 @@ inline scen_intro_t intro_from_scen(cScenario& scen) {
 	return { scen.intro_pic, scen.intro_strs };
 }
 
-inline void scen_set_intro(cScenario& scen, scen_intro_t details) {
+inline void scen_set_intro(cScenario& scen, const scen_intro_t& details) {
 	scen.intro_pic = details.intro_pic;
 	scen.intro_strs = details.intro_strs;
+}
+
+// Store a version the scenario advanced details for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct scen_advanced_t {
+	bool adjust_diff;
+	std::string campaign_id;
+	int bg_out;
+	int bg_town;
+	int bg_dungeon;
+	int bg_fight;
+	spec_num_t init_spec;
+	bool operator==(const scen_advanced_t& other) const {
+		CHECK_EQ(other, adjust_diff);
+		CHECK_EQ(other, campaign_id);
+		CHECK_EQ(other, bg_out);
+		CHECK_EQ(other, bg_town);
+		CHECK_EQ(other, bg_dungeon);
+		CHECK_EQ(other, bg_fight);
+		CHECK_EQ(other, init_spec);
+		return true;
+	}
+	bool operator!=(const scen_advanced_t& other) const { return !(*this == other); }
+};
+
+inline scen_advanced_t advanced_from_scen(cScenario& scen) {
+	return {
+		scen.adjust_diff,
+		scen.campaign_id,
+		scen.bg_out,
+		scen.bg_town,
+		scen.bg_dungeon,
+		scen.bg_fight,
+		scen.init_spec
+	};
+}
+
+inline void scen_set_advanced(cScenario& scen, const scen_advanced_t& details) {
+	scen.adjust_diff = details.adjust_diff;
+	scen.campaign_id = details.campaign_id;
+	scen.bg_out = details.bg_out;
+	scen.bg_town = details.bg_town;
+	scen.bg_dungeon = details.bg_dungeon;
+	scen.bg_fight = details.bg_fight;
+	scen.init_spec = details.init_spec;
 }
 
 #endif
