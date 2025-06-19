@@ -11,6 +11,7 @@
 #include <memory>
 #include <algorithm>
 #include <iostream>
+#include "tools/undo.hpp"
 #include "fileio/fileio.hpp"
 #include "scen.actions.hpp"
 #include "scen.townout.hpp"
@@ -21,7 +22,8 @@ extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern location cur_out;
 extern bool change_made, ae_loading;
-
+extern cUndoList undo_list;
+extern void update_edit_menu();
 @interface AppleEventHandler : NSObject<NSApplicationDelegate>
 -(BOOL)application:(NSApplication*) app openFile:(NSString*) file;
 // TODO: Handle quit event by putting up quit dialog
