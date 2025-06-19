@@ -59,24 +59,26 @@ void cStack::draw() {
 	drawFrame(2, frameStyle);
 }
 
-bool cStack::setPage(size_t n) {
+bool cStack::setPage(size_t n, bool call_focus_handlers) {
 	if(n >= nPages) return false;
 	if(n == curPage) return true;
 	cTextField* focus = getDialog()->getFocus();
 	bool failed = false;
-	for(auto p : controls) {
-		const std::string& id = p.first;
-		cControl& ctrl = *p.second;
-		// Only trigger focus handlers if the current page still exists.
-		if(curPage < nPages) {
-			storage[curPage][id] = ctrl.store();
-			if(!ctrl.triggerFocusHandler(*getDialog(), id, true))
-				failed = true;
-			if(!failed) {
-				ctrl.restore(storage[n][id]);
-				if(focus == &ctrl && !ctrl.triggerFocusHandler(*getDialog(), id, false)) {
+	if(call_focus_handlers){
+		for(auto p : controls) {
+			const std::string& id = p.first;
+			cControl& ctrl = *p.second;
+			// Only trigger focus handlers if the current page still exists.
+			if(curPage < nPages) {
+				storage[curPage][id] = ctrl.store();
+				if(!ctrl.triggerFocusHandler(*getDialog(), id, true))
 					failed = true;
-					ctrl.restore(storage[curPage][id]);
+				if(!failed) {
+					ctrl.restore(storage[n][id]);
+					if(focus == &ctrl && !ctrl.triggerFocusHandler(*getDialog(), id, false)) {
+						failed = true;
+						ctrl.restore(storage[curPage][id]);
+					}
 				}
 			}
 		}
@@ -102,7 +104,7 @@ size_t cStack::getPage() const {
 
 void cStack::setPageCount(size_t n) {
 	if(curPage >= n && n > 0)
-		setPage(nPages - 1);
+		setPage(nPages - 1, false);
 	auto added = n - nPages;
 	if(n == 0) curPage = 0;
 	nPages = n;
@@ -110,10 +112,10 @@ void cStack::setPageCount(size_t n) {
 	if(added > 0 && defaultTemplate < storage.size()) {
 		auto saveCur = curPage;
 		for(int i = n - added; i < nPages; i++) {
-			setPage(i);
+			setPage(i, false);
 			applyTemplate(defaultTemplate);
 		}
-		setPage(saveCur);
+		setPage(saveCur, false);
 	}
 }
 
@@ -235,10 +237,10 @@ void cStack::validatePostParse(ticpp::Element&, std::string, const std::set<std:
 	// Actual number of pages is the larger of pages= and count of <page>
 	setPageCount(std::max(nPages, templates.size()));
 	for(size_t i = 0; i < nPages; i++) {
-		setPage(i);
+		setPage(i, false);
 		applyTemplate(i);
 	}
-	setPage(0);
+	setPage(0, false);
 }
 
 void cStack::applyTemplate(size_t n) {
