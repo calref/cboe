@@ -909,3 +909,13 @@ bool aEditTownVarying::redo_me() {
 	scenario.town_mods = new_varying;
 	return true;
 }
+
+bool aEditScenTimers::undo_me() {
+	scenario.scenario_timers = old_timers;
+	return true;
+}
+
+bool aEditScenTimers::redo_me() {
+	scenario.scenario_timers = new_timers;
+	return true;
+}

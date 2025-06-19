@@ -3442,13 +3442,24 @@ static bool save_scenario_events(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	cStack& stk = dynamic_cast<cStack&>(me["list"]);
 
+	auto old_timers = scenario.scenario_timers;
+	auto& new_timers = scenario.scenario_timers;
 	for(short i = 0; i < scenario.scenario_timers.size(); i++) {
 		stk.setPage(i / 10);
 		short fieldId = i % 10;
 		std::string id = std::to_string(fieldId + 1);
-		scenario.scenario_timers[i].time = stk["time" + id].getTextAsNum();
-		scenario.scenario_timers[i].node = stk["node" + id].getTextAsNum();
+		new_timers[i].time = stk["time" + id].getTextAsNum();
+		new_timers[i].node = stk["node" + id].getTextAsNum();
 	}
+
+	for(int i = 0; i < new_timers.size(); ++i){
+		if(old_timers[i].time != new_timers[i].time || old_timers[i].node != new_timers[i].node){
+			undo_list.add(action_ptr(new aEditScenTimers(old_timers, new_timers)));
+			update_edit_menu();
+			break;
+		}
+	}
+
 	return true;
 }
 

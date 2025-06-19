@@ -562,4 +562,14 @@ public:
 		cAction("Edit Town Varying Entrances"), old_varying(old_varying), new_varying(new_varying) {}
 };
 
+class aEditScenTimers : public cAction {
+	std::array<cTimer,20> old_timers;
+	std::array<cTimer,20> new_timers;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditScenTimers(std::array<cTimer,20> old_timers, std::array<cTimer,20> new_timers) :
+		cAction("Edit Scenario Event Timers"), old_timers(old_timers), new_timers(new_timers) {}
+};
+
 #endif
