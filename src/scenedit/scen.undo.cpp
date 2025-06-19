@@ -919,3 +919,13 @@ bool aEditScenTimers::redo_me() {
 	scenario.scenario_timers = new_timers;
 	return true;
 }
+
+bool aEditItemShortcuts::undo_me() {
+	scenario.storage_shortcuts = old_shortcuts;
+	return true;
+}
+
+bool aEditItemShortcuts::redo_me() {
+	scenario.storage_shortcuts = new_shortcuts;
+	return true;
+}

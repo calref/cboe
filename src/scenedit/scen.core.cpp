@@ -3005,6 +3005,22 @@ static void put_item_placement_in_dlog(cDialog& me, const cScenario::cItemStorag
 	me["num"].setTextToNum(which);
 	dynamic_cast<cLed&>(me["owned"]).setState(storage.property ? led_red : led_off);
 	me["ter"].setTextToNum(storage.ter_type);
+	if(storage.ter_type == -1){
+		me["ter-pic"].hide();
+	}
+	else{
+		me["ter-pic"].show();
+		pic_num_t pict = scenario.ter_types[storage.ter_type].picture;
+		if(pict < 960){
+			dynamic_cast<cPict&>(me["ter-pic"]).setPict(pict, PIC_TER);
+		}else if(pict < 1000){
+			dynamic_cast<cPict&>(me["ter-pic"]).setPict(pict - 960, PIC_TER_ANIM);
+		}else if(pict < 2000){
+			dynamic_cast<cPict&>(me["ter-pic"]).setPict(pict - 1000, PIC_CUSTOM_TER);
+		}else{
+			dynamic_cast<cPict&>(me["ter-pic"]).setPict(pict - 2000, PIC_CUSTOM_TER_ANIM);
+		}
+	}
 	for(short i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
 		me["item" + id].setTextToNum(storage.item_num[i]);
@@ -3037,6 +3053,7 @@ static bool edit_item_placement_event_filter(cDialog& me, std::string hit, cScen
 		if(i >= 0){
 			me["ter"].setTextToNum(i);
 			storage.ter_type = i;
+			put_item_placement_in_dlog(me, storage, which);
 		}
 	}
 	return true;

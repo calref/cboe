@@ -29,6 +29,7 @@
 	<button name='left' type='left' top='334' left='10' def-key='left'/>
 	<text name='num' top='115' left='211' width=' 46' height='14'/>
 	<pict type='dlog' num='16' top='8' left='8'/>
+	<pict name='ter-pic' type='ter' num='0' top='70' left='458'/>
 	<text size='large' top='6' left='50' width='256' height='20'>Item Placement Shortcuts</text>
 	<text top='25' left='50' width='439' height='40'>
 		You can design shortcuts for automatic placement of items in towns.
