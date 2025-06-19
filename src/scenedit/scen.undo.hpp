@@ -513,13 +513,23 @@ public:
 };
 
 class aEditScenarioDetails : public cAction {
-	scenario_details_t old_details;
-	scenario_details_t new_details;
+	scen_details_t old_details;
+	scen_details_t new_details;
 	bool undo_me() override;
 	bool redo_me() override;
 public:
-	aEditScenarioDetails(scenario_details_t old_details, scenario_details_t new_details) :
+	aEditScenarioDetails(scen_details_t old_details, scen_details_t new_details) :
 		cAction("Edit Scenario Details"), old_details(old_details), new_details(new_details) {}
+};
+
+class aEditIntro : public cAction {
+	scen_intro_t old_intro;
+	scen_intro_t new_intro;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditIntro(scen_intro_t old_intro, scen_intro_t new_intro) :
+		cAction("Edit Scenario Intro/Picture"), old_intro(old_intro), new_intro(new_intro) {}
 };
 
 #endif

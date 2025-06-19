@@ -38,6 +38,8 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
+extern cUndoList undo_list;
+extern void update_edit_menu();
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
 std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
@@ -1691,14 +1693,23 @@ short edit_special_num(short mode,short what_start) {
 
 static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
-		scenario.intro_pic = me["picnum"].getTextAsNum();
-		if(scenario.intro_pic > 29) {
+		scen_intro_t old_intro = intro_from_scen(scenario);		
+		scen_intro_t new_intro;
+
+		new_intro.intro_pic = me["picnum"].getTextAsNum();
+		if(new_intro.intro_pic > 29) {
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
-		for(short i = 0; i < scenario.intro_strs.size(); i++) {
+		for(short i = 0; i < new_intro.intro_strs.size(); i++) {
 			std::string id = "str" + std::to_string(i + 1);
-			scenario.intro_strs[i] = me[id].getText();
+			new_intro.intro_strs[i] = me[id].getText();
+		}
+
+		if(new_intro != old_intro){
+			scen_set_intro(scenario, new_intro);
+			undo_list.add(action_ptr(new aEditIntro(old_intro, new_intro)));
+			update_edit_menu();
 		}
 		me.toast(true);
 	} else if(item_hit == "cancel") {

@@ -3061,8 +3061,8 @@ void edit_item_placement() {
 static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	
-	scenario_details_t old_details = details_from_scen(scenario);
-	scenario_details_t new_details;
+	scen_details_t old_details = details_from_scen(scenario);
+	scen_details_t new_details;
 
 	{
 		cLedGroup& difficulty = dynamic_cast<cLedGroup&>(me["difficulty"]);

@@ -184,16 +184,16 @@ std::ostream& operator<< (std::ostream& out, eContentRating rating);
 
 // Store a version the scenario details for undo history.
 // This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
-// require changing every reference to these detail values in the game code, making them more verbose. I don't know
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
 // if that's worth it.
-struct scenario_details_t {
+struct scen_details_t {
 	unsigned short difficulty;
 	eContentRating rating;
 	std::string scen_name;
 	unsigned char ver[3];
 	std::string teaser_text[2];
 	std::string contact_info[2];
-	bool operator==(const scenario_details_t& other) const {
+	bool operator==(const scen_details_t& other) const {
 		CHECK_EQ(other, difficulty);
 		CHECK_EQ(other, rating);
 		CHECK_EQ(other, scen_name);
@@ -205,10 +205,10 @@ struct scenario_details_t {
 			if(this->contact_info[i] != other.contact_info[i]) return false;
 		return true;
 	}
-	bool operator!=(const scenario_details_t& other) const { return !(*this == other); }
+	bool operator!=(const scen_details_t& other) const { return !(*this == other); }
 };
 
-inline scenario_details_t details_from_scen(cScenario& scen) {
+inline scen_details_t details_from_scen(cScenario& scen) {
 	return {
 		scen.difficulty,
 		scen.rating,
@@ -219,7 +219,7 @@ inline scenario_details_t details_from_scen(cScenario& scen) {
 	};
 }
 
-inline void scen_set_details(cScenario& scen, scenario_details_t details) {
+inline void scen_set_details(cScenario& scen, scen_details_t details) {
 	scen.difficulty = details.difficulty;
 	scen.rating = details.rating;
 	scen.scen_name = details.scen_name;
@@ -229,6 +229,32 @@ inline void scen_set_details(cScenario& scen, scenario_details_t details) {
 		scen.teaser_text[i] = details.teaser_text[i];
 	for(short i = 0; i < 2; i++)
 		scen.contact_info[i] = details.contact_info[i];
+}
+
+// Store a version the scenario intro text/icon# for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct scen_intro_t {
+	unsigned short intro_pic;
+	std::array<std::string, 6> intro_strs;
+	bool operator==(const scen_intro_t& other) const {
+		CHECK_EQ(other, intro_pic);
+		for(int i = 0; i < intro_strs.size(); ++i){
+			if(intro_strs[i] != other.intro_strs[i]) return false;
+		}
+		return true;
+	}
+	bool operator!=(const scen_intro_t& other) const { return !(*this == other); }
+};
+
+inline scen_intro_t intro_from_scen(cScenario& scen) {
+	return { scen.intro_pic, scen.intro_strs };
+}
+
+inline void scen_set_intro(cScenario& scen, scen_intro_t details) {
+	scen.intro_pic = details.intro_pic;
+	scen.intro_strs = details.intro_strs;
 }
 
 #endif

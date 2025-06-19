@@ -869,3 +869,13 @@ bool aEditScenarioDetails::redo_me() {
 	scen_set_details(scenario, new_details);
 	return true;
 }
+
+bool aEditIntro::undo_me() {
+	scen_set_intro(scenario, old_intro);
+	return true;
+}
+
+bool aEditIntro::redo_me() {
+	scen_set_intro(scenario, new_intro);
+	return true;
+}
