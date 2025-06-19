@@ -100,6 +100,7 @@ public:
 	bool has_feature_flag(std::string flag);
 	std::string get_feature_flag(std::string flag);
 
+	// Varying town entrances
 	std::array<spec_loc_t,10> town_mods;
 	std::map<short, rectangle> store_item_rects;
 	std::vector<cSpecItem> special_items;

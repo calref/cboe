@@ -899,3 +899,13 @@ bool aEditAdvancedDetails::redo_me() {
 	scen_set_advanced(scenario, new_advanced);
 	return true;
 }
+
+bool aEditTownVarying::undo_me() {
+	scenario.town_mods = old_varying;
+	return true;
+}
+
+bool aEditTownVarying::redo_me() {
+	scenario.town_mods = new_varying;
+	return true;
+}

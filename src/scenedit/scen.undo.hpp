@@ -552,4 +552,14 @@ public:
 		cAction("Edit Advanced Details"), old_advanced(old_advanced), new_advanced(new_advanced) {}
 };
 
+class aEditTownVarying : public cAction {
+	std::array<spec_loc_t,10> old_varying;
+	std::array<spec_loc_t,10> new_varying;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownVarying(std::array<spec_loc_t,10> old_varying, std::array<spec_loc_t,10> new_varying) :
+		cAction("Edit Town Varying Entrances"), old_varying(old_varying), new_varying(new_varying) {}
+};
+
 #endif

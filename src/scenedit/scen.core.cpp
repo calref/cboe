@@ -2901,6 +2901,9 @@ bool edit_vehicle(cVehicle& what, int num, bool is_boat) {
 
 static bool save_add_town(cDialog& me) {
 	cTilemap& grid = dynamic_cast<cTilemap&>(me["varying"]);
+	auto old_town_mods = scenario.town_mods;
+	auto new_town_mods = scenario.town_mods;
+	bool changed = false;
 	for(short i = 0; i < scenario.town_mods.size(); i++) {
 		int town = grid.getChild("town", 0, i).getTextAsNum();
 		if(cre(town,
@@ -2911,9 +2914,17 @@ static bool save_add_town(cDialog& me) {
 		int sdf_col = grid.getChild("flag-col", 0, i).getTextAsNum();
 		if(cre(sdf_col,0,SDF_COLUMNS - 1,"Second part of flag must be from 0 to " + std::to_string(SDF_COLUMNS - 1) + ".","",&me))
 			return false;
-		scenario.town_mods[i].spec = town;
-		scenario.town_mods[i].x = sdf_col;
-		scenario.town_mods[i].y = sdf_row;
+		if(town != old_town_mods[i].spec) changed = true;
+		if(sdf_col != old_town_mods[i].x) changed = true;
+		if(sdf_row != old_town_mods[i].y) changed = true;
+		new_town_mods[i].spec = town;
+		new_town_mods[i].x = sdf_col;
+		new_town_mods[i].y = sdf_row;
+	}
+	if(changed){
+		scenario.town_mods = new_town_mods;
+		undo_list.add(action_ptr(new aEditTownVarying(old_town_mods, new_town_mods)));
+		update_edit_menu();
 	}
 	return true;
 }
