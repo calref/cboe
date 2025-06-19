@@ -939,3 +939,15 @@ bool aEditTownDetails::redo_me() {
 	town_set_details(*scenario.towns[which], new_details);
 	return true;
 }
+
+bool aEditTownWandering::undo_me() {
+	scenario.towns[which]->wandering = old_wandering;
+	scenario.towns[which]->wandering_locs = old_wandering_locs;
+	return true;
+}
+
+bool aEditTownWandering::redo_me() {
+	scenario.towns[which]->wandering = new_wandering;
+	scenario.towns[which]->wandering_locs = new_wandering_locs;
+	return true;
+}

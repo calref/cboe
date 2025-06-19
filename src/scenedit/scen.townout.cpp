@@ -1034,13 +1034,22 @@ void edit_advanced_town() {
 
 static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
+	auto old_wandering = town->wandering;
+	auto old_wandering_locs = town->wandering_locs;
+	bool changed = false;
 	for(int i = 0; i < town->wandering.size(); i++) {
 		std::string base_id = "group" + std::to_string(i + 1) + "-monst";
 		for(int j = 0; j < 4; j++) {
 			std::string id = base_id + std::to_string(j + 1);
 			town->wandering[i].monst[j] = me[id].getTextAsNum();
+			if(town->wandering[i].monst[j] != old_wandering[i].monst[j]) changed = true;
 		}
 		town->wandering_locs[i] = boost::lexical_cast<location>(me["group" + std::to_string(i+1) + "-loc"].getText());
+		if(town->wandering_locs[i] != old_wandering_locs[i]) changed = true;
+	}
+	if(changed){
+		undo_list.add(action_ptr(new aEditTownWandering(cur_town, old_wandering, old_wandering_locs, town->wandering, town->wandering_locs)));
+		update_edit_menu();
 	}
 	return true;
 }

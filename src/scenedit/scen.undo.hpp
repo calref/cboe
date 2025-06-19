@@ -594,4 +594,19 @@ public:
 		cAction("Edit Town Details"), which(which), old_details(old_details), new_details(new_details) {}
 };
 
+class aEditTownWandering : public cAction {
+	size_t which;
+	std::array<cTown::cWandering,4> old_wandering;
+	std::array<location, 4> old_wandering_locs;
+	std::array<cTown::cWandering,4> new_wandering;
+	std::array<location, 4> new_wandering_locs;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownWandering(size_t which, std::array<cTown::cWandering,4> old_wandering, std::array<location, 4> old_wandering_locs,
+							 std::array<cTown::cWandering,4> new_wandering, std::array<location, 4> new_wandering_locs) :
+		cAction("Edit Town Wandering Monsters"), which(which), old_wandering(old_wandering), old_wandering_locs(old_wandering_locs),
+													new_wandering(new_wandering), new_wandering_locs(new_wandering_locs) {}
+};
+
 #endif
