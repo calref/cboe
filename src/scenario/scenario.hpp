@@ -185,7 +185,7 @@ public:
 std::istream& operator>> (std::istream& in, eContentRating& rating);
 std::ostream& operator<< (std::ostream& out, eContentRating rating);
 
-// Store a version the scenario details for undo history.
+// Store a version of the scenario details for undo history.
 // This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
 // require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
 // if that's worth it.
@@ -234,7 +234,7 @@ inline void scen_set_details(cScenario& scen, const scen_details_t& details) {
 		scen.contact_info[i] = details.contact_info[i];
 }
 
-// Store a version the scenario intro text/icon# for undo history.
+// Store a version of the scenario intro text/icon# for undo history.
 // This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
 // require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
 // if that's worth it.
@@ -260,7 +260,7 @@ inline void scen_set_intro(cScenario& scen, const scen_intro_t& details) {
 	scen.intro_strs = details.intro_strs;
 }
 
-// Store a version the scenario advanced details for undo history.
+// Store a version of the scenario advanced details for undo history.
 // This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
 // require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
 // if that's worth it.

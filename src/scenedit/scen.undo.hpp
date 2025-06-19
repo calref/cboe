@@ -583,4 +583,15 @@ public:
 		cAction("Edit Item Placement Shortcut"), which(which), old_shortcut(old_shortcut), new_shortcut(new_shortcut) {}
 };
 
+class aEditTownDetails : public cAction {
+	size_t which;
+	town_details_t old_details;
+	town_details_t new_details;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownDetails(size_t which, town_details_t old_details, town_details_t new_details) :
+		cAction("Edit Town Details"), which(which), old_details(old_details), new_details(new_details) {}
+};
+
 #endif

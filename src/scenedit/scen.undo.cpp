@@ -929,3 +929,13 @@ bool aEditItemShortcut::redo_me() {
 	scenario.storage_shortcuts[which] = new_shortcut;
 	return true;
 }
+
+bool aEditTownDetails::undo_me() {
+	town_set_details(*scenario.towns[which], old_details);
+	return true;
+}
+
+bool aEditTownDetails::redo_me() {
+	town_set_details(*scenario.towns[which], new_details);
+	return true;
+}

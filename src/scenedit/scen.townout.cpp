@@ -752,20 +752,29 @@ void edit_out_wand(short mode) {
 
 static bool save_town_details(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
-	town->name = me["name"].getText();
-	town->town_chop_time = me["chop"].getTextAsNum();
-	town->town_chop_key = me["key"].getTextAsNum();
-	town->max_num_monst = me["population"].getTextAsNum();
-	town->difficulty = me["difficulty"].getTextAsNum();
+	town_details_t old_details = details_from_town(*town);
+	town_details_t new_details = old_details;
+
+	new_details.name = me["name"].getText();
+	new_details.town_chop_time = me["chop"].getTextAsNum();
+	new_details.town_chop_key = me["key"].getTextAsNum();
+	new_details.max_num_monst = me["population"].getTextAsNum();
+	new_details.difficulty = me["difficulty"].getTextAsNum();
 	std::string lighting = dynamic_cast<cLedGroup&>(me["lighting"]).getSelected();
-	if(lighting == "lit") town->lighting_type = LIGHT_NORMAL;
-	else if(lighting == "dark") town->lighting_type = LIGHT_DARK;
-	else if(lighting == "drains") town->lighting_type = LIGHT_DRAINS;
-	else if(lighting == "no-light") town->lighting_type = LIGHT_NONE;
+	if(lighting == "lit") new_details.lighting_type = LIGHT_NORMAL;
+	else if(lighting == "dark") new_details.lighting_type = LIGHT_DARK;
+	else if(lighting == "drains") new_details.lighting_type = LIGHT_DRAINS;
+	else if(lighting == "no-light") new_details.lighting_type = LIGHT_NONE;
 	cStack& comments = dynamic_cast<cStack&>(me["cmt"]);
 	for(int i = 0; i < 3; i++) {
 		comments.setPage(i);
-		town->comment[i] = comments["comment"].getText();
+		new_details.comment[i] = comments["comment"].getText();
+	}
+
+	if(new_details != old_details){
+		town_set_details(*town, new_details);
+		undo_list.add(action_ptr(new aEditTownDetails(cur_town, old_details, new_details)));
+		update_edit_menu();
 	}
 	return true;
 }

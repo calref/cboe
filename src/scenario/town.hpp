@@ -132,4 +132,53 @@ public:
 std::ostream& operator<< (std::ostream& out, eLighting light);
 std::istream& operator>> (std::istream& in, eLighting& light);
 
+// Store a version of the town details for undo history.
+// This could be made a struct that cTown contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct town_details_t {
+	std::string name;
+	short town_chop_time;
+	short town_chop_key;
+	long max_num_monst;
+	short difficulty;
+	eLighting lighting_type;
+	std::array<std::string,3> comment;
+
+	bool operator==(const town_details_t& other) const {
+		CHECK_EQ(other,name);
+		CHECK_EQ(other,town_chop_key);
+		CHECK_EQ(other,max_num_monst);
+		CHECK_EQ(other,difficulty);
+		CHECK_EQ(other,lighting_type);
+		for(int i = 0; i < comment.size(); ++i){
+			if(other.comment[i] != comment[i]) return false;
+		}
+		return true;
+	}
+	bool operator!=(const town_details_t& other) const { return !(*this == other); }
+};
+
+inline town_details_t details_from_town(cTown& town) {
+	return {
+		town.name,
+		town.town_chop_time,
+		town.town_chop_key,
+		town.max_num_monst,
+		town.difficulty,
+		town.lighting_type,
+		town.comment
+	};
+}
+
+inline void town_set_details(cTown& town, const town_details_t& details) {
+	town.name = details.name;
+	town.town_chop_time = details.town_chop_time;
+	town.town_chop_key = details.town_chop_key;
+	town.max_num_monst = details.max_num_monst;
+	town.difficulty = details.difficulty;
+	town.lighting_type = details.lighting_type;
+	town.comment = details.comment;
+}
+
 #endif
