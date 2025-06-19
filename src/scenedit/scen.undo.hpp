@@ -532,4 +532,14 @@ public:
 		cAction("Edit Scenario Intro/Picture"), old_intro(old_intro), new_intro(new_intro) {}
 };
 
+class aClassifyGraphics : public cAction {
+	std::vector<ePicType> old_types;
+	std::vector<ePicType> new_types;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aClassifyGraphics(std::vector<ePicType> old_types, std::vector<ePicType> new_types) :
+		cAction("Classify Custom Graphics"), old_types(old_types), new_types(new_types) {}
+};
+
 #endif

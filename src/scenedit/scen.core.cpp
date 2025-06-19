@@ -3590,6 +3590,15 @@ static bool set_custom_pic_type(cDialog& me, std::string hit, std::vector<ePicTy
 
 static bool save_pics_types(cDialog& me, const std::vector<ePicType>& pics) {
 	if(!me.toast(true)) return true;
+
+	// I could check the size, but it should always match, right?
+	for(int i = 0; i < scenario.custom_graphics.size(); ++i){
+		if(scenario.custom_graphics[i] != pics[i]){
+			undo_list.add(action_ptr(new aClassifyGraphics(scenario.custom_graphics, pics)));
+			update_edit_menu();
+			break;
+		}
+	}
 	scenario.custom_graphics = pics;
 	return true;
 }

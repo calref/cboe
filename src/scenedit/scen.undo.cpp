@@ -879,3 +879,13 @@ bool aEditIntro::redo_me() {
 	scen_set_intro(scenario, new_intro);
 	return true;
 }
+
+bool aClassifyGraphics::undo_me() {
+	scenario.custom_graphics = old_types;
+	return true;
+}
+
+bool aClassifyGraphics::redo_me() {
+	scenario.custom_graphics = new_types;
+	return true;
+}
