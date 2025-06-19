@@ -87,6 +87,8 @@ public:
 		short property;
 		cItemStorage();
 		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
+		bool operator==(const cItemStorage& other) const;
+		bool operator!=(const cItemStorage& other) { return !(*this == other); }
 	};
 	void destroy_terrain();
 public:

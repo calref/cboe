@@ -2997,7 +2997,12 @@ static bool save_item_placement(cDialog& me, cScenario::cItemStorage& storage, s
 		if(cre(storage.item_odds[i],
 			   0,100,"All item chances must bve from 0 to 100.","",&me)) return false;
 	}
-	scenario.storage_shortcuts[which] = storage;
+
+	if(storage != scenario.storage_shortcuts[which]){
+		// the edit menu will update when the dialog closes
+		undo_list.add(action_ptr(new aEditItemShortcut(which, scenario.storage_shortcuts[which], storage)));
+		scenario.storage_shortcuts[which] = storage;
+	}
 	return true;
 }
 
@@ -3086,6 +3091,7 @@ void edit_item_placement() {
 	put_item_placement_in_dlog(shortcut_dlg, storage, cur_shortcut);
 	
 	shortcut_dlg.run();
+	update_edit_menu();
 }
 
 static bool save_scen_details(cDialog& me, std::string, eKeyMod) {

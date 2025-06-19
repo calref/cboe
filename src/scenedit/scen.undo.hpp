@@ -572,14 +572,15 @@ public:
 		cAction("Edit Scenario Event Timers"), old_timers(old_timers), new_timers(new_timers) {}
 };
 
-class aEditItemShortcuts : public cAction {
-	std::array<cScenario::cItemStorage,10> old_shortcuts;
-	std::array<cScenario::cItemStorage,10> new_shortcuts;
+class aEditItemShortcut : public cAction {
+	size_t which;
+	cScenario::cItemStorage old_shortcut;
+	cScenario::cItemStorage new_shortcut;
 	bool undo_me() override;
 	bool redo_me() override;
 public:
-	aEditItemShortcuts(std::array<cScenario::cItemStorage,10> old_shortcuts, std::array<cScenario::cItemStorage,10> new_shortcuts) :
-		cAction("Edit Item Placement Shortcuts"), old_shortcuts(old_shortcuts), new_shortcuts(new_shortcuts) {}
+	aEditItemShortcut(size_t which, cScenario::cItemStorage old_shortcut, cScenario::cItemStorage new_shortcut) :
+		cAction("Edit Item Placement Shortcut"), which(which), old_shortcut(old_shortcut), new_shortcut(new_shortcut) {}
 };
 
 #endif

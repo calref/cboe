@@ -920,12 +920,12 @@ bool aEditScenTimers::redo_me() {
 	return true;
 }
 
-bool aEditItemShortcuts::undo_me() {
-	scenario.storage_shortcuts = old_shortcuts;
+bool aEditItemShortcut::undo_me() {
+	scenario.storage_shortcuts[which] = old_shortcut;
 	return true;
 }
 
-bool aEditItemShortcuts::redo_me() {
-	scenario.storage_shortcuts = new_shortcuts;
+bool aEditItemShortcut::redo_me() {
+	scenario.storage_shortcuts[which] = new_shortcut;
 	return true;
 }
