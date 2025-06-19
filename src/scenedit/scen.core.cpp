@@ -2988,10 +2988,12 @@ static bool save_item_placement(cDialog& me, cScenario::cItemStorage& storage, s
 			-1,255,"Terrain Type must be from 0 to 255 (or -1 for No Shortcut).","",&me)) return false;
 	for(short i = 0; i < 10; i++) {
 		std::string id = std::to_string(i + 1);
-		storage.item_num[i] = me["item" + id].getTextAsNum();
+		storage.item_num[i] = -1;
+		if(!me["item" + id].getText().empty()) storage.item_num[i] = me["item" + id].getTextAsNum();
 		if(cre(storage.item_num[i],
 			   -1,399,"All item numbers must be from 0 to 399 (or -1 for No Item).","",&me)) return false;
-		storage.item_odds[i] = me["odds" + id].getTextAsNum();
+		storage.item_odds[i] = 0;
+		if(!me["odds" + id].getText().empty()) storage.item_odds[i] = me["odds" + id].getTextAsNum();
 		if(cre(storage.item_odds[i],
 			   0,100,"All item chances must bve from 0 to 100.","",&me)) return false;
 	}

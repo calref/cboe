@@ -38,7 +38,7 @@
 	<text top='66' left='50' width='439' height='41'>
 		Enter the terrain type to get the items,
 		the numbers of the items to place,
-		and the percentage chance (0-100) that the item is places there.
+		and the percentage chance (0-100) that the item is placed there.
 		For more details, see the documentation.
 	</text>
 	<text top='115' left='50' width='155' height='14'>Item shortcut number:</text>
