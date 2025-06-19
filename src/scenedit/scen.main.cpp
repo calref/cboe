@@ -332,6 +332,8 @@ static void process_args(int argc, char* argv[]) {
 	}
 	if(!file.empty()) {
 		if(load_scenario(file, scenario)) {
+			// On first launch, no need to clear the undo_list
+
 			set_pref("LastScenario", file);
 			restore_editor_state();
 			change_made = false;
@@ -516,6 +518,8 @@ void handle_menu_choice(eMenu item_hit) {
 				break;
 			file_to_load = item_hit == eMenu::FILE_OPEN ? nav_get_scenario() : scenario.scen_file;
 			if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
+				undo_list.clear();
+				update_edit_menu();
 				set_pref("LastScenario", file_to_load.string());
 				restore_editor_state();
 				change_made = false;

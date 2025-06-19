@@ -52,6 +52,8 @@ void set_up_apple_events() {
 	std::copy(msg.get(), msg.get() + len, std::inserter(fileName, fileName.begin()));
 	
 	if(load_scenario(fileName, scenario)) {
+		undo_list.clear();
+		update_edit_menu();
 		set_pref("LastScenario", fileName);
 		restore_editor_state();
 		change_made = false;

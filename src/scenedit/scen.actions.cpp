@@ -258,6 +258,8 @@ static bool handle_lb_action(int i){
 				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 					set_pref("LastScenario", file_to_load.string());
 					restore_editor_state();
+					undo_list.clear();
+					update_edit_menu();
 				} else if(!file_to_load.empty())
 					// If we tried to load but failed, the scenario record is messed up, so boot to start screen.
 					set_up_start_screen();

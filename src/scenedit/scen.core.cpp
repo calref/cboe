@@ -3280,6 +3280,9 @@ bool build_scenario() {
 	if(!edit_make_scen_2(width, height, lg, med, sm, default_town))
 		return false;
 	
+	undo_list.clear();
+	update_edit_menu();
+
 	scenario = cScenario();
 	scenario.scen_name = title;
 	scenario.contact_info[0] = author;
