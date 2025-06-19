@@ -3061,25 +3061,35 @@ void edit_item_placement() {
 static bool save_scen_details(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
 	
+	scenario_details_t old_details = details_from_scen(scenario);
+	scenario_details_t new_details;
+
 	{
 		cLedGroup& difficulty = dynamic_cast<cLedGroup&>(me["difficulty"]);
-		scenario.difficulty = difficulty.getSelected()[3] - '1';
+		new_details.difficulty = difficulty.getSelected()[3] - '1';
 	}{
 		cLedGroup& rating = dynamic_cast<cLedGroup&>(me["rating"]);
 		switch(rating.getSelected()[4]) {
-			case '1': scenario.rating = eContentRating::G; break;
-			case '2': scenario.rating = eContentRating::PG; break;
-			case '3': scenario.rating = eContentRating::R; break;
-			case '4': scenario.rating = eContentRating::NC17; break;
+			case '1': new_details.rating = eContentRating::G; break;
+			case '2': new_details.rating = eContentRating::PG; break;
+			case '3': new_details.rating = eContentRating::R; break;
+			case '4': new_details.rating = eContentRating::NC17; break;
 		}
 	}
-	scenario.scen_name = me["title"].getText();
+	new_details.scen_name = me["title"].getText();
 	for(short i = 0; i < 3; i++)
-		scenario.format.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
-	scenario.teaser_text[0] = me["teaser1"].getText();
-	scenario.teaser_text[1] = me["teaser2"].getText();
-	scenario.contact_info[0] = me["author"].getText();
-	scenario.contact_info[1] = me["contact"].getText();
+		new_details.ver[i] = me["ver" + std::to_string(i + 1)].getTextAsNum();
+	new_details.teaser_text[0] = me["teaser1"].getText();
+	new_details.teaser_text[1] = me["teaser2"].getText();
+	new_details.contact_info[0] = me["author"].getText();
+	new_details.contact_info[1] = me["contact"].getText();
+
+	if(new_details != old_details){
+		scen_set_details(scenario, new_details);
+		undo_list.add(action_ptr(new aEditScenarioDetails(old_details, new_details)));
+		update_edit_menu();
+	}
+
 	return true;
 }
 

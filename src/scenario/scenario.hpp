@@ -182,4 +182,53 @@ public:
 std::istream& operator>> (std::istream& in, eContentRating& rating);
 std::ostream& operator<< (std::ostream& out, eContentRating rating);
 
+// Store a version the scenario details for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game code, making them more verbose. I don't know
+// if that's worth it.
+struct scenario_details_t {
+	unsigned short difficulty;
+	eContentRating rating;
+	std::string scen_name;
+	unsigned char ver[3];
+	std::string teaser_text[2];
+	std::string contact_info[2];
+	bool operator==(const scenario_details_t& other) const {
+		CHECK_EQ(other, difficulty);
+		CHECK_EQ(other, rating);
+		CHECK_EQ(other, scen_name);
+		for(short i = 0; i < 3; i++)
+			if(this->ver[i] != other.ver[i]) return false;
+		for(short i = 0; i < 2; i++)
+			if(this->teaser_text[i] != other.teaser_text[i]) return false;
+		for(short i = 0; i < 2; i++)
+			if(this->contact_info[i] != other.contact_info[i]) return false;
+		return true;
+	}
+	bool operator!=(const scenario_details_t& other) const { return !(*this == other); }
+};
+
+inline scenario_details_t details_from_scen(cScenario& scen) {
+	return {
+		scen.difficulty,
+		scen.rating,
+		scen.scen_name,
+		scen.format.ver[0],scen.format.ver[1],scen.format.ver[2],
+		scen.teaser_text[0],scen.teaser_text[1],
+		scen.contact_info[0],scen.contact_info[1],
+	};
+}
+
+inline void scen_set_details(cScenario& scen, scenario_details_t details) {
+	scen.difficulty = details.difficulty;
+	scen.rating = details.rating;
+	scen.scen_name = details.scen_name;
+	for(short i = 0; i < 3; i++)
+		scen.format.ver[i] = details.ver[i];
+	for(short i = 0; i < 2; i++)
+		scen.teaser_text[i] = details.teaser_text[i];
+	for(short i = 0; i < 2; i++)
+		scen.contact_info[i] = details.contact_info[i];
+}
+
 #endif

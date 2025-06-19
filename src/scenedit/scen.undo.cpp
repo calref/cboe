@@ -859,3 +859,13 @@ bool aReplaceSound::redo_me() {
 	ResMgr::sounds.free(sound_to_fname(index));
 	return new_sound.saveToFile(get_snd_path(index).string());
 }
+
+bool aEditScenarioDetails::undo_me() {
+	scen_set_details(scenario, old_details);
+	return true;
+}
+
+bool aEditScenarioDetails::redo_me() {
+	scen_set_details(scenario, new_details);
+	return true;
+}
