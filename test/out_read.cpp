@@ -19,7 +19,6 @@ using namespace ticpp;
 extern Document xmlDocFromStream(istream& stream, string name);
 extern void readOutdoorsFromXml(Document&& data, cOutdoors& out);
 
-bool operator==(const cOutdoors::cWandering& lhs, const cOutdoors::cWandering& rhs);
 ostream& operator<<(ostream& out, const cOutdoors::cWandering& enc);
 
 TEST_CASE("Loading an outdoor section definition") {
@@ -122,19 +121,6 @@ TEST_CASE("Loading an outdoor section definition") {
 		REQUIRE(sector.spec_strs.size() >= 10);
 		CHECK(sector.spec_strs[9] == "A random special string");
 	}
-}
-
-bool operator==(const cOutdoors::cWandering& lhs, const cOutdoors::cWandering& rhs) {
-	if(lhs.monst != rhs.monst) return false;
-	if(lhs.friendly != rhs.friendly) return false;
-	if(lhs.spec_on_meet != rhs.spec_on_meet) return false;
-	if(lhs.spec_on_win != rhs.spec_on_win) return false;
-	if(lhs.spec_on_flee != rhs.spec_on_flee) return false;
-	if(lhs.cant_flee != rhs.cant_flee) return false;
-	if(lhs.forced != rhs.forced) return false;
-	if(lhs.end_spec1 != rhs.end_spec1) return false;
-	if(lhs.end_spec2 != rhs.end_spec2) return false;
-	return true;
 }
 
 ostream& operator<<(ostream& out, const cOutdoors::cWandering& enc) {
