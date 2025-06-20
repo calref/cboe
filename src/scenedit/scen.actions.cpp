@@ -543,7 +543,8 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							is_new = true;
 							town->talking.talk_nodes.emplace_back();
 						}
-						if((j = edit_talk_node(j)) >= 0){
+						cSpeech::cNode old_node = town->talking.talk_nodes[j];
+						if(edit_talk_node(j) >= 0){
 							// Cancel create new
 							if(is_new)
 								town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
@@ -554,8 +555,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							update_edit_menu();
 						}
 						// Edit confirmed
-						else{
-
+						else if(old_node != town->talking.talk_nodes[j]){
+							undo_list.add(action_ptr(new aEditTalkNode(cur_town, j, old_node, town->talking.talk_nodes[j])));
+							update_edit_menu();
 						}
 					}
 					start_dialogue_editing();

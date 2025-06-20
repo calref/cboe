@@ -685,4 +685,16 @@ public:
 		cAction(create ? "Create Talk Node" : "Delete Talk Node", !create), town_num(town_num), which(which), node(node) {}
 };
 
+class aEditTalkNode : public cAction {
+	size_t town_num;
+	size_t which;
+	cSpeech::cNode old_node;
+	cSpeech::cNode new_node;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTalkNode(size_t town_num, size_t which, cSpeech::cNode old_node, cSpeech::cNode new_node) :
+		cAction("Edit Talk Node"), town_num(town_num), which(which), old_node(old_node), new_node(new_node) {}
+};
+
 #endif

@@ -1025,3 +1025,13 @@ bool aCreateDeleteTalkNode::redo_me() {
 	start_dialogue_editing();
 	return true;
 }
+
+bool aEditTalkNode::undo_me() {
+	scenario.towns[town_num]->talking.talk_nodes[which] = old_node;
+	return true;
+}
+
+bool aEditTalkNode::redo_me() {
+	scenario.towns[town_num]->talking.talk_nodes[which] = new_node;
+	return true;
+}
