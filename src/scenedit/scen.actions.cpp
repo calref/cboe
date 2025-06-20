@@ -534,6 +534,8 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == size_before)
 							break;
+						undo_list.add(action_ptr(new aCreateDeleteTalkNode(false, cur_town, j, town->talking.talk_nodes[j])));
+						update_edit_menu();
 						town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
 					} else {
 						bool is_new = false;
@@ -541,8 +543,20 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							is_new = true;
 							town->talking.talk_nodes.emplace_back();
 						}
-						if((j = edit_talk_node(j)) >= 0 && is_new)
-							town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
+						if((j = edit_talk_node(j)) >= 0){
+							// Cancel create new
+							if(is_new)
+								town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
+						}
+						// Create confirmed
+						else if(is_new){
+							undo_list.add(action_ptr(new aCreateDeleteTalkNode(true, cur_town, j, town->talking.talk_nodes[j])));
+							update_edit_menu();
+						}
+						// Edit confirmed
+						else{
+
+						}
 					}
 					start_dialogue_editing();
 					if(size_before > town->talking.talk_nodes.size())

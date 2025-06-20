@@ -674,4 +674,15 @@ public:
 		cAction("Edit Personality"), town_num(town_num), which(which), old_pers(old_pers), new_pers(new_pers) {}
 };
 
+class aCreateDeleteTalkNode : public cAction {
+	size_t town_num;
+	size_t which;
+	cSpeech::cNode node;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteTalkNode(bool create, size_t town_num, size_t which, cSpeech::cNode node) :
+		cAction(create ? "Create Talk Node" : "Delete Talk Node", !create), town_num(town_num), which(which), node(node) {}
+};
+
 #endif

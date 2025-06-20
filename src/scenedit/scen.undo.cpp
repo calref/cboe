@@ -1000,10 +1000,28 @@ bool aEditOutEncounter::redo_me() {
 
 bool aEditPersonality::undo_me() {
 	scenario.towns[town_num]->talking.people[which] = old_pers;
+	// Show the change
+	start_dialogue_editing();
 	return true;
 }
 
 bool aEditPersonality::redo_me() {
 	scenario.towns[town_num]->talking.people[which] = new_pers;
+	// Show the change
+	start_dialogue_editing();
+	return true;
+}
+
+bool aCreateDeleteTalkNode::undo_me() {
+	scenario.towns[town_num]->talking.talk_nodes.erase(scenario.towns[town_num]->talking.talk_nodes.begin() + which);
+	// Show the change
+	start_dialogue_editing();
+	return true;
+}
+
+bool aCreateDeleteTalkNode::redo_me() {
+	scenario.towns[town_num]->talking.talk_nodes.insert(scenario.towns[town_num]->talking.talk_nodes.begin() + which, node);
+	// Show the change
+	start_dialogue_editing();
 	return true;
 }
