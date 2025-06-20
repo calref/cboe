@@ -574,14 +574,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == size_before - 1)
 							current_terrain->sign_locs.pop_back();
-						else if(j == size_before)
-							break;
 						else current_terrain->sign_locs[j] = {-1, -1, "*"};
 					} else {
-						if(j == size_before)
-							current_terrain->sign_locs.emplace_back(-1,-1,"*");
-						if(!edit_text_str(j,STRS_OUT_SIGN) && j == size_before && current_terrain->sign_locs[j].text == "*")
-							current_terrain->sign_locs.pop_back();
+						edit_text_str(j,STRS_OUT_SIGN);
 					}
 					start_string_editing(STRS_OUT_SIGN);
 					if(size_before > current_terrain->sign_locs.size())
@@ -593,14 +588,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == size_before - 1)
 							town->sign_locs.pop_back();
-						else if(j == size_before)
-							break;
 						else town->sign_locs[j] = {-1, -1, "*"};
 					} else {
-						if(j == size_before)
-							town->sign_locs.emplace_back(-1,-1,"*");
-						if(!edit_text_str(j,STRS_TOWN_SIGN) && j == size_before && town->sign_locs[j].text == "*")
-							town->sign_locs.pop_back();
+						edit_text_str(j,STRS_TOWN_SIGN);
 					}
 					start_string_editing(STRS_TOWN_SIGN);
 					if(size_before > town->sign_locs.size())
@@ -612,14 +602,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == size_before - 1)
 							current_terrain->area_desc.pop_back();
-						else if(j == size_before)
-							break;
 						else current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
-						if(j == size_before)
-							current_terrain->area_desc.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_OUT_RECT) && j == size_before && current_terrain->area_desc[j].descr == "*")
-							current_terrain->area_desc.pop_back();
+						edit_text_str(j,STRS_OUT_RECT);
 					}
 					start_string_editing(STRS_OUT_RECT);
 					if(size_before > current_terrain->area_desc.size())
@@ -631,14 +616,9 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					if(option_hit) {
 						if(j == size_before - 1)
 							town->area_desc.pop_back();
-						else if(j == size_before)
-							break;
 						else town->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
-						if(j == size_before)
-							town->area_desc.emplace_back(0,0,0,0,"*");
-						if(!edit_text_str(j,STRS_TOWN_RECT) && j == size_before && town->area_desc[j].descr == "*")
-							town->area_desc.pop_back();
+						edit_text_str(j,STRS_TOWN_RECT);
 					}
 					start_string_editing(STRS_TOWN_RECT);
 					if(size_before > town->area_desc.size())
