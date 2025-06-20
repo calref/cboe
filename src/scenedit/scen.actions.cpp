@@ -536,9 +536,12 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							break;
 						town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
 					} else {
-						if(j == size_before)
+						bool is_new = false;
+						if(j == size_before){
+							is_new = true;
 							town->talking.talk_nodes.emplace_back();
-						if((j = edit_talk_node(j)) >= 0 && town->talking.talk_nodes[j].personality == -1)
+						}
+						if((j = edit_talk_node(j)) >= 0 && is_new)
 							town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
 					}
 					start_dialogue_editing();
