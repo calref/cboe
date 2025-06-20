@@ -662,4 +662,16 @@ public:
 		out_sec(out_sec), mode(1), which(which), old_enc(old_enc), new_enc(new_enc) {}
 };
 
+class aEditPersonality : public cAction {
+	size_t town_num;
+	size_t which;
+	cPersonality old_pers;
+	cPersonality new_pers;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditPersonality(size_t town_num, size_t which, cPersonality old_pers, cPersonality new_pers) :
+		cAction("Edit Personality"), town_num(town_num), which(which), old_pers(old_pers), new_pers(new_pers) {}
+};
+
 #endif

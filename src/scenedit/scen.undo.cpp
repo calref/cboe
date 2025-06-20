@@ -997,3 +997,13 @@ bool aEditOutEncounter::redo_me() {
 	if(mode == 0) outdoors.wandering_locs[which] = new_loc;
 	return true;
 }
+
+bool aEditPersonality::undo_me() {
+	scenario.towns[town_num]->talking.people[which] = old_pers;
+	return true;
+}
+
+bool aEditPersonality::redo_me() {
+	scenario.towns[town_num]->talking.people[which] = new_pers;
+	return true;
+}

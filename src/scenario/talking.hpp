@@ -20,8 +20,19 @@ namespace legacy {
 
 class cPersonality {
 public:
+	// This is the character's name.
 	std::string title;
+	// name is how the character responds when asked about it
 	std::string look, name, job, dunno;
+	bool operator==(const cPersonality& other) const {
+		CHECK_EQ(other, title);
+		CHECK_EQ(other, look);
+		CHECK_EQ(other, name);
+		CHECK_EQ(other, job);
+		CHECK_EQ(other, dunno);
+		return true;
+	}
+	bool operator!=(const cPersonality& other) const { return !(*this == other); }
 };
 
 // This is used solely for porting old shops

@@ -1163,13 +1163,37 @@ void edit_town_wand() {
 	wand_dlg.run();
 }
 
-static void save_basic_dlog(cDialog& me, short& which) {
+// return true if the left/right buttons can continue their shift
+bool save_basic_dlog(cDialog& me, short& which, bool need_confirm) {
 	auto& the_node = town->talking.people[which];
-	the_node.title = me["title"].getText().substr(0,30);
-	the_node.dunno = me["dunno"].getText();
-	the_node.look = me["look"].getText();
-	the_node.name = me["name"].getText();
-	the_node.job = me["job"].getText();
+
+	auto new_node = the_node;
+	new_node.title = me["title"].getText().substr(0,30);
+	new_node.dunno = me["dunno"].getText();
+	new_node.look = me["look"].getText();
+	new_node.name = me["name"].getText();
+	new_node.job = me["job"].getText();
+
+	if(new_node != the_node){
+		if(need_confirm){
+			cChoiceDlog dlog("confirm-edit-personality", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{name}}", new_node.title);
+			std::string choice = dlog.show();
+			if(choice == "cancel"){
+				// Can't shift left/right
+				return false;
+			}else if(choice == "revert"){
+				// Shift left/right without saving
+				return true;
+			}
+		}
+
+		// We update the edit menu after all editing is done
+		undo_list.add(action_ptr(new aEditPersonality(cur_town, which, the_node, new_node)));
+		the_node = new_node;
+	}
+
+	return true;
 }
 
 static void put_basic_dlog_in_dlog(cDialog& me, const short which) {
@@ -1183,14 +1207,19 @@ static void put_basic_dlog_in_dlog(cDialog& me, const short which) {
 }
 
 static bool edit_basic_dlog_event_filter(cDialog& me, std::string hit, short& which) {
-	save_basic_dlog(me, which);
+	// There are no focus handlers right now, but there could be.
+	if(!me.toast(true)) return true;
+	if(hit != "okay") me.untoast();
+
 	if(hit == "okay")
-		me.toast(true);
+		save_basic_dlog(me, which, false);
 	else if(hit == "left") {
+		if(!save_basic_dlog(me, which, true)) return true;
 		which--;
 		if(which < 0) which = 9;
 		put_basic_dlog_in_dlog(me, which);
 	} else if(hit == "right") {
+		if(!save_basic_dlog(me, which, true)) return true;
 		which++;
 		if(which > 9) which = 0;
 		put_basic_dlog_in_dlog(me, which);
@@ -1208,6 +1237,7 @@ void edit_basic_dlog(short personality) {
 	put_basic_dlog_in_dlog(person_dlg, personality);
 	
 	person_dlg.run();
+	update_edit_menu();
 }
 
 static bool check_talk_personality(cDialog& me, std::string item_hit, bool losing) {
