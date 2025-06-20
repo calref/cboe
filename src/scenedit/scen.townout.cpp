@@ -1426,7 +1426,7 @@ static bool check_talk_xtra(cDialog& me, std::stack<node_ref_t>& talk_edit_stack
 	return true;
 }
 
-static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool close_dlg, bool commit) {
+static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool close_dlg, bool commit, bool is_new = false) {
 	if(!me.toast(true)) return false;
 	if(!close_dlg) me.untoast();
 	
@@ -1455,8 +1455,14 @@ static bool save_talk_node(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 	talk_node.str1 = me["str1"].getText();
 	talk_node.str2 = me["str2"].getText();
 	
-	if(commit){
-		town->talking.talk_nodes[talk_edit_stack.top().first] = talk_node;
+	size_t which = talk_edit_stack.top().first;
+	if(commit && talk_node != town->talking.talk_nodes[which]){
+		if(is_new){
+			undo_list.add(action_ptr(new aCreateDeleteTalkNode(true, cur_town, which, talk_node)));
+		}else{
+			undo_list.add(action_ptr(new aEditTalkNode(cur_town, which, town->talking.talk_nodes[which], talk_node)));
+		}
+		town->talking.talk_nodes[which] = talk_node;
 	}
 	return true;
 }
@@ -1532,7 +1538,7 @@ static void put_talk_node_in_dlog(cDialog& me, std::stack<node_ref_t>& talk_edit
 }
 
 static bool talk_node_back(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool& is_new) {
-	if(!save_talk_node(me, talk_edit_stack, false, true)) return true;
+	if(!save_talk_node(me, talk_edit_stack, false, true, is_new)) return true;
 	is_new = false;
 	talk_edit_stack.pop();
 	put_talk_node_in_dlog(me, talk_edit_stack);
@@ -1540,7 +1546,7 @@ static bool talk_node_back(cDialog& me, std::stack<node_ref_t>& talk_edit_stack,
 }
 
 static bool talk_node_branch(cDialog& me, std::stack<node_ref_t>& talk_edit_stack, bool& is_new) {
-	if(!save_talk_node(me, talk_edit_stack, false, true)) return true;
+	if(!save_talk_node(me, talk_edit_stack, false, true, is_new)) return true;
 	
 	int spec = -1;
 	for(int j = 0; j < town->talking.talk_nodes.size(); j++)
@@ -1648,7 +1654,7 @@ short edit_talk_node(short which_node, bool& is_new) {
 	talk_edit_stack.push({which_node, town->talking.talk_nodes[which_node]});
 	
 	cDialog talk_dlg(*ResMgr::dialogs.get("edit-talk-node"));
-	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, std::ref(talk_edit_stack), true, true));
+	talk_dlg["okay"].attachClickHandler(std::bind(save_talk_node, _1, std::ref(talk_edit_stack), true, true, std::ref(is_new)));
 	talk_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &talk_dlg, false));
 	talk_dlg["back"].attachClickHandler(std::bind(talk_node_back, _1, std::ref(talk_edit_stack), std::ref(is_new)));
 	talk_dlg["new"].attachClickHandler(std::bind(talk_node_branch, _1, std::ref(talk_edit_stack), std::ref(is_new)));

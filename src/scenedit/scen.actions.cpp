@@ -550,16 +550,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							if(is_new)
 								town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + canceled);
 						}
-						// Create confirmed
-						else if(is_new){
-							undo_list.add(action_ptr(new aCreateDeleteTalkNode(true, cur_town, j, town->talking.talk_nodes[j])));
-							update_edit_menu();
-						}
-						// Edit confirmed
-						else if(old_node != town->talking.talk_nodes[j]){
-							undo_list.add(action_ptr(new aEditTalkNode(cur_town, j, old_node, town->talking.talk_nodes[j])));
-							update_edit_menu();
-						}
+						update_edit_menu();
 					}
 					start_dialogue_editing();
 					if(size_before > town->talking.talk_nodes.size())
