@@ -631,4 +631,15 @@ public:
 		cAction("Edit Town Event Timers"), which(which), old_timers(old_timers), new_timers(new_timers) {}
 };
 
+class aEditOutDetails : public cAction {
+	location out_sec;
+	out_details_t old_details;
+	out_details_t new_details;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditOutDetails(location out_sec, out_details_t old_details, out_details_t new_details) :
+		cAction("Edit Outdoor Details"), out_sec(out_sec), old_details(old_details), new_details(new_details) {}
+};
+
 #endif

@@ -971,3 +971,13 @@ bool aEditTownTimers::redo_me() {
 	scenario.towns[which]->timers = new_timers;
 	return true;
 }
+
+bool aEditOutDetails::undo_me() {
+	out_set_details(*scenario.outdoors[out_sec.x][out_sec.y], old_details);
+	return true;
+}
+
+bool aEditOutDetails::redo_me() {
+	out_set_details(*scenario.outdoors[out_sec.x][out_sec.y], new_details);
+	return true;
+}

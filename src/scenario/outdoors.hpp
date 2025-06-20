@@ -87,4 +87,56 @@ public:
 	void reattach(cScenario& to);
 };
 
+// Store a version of the outdoor details for undo history.
+// This could be made a struct that cTown contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct out_details_t {
+	std::string name;
+	eAmbientSound ambient_sound;
+	snd_num_t out_sound;
+	int bg_out;
+	int bg_fight;
+	int bg_town;
+	int bg_dungeon;
+	std::string comment;
+
+	bool operator==(const out_details_t& other) const {
+		CHECK_EQ(other,name);
+		CHECK_EQ(other,ambient_sound);
+		CHECK_EQ(other,out_sound);
+		CHECK_EQ(other,bg_out);
+		CHECK_EQ(other,bg_fight);
+		CHECK_EQ(other,bg_town);
+		CHECK_EQ(other,bg_dungeon);
+		CHECK_EQ(other,comment);
+		return true;
+	}
+	bool operator!=(const out_details_t& other) const { return !(*this == other); }
+};
+
+inline out_details_t details_from_out(cOutdoors& out) {
+	return {
+		out.name,
+		out.ambient_sound,
+		out.out_sound,
+		out.bg_out,
+		out.bg_fight,
+		out.bg_town,
+		out.bg_dungeon,
+		out.comment
+	};
+}
+
+inline void out_set_details(cOutdoors& out, const out_details_t& details) {
+	out.name = details.name;
+	out.ambient_sound = details.ambient_sound;
+	out.out_sound = details.out_sound;
+	out.bg_out = details.bg_out;
+	out.bg_fight = details.bg_fight;
+	out.bg_town = details.bg_town;
+	out.bg_dungeon = details.bg_dungeon;
+	out.comment = details.comment;
+}
+
 #endif

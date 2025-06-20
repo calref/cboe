@@ -552,20 +552,30 @@ bool change_ter(short& change_from,short& change_to,short& chance) {
 	return chg_dlg.getResult<bool>();
 }
 
-static bool outdoor_details_event_filter(cDialog& me, std::string, eKeyMod) {
+static bool save_outdoor_details(cDialog& me, std::string, eKeyMod, const out_details_t old_details, out_details_t& details) {
 	if(!me.toast(true)) return true;
-	current_terrain->name = me["name"].getText();
-	current_terrain->comment = me["comment"].getText();
-	current_terrain->bg_out = me["bg-out"].getTextAsNum();
-	current_terrain->bg_fight = me["bg-fight"].getTextAsNum();
-	current_terrain->bg_town = me["bg-town"].getTextAsNum();
-	current_terrain->bg_dungeon = me["bg-dungeon"].getTextAsNum();
+	details.name = me["name"].getText();
+	details.comment = me["comment"].getText();
+	details.bg_out = me["bg-out"].getTextAsNum();
+	details.bg_fight = me["bg-fight"].getTextAsNum();
+	details.bg_town = me["bg-town"].getTextAsNum();
+	details.bg_dungeon = me["bg-dungeon"].getTextAsNum();
+
+	if(details != old_details){
+		out_set_details(*current_terrain, details);
+		undo_list.add(action_ptr(new aEditOutDetails(cur_out, old_details, details)));
+		update_edit_menu();
+	}
+
 	return true;
 }
 
 void outdoor_details() {
+	using namespace std::placeholders;
+	out_details_t old_details = details_from_out(*current_terrain);
+	out_details_t new_details = old_details;
 	cDialog out_dlg(*ResMgr::dialogs.get("edit-outdoor-details"));
-	out_dlg["okay"].attachClickHandler(outdoor_details_event_filter);
+	out_dlg["okay"].attachClickHandler(std::bind(save_outdoor_details, _1, _2, _3, old_details, std::ref(new_details)));
 	out_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &out_dlg, false));
 	std::ostringstream str_out;
 	str_out << "X = " << cur_out.x << ", Y = " << cur_out.y;
@@ -577,7 +587,7 @@ void outdoor_details() {
 	out_dlg["bg-town"].setTextToNum(current_terrain->bg_town);
 	out_dlg["bg-dungeon"].setTextToNum(current_terrain->bg_dungeon);
 	dynamic_cast<cLedGroup&>(out_dlg["ambient"]).setSelected("snd" + std::to_string(int(current_terrain->ambient_sound) + 1));
-	out_dlg["ambient"].attachFocusHandler([](cDialog& me, std::string, bool) -> bool {
+	out_dlg["ambient"].attachFocusHandler([&new_details](cDialog& me, std::string, bool) -> bool {
 		cLedGroup& lg = dynamic_cast<cLedGroup&>(me["ambient"]);
 		std::string hit = lg.getSelected();
 		std::string prev = lg.getPrevSelection();
@@ -589,9 +599,9 @@ void outdoor_details() {
 				lg.setSelected(prev);
 				return false;
 			}
-			current_terrain->out_sound = i;
+			new_details.out_sound = i;
 		}
-		current_terrain->ambient_sound = choice;
+		new_details.ambient_sound = choice;
 		return true;
 	});
 	out_dlg.attachClickHandlers([](cDialog& me, std::string which, eKeyMod) -> bool {
