@@ -14,6 +14,7 @@
 
 extern cScenario scenario;
 extern cTown* town;
+extern bool editing_town;
 
 struct area_ref_t {
 	bool is_town;
@@ -695,6 +696,22 @@ class aEditTalkNode : public cAction {
 public:
 	aEditTalkNode(size_t town_num, size_t which, cSpeech::cNode old_node, cSpeech::cNode new_node) :
 		cAction("Edit Talk Node"), town_num(town_num), which(which), old_node(old_node), new_node(new_node) {}
+};
+
+/// Action representing the deletion of a string tied to a location or rectangle in an area
+class aDeleteLocString : public cAction {
+	cArea* area;
+	bool is_town;
+	bool is_sign; // either a sign or an area description
+	sign_loc_t sign;
+	info_rect_t desc;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aDeleteLocString(cArea* area, sign_loc_t sign) :
+		cAction("Delete Sign Text"), area(area), is_town(editing_town), is_sign(true), sign(sign) {}
+	aDeleteLocString(cArea* area, info_rect_t desc) :
+		cAction("Delete Area Description"), area(area), is_town(editing_town), is_sign(false), desc(desc) {}
 };
 
 #endif

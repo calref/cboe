@@ -1035,3 +1035,25 @@ bool aEditTalkNode::redo_me() {
 	scenario.towns[town_num]->talking.talk_nodes[which] = new_node;
 	return true;
 }
+
+bool aDeleteLocString::undo_me() {
+	if(is_sign){
+		area->sign_locs.push_back(sign);
+		start_string_editing(is_town ? STRS_TOWN_SIGN : STRS_OUT_SIGN);
+	}else{
+		area->area_desc.push_back(desc);
+		start_string_editing(is_town ? STRS_TOWN_RECT : STRS_OUT_RECT);
+	}
+	return true;
+}
+
+bool aDeleteLocString::redo_me() {
+	if(is_sign){
+		area->sign_locs.pop_back();
+		start_string_editing(is_town ? STRS_TOWN_SIGN : STRS_OUT_SIGN);
+	}else{
+		area->area_desc.pop_back();
+		start_string_editing(is_town ? STRS_TOWN_RECT : STRS_OUT_RECT);
+	}
+	return true;
+}

@@ -572,8 +572,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_OUT_SIGN:
 					size_before = current_terrain->sign_locs.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aDeleteLocString(current_terrain, current_terrain->sign_locs.back())));
+							update_edit_menu();
 							current_terrain->sign_locs.pop_back();
+						}
 						else current_terrain->sign_locs[j] = {-1, -1, "*"};
 					} else {
 						edit_text_str(j,STRS_OUT_SIGN);
@@ -586,8 +589,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_TOWN_SIGN:
 					size_before = town->sign_locs.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aDeleteLocString(town, town->sign_locs.back())));
+							update_edit_menu();
 							town->sign_locs.pop_back();
+						}
 						else town->sign_locs[j] = {-1, -1, "*"};
 					} else {
 						edit_text_str(j,STRS_TOWN_SIGN);
@@ -600,8 +606,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_OUT_RECT:
 					size_before = current_terrain->area_desc.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aDeleteLocString(current_terrain, current_terrain->area_desc.back())));
+							update_edit_menu();
 							current_terrain->area_desc.pop_back();
+						}
 						else current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
 						edit_text_str(j,STRS_OUT_RECT);
@@ -614,8 +623,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_TOWN_RECT:
 					size_before = town->area_desc.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aDeleteLocString(town, town->area_desc.back())));
+							update_edit_menu();
 							town->area_desc.pop_back();
+						}
 						else town->area_desc[j] = {0, 0, 0, 0, "*"};
 					} else {
 						edit_text_str(j,STRS_TOWN_RECT);
@@ -3084,7 +3096,6 @@ void start_shops_editing() {
 
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 
-// mode 0 - scen 1 - out 2 - town 3 - journal
 void start_string_editing(eStrMode mode) {
 	handle_close_terrain_view(MODE_EDIT_STRINGS);
 	scenario.editor_state.string_editing_mode = mode;
