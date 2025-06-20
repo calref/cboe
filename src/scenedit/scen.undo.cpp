@@ -961,3 +961,13 @@ bool aEditTownAdvancedDetails::redo_me() {
 	town_set_advanced(which, *scenario.towns[which], scenario, new_details);
 	return true;
 }
+
+bool aEditTownTimers::undo_me() {
+	scenario.towns[which]->timers = old_timers;
+	return true;
+}
+
+bool aEditTownTimers::redo_me() {
+	scenario.towns[which]->timers = new_timers;
+	return true;
+}

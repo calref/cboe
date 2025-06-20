@@ -828,10 +828,16 @@ void edit_town_details() {
 
 static bool save_town_events(cDialog& me, std::string, eKeyMod) {
 	if(!me.toast(true)) return true;
+	auto old_timers = town->timers;
+	bool changed = false;
 	for(int i = 0; i < town->timers.size(); i++) {
 		std::string id = std::to_string(i + 1);
 		town->timers[i].time = me["time" + id].getTextAsNum();
 		town->timers[i].node = me["spec" + id].getTextAsNum();
+		if((town->timers[i].time != old_timers[i].time) || (town->timers[i].node != old_timers[i].node)) changed = true;
+	}
+	if(changed){
+		undo_list.add(action_ptr(new aEditTownTimers(cur_town, old_timers, town->timers)));
 	}
 	return true;
 }

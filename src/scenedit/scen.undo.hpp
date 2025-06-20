@@ -620,4 +620,15 @@ public:
 		cAction("Edit Town Advanced Details"), which(which), old_details(old_details), new_details(new_details) {}
 };
 
+class aEditTownTimers : public cAction {
+	size_t which;
+	std::array<cTimer,8> old_timers;
+	std::array<cTimer,8> new_timers;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownTimers(size_t which, std::array<cTimer,8> old_timers, std::array<cTimer,8> new_timers) :
+		cAction("Edit Town Event Timers"), which(which), old_timers(old_timers), new_timers(new_timers) {}
+};
+
 #endif
