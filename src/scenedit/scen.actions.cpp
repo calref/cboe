@@ -544,10 +544,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->talking.talk_nodes.emplace_back();
 						}
 						cSpeech::cNode old_node = town->talking.talk_nodes[j];
-						if(edit_talk_node(j) >= 0){
-							// Cancel create new
+						int canceled;
+						if((canceled = edit_talk_node(j, is_new)) >= 0){
+							// Cancel the last create new
 							if(is_new)
-								town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + j);
+								town->talking.talk_nodes.erase(town->talking.talk_nodes.begin() + canceled);
 						}
 						// Create confirmed
 						else if(is_new){
