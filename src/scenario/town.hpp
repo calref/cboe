@@ -181,4 +181,46 @@ inline void town_set_details(cTown& town, const town_details_t& details) {
 	town.comment = details.comment;
 }
 
+// Store a version of the advanced town details for undo history.
+// This could be made a struct that cTown contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct town_advanced_t {
+	std::array<spec_loc_t, 4> exits;
+	short spec_on_entry;
+	short spec_on_entry_if_dead;
+	short spec_on_hostile;
+	int bg_town;
+	int bg_fight;
+	bool is_hidden;
+	bool defy_mapping;
+	bool defy_scrying;
+	bool strong_barriers;
+	bool has_tavern;
+	boost::optional<rectangle> store_item_rect;
+
+	bool operator==(const town_advanced_t& other) const {
+		for(int i = 0; i < exits.size(); ++i){
+			if(other.exits[i].spec != exits[i].spec) return false;
+			if(other.exits[i] != exits[i]) return false;
+		}
+		CHECK_EQ(other,spec_on_entry);
+		CHECK_EQ(other,spec_on_entry_if_dead);
+		CHECK_EQ(other,spec_on_hostile);
+		CHECK_EQ(other,bg_town);
+		CHECK_EQ(other,bg_fight);
+		CHECK_EQ(other,is_hidden);
+		CHECK_EQ(other,defy_mapping);
+		CHECK_EQ(other,defy_scrying);
+		CHECK_EQ(other,strong_barriers);
+		CHECK_EQ(other,has_tavern);
+		CHECK_EQ(other,store_item_rect);
+		return true;
+	}
+	bool operator!=(const town_advanced_t& other) const { return !(*this == other); }
+};
+
+town_advanced_t advanced_from_town(size_t which, cTown& town, cScenario& scenario);
+void town_set_advanced(size_t which, cTown& town, cScenario& scenario, const town_advanced_t& details);
+
 #endif

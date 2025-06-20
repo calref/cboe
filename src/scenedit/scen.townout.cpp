@@ -1027,9 +1027,19 @@ void edit_advanced_town() {
 	
 	put_advanced_town_in_dlog(town_dlg);
 	
+	town_advanced_t old_details = advanced_from_town(cur_town, *town, scenario);
 	town_dlg.run();
-	if(town_dlg.accepted() && delete_rect)
-		scenario.store_item_rects.erase(cur_town);
+	if(town_dlg.accepted()){
+		if(delete_rect){
+			scenario.store_item_rects.erase(cur_town);
+		}
+
+		town_advanced_t new_details = advanced_from_town(cur_town, *town, scenario);
+		if(new_details != old_details){
+			undo_list.add(action_ptr(new aEditTownAdvancedDetails(cur_town, old_details, new_details)));
+			update_edit_menu();
+		}
+	}
 }
 
 static bool save_town_wand(cDialog& me, std::string, eKeyMod) {

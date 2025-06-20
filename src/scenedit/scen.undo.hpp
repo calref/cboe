@@ -609,4 +609,15 @@ public:
 													new_wandering(new_wandering), new_wandering_locs(new_wandering_locs) {}
 };
 
+class aEditTownAdvancedDetails : public cAction {
+	size_t which;
+	town_advanced_t old_details;
+	town_advanced_t new_details;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownAdvancedDetails(size_t which, town_advanced_t old_details, town_advanced_t new_details) :
+		cAction("Edit Town Advanced Details"), which(which), old_details(old_details), new_details(new_details) {}
+};
+
 #endif

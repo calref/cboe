@@ -288,3 +288,38 @@ bool cTown::cItem::operator==(const cTown::cItem& other) {
 	CHECK_EQ(other, contained);
 	return true;
 }
+
+town_advanced_t advanced_from_town(size_t which, cTown& town, cScenario& scenario) {
+	town_advanced_t details = {
+		town.exits,
+		town.spec_on_entry,
+		town.spec_on_entry_if_dead,
+		town.spec_on_hostile,
+		town.bg_town,
+		town.bg_fight,
+		town.is_hidden,
+		town.defy_mapping,
+		town.defy_scrying,
+		town.strong_barriers,
+		town.has_tavern
+	};
+	auto iter = scenario.store_item_rects.find(which);
+	if(iter != scenario.store_item_rects.end()) details.store_item_rect = iter->second;
+	return details;
+}
+
+void town_set_advanced(size_t which, cTown& town, cScenario& scenario, const town_advanced_t& details) {
+	town.exits = details.exits;
+	town.spec_on_entry = details.spec_on_entry;
+	town.spec_on_entry_if_dead = details.spec_on_entry_if_dead;
+	town.spec_on_hostile = details.spec_on_hostile;
+	town.bg_town = details.bg_town;
+	town.bg_fight = details.bg_fight;
+	town.is_hidden = details.is_hidden;
+	town.defy_mapping = details.defy_mapping;
+	town.defy_scrying = details.defy_scrying;
+	town.strong_barriers = details.strong_barriers;
+	town.has_tavern = details.has_tavern;
+	if(details.store_item_rect) scenario.store_item_rects[which] = *details.store_item_rect;
+	else scenario.store_item_rects.erase(which);
+}

@@ -951,3 +951,13 @@ bool aEditTownWandering::redo_me() {
 	scenario.towns[which]->wandering_locs = new_wandering_locs;
 	return true;
 }
+
+bool aEditTownAdvancedDetails::undo_me() {
+	town_set_advanced(which, *scenario.towns[which], scenario, old_details);
+	return true;
+}
+
+bool aEditTownAdvancedDetails::redo_me() {
+	town_set_advanced(which, *scenario.towns[which], scenario, new_details);
+	return true;
+}
