@@ -647,7 +647,9 @@ static void put_out_wand_in_dlog(cDialog& me, short which, const cOutdoors::cWan
 	me["location"].setText(boost::lexical_cast<std::string>(current_terrain->wandering_locs[which]));
 }
 
+// mode 0 - wandering, 1 - special, 100 - do not commit changes to the scenario yet
 static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand, short mode) {
+	cOutdoors::cWandering old_wand = (mode == 0 ? current_terrain->wandering[which] : current_terrain->special_enc[which]);
 	wand.spec_on_meet = me["onmeet"].getTextAsNum();
 	wand.spec_on_win = me["onwin"].getTextAsNum();
 	wand.spec_on_flee = me["onflee"].getTextAsNum();
@@ -658,19 +660,45 @@ static void save_out_wand(cDialog& me, short which, cOutdoors::cWandering& wand,
 	wand.cant_flee = dynamic_cast<cLed&>(me["no-flee"]).getState() != led_off;
 	
 	switch(mode) {
-		case 0:
+		case 0:{
 			current_terrain->wandering[which] = wand;
-			current_terrain->wandering_locs[which] = boost::lexical_cast<location>(me["location"].getText());
-			break;
+			location old_loc = current_terrain->wandering_locs[which];
+			location new_loc = boost::lexical_cast<location>(me["location"].getText());
+			current_terrain->wandering_locs[which] = new_loc;
+			undo_list.add(action_ptr(new aEditOutEncounter(cur_out, which, old_wand, old_loc, wand, new_loc)));
+		}break;
 		case 1:
 			current_terrain->special_enc[which] = wand;
+			undo_list.add(action_ptr(new aEditOutEncounter(cur_out, which, old_wand, wand)));
 			break;
 	}
+	update_edit_menu();
 }
 
 static bool edit_out_wand_event_filter(cDialog& me, std::string hit, short& which, cOutdoors::cWandering& wand, short mode) {
 	if(!me.toast(true)) return true;
-	save_out_wand(me, which, wand, mode);
+
+	bool loc_changed = (mode == 0 && current_terrain->wandering_locs[which] != boost::lexical_cast<location>(me["location"].getText()));
+	cOutdoors::cWandering old_wand = (mode == 0 ? current_terrain->wandering[which] : current_terrain->special_enc[which]);
+	if((loc_changed || wand != old_wand)){
+		// Confirm before moving left/right and committing changes
+		if(hit == "left" || hit == "right"){
+			cChoiceDlog dlog("confirm-edit-out-wand", {"keep","revert","cancel"}, &me);
+			dlog->getControl("keep-msg").replaceText("{{enc-type}}", (mode == 0 ? "Wandering Monster Group" : "Special Encounter"));
+			dlog->getControl("keep-msg").replaceText("{{num}}", std::to_string(which));
+			std::string choice = dlog.show();
+			if(choice == "keep"){
+				save_out_wand(me, which, wand, mode);
+			}else if(choice == "cancel"){
+				return true;
+			}
+		}
+		// Okay pressed
+		else{
+			save_out_wand(me, which, wand, mode);
+		}
+	}
+
 	size_t num_enc = (mode == 0) ? current_terrain->wandering.size() : current_terrain->special_enc.size();
 	if(hit == "left") {
 		me.untoast();

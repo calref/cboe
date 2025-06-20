@@ -110,6 +110,21 @@ cOutdoors::cWandering::cWandering() {
 	std::fill(friendly.begin(), friendly.end(), 0);
 }
 
+bool cOutdoors::cWandering::operator==(const cOutdoors::cWandering& other) const {
+	for(int i = 0; i < monst.size(); ++i){
+		if(other.monst[i] != monst[i]) return false;
+	}
+	for(int i = 0; i < friendly.size(); ++i){
+		if(other.friendly[i] != friendly[i]) return false;
+	}
+	CHECK_EQ(other, spec_on_meet);
+	CHECK_EQ(other, spec_on_win);
+	CHECK_EQ(other, spec_on_flee);
+	CHECK_EQ(other, end_spec1);
+	CHECK_EQ(other, end_spec2);
+	return true;
+}
+
 cOutdoors::cOutdoors(cScenario& scenario) : cArea(AREA_MEDIUM), scenario(&scenario) {
 	location locs[4] = {loc(8,8),loc(32,8),loc(8,32),loc(32,32)};
 	bg_out = bg_fight = bg_town = bg_dungeon = -1;

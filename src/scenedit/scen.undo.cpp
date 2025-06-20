@@ -981,3 +981,19 @@ bool aEditOutDetails::redo_me() {
 	out_set_details(*scenario.outdoors[out_sec.x][out_sec.y], new_details);
 	return true;
 }
+
+bool aEditOutEncounter::undo_me() {
+	cOutdoors& outdoors = *scenario.outdoors[out_sec.x][out_sec.y];
+	auto& encounters = (mode == 0 ? outdoors.wandering : outdoors.special_enc);
+	encounters[which] = old_enc;
+	if(mode == 0) outdoors.wandering_locs[which] = old_loc;
+	return true;
+}
+
+bool aEditOutEncounter::redo_me() {
+	cOutdoors& outdoors = *scenario.outdoors[out_sec.x][out_sec.y];
+	auto& encounters = (mode == 0 ? outdoors.wandering : outdoors.special_enc);
+	encounters[which] = new_enc;
+	if(mode == 0) outdoors.wandering_locs[which] = new_loc;
+	return true;
+}
