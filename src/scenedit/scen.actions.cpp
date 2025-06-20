@@ -1111,7 +1111,12 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 			{
 				auto& signs = cur_area->sign_locs;
 				auto iter = std::find(signs.begin(), signs.end(), spot_hit);
-				short picture = scenario.ter_types[cur_area->terrain(spot_hit.x,spot_hit.y)].picture;
+				const cTerrain& terrain = scenario.ter_types[cur_area->terrain(spot_hit.x,spot_hit.y)];
+				if(terrain.special != eTerSpec::IS_A_SIGN){
+					showWarning("This is not a sign.");
+					return true;
+				}
+				short picture = terrain.picture;
 				if(iter != signs.end()) {
 					edit_sign(*iter, iter - signs.begin(), picture);
 				} else {
