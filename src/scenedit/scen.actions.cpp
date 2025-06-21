@@ -346,9 +346,31 @@ static bool handle_lb_click(location the_point) {
 
 static void clear_string(eStrMode mode, size_t which) {
 	std::string& value = fetch_str(mode, which);
-	undo_list.add(action_ptr(new aEditClearString(edit_string_action_name(true, mode), mode, which, value, "*")));
+	undo_list.add(action_ptr(new aEditClearString(edit_string_action_name("Clear", mode), mode, which, value, "*")));
 	update_edit_menu();
 	value = "*";
+}
+
+// Only for strings not tied to a location -- for creation and deletion
+std::vector<std::string>& fetch_str_list(eStrMode str_mode){
+	switch(str_mode){
+		case 0: return scenario.spec_strs;
+		case 1: return current_terrain->spec_strs;
+		case 2: return town->spec_strs;
+		case 3: return scenario.journal_strs;
+		default: throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-3)";
+	}
+}
+
+static void delete_last_string(eStrMode mode) {
+	auto& str_list = fetch_str_list(mode);
+	std::string str = str_list.back();
+	undo_list.add(action_ptr(new aDeleteString(edit_string_action_name("Delete", mode), mode, str)));
+	update_edit_menu();
+	str_list.pop_back();
+}
+
+static void create_string(eStrMode mode, bool option_hit) {
 }
 
 static bool handle_rb_action(location the_point, bool option_hit) {
@@ -430,7 +452,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					size_before = scenario.spec_strs.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							scenario.spec_strs.pop_back();
+							delete_last_string(STRS_SCEN);
 						else if(j == size_before)
 							scenario.spec_strs.resize(size_before + 8, "*");
 						else clear_string(STRS_SCEN, j);
@@ -449,7 +471,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					size_before = current_terrain->spec_strs.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							current_terrain->spec_strs.pop_back();
+							delete_last_string(STRS_OUT);
 						else if(j == size_before)
 							current_terrain->spec_strs.resize(size_before + 8, "*");
 						else clear_string(STRS_OUT, j);
@@ -468,7 +490,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					size_before = town->spec_strs.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							town->spec_strs.pop_back();
+							delete_last_string(STRS_TOWN);
 						else if(j == size_before)
 							town->spec_strs.resize(size_before + 8, "*");
 						else clear_string(STRS_TOWN, j);
@@ -521,7 +543,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 					size_before = scenario.journal_strs.size();
 					if(option_hit) {
 						if(j == size_before - 1)
-							scenario.journal_strs.pop_back();
+							delete_last_string(STRS_JOURNAL);
 						else if(j == size_before)
 							scenario.journal_strs.resize(size_before + 8, "*");
 						else clear_string(STRS_JOURNAL, j);

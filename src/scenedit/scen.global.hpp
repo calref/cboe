@@ -2,6 +2,8 @@
 #ifndef BOE_SCEN_GLOBAL_HPP
 #define BOE_SCEN_GLOBAL_HPP
 
+#include <vector>
+
 const int BITMAP_WIDTH = 28;
 const int BITMAP_HEIGHT = 36;
 
@@ -115,7 +117,7 @@ enum ePalBtn {
 };
 
 extern std::string& fetch_str(eStrMode str_mode, size_t which);
-extern std::string edit_string_action_name(bool clear, eStrMode str_mode);
-
+extern std::string edit_string_action_name(std::string what, eStrMode str_mode);
+extern std::vector<std::string>& fetch_str_list(eStrMode str_mode);
 
 #endif

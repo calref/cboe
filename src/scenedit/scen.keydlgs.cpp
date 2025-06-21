@@ -654,8 +654,8 @@ short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDi
 	return cur_choice;
 }
 
-std::string edit_string_action_name(bool clear, eStrMode str_mode){
-	std::string name = clear ? "Clear " : "Edit ";
+std::string edit_string_action_name(std::string what, eStrMode str_mode){
+	std::string name = what + " ";
 	switch(str_mode){
 		case 0: name += "Scenario Text"; break;
 		case 1: name += "Outdoor Text"; break;
@@ -674,7 +674,7 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	std::string& realVal = fetch_str(str_mode, which_str);
 	if(realVal != newVal){
 		// edit menu will update when string editor closes
-		undo_list.add(action_ptr(new aEditClearString(edit_string_action_name(false, str_mode), str_mode, which_str, realVal, newVal)));
+		undo_list.add(action_ptr(new aEditClearString(edit_string_action_name("Edit", str_mode), str_mode, which_str, realVal, newVal)));
 	}
 
 	fetch_str(str_mode, which_str) = newVal;

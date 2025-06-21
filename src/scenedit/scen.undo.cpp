@@ -1095,3 +1095,17 @@ bool aEditClearString::redo_me() {
 	start_string_editing(str_mode);
 	return true;
 }
+
+bool aDeleteString::undo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
+	fetch_str_list(str_mode).push_back(str);
+	return true;
+}
+
+bool aDeleteString::redo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
+	fetch_str_list(str_mode).pop_back();
+	return true;
+}
