@@ -18,6 +18,8 @@
 extern cScenario scenario;
 extern cTown* town;
 extern bool editing_town;
+extern short cur_town;
+extern location cur_out;
 
 struct area_ref_t {
 	bool is_town;
@@ -747,9 +749,12 @@ class aEditClearString : public cAction {
 	std::string new_value;
 	bool undo_me() override;
 	bool redo_me() override;
+	// undo/redo for town text and outdoor text depends on global state of which town/outdoor section are active
+	size_t which_town;
+	location which_out;
 public:
 	aEditClearString(std::string name, eStrMode str_mode, size_t which, std::string old_value, std::string new_value) :
-		cAction(name), str_mode(str_mode), which(which), old_value(old_value), new_value(new_value) {}
+		cAction(name), str_mode(str_mode), which(which), old_value(old_value), new_value(new_value), which_town(cur_town), which_out(cur_out) {}
 };
 
 #endif

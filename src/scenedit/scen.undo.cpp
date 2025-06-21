@@ -1081,12 +1081,16 @@ bool aClearLocString::redo_me() {
 }
 
 bool aEditClearString::undo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
 	fetch_str(str_mode, which) = old_value;
 	start_string_editing(str_mode);
 	return true;
 }
 
 bool aEditClearString::redo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
 	fetch_str(str_mode, which) = new_value;
 	start_string_editing(str_mode);
 	return true;
