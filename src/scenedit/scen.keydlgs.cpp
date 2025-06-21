@@ -756,7 +756,7 @@ struct editing_node_t {
 	cSpecial node;
 };
 
-typedef std::stack<editing_node_t> node_stack_t;
+typedef std::vector<editing_node_t> node_stack_t;
 
 static void setup_node_field(cDialog& me, std::string field, short value, const node_function_t& fcn) {
 	me[field + "-lbl"].setText(fcn.label());
@@ -794,15 +794,15 @@ static void setup_node_field(cDialog& me, std::string field, short value, const 
 }
 
 static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
-	cSpecial& spec = edit_stack.top().node;
+	cSpecial& spec = edit_stack.back().node;
 	
 	// Show which node is being edited and what type of node it is
-	switch(edit_stack.top().mode) {
+	switch(edit_stack.back().mode) {
 		case 0: me["title"].setText("Edit Scenario Special Node"); break;
 		case 1: me["title"].setText("Edit Outdoors Special Node"); break;
 		case 2: me["title"].setText("Edit Town Special Node"); break;
 	}
-	me["num"].setTextToNum(edit_stack.top().which);
+	me["num"].setTextToNum(edit_stack.back().which);
 	
 	// Show the node opcode information
 	me["type"].setText((*spec.type).name());
@@ -837,7 +837,7 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
-	cSpecial& the_node = edit_stack.top().node;
+	cSpecial& the_node = edit_stack.back().node;
 	the_node.sd1 = me["sdf1"].getTextAsNum();
 	the_node.sd2 = me["sdf2"].getTextAsNum();
 	the_node.m1 = me["msg1"].getTextAsNum();
@@ -898,20 +898,20 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 
 static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_stack_t& edit_stack, short mode) {
 	save_spec_enc(me, edit_stack);
-	cSpecial& special = edit_stack.top().node;
+	cSpecial& special = edit_stack.back().node;
 	return preview_spec_enc_dlog(me, item_hit, special, mode);
 }
 
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	if(item_hit != "unwind")
 		save_spec_enc(me, edit_stack);
-	int mode = edit_stack.top().mode, node = edit_stack.top().which;
+	int mode = edit_stack.back().mode, node = edit_stack.back().which;
 	switch(mode) {
-		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
-		case 1: current_terrain->specials[node] = edit_stack.top().node; break;
-		case 2: town->specials[node] = edit_stack.top().node; break;
+		case 0: scenario.scen_specials[node] = edit_stack.back().node; break;
+		case 1: current_terrain->specials[node] = edit_stack.back().node; break;
+		case 2: town->specials[node] = edit_stack.back().node; break;
 	}
-	edit_stack.pop();
+	edit_stack.pop_back();
 	if(item_hit == "okay") {
 		while(!edit_stack.empty())
 			commit_spec_enc(me, "unwind", edit_stack);
@@ -932,18 +932,18 @@ static bool discard_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 		action = cChoiceDlog("discard-special-node", {"save", "cancel", "revert"}).show();
 		if(action == "save") return true;
 	}
-	auto cur = edit_stack.top();
+	auto cur = edit_stack.back();
 	auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
 	if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
 		list.pop_back();
-	edit_stack.pop();
+	edit_stack.pop_back();
 	if(action == "cancel") {
 		while(!edit_stack.empty()) {
-			auto cur = edit_stack.top();
+			auto cur = edit_stack.back();
 			auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
 			if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
 				list.pop_back();
-			edit_stack.pop();
+			edit_stack.pop_back();
 		}
 	} else if(edit_stack.size() == 1)
 		me["back"].hide();
@@ -964,7 +964,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	else if(item_hit == "out") category = eSpecCat::OUTDOOR;
 	else if(item_hit == "rect") category = eSpecCat::RECT;
 	auto bounds = *category;
-	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.top().node.type);
+	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.back().node.type);
 	if(start < 0 || finish < 0) return true;
 	std::vector<std::string> choices;
 	for(int i = start; i <= finish; i++) {
@@ -977,7 +977,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	cStringChoice choose(choices, "Select a special node type:",&me);
 	result = choose.show((current < start || current > finish) ? cancelled : current - start);
 	if(result != cancelled) {
-		edit_stack.top().node.type = eSpecType(result + start);
+		edit_stack.back().node.type = eSpecType(result + start);
 		put_spec_enc_in_dlog(me, edit_stack);
 	}
 	return true;
@@ -1137,7 +1137,7 @@ static std::string get_control_for_field(eSpecField field) {
 
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
-	const cSpecial& spec = edit_stack.top().node;
+	const cSpecial& spec = edit_stack.back().node;
 	node_function_t fcn = get_field_function(spec, field);
 	short val = me[field].getTextAsNum(), store;
 	switch(fcn.button) {
@@ -1148,22 +1148,22 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 			auto otherField = get_control_for_field(fcn.continuation);
 			store = me[otherField].getTextAsNum();
-			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, &store, &me);
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &val, &store, &me);
 			me[otherField].setTextToNum(store);
 			store = val;
 		} break;
 		case eSpecPicker::MSG_SINGLE:
-			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, nullptr, &me);
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &val, nullptr, &me);
 			store = val;
 			break;
 		case eSpecPicker::MSG_SEQUENCE:
 			store = val;
-			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &store, &me);
+			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &store, &me);
 			break;
 		case eSpecPicker::MSG_SEQUENCE_VAR:
 			if(val < 0) {
 				// If no string was specified, start appending strings to the end of the list.
-				auto mode = eStrMode(edit_stack.top().mode);
+				auto mode = eStrMode(edit_stack.back().mode);
 				store = num_strs(mode);
 				ensure_str(mode, store);
 				bool is_new = true;
@@ -1176,7 +1176,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				store = val;
 				bool is_new = false;
 				auto otherField = get_control_for_field(fcn.continuation);
-				edit_text_str(val, eStrMode(edit_stack.top().mode), is_new, false, val, me[otherField].getTextAsNum());
+				edit_text_str(val, eStrMode(edit_stack.back().mode), is_new, false, val, me[otherField].getTextAsNum());
 			}
 			break;
 		case eSpecPicker::TOGGLE: {
@@ -1191,7 +1191,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 		} break;
 		case eSpecPicker::NODE: {
-			short mode = fcn.force_global ? 0 : edit_stack.top().mode;
+			short mode = fcn.force_global ? 0 : edit_stack.back().mode;
 			store = val < 0 ? get_fresh_spec(mode) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
@@ -1205,7 +1205,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if (node_to_change_to) {
 				if(node_to_change_to->pic < 0)
 					node_to_change_to->pic = 0;
-				edit_stack.push({store,mode,*node_to_change_to});
+				edit_stack.push_back({store,mode,*node_to_change_to});
 			}
 			put_spec_enc_in_dlog(me, edit_stack);
 			me["back"].show();
@@ -1319,7 +1319,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case eLocType::ACTIVE_OUT: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
 				case eLocType::ACTIVE_TOWN: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
 				case eLocType::ACTIVE_AUTO: {
-					switch(edit_stack.top().mode) {
+					switch(edit_stack.back().mode) {
 						case 1: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
 						case 2: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
 						case 0: {
@@ -1485,7 +1485,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
 	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string, eKeyMod) {
-		eSpecType type = edit_stack.top().node.type;
+		eSpecType type = edit_stack.back().node.type;
 		const std::string& str = (*type).descr();
 		// TODO: This is the same dialog as give_help(), the only difference being that we don't have a string number!
 		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
@@ -1496,7 +1496,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	
 
 	special["back"].hide();
-	edit_stack.push({which_node,mode,the_node});
+	edit_stack.push_back({which_node,mode,the_node});
 	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog_stack, _1, _2, std::ref(edit_stack), mode));
 
 	put_spec_enc_in_dlog(special, edit_stack);
