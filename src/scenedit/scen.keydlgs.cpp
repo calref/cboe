@@ -903,16 +903,28 @@ static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_
 }
 
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
+	// don't update the node from the dialog fields when unwinding
 	if(item_hit != "unwind")
 		save_spec_enc(me, edit_stack);
+
+	// commit the node's changes
 	int mode = edit_stack.back().mode, node = edit_stack.back().which;
+	cSpecial spec = edit_stack.back().node;
 	switch(mode) {
-		case 0: scenario.scen_specials[node] = edit_stack.back().node; break;
-		case 1: current_terrain->specials[node] = edit_stack.back().node; break;
-		case 2: town->specials[node] = edit_stack.back().node; break;
+		case 0: scenario.scen_specials[node] = spec; break;
+		case 1: current_terrain->specials[node] = spec; break;
+		case 2: town->specials[node] = spec; break;
 	}
 	edit_stack.pop_back();
+
+	// Update previous instances of the same node in the stack in case the designer looped
+	auto last_instance = std::find_if(edit_stack.rbegin(), edit_stack.rend(), [node](editing_node_t e){ return e.which == node; });
+	if(last_instance != edit_stack.rend()){
+		last_instance->node = spec;
+	}
+
 	if(item_hit == "okay") {
+		// Unwind the stack committing every edit
 		while(!edit_stack.empty())
 			commit_spec_enc(me, "unwind", edit_stack);
 		me.toast(true);
