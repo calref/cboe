@@ -770,4 +770,17 @@ public:
 		cAction(name), str_mode(mode), which_town(cur_town), which_out(cur_out), str(str) {}
 };
 
+class aCreateStrings : public cAction {
+	eStrMode str_mode;
+	std::vector<std::string> strs;
+	// undo/redo for town text and outdoor text depends on global state of which town/outdoor section are active
+	size_t which_town;
+	location which_out;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateStrings(eStrMode mode, std::vector<std::string> strs) :
+		cAction(edit_string_action_name("Create", mode) + (strs.size() > 1 ? "s" : "")), str_mode(mode), strs(strs), which_town(cur_town), which_out(cur_out) {}
+};
+
 #endif

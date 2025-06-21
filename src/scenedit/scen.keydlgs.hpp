@@ -14,7 +14,7 @@ short choose_text_res(std::string res_list,short first_t,short last_t,unsigned s
 short choose_text(eStrType list, unsigned short cur_choice, cDialog* parent,std::string title);
 short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDialog* parent, std::string title);
 short choose_pattern(short cur_choice, cDialog* parent, bool expandRotatable);
-bool edit_text_str(short which_str,eStrMode mode,bool loop = true,short min_str = 0,short max_str = -1);
+bool edit_text_str(short which_str,eStrMode mode,bool& is_new,bool loop = true,short min_str = 0,short max_str = -1);
 bool edit_spec_enc(short which_node,short mode,cDialog* parent);
 short get_fresh_spec(short which_mode);
 void edit_spec_text(eStrMode mode,short *str1,short *str2,cDialog* parent);

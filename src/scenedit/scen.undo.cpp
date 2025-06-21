@@ -1100,6 +1100,7 @@ bool aDeleteString::undo_me() {
 	if(str_mode == STRS_TOWN) set_current_town(which_town);
 	else if(str_mode == STRS_OUT) set_current_out(which_out);
 	fetch_str_list(str_mode).push_back(str);
+	start_string_editing(str_mode);
 	return true;
 }
 
@@ -1107,5 +1108,28 @@ bool aDeleteString::redo_me() {
 	if(str_mode == STRS_TOWN) set_current_town(which_town);
 	else if(str_mode == STRS_OUT) set_current_out(which_out);
 	fetch_str_list(str_mode).pop_back();
+	start_string_editing(str_mode);
+	return true;
+}
+
+bool aCreateStrings::undo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
+	auto& str_list = fetch_str_list(str_mode);
+	for(int i = 0; i < strs.size(); ++i){
+		str_list.pop_back();
+	}
+	start_string_editing(str_mode);
+	return true;
+}
+
+bool aCreateStrings::redo_me() {
+	if(str_mode == STRS_TOWN) set_current_town(which_town);
+	else if(str_mode == STRS_OUT) set_current_out(which_out);
+	auto& str_list = fetch_str_list(str_mode);
+	for(auto str : strs){
+		str_list.push_back(str);
+	}
+	start_string_editing(str_mode);
 	return true;
 }

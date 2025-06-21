@@ -668,16 +668,20 @@ std::string edit_string_action_name(std::string what, eStrMode str_mode){
 	return name;
 }
 
-static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool loop,short min_str,short max_str) {
+static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool& is_new,bool loop,short min_str,short max_str) {
 	std::string newVal = me["text"].getText();
 
 	std::string& realVal = fetch_str(str_mode, which_str);
-	if(realVal != newVal){
+	if(is_new){
+		undo_list.add(action_ptr(new aCreateStrings(str_mode, {newVal})));
+	}
+	else if(realVal != newVal){
 		// edit menu will update when string editor closes
 		undo_list.add(action_ptr(new aEditClearString(edit_string_action_name("Edit", str_mode), str_mode, which_str, realVal, newVal)));
 	}
 
-	fetch_str(str_mode, which_str) = newVal;
+	realVal = newVal;
+	is_new = false;
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 		if(item_hit[0] == 'l')
@@ -700,12 +704,12 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	return true;
 }
 
-bool edit_text_str(short which_str,eStrMode mode,bool loop,short min_str,short max_str) {
+bool edit_text_str(short which_str,eStrMode mode,bool& is_new,bool loop,short min_str,short max_str) {
 	using namespace std::placeholders;
 	short first = which_str;
 	
 	cDialog dlog(*ResMgr::dialogs.get("edit-text"));
-	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode, loop, min_str, max_str), {"okay", "left", "right"});
+	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode, std::ref(is_new), loop, min_str, max_str), {"okay", "left", "right"});
 	dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	
 	dlog["num"].setText(str_info(mode, which_str));
@@ -1162,15 +1166,17 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				auto mode = eStrMode(edit_stack.top().mode);
 				store = num_strs(mode);
 				ensure_str(mode, store);
-				if(edit_text_str(store, mode, false, store)) {
+				bool is_new = true;
+				if(edit_text_str(store, mode, is_new, false, store)) {
 					auto otherField = get_control_for_field(fcn.continuation);
 					me[otherField].setTextToNum(num_strs(mode) - 1);
 				} else store = val;
 			} else {
 				// Otherwise, edit only the sequence of strings specified. The values of the fields won't change.
 				store = val;
+				bool is_new = false;
 				auto otherField = get_control_for_field(fcn.continuation);
-				edit_text_str(val, eStrMode(edit_stack.top().mode), false, val, me[otherField].getTextAsNum());
+				edit_text_str(val, eStrMode(edit_stack.top().mode), is_new, false, val, me[otherField].getTextAsNum());
 			}
 			break;
 		case eSpecPicker::TOGGLE: {

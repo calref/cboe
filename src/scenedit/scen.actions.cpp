@@ -370,7 +370,28 @@ static void delete_last_string(eStrMode mode) {
 	str_list.pop_back();
 }
 
-static void create_string(eStrMode mode, bool option_hit) {
+static void create_many_strings(eStrMode mode) {
+	auto& str_list = fetch_str_list(mode);
+	std::vector<std::string> new_strings;
+	for(int i = 0; i < 8; ++i){
+		str_list.push_back("*");
+		new_strings.push_back("*");
+	}
+	undo_list.add(action_ptr(new aCreateStrings(mode, new_strings)));
+	update_edit_menu();
+}
+
+static void try_edit_string(eStrMode mode, size_t which, bool is_new) {
+	auto& str_list = fetch_str_list(mode);
+	if(is_new)
+		str_list.emplace_back("*");
+	if(!edit_text_str(which,mode,is_new) && is_new)
+		str_list.pop_back();
+}
+
+static void edit_loc_string(eStrMode mode, size_t which) {
+	bool is_new = false;
+	edit_text_str(which,mode,is_new);
 }
 
 static bool handle_rb_action(location the_point, bool option_hit) {
@@ -454,13 +475,10 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(j == size_before - 1)
 							delete_last_string(STRS_SCEN);
 						else if(j == size_before)
-							scenario.spec_strs.resize(size_before + 8, "*");
+							create_many_strings(STRS_SCEN);
 						else clear_string(STRS_SCEN, j);
 					} else {
-						if(j == size_before)
-							scenario.spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_SCEN) && j == size_before && scenario.spec_strs[j] == "*")
-							scenario.spec_strs.pop_back();
+						try_edit_string(STRS_SCEN, j, j == size_before);
 					}
 					start_string_editing(STRS_SCEN);
 					if(size_before > scenario.spec_strs.size())
@@ -473,13 +491,10 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(j == size_before - 1)
 							delete_last_string(STRS_OUT);
 						else if(j == size_before)
-							current_terrain->spec_strs.resize(size_before + 8, "*");
+							create_many_strings(STRS_OUT);
 						else clear_string(STRS_OUT, j);
 					} else {
-						if(j == size_before)
-							current_terrain->spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_OUT) && j == size_before && current_terrain->spec_strs[j] == "*")
-							current_terrain->spec_strs.pop_back();
+						try_edit_string(STRS_OUT, j, j == size_before);
 					}
 					start_string_editing(STRS_OUT);
 					if(size_before > current_terrain->spec_strs.size())
@@ -492,13 +507,10 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(j == size_before - 1)
 							delete_last_string(STRS_TOWN);
 						else if(j == size_before)
-							town->spec_strs.resize(size_before + 8, "*");
+							create_many_strings(STRS_TOWN);
 						else clear_string(STRS_TOWN, j);
 					} else {
-						if(j == size_before)
-							town->spec_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_TOWN) && j == size_before && town->spec_strs[j] == "*")
-							town->spec_strs.pop_back();
+						try_edit_string(STRS_TOWN, j, j == size_before);
 					}
 					start_string_editing(STRS_TOWN);
 					if(size_before > town->spec_strs.size())
@@ -545,13 +557,10 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						if(j == size_before - 1)
 							delete_last_string(STRS_JOURNAL);
 						else if(j == size_before)
-							scenario.journal_strs.resize(size_before + 8, "*");
+							create_many_strings(STRS_JOURNAL);
 						else clear_string(STRS_JOURNAL, j);
 					} else {
-						if(j == size_before)
-							scenario.journal_strs.emplace_back("*");
-						if(!edit_text_str(j,STRS_JOURNAL) && j == size_before && scenario.journal_strs[j] == "*")
-							scenario.journal_strs.pop_back();
+						try_edit_string(STRS_JOURNAL, j, j == size_before);
 					}
 					start_string_editing(STRS_JOURNAL);
 					if(size_before > scenario.journal_strs.size())
@@ -604,7 +613,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->sign_locs[j] = {-1, -1, "*"};
 						}
 					} else {
-						edit_text_str(j,STRS_OUT_SIGN);
+						edit_loc_string(STRS_OUT_SIGN,j);
 					}
 					start_string_editing(STRS_OUT_SIGN);
 					if(size_before > current_terrain->sign_locs.size())
@@ -625,7 +634,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->sign_locs[j] = {-1, -1, "*"};
 						}
 					} else {
-						edit_text_str(j,STRS_TOWN_SIGN);
+						edit_loc_string(STRS_TOWN_SIGN,j);
 					}
 					start_string_editing(STRS_TOWN_SIGN);
 					if(size_before > town->sign_locs.size())
@@ -646,7 +655,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
 						}
 					} else {
-						edit_text_str(j,STRS_OUT_RECT);
+						edit_loc_string(STRS_OUT_RECT,j);
 					}
 					start_string_editing(STRS_OUT_RECT);
 					if(size_before > current_terrain->area_desc.size())
@@ -667,7 +676,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->area_desc[j] = {0, 0, 0, 0, "*"};
 						}
 					} else {
-						edit_text_str(j,STRS_TOWN_RECT);
+						edit_loc_string(STRS_TOWN_RECT,j);
 					}
 					start_string_editing(STRS_TOWN_RECT);
 					if(size_before > town->area_desc.size())
