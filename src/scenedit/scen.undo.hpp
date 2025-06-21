@@ -796,4 +796,20 @@ public:
 		cAction(create ? "Create Special Node" : "Delete Special Node", !create), mode(mode), spec(spec), which_town(cur_town), which_out(cur_out) {}
 };
 
+class aEditSpecial : public cAction {
+	short mode;
+	size_t which;
+	// undo/redo for town and outdoor nodes depends on global state of which town/outdoor section are active
+	size_t which_town;
+	location which_out;
+	cSpecial old_spec;
+	cSpecial new_spec;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditSpecial(short mode, size_t which, cSpecial old_spec, cSpecial new_spec) :
+		cAction("Edit Special Node"), mode(mode), which(which), old_spec(old_spec), new_spec(new_spec), which_town(cur_town), which_out(cur_out) {
+	}
+};
+
 #endif

@@ -427,9 +427,12 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							break;
 						else scenario.scen_specials[j] = cSpecial();
 					} else {
-						if(j == size_before)
+						bool is_new = false;
+						if(j == size_before){
 							scenario.scen_specials.emplace_back();
-						edit_spec_enc(j,0,nullptr);
+							is_new = true;
+						}
+						edit_spec_enc(j,0,nullptr,is_new);
 					}
 					start_special_editing(0);
 					if(size_before > scenario.scen_specials.size())
@@ -448,9 +451,12 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							break;
 						else current_terrain->specials[j] = cSpecial();
 					} else {
-						if(j == size_before)
+						bool is_new = false;
+						if(j == size_before){
 							current_terrain->specials.emplace_back();
-						edit_spec_enc(j,1,nullptr);
+							is_new = true;
+						}
+						edit_spec_enc(j,1,nullptr,is_new);
 					}
 					start_special_editing(1);
 					if(size_before > current_terrain->specials.size())
@@ -469,9 +475,12 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							break;
 						else town->specials[j] = cSpecial();
 					} else {
-						if(j == size_before)
+						bool is_new = false;
+						if(j == size_before){
 							town->specials.emplace_back();
-						edit_spec_enc(j,2,nullptr);
+							is_new = true;
+						}
+						edit_spec_enc(j,2,nullptr,is_new);
 					}
 					start_special_editing(2);
 					if(size_before > town->specials.size())
@@ -2848,21 +2857,21 @@ void place_edit_special(location loc) {
 	auto& specials = get_current_area()->special_locs;
 	for(short i = 0; i < specials.size(); i++)
 		if(specials[i] == loc && specials[i].spec >= 0) {
-			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr);
-			// TODO add the edit specials actions
+			edit_spec_enc(specials[i].spec, editing_town ? 2 : 1, nullptr, false);
 			return;
 		}
 	// new special
-	short spec = get_fresh_spec(editing_town ? 2 : 1);
 	for(short i = 0; i <= specials.size(); i++) {
-		if(i == specials.size())
+		bool is_new = false;
+		if(i == specials.size()){
 			specials.emplace_back(-1,-1,-1);
+			is_new = true;
+		}
 		if(specials[i].spec < 0) {
-			if(edit_spec_enc(spec, editing_town ? 2: 1, nullptr)) {
+			if(edit_spec_enc(i, editing_town ? 2: 1, nullptr, is_new)) {
 				specials[i] = loc;
-				specials[i].spec = spec;
+				specials[i].spec = i;
 				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[i])));
-				// TODO add the edit specials actions
 				update_edit_menu();
 			}
 			break;
@@ -2882,7 +2891,6 @@ void set_special(location spot_hit) {
 			int spec = edit_special_num(editing_town ? 2 : 1,specials[x].spec);
 			if(spec >= 0 && spec != specials[x].spec){
 				undo_list.add(action_ptr(new aSetSpecial(spot_hit, specials[x].spec, spec)));
-				// TODO if create/edit was used, add those actions
 				update_edit_menu();
 				specials[x].spec = spec;
 			}
@@ -2898,7 +2906,6 @@ void set_special(location spot_hit) {
 				specials[x] = spot_hit;
 				specials[x].spec = spec;
 				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[x])));
-				// TODO if create/edit was used, add those actions
 				update_edit_menu();
 			}
 			break;

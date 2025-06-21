@@ -754,6 +754,7 @@ bool edit_area_rect_str(info_rect_t& r) {
 struct editing_node_t {
 	short which, mode;
 	cSpecial node;
+	bool is_new;
 };
 
 typedef std::vector<editing_node_t> node_stack_t;
@@ -902,6 +903,19 @@ static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_
 	return preview_spec_enc_dlog(me, item_hit, special, mode);
 }
 
+static cSpecial& get_spec_ref(int mode, size_t which) {
+	switch(mode) {
+		case 0:
+			return scenario.scen_specials[which];
+		case 1:
+			return current_terrain->specials[which];
+		case 2:
+			return town->specials[which];
+		default:
+			throw std::string {"Bad mode"};
+	}
+}
+
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	// don't update the node from the dialog fields when unwinding
 	if(item_hit != "unwind")
@@ -909,18 +923,24 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 
 	// commit the node's changes
 	int mode = edit_stack.back().mode, node = edit_stack.back().which;
+	bool is_new = edit_stack.back().is_new;
 	cSpecial spec = edit_stack.back().node;
-	switch(mode) {
-		case 0: scenario.scen_specials[node] = spec; break;
-		case 1: current_terrain->specials[node] = spec; break;
-		case 2: town->specials[node] = spec; break;
+
+	cSpecial& existing = get_spec_ref(mode, node);
+	if(is_new){
+		undo_list.add(action_ptr(new aCreateDeleteSpecial(true, mode, spec)));
 	}
+	else if(existing != spec){
+		undo_list.add(action_ptr(new aEditSpecial(mode, node, existing, spec)));
+	}
+	existing = spec;
 	edit_stack.pop_back();
 
 	// Update previous instances of the same node in the stack in case the designer looped
 	auto last_instance = std::find_if(edit_stack.rbegin(), edit_stack.rend(), [node](editing_node_t e){ return e.which == node; });
 	if(last_instance != edit_stack.rend()){
 		last_instance->node = spec;
+		last_instance->is_new = false;
 	}
 
 	if(item_hit == "okay") {
@@ -929,6 +949,7 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 			commit_spec_enc(me, "unwind", edit_stack);
 		me.toast(true);
 		me.setResult(true);
+		update_edit_menu();
 	} else if(item_hit == "back") {
 		put_spec_enc_in_dlog(me, edit_stack);
 		if(edit_stack.size() == 1)
@@ -1204,7 +1225,8 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 		} break;
 		case eSpecPicker::NODE: {
 			short mode = fcn.force_global ? 0 : edit_stack.back().mode;
-			store = val < 0 ? get_fresh_spec(mode) : val;
+			bool is_new = false;
+			store = val < 0 ? get_fresh_spec(mode,is_new) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
 			cSpecial* node_to_change_to = nullptr;
@@ -1217,7 +1239,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if (node_to_change_to) {
 				if(node_to_change_to->pic < 0)
 					node_to_change_to->pic = 0;
-				edit_stack.push_back({store,mode,*node_to_change_to});
+				edit_stack.push_back({store,mode,*node_to_change_to,is_new});
 			}
 			put_spec_enc_in_dlog(me, edit_stack);
 			me["back"].show();
@@ -1439,8 +1461,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 }
 
 // mode - 0 scen 1 - out 2 - town
-// TODO collect a list of undo actions that can be committed to undo_list by the calling code
-bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
+bool edit_spec_enc(short which_node,short mode,cDialog* parent,bool is_new) {
 	using namespace std::placeholders;
 	cSpecial the_node;
 	node_stack_t edit_stack;
@@ -1508,7 +1529,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	
 
 	special["back"].hide();
-	edit_stack.push_back({which_node,mode,the_node});
+	edit_stack.push_back({which_node,mode,the_node,is_new});
 	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog_stack, _1, _2, std::ref(edit_stack), mode));
 
 	put_spec_enc_in_dlog(special, edit_stack);
@@ -1518,7 +1539,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	return special.getResult<bool>();
 }
 
-short get_fresh_spec(short which_mode) {
+short get_fresh_spec(short which_mode,bool& is_new) {
 	cSpecial store_node;
 	size_t num_specs = 0;
 	switch(which_mode) {
@@ -1538,6 +1559,7 @@ short get_fresh_spec(short which_mode) {
 			return i;
 	}
 	
+	is_new = true;
 	switch(which_mode) {
 		case 0: scenario.scen_specials.emplace_back(); break;
 		case 1: current_terrain->specials.emplace_back(); break;
@@ -1688,10 +1710,11 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 		if(i > num_specs){
 			showWarning("There is no special node with that number. " + range, how_to_create + ".", &me);
 		}else{
+			bool is_new = false;
 			if(i < 0 || i == num_specs)
-				i = get_fresh_spec(spec_mode);
+				i = get_fresh_spec(spec_mode,is_new);
 			me.setResult<short>(i);
-			edit_spec_enc(i, spec_mode, &me);
+			edit_spec_enc(i, spec_mode, &me,is_new);
 			me.toast(true);
 		}
 	}else if(item_hit == "okay") {

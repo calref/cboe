@@ -273,9 +273,10 @@ static bool pick_ter_flag(cDialog& me, std::string id, eKeyMod) {
 			else if(choice == "town") which_type = 2;
 		}
 		short spec = me["flag1"].getTextAsNum();
+		bool is_new = false;
 		if(spec < 0)
-			spec = get_fresh_spec(which_type);
-		if(edit_spec_enc(spec,which_type,&me))
+			spec = get_fresh_spec(which_type,is_new);
+		if(edit_spec_enc(spec,which_type,&me,is_new))
 			me["flag1"].setTextToNum(spec);
 		return true;
 	} else if(id == "picktrans") {
@@ -1114,9 +1115,10 @@ static bool edit_monst_abil_event_filter(cDialog& me,std::string hit,cMonster& m
 		else abils.setPage(abils.getPage() + 1);
 	} else if(hit == "edit-see") {
 		short spec = me["onsee"].getTextAsNum();
+		bool is_new = false;
 		if(spec < 0)
-			spec = get_fresh_spec(0);
-		if(edit_spec_enc(spec,0,&me))
+			spec = get_fresh_spec(0,is_new);
+		if(edit_spec_enc(spec,0,&me,is_new))
 			me["onsee"].setTextToNum(spec);
 	} else if(hit == "pick-snd") {
 		int i = me["snd"].getTextAsNum();
@@ -1314,11 +1316,12 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 				break;
 			case eMonstAbilTemplate::SPECIAL:
 			case eMonstAbilTemplate::HIT_TRIGGERS:
-			case eMonstAbilTemplate::DEATH_TRIGGERS:
-				param = get_fresh_spec(0);
-				if(!edit_spec_enc(param,0,&me))
+			case eMonstAbilTemplate::DEATH_TRIGGERS:{
+				bool is_new = false;
+				param = get_fresh_spec(0,is_new);
+				if(!edit_spec_enc(param,0,&me,is_new))
 					return true;
-				break;
+			}break;
 			case eMonstAbilTemplate::TOUCH_POISON:
 				param = get_monst_abil_num("Poison strength:", 0, 8, me);
 				break;
@@ -1483,9 +1486,10 @@ static bool edit_monst_abil_detail(cDialog& me, std::string hit, cMonster& monst
 		if(abil == eMonstAbil::SPECIAL || abil == eMonstAbil::HIT_TRIGGER || abil == eMonstAbil::DEATH_TRIGGER)
 			abil_dlg["pick-extra1"].attachClickHandler([&](cDialog& me,std::string,eKeyMod) -> bool {
 				short spec = me["extra1"].getTextAsNum();
+				bool is_new = false;
 				if(spec < 0)
-					spec = get_fresh_spec(0);
-				if(edit_spec_enc(spec,0,&me))
+					spec = get_fresh_spec(0,is_new);
+				if(edit_spec_enc(spec,0,&me,is_new))
 					me["extra1"].setTextToNum(spec);
 				return true;
 			});
@@ -2082,9 +2086,10 @@ static bool edit_item_abil_event_filter(cDialog& me, std::string hit, cItem& ite
 	} else if(hit == "str1-choose") {
 		save_item_abils(me, item);
 		short spec = me["str1"].getTextAsNum();
+		bool is_new = false;
 		if(spec < 0)
-			spec = get_fresh_spec(0);
-		if(edit_spec_enc(spec,0,&me)) {
+			spec = get_fresh_spec(0, is_new);
+		if(edit_spec_enc(spec,0,&me,is_new)) {
 			item.abil_strength = spec;
 			me["str1"].setTextToNum(spec);
 		}
@@ -2270,9 +2275,10 @@ static bool edit_spec_item_event_filter(cDialog& me, std::string hit, cSpecItem&
 	} else if(hit == "edit-spec") {
 		if(!save_spec_item(me, item, which, is_new)) return true;
 		short spec = me["spec"].getTextAsNum();
+		bool is_new = false;
 		if(spec < 0)
-			spec = get_fresh_spec(0);
-		if(edit_spec_enc(spec,0,&me))
+			spec = get_fresh_spec(0,is_new);
+		if(edit_spec_enc(spec,0,&me,is_new))
 			me["spec"].setTextToNum(spec);
 		save_spec_item(me, item, which, is_new);
 		
@@ -2645,8 +2651,9 @@ static void edit_shop_special(cDialog& parent, cItem& item, size_t& quantity) {
 	
 	spec_dlg["edit"].attachClickHandler([](cDialog& me, std::string, eKeyMod) -> bool {
 		int spec = me["node"].getTextAsNum();
-		if(spec < 0) spec = get_fresh_spec(0);
-		if(edit_spec_enc(spec, 0, &me))
+		bool is_new = false;
+		if(spec < 0) spec = get_fresh_spec(0,is_new);
+		if(edit_spec_enc(spec, 0, &me,is_new))
 			me["node"].setTextToNum(spec);
 		return true;
 	});
@@ -3170,8 +3177,9 @@ static void put_scen_adv_details_in_dlog(cDialog& me) {
 
 static bool edit_scen_init_spec(cDialog& me, std::string, eKeyMod) {
 	int spec = me["oninit"].getTextAsNum();
-	if(spec < 0) spec = get_fresh_spec(0);
-	if(edit_spec_enc(spec, 0, &me))
+	bool is_new = false;
+	if(spec < 0) spec = get_fresh_spec(0,is_new);
+	if(edit_spec_enc(spec, 0, &me, is_new))
 		me["oninit"].setTextToNum(spec);
 	return true;
 }
@@ -3502,9 +3510,10 @@ static bool edit_scenario_events_event_filter(cDialog& me, std::string item_hit,
 	// item_hit is of the form editN; we need an ID of the form nodeN
 	item_hit.replace(0, 4, "node");
 	short spec = me[item_hit].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(0);
-	if(edit_spec_enc(spec,0,&me))
+		spec = get_fresh_spec(0,is_new);
+	if(edit_spec_enc(spec,0,&me,is_new))
 		me[item_hit].setTextToNum(spec);
 	return true;
 }

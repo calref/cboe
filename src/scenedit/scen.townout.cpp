@@ -233,18 +233,20 @@ static bool edit_placed_monst_adv_time_flag(cDialog& me, std::string, bool losin
 
 static bool edit_placed_monst_adv_death(cDialog& me) {
 	short spec = me["death"].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(2);
-	if(edit_spec_enc(spec,2,&me))
+		spec = get_fresh_spec(2,is_new);
+	if(edit_spec_enc(spec,2,&me,is_new))
 		me["death"].setTextToNum(spec);
 	return true;
 }
 
 static bool edit_placed_monst_adv_hail(cDialog& me) {
 	short spec = me["hail"].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(2);
-	if(edit_spec_enc(spec,2,&me))
+		spec = get_fresh_spec(2,is_new);
+	if(edit_spec_enc(spec,2,&me,is_new))
 		me["hail"].setTextToNum(spec);
 	return true;
 }
@@ -722,9 +724,10 @@ static bool edit_out_wand_spec(cDialog& me, std::string hit, short which, cOutdo
 	save_out_wand(me, which, wand, 100);
 	std::string fld = "on" + hit.substr(5);
 	short spec = me[fld].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(1);
-	if(edit_spec_enc(spec,1,&me))
+		spec = get_fresh_spec(1,is_new);
+	if(edit_spec_enc(spec,1,&me,is_new))
 		me[fld].setTextToNum(spec);
 	return true;
 }
@@ -891,9 +894,10 @@ static void put_town_events_in_dlog(cDialog& me) {
 static bool edit_town_events_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	std::string id = item_hit.substr(4);
 	short spec = me["spec" + id].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(2);
-	if(edit_spec_enc(spec,2,&me))
+		spec = get_fresh_spec(2,is_new);
+	if(edit_spec_enc(spec,2,&me,is_new))
 		me["spec" + id].setTextToNum(spec);
 	return true;
 }
@@ -963,9 +967,10 @@ static void put_advanced_town_in_dlog(cDialog& me) {
 static bool edit_advanced_town_special(cDialog& me, std::string hit, eKeyMod) {
 	std::string fld = hit.substr(5);
 	short spec = me[fld].getTextAsNum();
+	bool is_new = false;
 	if(spec < 0)
-		spec = get_fresh_spec(2);
-	if(edit_spec_enc(spec,2,&me)) {
+		spec = get_fresh_spec(2,is_new);
+	if(edit_spec_enc(spec,2,&me,is_new)) {
 		me[fld].setTextToNum(spec);
 	}
 	return true;
@@ -1638,9 +1643,10 @@ static bool select_talk_node_value(cDialog& me, std::string item_hit, const std:
 	} else if(fcn.button == eSpecPicker::NODE) {
 		int spec = me[field_id].getTextAsNum();
 		int mode = fcn.force_global ? 0 : 2;
+		bool is_new = false;
 		if(spec < 0)
-			spec = get_fresh_spec(mode);
-		if(edit_spec_enc(spec,mode,&me))
+			spec = get_fresh_spec(mode,is_new);
+		if(edit_spec_enc(spec,mode,&me,is_new))
 			me[field_id].setTextToNum(spec);
 	}
 	return true;
