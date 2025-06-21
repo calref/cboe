@@ -14,7 +14,8 @@
 
 void init_snd_tool();
 bool sound_going(snd_num_t which_s);
-void play_sound(snd_num_t which, sf::Time delay = sf::Time());
+void play_sound(snd_num_t which, sf::Time delay = sf::Time(), bool force = false);
+inline void force_play_sound(snd_num_t which, sf::Time delay = sf::Time()) { play_sound(which, delay, true); }
 void one_sound(snd_num_t which);
 std::string sound_to_fname(snd_num_t snd_num);
 

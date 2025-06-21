@@ -20,8 +20,19 @@ namespace legacy {
 
 class cPersonality {
 public:
+	// This is the character's name.
 	std::string title;
+	// name is how the character responds when asked about it
 	std::string look, name, job, dunno;
+	bool operator==(const cPersonality& other) const {
+		CHECK_EQ(other, title);
+		CHECK_EQ(other, look);
+		CHECK_EQ(other, name);
+		CHECK_EQ(other, job);
+		CHECK_EQ(other, dunno);
+		return true;
+	}
+	bool operator!=(const cPersonality& other) const { return !(*this == other); }
 };
 
 // This is used solely for porting old shops
@@ -77,6 +88,19 @@ public:
 			std::fill(link1, link1 + 4, ' ');
 			std::fill(link2, link2 + 4, ' ');
 		}
+		bool operator==(const cNode& other) const {
+			CHECK_EQ(other, personality);
+			CHECK_EQ(other, type);
+			for(int i = 0; i < 4; i++){
+				if(link1[i] != other.link1[i]) return false;
+				if(link2[i] != other.link2[i]) return false;
+				if(extras[i] != other.extras[i]) return false;
+			}
+			CHECK_EQ(other, str1);
+			CHECK_EQ(other, str2);
+			return true;
+		}
+		bool operator!=(const cNode& other) const { return !(*this == other); }
 	};
 	std::array<cPersonality, 10> people;
 	std::vector<cNode> talk_nodes;

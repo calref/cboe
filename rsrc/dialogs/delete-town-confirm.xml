@@ -8,12 +8,11 @@
 	<text top='6' left='49' width='271' height='66'>
 		You are about to delete the last town in your scenario's town list
 		(so if you have 10 towns in your scenario, the tenth will disappear).
-		This change will immediately be saved, and can't be undone.
 	</text>
-	<text top='127' left='49' width='268' height='14'>Are you sure you want to do this?</text>
 	<text top='73' left='49' width='276' height='53'>
 		Make sure to remove all outdoor entrances to the deleted town,
 		as well as all references to it in special encounters.
 		Failure to do so will result in scenario run-time errors.
 	</text>
+	<text top='127' left='49' width='268' height='14'>Are you sure you want to do this?</text>
 </dialog>

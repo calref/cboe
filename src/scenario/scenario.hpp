@@ -69,6 +69,12 @@ struct editor_state_t {
 	// When simply shifting over by 1 section we won't want to
 	// use this stored state, we want seamless transition.
 	std::map<location, terrain_view_t, loc_compare> out_view_state;
+
+	// Non-drawing modes will be remembered and reopened when the editor launches.
+	int overall_mode = -1;
+	int type_editing_mode = -1;
+	int string_editing_mode = -1;
+	int special_editing_mode = -1;
 };
 
 class cScenario {
@@ -81,6 +87,8 @@ public:
 		short property;
 		cItemStorage();
 		cItemStorage& operator = (legacy::item_storage_shortcut_type& old);
+		bool operator==(const cItemStorage& other) const;
+		bool operator!=(const cItemStorage& other) { return !(*this == other); }
 	};
 	void destroy_terrain();
 public:
@@ -94,6 +102,7 @@ public:
 	bool has_feature_flag(std::string flag);
 	std::string get_feature_flag(std::string flag);
 
+	// Varying town entrances
 	std::array<spec_loc_t,10> town_mods;
 	std::map<short, rectangle> store_item_rects;
 	std::vector<cSpecItem> special_items;
@@ -175,5 +184,127 @@ public:
 
 std::istream& operator>> (std::istream& in, eContentRating& rating);
 std::ostream& operator<< (std::ostream& out, eContentRating rating);
+
+// Store a version of the scenario details for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct scen_details_t {
+	unsigned short difficulty;
+	eContentRating rating;
+	std::string scen_name;
+	unsigned char ver[3];
+	std::string teaser_text[2];
+	std::string contact_info[2];
+	bool operator==(const scen_details_t& other) const {
+		CHECK_EQ(other, difficulty);
+		CHECK_EQ(other, rating);
+		CHECK_EQ(other, scen_name);
+		for(short i = 0; i < 3; i++)
+			if(this->ver[i] != other.ver[i]) return false;
+		for(short i = 0; i < 2; i++)
+			if(this->teaser_text[i] != other.teaser_text[i]) return false;
+		for(short i = 0; i < 2; i++)
+			if(this->contact_info[i] != other.contact_info[i]) return false;
+		return true;
+	}
+	bool operator!=(const scen_details_t& other) const { return !(*this == other); }
+};
+
+inline scen_details_t details_from_scen(cScenario& scen) {
+	return {
+		scen.difficulty,
+		scen.rating,
+		scen.scen_name,
+		scen.format.ver[0],scen.format.ver[1],scen.format.ver[2],
+		scen.teaser_text[0],scen.teaser_text[1],
+		scen.contact_info[0],scen.contact_info[1],
+	};
+}
+
+inline void scen_set_details(cScenario& scen, const scen_details_t& details) {
+	scen.difficulty = details.difficulty;
+	scen.rating = details.rating;
+	scen.scen_name = details.scen_name;
+	for(short i = 0; i < 3; i++)
+		scen.format.ver[i] = details.ver[i];
+	for(short i = 0; i < 2; i++)
+		scen.teaser_text[i] = details.teaser_text[i];
+	for(short i = 0; i < 2; i++)
+		scen.contact_info[i] = details.contact_info[i];
+}
+
+// Store a version of the scenario intro text/icon# for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct scen_intro_t {
+	unsigned short intro_pic;
+	std::array<std::string, 6> intro_strs;
+	bool operator==(const scen_intro_t& other) const {
+		CHECK_EQ(other, intro_pic);
+		for(int i = 0; i < intro_strs.size(); ++i){
+			if(intro_strs[i] != other.intro_strs[i]) return false;
+		}
+		return true;
+	}
+	bool operator!=(const scen_intro_t& other) const { return !(*this == other); }
+};
+
+inline scen_intro_t intro_from_scen(cScenario& scen) {
+	return { scen.intro_pic, scen.intro_strs };
+}
+
+inline void scen_set_intro(cScenario& scen, const scen_intro_t& details) {
+	scen.intro_pic = details.intro_pic;
+	scen.intro_strs = details.intro_strs;
+}
+
+// Store a version of the scenario advanced details for undo history.
+// This could be made a struct that cScenario contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct scen_advanced_t {
+	bool adjust_diff;
+	std::string campaign_id;
+	int bg_out;
+	int bg_town;
+	int bg_dungeon;
+	int bg_fight;
+	spec_num_t init_spec;
+	bool operator==(const scen_advanced_t& other) const {
+		CHECK_EQ(other, adjust_diff);
+		CHECK_EQ(other, campaign_id);
+		CHECK_EQ(other, bg_out);
+		CHECK_EQ(other, bg_town);
+		CHECK_EQ(other, bg_dungeon);
+		CHECK_EQ(other, bg_fight);
+		CHECK_EQ(other, init_spec);
+		return true;
+	}
+	bool operator!=(const scen_advanced_t& other) const { return !(*this == other); }
+};
+
+inline scen_advanced_t advanced_from_scen(cScenario& scen) {
+	return {
+		scen.adjust_diff,
+		scen.campaign_id,
+		scen.bg_out,
+		scen.bg_town,
+		scen.bg_dungeon,
+		scen.bg_fight,
+		scen.init_spec
+	};
+}
+
+inline void scen_set_advanced(cScenario& scen, const scen_advanced_t& details) {
+	scen.adjust_diff = details.adjust_diff;
+	scen.campaign_id = details.campaign_id;
+	scen.bg_out = details.bg_out;
+	scen.bg_town = details.bg_town;
+	scen.bg_dungeon = details.bg_dungeon;
+	scen.bg_fight = details.bg_fight;
+	scen.init_spec = details.init_spec;
+}
 
 #endif

@@ -18,7 +18,6 @@ void do_rest(long length, int hp_restore, int mp_restore);
 void out_move_party(short x,short y) ;
 void teleport_party(short x,short y,short mode);
 bool run_stone_circle(short which);
-void fade_party();
 void change_level(short town_num,short x,short y);
 void push_things();
 void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc);

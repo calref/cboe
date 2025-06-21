@@ -63,6 +63,8 @@ inline void LOG(std::string line) {
 
 #define LOG_VALUE(x) std::cout << #x << ": " << (x) << std::endl;
 
+#define CHECK_EQ(other, x) if(this->x != other.x) return false;
+
 const std::string FINISH_FIRST = "Finish what you're doing first.";
 
 #endif

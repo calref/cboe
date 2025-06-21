@@ -15,6 +15,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include "location.hpp"
 
 class cAction {
 	std::string actname;
@@ -22,14 +23,16 @@ class cAction {
 protected:
 	/// Construct a named action
 	/// @param name The name of the action to show in the Edit menu
-	cAction(std::string name) : actname(name) {}
+	cAction(std::string name, bool reversed = false) : actname(name), reversed(reversed) {}
+	/// For actions that have an inverse, this flag inverts the action implementation (i.e. create/delete)
+	bool reversed = true;
 public:
 	/// Undoes this action if it has not already been undone.
 	/// If it has already been undone, does nothing.
-	void undo();
+	virtual void undo();
 	/// Redoes this action if it has been undone.
 	/// If it has not been undone, does nothing.
-	void redo();
+	virtual void redo();
 	/// Cchecks to see whether the action has been undone.
 	/// @return false if it the action has been undone.
 	bool isDone() {return done;};
@@ -55,7 +58,6 @@ using action_ptr = std::shared_ptr<cAction>;
 class cUndoList {
 	std::list<action_ptr> theList;
 	std::list<action_ptr>::iterator cur, lastSave;
-	size_t num_actions = 0;
 public:
 	/// Construct a new undo list.
 	cUndoList();
@@ -93,6 +95,6 @@ public:
 	static size_t maxUndoSize;
 };
 
-// As a special convention, I will prefix action classes with 'a' instead of 'c'
+// As a special convention, I will prefix non-abstract action classes with 'a' instead of 'c'
 
 #endif

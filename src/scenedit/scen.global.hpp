@@ -2,6 +2,8 @@
 #ifndef BOE_SCEN_GLOBAL_HPP
 #define BOE_SCEN_GLOBAL_HPP
 
+#include <vector>
+
 const int BITMAP_WIDTH = 28;
 const int BITMAP_HEIGHT = 36;
 
@@ -22,9 +24,14 @@ const int TER_RECT_UL_Y = 19;
 const int UI_LAYER_DEFAULT = 1000;
 const int UI_LAYER_MENUBAR = 1200;
 
+// When editing types, several more rows can fit because the tool palette isn't there
+const int TYPE_ROWS_DRAWING = 16;
+const int TYPE_ROWS_EDITING = 23;
+
 enum eScenMode {
 	MODE_DRAWING = 0,
 	MODE_TOGGLE_ROAD = 1,
+	// Deprecated. Use the location picker in the encounter editor dialog.
 	MODE_SET_WANDER_POINTS = 2,
 	MODE_ROOM_RECT = 3,
 	MODE_PLACE_ITEM = 4,
@@ -78,6 +85,11 @@ enum eScenMode {
 	MODE_INTRO_SCREEN = 61,
 	MODE_EDIT_TYPES = 62, // currently only used for editing terrain, but I'd like to use it for editing monsters and items too.
 	MODE_EDIT_SPECIALS = 63, // editing a LIST of specials, not to be confused with MODE_EDIT_SPECIAL singular
+	MODE_EDIT_SPECIAL_ITEMS = 64,
+	MODE_EDIT_QUESTS = 65,
+	MODE_EDIT_SHOPS = 66,
+	MODE_EDIT_STRINGS = 67,
+	MODE_EDIT_DIALOGUE = 68,
 };
 
 enum eDrawMode {
@@ -103,5 +115,9 @@ enum ePalBtn {
 	PAL_ARROW_UP = 9, PAL_ARROW_DOWN = 69, PAL_TERRAIN = 29, PAL_ITEM = 39, PAL_MONST = 49,
 	PAL_BOAT = 60, PAL_HORSE = 61,
 };
+
+extern std::string& fetch_str(eStrMode str_mode, size_t which);
+extern std::string edit_string_action_name(std::string what, eStrMode str_mode);
+extern std::vector<std::string>& fetch_str_list(eStrMode str_mode);
 
 #endif

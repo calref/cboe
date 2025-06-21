@@ -5,7 +5,7 @@
 	<text size='large' relative='pos pos-in' rel-anchor='prev' top='0' left='4' width='218' height='16'>
 		BoE Scenario Editor Preferences
 	</text>
-	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>No Sounds</led>
+	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>No UI Sounds</led>
 	<text name='scale-head' size='large' relative='neg pos' rel-anchor='prev' top='17' left='10' width='260' height='17'>Scale UI:</text>
 	<group name='scaleui'>
 		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15'>1</led>

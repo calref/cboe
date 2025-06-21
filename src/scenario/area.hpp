@@ -26,6 +26,13 @@ enum {
 	AREA_HUGE = 128,
 };
 
+// x of 100 used to be used to indicate an unused location
+// or a place to temporarily move monsters out of the tile grid completely.
+// I don't know why a negative number wasn't used instead?
+// But in case there is a good reason for that, I'm shifting the placeholder
+// value to a new, much larger, positive constant, that we *could* change again later.
+const int LOC_UNUSED = AREA_HUGE * 2;
+
 class cArea {
 public:
 	const size_t max_dim;

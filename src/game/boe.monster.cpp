@@ -765,10 +765,7 @@ location random_shift(location start) {
 
 bool outdoor_move_monster(short num,location dest) {
 	
-	if(!outd_is_blocked(dest) && !outd_is_special(dest) &&
-		(dest != univ.party.out_loc) &&
-	   // TODO: Don't hard-code terrain types!
-		((univ.out[dest.x][dest.y] > 21) || (univ.out[dest.x][dest.y] < 5))) {
+	if(!outd_is_blocked(dest) && !outd_is_special(dest) && (dest != univ.party.out_loc)) {
 		univ.party.out_c[num].direction =
 		set_direction(univ.party.out_c[num].m_loc, dest);
 		univ.party.out_c[num].m_loc = dest;

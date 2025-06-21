@@ -1074,6 +1074,8 @@ void readScenarioFromXml(ticpp::Document&& data, cScenario& scenario) {
 		throw xMissingElem("scenario", *reqs.begin(), data.FirstChildElement()->Row(), data.FirstChildElement()->Column(), fname);
 }
 
+// This state is serialized in scen.fileio.cpp: writeEditorStateToXml()
+// and re-applied at editor launch in scen.actions.cpp: restore_editor_state()
 void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 	using namespace ticpp;
 	int maj, min, rev;
@@ -1122,6 +1124,14 @@ void readEditorStateFromXml(ticpp::Document&& data, cScenario& scenario) {
 				}
 			}
 			editor_state.out_view_state[section] = {center, viewing_mode};
+		}else if(type == "overall-mode"){
+			elem->GetText(&editor_state.overall_mode);
+		}else if(type == "type-editing-mode"){
+			elem->GetText(&editor_state.type_editing_mode);
+		}else if(type == "string-editing-mode"){
+			elem->GetText(&editor_state.string_editing_mode);
+		}else if(type == "special-editing-mode"){
+			elem->GetText(&editor_state.special_editing_mode);
 		}
 	}
 }

@@ -88,6 +88,26 @@ public:
 	cSpecial();
 	void import_legacy(legacy::special_node_type& old);
 	void writeTo(std::ostream& file, int n) const;
+
+	bool operator==(const cSpecial& other) const {
+		CHECK_EQ(other, type);
+		CHECK_EQ(other, sd1);
+		CHECK_EQ(other, sd2);
+		CHECK_EQ(other, pic);
+		CHECK_EQ(other, pictype);
+		CHECK_EQ(other, m1);
+		CHECK_EQ(other, m2);
+		CHECK_EQ(other, m3);
+		CHECK_EQ(other, ex1a);
+		CHECK_EQ(other, ex1b);
+		CHECK_EQ(other, ex1c);
+		CHECK_EQ(other, ex2a);
+		CHECK_EQ(other, ex2b);
+		CHECK_EQ(other, ex2c);
+		CHECK_EQ(other, jumpto);
+		return true;
+	}
+	bool operator!=(const cSpecial& other) const { return !(*this == other); }
 };
 
 enum class eSpecCtxType {

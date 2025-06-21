@@ -19,7 +19,6 @@ extern Document xmlDocFromStream(istream& stream, string name);
 extern void readOutdoorsFromXml(Document&& data, cOutdoors& out);
 extern void writeOutdoorsToXml(ticpp::Printer&& data, cOutdoors& sector);
 
-extern bool operator==(const cOutdoors::cWandering& lhs, const cOutdoors::cWandering& rhs);
 extern ostream& operator<<(ostream& out, const cOutdoors::cWandering& enc);
 
 static void in_and_out(string name, cOutdoors& out, cScenario& scen) {

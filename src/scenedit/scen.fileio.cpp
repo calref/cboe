@@ -122,6 +122,8 @@ namespace ticpp {
 	}
 }
 
+// This state is parsed in fileio_scen.cpp: readEditorStateFromXml()
+// and re-applied at editor launch in scen.actions.cpp: restore_editor_state()
 void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 	editor_state_t editor_state = scenario.editor_state;
 
@@ -148,6 +150,11 @@ void writeEditorStateToXml(ticpp::Printer&& data, cScenario& scenario) {
 		data.PushElement("viewing-mode", pair.second.cur_viewing_mode);
 		data.CloseElement("out-view-state");
 	}
+
+	data.PushElement("overall-mode", scenario.editor_state.overall_mode);
+	data.PushElement("type-editing-mode", scenario.editor_state.type_editing_mode);
+	data.PushElement("string-editing-mode", scenario.editor_state.string_editing_mode);
+	data.PushElement("special-editing-mode", scenario.editor_state.special_editing_mode);
 
 	data.CloseElement("editor");
 }
@@ -855,26 +862,33 @@ void writeTownToXml(ticpp::Printer&& data, cTown& town) {
 		}
 		data.CloseElement("wandering");
 	}
-	for(size_t i = 0; i < town.preset_items.size(); i++) {
+	
+
+	for(int i = 0; i < town.preset_items.size(); ++i) {
+		const cTown::cItem& item = town.preset_items[i];
+		// Don't save empty items
+		if(item.code < 0) continue;
 		data.OpenElement("item");
 		data.PushAttribute("id", i);
-		data.PushElement("type", town.preset_items[i].code);
-		if(town.preset_items[i].charges > 0)
-			data.PushElement("charges", town.preset_items[i].charges);
-		if(town.preset_items[i].ability != eEnchant::NONE)
-			data.PushElement("mod", town.preset_items[i].ability);
-		if(town.preset_items[i].always_there)
+		data.PushElement("type", item.code);
+		if(item.charges > 0)
+			data.PushElement("charges", item.charges);
+		if(item.ability != eEnchant::NONE)
+			data.PushElement("mod", item.ability);
+		if(item.always_there)
 			data.PushElement("always", true);
-		if(town.preset_items[i].property)
+		if(item.property)
 			data.PushElement("property", true);
-		if(town.preset_items[i].contained)
+		if(item.contained)
 			data.PushElement("contained", true);
 		data.CloseElement("item");
 	}
-	for(size_t i = 0; i < town.creatures.size(); i++) {
+	for(int i = 0; i < town.creatures.size(); ++i) {
+		cTownperson& preset = town.creatures[i];
+		// Don't save empty creatures
+		if(preset.number <= 0) continue;
 		data.OpenElement("creature");
 		data.PushAttribute("id", i);
-		cTownperson& preset = town.creatures[i];
 		data.PushElement("type", preset.number);
 		data.PushElement("attitude", preset.start_attitude);
 		data.PushElement("mobility", preset.mobility);

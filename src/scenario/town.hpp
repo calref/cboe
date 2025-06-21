@@ -59,6 +59,9 @@ public:
 		eEnchant ability;
 		int charges = -1;
 		bool always_there = false, property = false, contained = false;
+		// For detecting actual changes to town items in the editor
+		bool operator==(const cItem& other);
+		bool operator!=(const cItem& other) { return !(*this == other); }
 		
 		void import_legacy(legacy::preset_item_type old);
 		cItem();
@@ -115,6 +118,7 @@ public:
 	void set_up_lights();
 	short light_obscurity(short x,short y) const; // Obscurity function used for calculating lighting
 	bool is_cleaned_out() const;
+	bool any_preset_items() const;
 	
 	explicit cTown(cScenario& scenario, size_t dim);
 	void import_legacy(legacy::town_record_type& old);
@@ -127,5 +131,96 @@ public:
 
 std::ostream& operator<< (std::ostream& out, eLighting light);
 std::istream& operator>> (std::istream& in, eLighting& light);
+
+// Store a version of the town details for undo history.
+// This could be made a struct that cTown contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct town_details_t {
+	std::string name;
+	short town_chop_time;
+	short town_chop_key;
+	long max_num_monst;
+	short difficulty;
+	eLighting lighting_type;
+	std::array<std::string,3> comment;
+
+	bool operator==(const town_details_t& other) const {
+		CHECK_EQ(other,name);
+		CHECK_EQ(other,town_chop_key);
+		CHECK_EQ(other,max_num_monst);
+		CHECK_EQ(other,difficulty);
+		CHECK_EQ(other,lighting_type);
+		for(int i = 0; i < comment.size(); ++i){
+			if(other.comment[i] != comment[i]) return false;
+		}
+		return true;
+	}
+	bool operator!=(const town_details_t& other) const { return !(*this == other); }
+};
+
+inline town_details_t details_from_town(cTown& town) {
+	return {
+		town.name,
+		town.town_chop_time,
+		town.town_chop_key,
+		town.max_num_monst,
+		town.difficulty,
+		town.lighting_type,
+		town.comment
+	};
+}
+
+inline void town_set_details(cTown& town, const town_details_t& details) {
+	town.name = details.name;
+	town.town_chop_time = details.town_chop_time;
+	town.town_chop_key = details.town_chop_key;
+	town.max_num_monst = details.max_num_monst;
+	town.difficulty = details.difficulty;
+	town.lighting_type = details.lighting_type;
+	town.comment = details.comment;
+}
+
+// Store a version of the advanced town details for undo history.
+// This could be made a struct that cTown contains, and that would eliminate the next 2 functions, but it would
+// require changing every reference to these detail values in the game and fileio code, making them more verbose. I don't know
+// if that's worth it.
+struct town_advanced_t {
+	std::array<spec_loc_t, 4> exits;
+	short spec_on_entry;
+	short spec_on_entry_if_dead;
+	short spec_on_hostile;
+	int bg_town;
+	int bg_fight;
+	bool is_hidden;
+	bool defy_mapping;
+	bool defy_scrying;
+	bool strong_barriers;
+	bool has_tavern;
+	boost::optional<rectangle> store_item_rect;
+
+	bool operator==(const town_advanced_t& other) const {
+		for(int i = 0; i < exits.size(); ++i){
+			if(other.exits[i].spec != exits[i].spec) return false;
+			if(other.exits[i] != exits[i]) return false;
+		}
+		CHECK_EQ(other,spec_on_entry);
+		CHECK_EQ(other,spec_on_entry_if_dead);
+		CHECK_EQ(other,spec_on_hostile);
+		CHECK_EQ(other,bg_town);
+		CHECK_EQ(other,bg_fight);
+		CHECK_EQ(other,is_hidden);
+		CHECK_EQ(other,defy_mapping);
+		CHECK_EQ(other,defy_scrying);
+		CHECK_EQ(other,strong_barriers);
+		CHECK_EQ(other,has_tavern);
+		CHECK_EQ(other,store_item_rect);
+		return true;
+	}
+	bool operator!=(const town_advanced_t& other) const { return !(*this == other); }
+};
+
+town_advanced_t advanced_from_town(size_t which, cTown& town, cScenario& scenario);
+void town_set_advanced(size_t which, cTown& town, cScenario& scenario, const town_advanced_t& details);
 
 #endif

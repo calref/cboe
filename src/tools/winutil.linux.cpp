@@ -15,7 +15,7 @@
 
 extern void showError(std::string str1, std::string str2, cDialog* parent = nullptr);
 
-extern void play_sound(snd_num_t which, sf::Time delay = sf::Time());
+extern void play_sound(snd_num_t which, sf::Time delay = sf::Time(), bool force = false);
 
 // TODO: I'm sure there's a better way to do this (maybe one that's keyboard layout agnostic)
 // The proper way would involve use of the TextEntered event

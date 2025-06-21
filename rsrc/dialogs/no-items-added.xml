@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='okay' escbtn='okay'>
+	<button name='okay' type='regular' top='37' left='256'>OK</button>
+	<pict type='dlog' num='16' top='6' left='6'/>
+	<text top='6' left='49' width='272' height='28'>No random items were added. Double-check your Item Placement Shortcuts in the Scenario menu.</text>
+</dialog>

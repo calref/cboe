@@ -38,8 +38,10 @@ void cTown::import_legacy(legacy::town_record_type& old){
 	for(short i = 0; i < 50; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		if(old.special_locs[i].x == 100)
+		if(old.special_locs[i].x == 100){
+			special_locs[i].x = LOC_UNUSED;
 			special_locs[i].spec = -1;
+		}
 		else special_locs[i].spec = old.spec_id[i];
 		cField temp;
 		temp.import_legacy(old.preset_fields[i]);
@@ -83,13 +85,13 @@ cTown::cTown(cScenario& scenario, size_t dim) : cArea(dim), scenario(&scenario),
 	town_chop_key = -1;
 	for(short i = 0; i < wandering.size(); i++) {
 		wandering[i] = d_wan;
-		// x of 100 indicates an unset wandering monster location
-		wandering_locs[i].x = 100;
+		// unset wandering monster location
+		wandering_locs[i].x = LOC_UNUSED;
 	}
 	lighting_type = LIGHT_NORMAL;
 	for(short i = 0; i < 4; i++) {
-		// x of 100 indicates an unset starting location
-		start_locs[i].x = 100;
+		// unset starting location
+		start_locs[i].x = LOC_UNUSED;
 		exits[i].spec = -1;
 		exits[i].x = -1;
 		exits[i].y = -1;
@@ -267,4 +269,57 @@ void cTown::clear_items_taken() {
 void cTown::set_item_taken(size_t i, bool val) {
 	if(i >= item_taken.size()) item_taken.resize(i + 1);
 	item_taken.set(i, val);
+}
+
+bool cTown::any_preset_items() const {
+	for(cItem item: preset_items){
+		if(item.code >= 0) return true;
+	}
+	return false;
+}
+
+bool cTown::cItem::operator==(const cTown::cItem& other) {
+	CHECK_EQ(other, loc);
+	CHECK_EQ(other, code);
+	CHECK_EQ(other, ability);
+	CHECK_EQ(other, charges);
+	CHECK_EQ(other, always_there);
+	CHECK_EQ(other, property);
+	CHECK_EQ(other, contained);
+	return true;
+}
+
+town_advanced_t advanced_from_town(size_t which, cTown& town, cScenario& scenario) {
+	town_advanced_t details = {
+		town.exits,
+		town.spec_on_entry,
+		town.spec_on_entry_if_dead,
+		town.spec_on_hostile,
+		town.bg_town,
+		town.bg_fight,
+		town.is_hidden,
+		town.defy_mapping,
+		town.defy_scrying,
+		town.strong_barriers,
+		town.has_tavern
+	};
+	auto iter = scenario.store_item_rects.find(which);
+	if(iter != scenario.store_item_rects.end()) details.store_item_rect = iter->second;
+	return details;
+}
+
+void town_set_advanced(size_t which, cTown& town, cScenario& scenario, const town_advanced_t& details) {
+	town.exits = details.exits;
+	town.spec_on_entry = details.spec_on_entry;
+	town.spec_on_entry_if_dead = details.spec_on_entry_if_dead;
+	town.spec_on_hostile = details.spec_on_hostile;
+	town.bg_town = details.bg_town;
+	town.bg_fight = details.bg_fight;
+	town.is_hidden = details.is_hidden;
+	town.defy_mapping = details.defy_mapping;
+	town.defy_scrying = details.defy_scrying;
+	town.strong_barriers = details.strong_barriers;
+	town.has_tavern = details.has_tavern;
+	if(details.store_item_rect) scenario.store_item_rects[which] = *details.store_item_rect;
+	else scenario.store_item_rects.erase(which);
 }

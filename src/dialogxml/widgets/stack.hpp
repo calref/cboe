@@ -56,7 +56,7 @@ public:
 	/// You need to do this before retrieving data from that page.
 	/// @param The new page number
 	/// @return false if the page could not be changed, usually due to a focus handler
-	bool setPage(size_t n);
+	bool setPage(size_t n, bool call_focus_handlers = true);
 	/// Page forward or backward in the stack
 	/// @param dir Usually -1 or 1
 	/// @param loop Beyond the first and last page, loop to the other side

@@ -38,6 +38,8 @@ extern ter_num_t template_terrain[64][64];
 extern cScenario scenario;
 extern cOutdoors* current_terrain;
 extern cCustomGraphics spec_scen_g;
+extern cUndoList undo_list;
+extern void update_edit_menu();
 
 std::vector<pic_num_t> field_pics = {0,3,5,6,7,8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31,4};
 std::vector<pic_num_t> static_boom_pics = {0,1,2,3,4,5};
@@ -73,7 +75,8 @@ static void ensure_str(eStrMode str_mode, size_t which) {
 	}
 }
 
-static std::string& fetch_str(eStrMode str_mode, size_t which) {
+// Return writeable reference to any type of string the designer can edit
+std::string& fetch_str(eStrMode str_mode, size_t which) {
 	ensure_str(str_mode, which);
 	switch(str_mode) {
 		case 0: return scenario.spec_strs[which];
@@ -85,7 +88,7 @@ static std::string& fetch_str(eStrMode str_mode, size_t which) {
 		case 6: return current_terrain->area_desc[which].descr;
 		case 7: return town->area_desc[which].descr;
 	}
-	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
+	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-7)";
 }
 
 static std::string str_info(eStrMode str_mode, size_t which) {
@@ -651,9 +654,34 @@ short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDi
 	return cur_choice;
 }
 
-static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool loop,short min_str,short max_str) {
+std::string edit_string_action_name(std::string what, eStrMode str_mode){
+	std::string name = what + " ";
+	switch(str_mode){
+		case 0: name += "Scenario Text"; break;
+		case 1: name += "Outdoor Text"; break;
+		case 2: name += "Town Text"; break;
+		case 3: name += "Journal Text"; break;
+		case 4: case 5: name += "Sign Text"; break;
+		case 6: case 7: name += "Area Description"; break;
+		default: throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-7)";
+	}
+	return name;
+}
+
+static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool& is_new,bool loop,short min_str,short max_str) {
 	std::string newVal = me["text"].getText();
-	fetch_str(str_mode, which_str) = newVal;
+
+	std::string& realVal = fetch_str(str_mode, which_str);
+	if(is_new){
+		undo_list.add(action_ptr(new aCreateStrings(str_mode, {newVal})));
+	}
+	else if(realVal != newVal){
+		// edit menu will update when string editor closes
+		undo_list.add(action_ptr(new aEditClearString(edit_string_action_name("Edit", str_mode), str_mode, which_str, realVal, newVal)));
+	}
+
+	realVal = newVal;
+	is_new = false;
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
 		if(item_hit[0] == 'l')
@@ -676,12 +704,12 @@ static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& whi
 	return true;
 }
 
-bool edit_text_str(short which_str,eStrMode mode,bool loop,short min_str,short max_str) {
+bool edit_text_str(short which_str,eStrMode mode,bool& is_new,bool loop,short min_str,short max_str) {
 	using namespace std::placeholders;
 	short first = which_str;
 	
 	cDialog dlog(*ResMgr::dialogs.get("edit-text"));
-	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode, loop, min_str, max_str), {"okay", "left", "right"});
+	dlog.attachClickHandlers(std::bind(edit_text_event_filter, _1, _2, std::ref(which_str), mode, std::ref(is_new), loop, min_str, max_str), {"okay", "left", "right"});
 	dlog["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	
 	dlog["num"].setText(str_info(mode, which_str));
@@ -690,6 +718,7 @@ bool edit_text_str(short which_str,eStrMode mode,bool loop,short min_str,short m
 	if(!loop && max_str >= 0 && which_str == max_str) dlog["right"].hide();
 	
 	dlog.run();
+	update_edit_menu();
 	return dlog.accepted() || which_str != first;
 }
 
@@ -725,9 +754,10 @@ bool edit_area_rect_str(info_rect_t& r) {
 struct editing_node_t {
 	short which, mode;
 	cSpecial node;
+	bool is_new;
 };
 
-typedef std::stack<editing_node_t> node_stack_t;
+typedef std::vector<editing_node_t> node_stack_t;
 
 static void setup_node_field(cDialog& me, std::string field, short value, const node_function_t& fcn) {
 	me[field + "-lbl"].setText(fcn.label());
@@ -765,15 +795,15 @@ static void setup_node_field(cDialog& me, std::string field, short value, const 
 }
 
 static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
-	cSpecial& spec = edit_stack.top().node;
+	cSpecial& spec = edit_stack.back().node;
 	
 	// Show which node is being edited and what type of node it is
-	switch(edit_stack.top().mode) {
+	switch(edit_stack.back().mode) {
 		case 0: me["title"].setText("Edit Scenario Special Node"); break;
 		case 1: me["title"].setText("Edit Outdoors Special Node"); break;
 		case 2: me["title"].setText("Edit Town Special Node"); break;
 	}
-	me["num"].setTextToNum(edit_stack.top().which);
+	me["num"].setTextToNum(edit_stack.back().which);
 	
 	// Show the node opcode information
 	me["type"].setText((*spec.type).name());
@@ -808,7 +838,7 @@ static void put_spec_enc_in_dlog(cDialog& me, node_stack_t& edit_stack) {
 }
 
 static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
-	cSpecial& the_node = edit_stack.top().node;
+	cSpecial& the_node = edit_stack.back().node;
 	the_node.sd1 = me["sdf1"].getTextAsNum();
 	the_node.sd2 = me["sdf2"].getTextAsNum();
 	the_node.m1 = me["msg1"].getTextAsNum();
@@ -869,25 +899,57 @@ static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& s
 
 static bool preview_spec_enc_dlog_stack(cDialog& me, std::string item_hit, node_stack_t& edit_stack, short mode) {
 	save_spec_enc(me, edit_stack);
-	cSpecial& special = edit_stack.top().node;
+	cSpecial& special = edit_stack.back().node;
 	return preview_spec_enc_dlog(me, item_hit, special, mode);
 }
 
+static cSpecial& get_spec_ref(int mode, size_t which) {
+	switch(mode) {
+		case 0:
+			return scenario.scen_specials[which];
+		case 1:
+			return current_terrain->specials[which];
+		case 2:
+			return town->specials[which];
+		default:
+			throw std::string {"Bad mode"};
+	}
+}
+
 static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
+	// don't update the node from the dialog fields when unwinding
 	if(item_hit != "unwind")
 		save_spec_enc(me, edit_stack);
-	int mode = edit_stack.top().mode, node = edit_stack.top().which;
-	switch(mode) {
-		case 0: scenario.scen_specials[node] = edit_stack.top().node; break;
-		case 1: current_terrain->specials[node] = edit_stack.top().node; break;
-		case 2: town->specials[node] = edit_stack.top().node; break;
+
+	// commit the node's changes
+	int mode = edit_stack.back().mode, node = edit_stack.back().which;
+	bool is_new = edit_stack.back().is_new;
+	cSpecial spec = edit_stack.back().node;
+
+	cSpecial& existing = get_spec_ref(mode, node);
+	if(is_new){
+		undo_list.add(action_ptr(new aCreateDeleteSpecial(true, mode, spec)));
 	}
-	edit_stack.pop();
+	else if(existing != spec){
+		undo_list.add(action_ptr(new aEditSpecial(mode, node, existing, spec)));
+	}
+	existing = spec;
+	edit_stack.pop_back();
+
+	// Update previous instances of the same node in the stack in case the designer looped
+	auto last_instance = std::find_if(edit_stack.rbegin(), edit_stack.rend(), [node](editing_node_t e){ return e.which == node; });
+	if(last_instance != edit_stack.rend()){
+		last_instance->node = spec;
+		last_instance->is_new = false;
+	}
+
 	if(item_hit == "okay") {
+		// Unwind the stack committing every edit
 		while(!edit_stack.empty())
 			commit_spec_enc(me, "unwind", edit_stack);
 		me.toast(true);
 		me.setResult(true);
+		update_edit_menu();
 	} else if(item_hit == "back") {
 		put_spec_enc_in_dlog(me, edit_stack);
 		if(edit_stack.size() == 1)
@@ -903,18 +965,18 @@ static bool discard_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 		action = cChoiceDlog("discard-special-node", {"save", "cancel", "revert"}).show();
 		if(action == "save") return true;
 	}
-	auto cur = edit_stack.top();
+	auto cur = edit_stack.back();
 	auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
 	if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
 		list.pop_back();
-	edit_stack.pop();
+	edit_stack.pop_back();
 	if(action == "cancel") {
 		while(!edit_stack.empty()) {
-			auto cur = edit_stack.top();
+			auto cur = edit_stack.back();
 			auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
 			if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
 				list.pop_back();
-			edit_stack.pop();
+			edit_stack.pop_back();
 		}
 	} else if(edit_stack.size() == 1)
 		me["back"].hide();
@@ -935,7 +997,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	else if(item_hit == "out") category = eSpecCat::OUTDOOR;
 	else if(item_hit == "rect") category = eSpecCat::RECT;
 	auto bounds = *category;
-	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.top().node.type);
+	int start = int(bounds.first), finish = int(bounds.last), current = int(edit_stack.back().node.type);
 	if(start < 0 || finish < 0) return true;
 	std::vector<std::string> choices;
 	for(int i = start; i <= finish; i++) {
@@ -948,7 +1010,7 @@ static bool edit_spec_enc_type(cDialog& me, std::string item_hit, node_stack_t& 
 	cStringChoice choose(choices, "Select a special node type:",&me);
 	result = choose.show((current < start || current > finish) ? cancelled : current - start);
 	if(result != cancelled) {
-		edit_stack.top().node.type = eSpecType(result + start);
+		edit_stack.back().node.type = eSpecType(result + start);
 		put_spec_enc_in_dlog(me, edit_stack);
 	}
 	return true;
@@ -1039,12 +1101,28 @@ static short choose_boom_type(short cur, cDialog* parent) {
 }
 
 snd_num_t choose_sound(short cur, cDialog* parent, std::string title) {
+	extern fs::path tempDir;
+	extern std::string scenario_temp_dir_name;
+
 	if(cur < 0) cur = 0;
 	StringList snd_names = *ResMgr::strings.get("sound-names");
 	std::copy(scenario.snd_names.begin(), scenario.snd_names.end(), std::back_inserter(snd_names));
+
+	if(fs::is_directory(tempDir/scenario_temp_dir_name/"sounds")) {
+		for(fs::directory_iterator iter(tempDir/scenario_temp_dir_name/"sounds"); iter != fs::directory_iterator(); iter++) {
+			std::string fname = iter->path().filename().string();
+			int num = std::stoi(fname.substr(3));
+			if(snd_names.size() <= num){
+				snd_names.resize(num + 1);
+			}
+			if(snd_names[num].empty())
+				snd_names[num] = fname + " (unnamed)";
+		}
+	}
+
 	cStringChoice snd_dlg(snd_names, title, parent);
 	snd_dlg.attachSelectHandler([](cStringChoice&, int n) {
-		play_sound(-n);
+		force_play_sound(-n);
 	});
 	short sel = snd_dlg.show(cur);
 	if(snd_dlg->accepted()) return sel;
@@ -1092,7 +1170,7 @@ static std::string get_control_for_field(eSpecField field) {
 
 static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t& edit_stack) {
 	std::string field = item_hit.substr(0, item_hit.find_first_of('-'));
-	const cSpecial& spec = edit_stack.top().node;
+	const cSpecial& spec = edit_stack.back().node;
 	node_function_t fcn = get_field_function(spec, field);
 	short val = me[field].getTextAsNum(), store;
 	switch(fcn.button) {
@@ -1103,33 +1181,35 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 			auto otherField = get_control_for_field(fcn.continuation);
 			store = me[otherField].getTextAsNum();
-			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, &store, &me);
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &val, &store, &me);
 			me[otherField].setTextToNum(store);
 			store = val;
 		} break;
 		case eSpecPicker::MSG_SINGLE:
-			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &val, nullptr, &me);
+			edit_spec_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &val, nullptr, &me);
 			store = val;
 			break;
 		case eSpecPicker::MSG_SEQUENCE:
 			store = val;
-			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.top().mode), &store, &me);
+			edit_dialog_text(fcn.force_global ? STRS_SCEN : eStrMode(edit_stack.back().mode), &store, &me);
 			break;
 		case eSpecPicker::MSG_SEQUENCE_VAR:
 			if(val < 0) {
 				// If no string was specified, start appending strings to the end of the list.
-				auto mode = eStrMode(edit_stack.top().mode);
+				auto mode = eStrMode(edit_stack.back().mode);
 				store = num_strs(mode);
 				ensure_str(mode, store);
-				if(edit_text_str(store, mode, false, store)) {
+				bool is_new = true;
+				if(edit_text_str(store, mode, is_new, false, store)) {
 					auto otherField = get_control_for_field(fcn.continuation);
 					me[otherField].setTextToNum(num_strs(mode) - 1);
 				} else store = val;
 			} else {
 				// Otherwise, edit only the sequence of strings specified. The values of the fields won't change.
 				store = val;
+				bool is_new = false;
 				auto otherField = get_control_for_field(fcn.continuation);
-				edit_text_str(val, eStrMode(edit_stack.top().mode), false, val, me[otherField].getTextAsNum());
+				edit_text_str(val, eStrMode(edit_stack.back().mode), is_new, false, val, me[otherField].getTextAsNum());
 			}
 			break;
 		case eSpecPicker::TOGGLE: {
@@ -1144,8 +1224,9 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			}
 		} break;
 		case eSpecPicker::NODE: {
-			short mode = fcn.force_global ? 0 : edit_stack.top().mode;
-			store = val < 0 ? get_fresh_spec(mode) : val;
+			short mode = fcn.force_global ? 0 : edit_stack.back().mode;
+			bool is_new = false;
+			store = val < 0 ? get_fresh_spec(mode,is_new) : val;
 			me[field].setTextToNum(store);
 			save_spec_enc(me, edit_stack);
 			cSpecial* node_to_change_to = nullptr;
@@ -1158,7 +1239,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 			if (node_to_change_to) {
 				if(node_to_change_to->pic < 0)
 					node_to_change_to->pic = 0;
-				edit_stack.push({store,mode,*node_to_change_to});
+				edit_stack.push_back({store,mode,*node_to_change_to,is_new});
 			}
 			put_spec_enc_in_dlog(me, edit_stack);
 			me["back"].show();
@@ -1272,7 +1353,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 				case eLocType::ACTIVE_OUT: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
 				case eLocType::ACTIVE_TOWN: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
 				case eLocType::ACTIVE_AUTO: {
-					switch(edit_stack.top().mode) {
+					switch(edit_stack.back().mode) {
 						case 1: loc = cLocationPicker(loc, *current_terrain, outStr, &me).run(); break;
 						case 2: loc = cLocationPicker(loc, *town, townStr, &me).run(); break;
 						case 0: {
@@ -1380,7 +1461,7 @@ static bool edit_spec_enc_value(cDialog& me, std::string item_hit, node_stack_t&
 }
 
 // mode - 0 scen 1 - out 2 - town
-bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
+bool edit_spec_enc(short which_node,short mode,cDialog* parent,bool is_new) {
 	using namespace std::placeholders;
 	cSpecial the_node;
 	node_stack_t edit_stack;
@@ -1437,7 +1518,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	});
 	special["cancel"].attachClickHandler(std::bind(discard_spec_enc, _1, std::ref(edit_stack)));
 	special["node-help"].attachClickHandler([&edit_stack](cDialog& me, std::string, eKeyMod) {
-		eSpecType type = edit_stack.top().node.type;
+		eSpecType type = edit_stack.back().node.type;
 		const std::string& str = (*type).descr();
 		// TODO: This is the same dialog as give_help(), the only difference being that we don't have a string number!
 		cStrDlog display_help(str,"","Instant Help",24,PIC_DLOG, &me);
@@ -1448,7 +1529,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	
 
 	special["back"].hide();
-	edit_stack.push({which_node,mode,the_node});
+	edit_stack.push_back({which_node,mode,the_node,is_new});
 	special["preview-dialog"].attachClickHandler(std::bind(preview_spec_enc_dlog_stack, _1, _2, std::ref(edit_stack), mode));
 
 	put_spec_enc_in_dlog(special, edit_stack);
@@ -1458,7 +1539,7 @@ bool edit_spec_enc(short which_node,short mode,cDialog* parent) {
 	return special.getResult<bool>();
 }
 
-short get_fresh_spec(short which_mode) {
+short get_fresh_spec(short which_mode,bool& is_new) {
 	cSpecial store_node;
 	size_t num_specs = 0;
 	switch(which_mode) {
@@ -1478,6 +1559,7 @@ short get_fresh_spec(short which_mode) {
 			return i;
 	}
 	
+	is_new = true;
 	switch(which_mode) {
 		case 0: scenario.scen_specials.emplace_back(); break;
 		case 1: current_terrain->specials.emplace_back(); break;
@@ -1628,10 +1710,11 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 		if(i > num_specs){
 			showWarning("There is no special node with that number. " + range, how_to_create + ".", &me);
 		}else{
+			bool is_new = false;
 			if(i < 0 || i == num_specs)
-				i = get_fresh_spec(spec_mode);
+				i = get_fresh_spec(spec_mode,is_new);
 			me.setResult<short>(i);
-			edit_spec_enc(i, spec_mode, &me);
+			edit_spec_enc(i, spec_mode, &me,is_new);
 			me.toast(true);
 		}
 	}else if(item_hit == "okay") {
@@ -1653,7 +1736,7 @@ static bool edit_special_num_event_filter(cDialog& me, std::string item_hit, sho
 short edit_special_num(short mode,short what_start) {
 	using namespace std::placeholders;
 
-	size_t num_specs = 0;
+	short num_specs = 0;
 	switch(mode) {
 		case 0: num_specs = scenario.scen_specials.size(); break;
 		case 1: num_specs = current_terrain->specials.size(); break;
@@ -1674,14 +1757,23 @@ short edit_special_num(short mode,short what_start) {
 
 static bool edit_scen_intro_event_filter(cDialog& me, std::string item_hit, eKeyMod) {
 	if(item_hit == "okay") {
-		scenario.intro_pic = me["picnum"].getTextAsNum();
-		if(scenario.intro_pic > 29) {
+		scen_intro_t old_intro = intro_from_scen(scenario);		
+		scen_intro_t new_intro;
+
+		new_intro.intro_pic = me["picnum"].getTextAsNum();
+		if(new_intro.intro_pic > 29) {
 			showError("Intro picture number is out of range.","",&me);
 			return true;
 		}
-		for(short i = 0; i < scenario.intro_strs.size(); i++) {
+		for(short i = 0; i < new_intro.intro_strs.size(); i++) {
 			std::string id = "str" + std::to_string(i + 1);
-			scenario.intro_strs[i] = me[id].getText();
+			new_intro.intro_strs[i] = me[id].getText();
+		}
+
+		if(new_intro != old_intro){
+			scen_set_intro(scenario, new_intro);
+			undo_list.add(action_ptr(new aEditIntro(old_intro, new_intro)));
+			update_edit_menu();
 		}
 		me.toast(true);
 	} else if(item_hit == "cancel") {

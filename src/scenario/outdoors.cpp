@@ -72,8 +72,10 @@ void cOutdoors::import_legacy(legacy::outdoor_record_type& old){
 	for(short i = 0; i < 18; i++){
 		special_locs[i].x = old.special_locs[i].x;
 		special_locs[i].y = old.special_locs[i].y;
-		if(old.special_locs[i].x == 100)
+		if(old.special_locs[i].x == 100){
+			special_locs[i].x = LOC_UNUSED;
 			special_locs[i].spec = -1;
+		}
 		else special_locs[i].spec = old.special_id[i];
 	}
 	city_locs.resize(8);
@@ -106,6 +108,21 @@ cOutdoors::cWandering::cWandering() {
 	end_spec1 = end_spec2 = -1;
 	std::fill(monst.begin(), monst.end(), 0);
 	std::fill(friendly.begin(), friendly.end(), 0);
+}
+
+bool cOutdoors::cWandering::operator==(const cOutdoors::cWandering& other) const {
+	for(int i = 0; i < monst.size(); ++i){
+		if(other.monst[i] != monst[i]) return false;
+	}
+	for(int i = 0; i < friendly.size(); ++i){
+		if(other.friendly[i] != friendly[i]) return false;
+	}
+	CHECK_EQ(other, spec_on_meet);
+	CHECK_EQ(other, spec_on_win);
+	CHECK_EQ(other, spec_on_flee);
+	CHECK_EQ(other, end_spec1);
+	CHECK_EQ(other, end_spec2);
+	return true;
 }
 
 cOutdoors::cOutdoors(cScenario& scenario) : cArea(AREA_MEDIUM), scenario(&scenario) {

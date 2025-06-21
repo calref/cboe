@@ -182,11 +182,6 @@ short sight_obscurity(short x,short y) {
 	
 	what_terrain = coord_to_ter(x,y);
 	
-	// TODO: This should not be hard-coded!
-	// It appears to refer to mountain cave entrances, surface tower, and surface pit. (WHY?)
-	if((what_terrain >= 237) && (what_terrain <= 242))
-		return 1;
-	
 	store = get_blockage(what_terrain);
 	
 	if(is_town()) {
@@ -444,7 +439,8 @@ bool impassable(ter_num_t terrain_to_check) {
 // NOTE: Seems to return 5 for "blocks sight", 1 for "obstructs missiles", 0 otherwise
 // So it should probably be called something like "get_opacity" instead.
 short get_blockage(ter_num_t terrain_type) {
-	// little kludgy in here for pits
+	// little kludgy in here for pits (but hardcoded check for 90 is forgivable
+	// because we protect terrain 90 from redefinition)
 	if((terrain_type == 90) && (is_combat()) && (which_combat_type == 0))
 		return 5;
 	if(univ.scenario.ter_types[terrain_type].blockage == eTerObstruct::BLOCK_MOVE_AND_SIGHT ||

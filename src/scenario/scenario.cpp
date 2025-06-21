@@ -650,3 +650,14 @@ std::string cScenario::get_sdf_name(int row, int col) {
 		return "";
 	return sdf_names[row][col];
 }
+
+bool cScenario::cItemStorage::operator==(const cScenario::cItemStorage& other) const {
+	CHECK_EQ(other, ter_type);
+	CHECK_EQ(other, property);
+	for(int i = 0; i < 10; ++i){
+		if(item_num[i] != other.item_num[i]) return false;
+		if(item_odds[i] != other.item_odds[i]) return false;
+	}
+
+	return true;
+}
