@@ -425,7 +425,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						}
 						else if(j == size_before)
 							break;
-						else scenario.scen_specials[j] = cSpecial();
+						else{
+							undo_list.add(action_ptr(new aEditSpecial(0, j, scenario.scen_specials[j])));
+							update_edit_menu();
+							scenario.scen_specials[j] = cSpecial();
+						}
 					} else {
 						bool is_new = false;
 						if(j == size_before){
@@ -449,7 +453,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						}
 						else if(j == size_before)
 							break;
-						else current_terrain->specials[j] = cSpecial();
+						else{
+							undo_list.add(action_ptr(new aEditSpecial(1, j, current_terrain->specials[j])));
+							update_edit_menu();
+							current_terrain->specials[j] = cSpecial();
+						}
 					} else {
 						bool is_new = false;
 						if(j == size_before){
@@ -473,7 +481,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 						}
 						else if(j == size_before)
 							break;
-						else town->specials[j] = cSpecial();
+						else{
+							undo_list.add(action_ptr(new aEditSpecial(2, j, town->specials[j])));
+							update_edit_menu();
+							town->specials[j] = cSpecial();
+						}
 					} else {
 						bool is_new = false;
 						if(j == size_before){

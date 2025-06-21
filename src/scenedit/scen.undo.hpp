@@ -808,8 +808,9 @@ class aEditSpecial : public cAction {
 	bool redo_me() override;
 public:
 	aEditSpecial(short mode, size_t which, cSpecial old_spec, cSpecial new_spec) :
-		cAction("Edit Special Node"), mode(mode), which(which), old_spec(old_spec), new_spec(new_spec), which_town(cur_town), which_out(cur_out) {
-	}
+		cAction("Edit Special Node"), mode(mode), which(which), old_spec(old_spec), new_spec(new_spec), which_town(cur_town), which_out(cur_out) {}
+	aEditSpecial(short mode, size_t which, cSpecial old_spec) :
+		cAction("Clear Special Node"), mode(mode), which(which), old_spec(old_spec), new_spec(cSpecial()), which_town(cur_town), which_out(cur_out) {}
 };
 
 #endif
