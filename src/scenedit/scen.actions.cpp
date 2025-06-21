@@ -918,10 +918,18 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 						iter->descr = "";
 						if(!edit_area_rect_str(*iter))
 							iter->right = 0;
+						else{
+							undo_list.add(action_ptr(new aCreateAreaRect(iter - area_descs.begin(), *iter)));
+							update_edit_menu();
+						}
 					} else {
 						area_descs.emplace_back(working_rect);
 						if(!edit_area_rect_str(area_descs.back()))
 							area_descs.pop_back();
+						else{
+							undo_list.add(action_ptr(new aCreateAreaRect(area_descs.size() - 1, area_descs.back())));
+							update_edit_menu();
+						}
 					}
 					change_made = true;
 				}

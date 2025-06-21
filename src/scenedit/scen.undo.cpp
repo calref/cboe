@@ -1232,3 +1232,13 @@ bool aEditTownBounds::redo_me() {
 	}
 	return true;
 }
+
+bool aCreateAreaRect::undo_me() {
+	area->area_desc[which] = {0, 0, 0, 0, "*"};
+	return true;
+}
+
+bool aCreateAreaRect::redo_me() {
+	area->area_desc[which] = rect;
+	return true;
+}

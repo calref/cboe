@@ -17,6 +17,7 @@
 
 extern cScenario scenario;
 extern cTown* town;
+extern cArea* get_current_area();
 extern bool editing_town;
 extern short cur_town;
 extern location cur_out;
@@ -827,6 +828,20 @@ public:
 								: "Edit Saved Item Area")
 							:"Edit Town Boundaries"), new_rect.topLeft()),
 		for_saved_items(saved_items), old_rect(old_rect), new_rect(new_rect) {}
+};
+
+class aCreateAreaRect : public cTerrainAction {
+	size_t which;
+	info_rect_t rect;
+	cArea* area;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateAreaRect(size_t which, info_rect_t rect) :
+		cTerrainAction("Create Area Description", rect.topLeft()),
+		which(which),
+		rect(rect),
+		area(get_current_area()) {}
 };
 
 #endif
