@@ -1213,3 +1213,22 @@ bool aEditSpecial::redo_me() {
 	start_special_editing(mode);
 	return true;
 }
+
+bool aEditTownBounds::undo_me() {
+	if(for_saved_items){
+		if(old_rect.empty()) scenario.store_item_rects.erase(area.town_num);
+		else scenario.store_item_rects[area.town_num] = old_rect;
+	}else{
+		scenario.towns[area.town_num]->in_town_rect = old_rect;
+	}
+	return true;
+}
+
+bool aEditTownBounds::redo_me() {
+	if(for_saved_items){
+		scenario.store_item_rects[area.town_num] = new_rect;
+	}else{
+		scenario.towns[area.town_num]->in_town_rect = new_rect;
+	}
+	return true;
+}

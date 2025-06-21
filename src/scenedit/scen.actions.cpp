@@ -903,6 +903,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					change_made = true;
 				}
 				else if(overall_mode == MODE_SET_TOWN_RECT) {
+					undo_list.add(action_ptr(new aEditTownBounds(false, town->in_town_rect, working_rect)));
+					update_edit_menu();
 					town->in_town_rect = working_rect;
 					change_made = true;
 				}
@@ -924,6 +926,8 @@ static bool handle_terrain_action(location the_point, bool ctrl_hit) {
 					change_made = true;
 				}
 				else if(overall_mode == MODE_STORAGE_RECT) {
+					undo_list.add(action_ptr(new aEditTownBounds(true, scenario.store_item_rects[cur_town], working_rect)));
+					update_edit_menu();
 					scenario.store_item_rects[cur_town] = working_rect;
 					change_made = true;
 				}

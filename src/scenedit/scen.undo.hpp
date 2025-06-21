@@ -813,4 +813,20 @@ public:
 		cAction("Clear Special Node"), mode(mode), which(which), old_spec(old_spec), new_spec(cSpecial()), which_town(cur_town), which_out(cur_out) {}
 };
 
+class aEditTownBounds : public cTerrainAction {
+	rectangle old_rect;
+	rectangle new_rect;
+	bool for_saved_items;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditTownBounds(bool saved_items, rectangle old_rect, rectangle new_rect) :
+		cTerrainAction((saved_items ?
+							(old_rect.empty() ?
+								"Create Saved Item Area"
+								: "Edit Saved Item Area")
+							:"Edit Town Boundaries"), new_rect.topLeft()),
+		for_saved_items(saved_items), old_rect(old_rect), new_rect(new_rect) {}
+};
+
 #endif
