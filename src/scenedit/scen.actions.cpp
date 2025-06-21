@@ -418,8 +418,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_SCEN_SPEC:
 					size_before = scenario.scen_specials.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aCreateDeleteSpecial(false, 0, scenario.scen_specials.back())));
+							update_edit_menu();
 							scenario.scen_specials.pop_back();
+						}
 						else if(j == size_before)
 							break;
 						else scenario.scen_specials[j] = cSpecial();
@@ -436,8 +439,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_OUT_SPEC:
 					size_before = current_terrain->specials.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aCreateDeleteSpecial(false, 1, current_terrain->specials.back())));
+							update_edit_menu();
 							current_terrain->specials.pop_back();
+						}
 						else if(j == size_before)
 							break;
 						else current_terrain->specials[j] = cSpecial();
@@ -454,8 +460,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 				case RB_TOWN_SPEC:
 					size_before = town->specials.size();
 					if(option_hit) {
-						if(j == size_before - 1)
+						if(j == size_before - 1){
+							undo_list.add(action_ptr(new aCreateDeleteSpecial(false, 2, town->specials.back())));
+							update_edit_menu();
 							town->specials.pop_back();
+						}
 						else if(j == size_before)
 							break;
 						else town->specials[j] = cSpecial();

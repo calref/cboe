@@ -1133,3 +1133,43 @@ bool aCreateStrings::redo_me() {
 	start_string_editing(str_mode);
 	return true;
 }
+
+bool aCreateDeleteSpecial::undo_me() {
+	switch(mode){
+		case 0:
+			scenario.scen_specials.pop_back();
+			break;
+		case 1:
+			set_current_out(which_out);
+			current_terrain->specials.pop_back();
+			break;
+		case 2:
+			set_current_town(which_town);
+			town->specials.pop_back();
+			break;
+		default:
+			break;
+	}
+	start_special_editing(mode);
+	return true;
+}
+
+bool aCreateDeleteSpecial::redo_me() {
+	switch(mode){
+		case 0:
+			scenario.scen_specials.push_back(spec);
+			break;
+		case 1:
+			set_current_out(which_out);
+			current_terrain->specials.push_back(spec);
+			break;
+		case 2:
+			set_current_town(which_town);
+			town->specials.push_back(spec);
+			break;
+		default:
+			break;
+	}
+	start_special_editing(mode);
+	return true;
+}

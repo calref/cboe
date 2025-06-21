@@ -783,4 +783,17 @@ public:
 		cAction(edit_string_action_name("Create", mode) + (strs.size() > 1 ? "s" : "")), str_mode(mode), strs(strs), which_town(cur_town), which_out(cur_out) {}
 };
 
+class aCreateDeleteSpecial : public cAction {
+	short mode;
+	cSpecial spec;
+	// undo/redo for town and outdoor nodes depends on global state of which town/outdoor section are active
+	size_t which_town;
+	location which_out;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aCreateDeleteSpecial(bool create, short mode, cSpecial spec) :
+		cAction(create ? "Create Special Node" : "Delete Special Node", !create), mode(mode), spec(spec), which_town(cur_town), which_out(cur_out) {}
+};
+
 #endif
