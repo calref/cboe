@@ -114,4 +114,6 @@ enum ePalBtn {
 	PAL_BOAT = 60, PAL_HORSE = 61,
 };
 
+extern std::string& fetch_str(eStrMode str_mode, size_t which);
+
 #endif

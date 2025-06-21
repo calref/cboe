@@ -1079,3 +1079,15 @@ bool aClearLocString::redo_me() {
 	}
 	return true;
 }
+
+bool aEditClearString::undo_me() {
+	fetch_str(str_mode, which) = old_value;
+	start_string_editing(str_mode);
+	return true;
+}
+
+bool aEditClearString::redo_me() {
+	fetch_str(str_mode, which) = new_value;
+	start_string_editing(str_mode);
+	return true;
+}

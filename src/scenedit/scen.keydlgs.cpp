@@ -75,7 +75,8 @@ static void ensure_str(eStrMode str_mode, size_t which) {
 	}
 }
 
-static std::string& fetch_str(eStrMode str_mode, size_t which) {
+// Return writeable reference to any type of string the designer can edit
+std::string& fetch_str(eStrMode str_mode, size_t which) {
 	ensure_str(str_mode, which);
 	switch(str_mode) {
 		case 0: return scenario.spec_strs[which];
@@ -87,7 +88,7 @@ static std::string& fetch_str(eStrMode str_mode, size_t which) {
 		case 6: return current_terrain->area_desc[which].descr;
 		case 7: return town->area_desc[which].descr;
 	}
-	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-5)";
+	throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-7)";
 }
 
 static std::string str_info(eStrMode str_mode, size_t which) {
@@ -653,8 +654,29 @@ short choose_text_editable(std::vector<std::string>& list, short cur_choice, cDi
 	return cur_choice;
 }
 
+std::string edit_string_action_name(bool clear, eStrMode str_mode){
+	std::string name = clear ? "Clear " : "Edit ";
+	switch(str_mode){
+		case 0: name += "Scenario Text"; break;
+		case 1: name += "Outdoor Text"; break;
+		case 2: name += "Town Text"; break;
+		case 3: name += "Journal Text"; break;
+		case 4: case 5: name += "Sign Text"; break;
+		case 6: case 7: name += "Area Description"; break;
+		default: throw "Invalid string mode " + std::to_string(str_mode) + " (valid are 0-7)";
+	}
+	return name;
+}
+
 static bool edit_text_event_filter(cDialog& me, std::string item_hit, short& which_str, eStrMode str_mode,bool loop,short min_str,short max_str) {
 	std::string newVal = me["text"].getText();
+
+	std::string& realVal = fetch_str(str_mode, which_str);
+	if(realVal != newVal){
+		// edit menu will update when string editor closes
+		undo_list.add(action_ptr(new aEditClearString(edit_string_action_name(false, str_mode), str_mode, which_str, realVal, newVal)));
+	}
+
 	fetch_str(str_mode, which_str) = newVal;
 	if(item_hit == "okay") me.toast(true);
 	else if(item_hit == "left" || item_hit == "right") {
@@ -692,6 +714,7 @@ bool edit_text_str(short which_str,eStrMode mode,bool loop,short min_str,short m
 	if(!loop && max_str >= 0 && which_str == max_str) dlog["right"].hide();
 	
 	dlog.run();
+	update_edit_menu();
 	return dlog.accepted() || which_str != first;
 }
 

@@ -12,6 +12,9 @@
 #include "scenario/monster.hpp"
 #include "scenario/vehicle.hpp"
 
+#include "scen.global.hpp"
+
+
 extern cScenario scenario;
 extern cTown* town;
 extern bool editing_town;
@@ -714,7 +717,8 @@ public:
 		cAction("Delete Area Description"), area(area), is_town(editing_town), is_sign(false), desc(desc) {}
 };
 
-/// Action representing clearing of a string tied to a location or rectangle in an area
+/// Action representing clearing of a string tied to a location or rectangle in an area.
+/// Separate from aEditClearString because it also clears the locations.
 class aClearLocString : public cAction {
 	cArea* area;
 	size_t which;
@@ -733,6 +737,19 @@ public:
 	aClearLocString(cArea* area, size_t which, info_rect_t old_desc, info_rect_t new_desc) :
 		cAction("Clear Area Description"), area(area), which(which), is_town(editing_town), is_sign(false), old_desc(old_desc), new_desc(new_desc) {
 	}
+};
+
+/// Action representing editing a string of any type in the scenario, or clearing a string that has no location tied to it
+class aEditClearString : public cAction {
+	eStrMode str_mode;
+	size_t which;
+	std::string old_value;
+	std::string new_value;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aEditClearString(std::string name, eStrMode str_mode, size_t which, std::string old_value, std::string new_value) :
+		cAction(name), str_mode(str_mode), which(which), old_value(old_value), new_value(new_value) {}
 };
 
 #endif
