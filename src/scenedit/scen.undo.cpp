@@ -1057,3 +1057,25 @@ bool aDeleteLocString::redo_me() {
 	}
 	return true;
 }
+
+bool aClearLocString::undo_me() {
+	if(is_sign){
+		area->sign_locs[which] = old_sign;
+		start_string_editing(is_town ? STRS_TOWN_SIGN : STRS_OUT_SIGN);
+	}else{
+		area->area_desc[which] = old_desc;
+		start_string_editing(is_town ? STRS_TOWN_RECT : STRS_OUT_RECT);
+	}
+	return true;
+}
+
+bool aClearLocString::redo_me() {
+	if(is_sign){
+		area->sign_locs[which] = new_sign;
+		start_string_editing(is_town ? STRS_TOWN_SIGN : STRS_OUT_SIGN);
+	}else{
+		area->area_desc[which] = new_desc;
+		start_string_editing(is_town ? STRS_TOWN_RECT : STRS_OUT_RECT);
+	}
+	return true;
+}

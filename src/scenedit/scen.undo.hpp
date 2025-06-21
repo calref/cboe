@@ -714,4 +714,25 @@ public:
 		cAction("Delete Area Description"), area(area), is_town(editing_town), is_sign(false), desc(desc) {}
 };
 
+/// Action representing clearing of a string tied to a location or rectangle in an area
+class aClearLocString : public cAction {
+	cArea* area;
+	size_t which;
+	bool is_town;
+	bool is_sign; // either a sign or an area description
+	sign_loc_t old_sign;
+	info_rect_t old_desc;
+	sign_loc_t new_sign;
+	info_rect_t new_desc;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aClearLocString(cArea* area, size_t which, sign_loc_t old_sign, sign_loc_t new_sign) :
+		cAction("Clear Sign Text"), area(area), which(which), is_town(editing_town), is_sign(true), old_sign(old_sign), new_sign(new_sign) {
+	}
+	aClearLocString(cArea* area, size_t which, info_rect_t old_desc, info_rect_t new_desc) :
+		cAction("Clear Area Description"), area(area), which(which), is_town(editing_town), is_sign(false), old_desc(old_desc), new_desc(new_desc) {
+	}
+};
+
 #endif

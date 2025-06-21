@@ -569,7 +569,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							update_edit_menu();
 							current_terrain->sign_locs.pop_back();
 						}
-						else current_terrain->sign_locs[j] = {-1, -1, "*"};
+						else{
+							undo_list.add(action_ptr(new aClearLocString(current_terrain, j, current_terrain->sign_locs[j], {-1, -1, "*"})));
+							update_edit_menu();
+							current_terrain->sign_locs[j] = {-1, -1, "*"};
+						}
 					} else {
 						edit_text_str(j,STRS_OUT_SIGN);
 					}
@@ -586,7 +590,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							update_edit_menu();
 							town->sign_locs.pop_back();
 						}
-						else town->sign_locs[j] = {-1, -1, "*"};
+						else{
+							undo_list.add(action_ptr(new aClearLocString(town, j, town->sign_locs[j], {-1, -1, "*"})));
+							update_edit_menu();
+							town->sign_locs[j] = {-1, -1, "*"};
+						}
 					} else {
 						edit_text_str(j,STRS_TOWN_SIGN);
 					}
@@ -603,7 +611,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							update_edit_menu();
 							current_terrain->area_desc.pop_back();
 						}
-						else current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
+						else{
+							undo_list.add(action_ptr(new aClearLocString(current_terrain, j, current_terrain->area_desc[j], {0, 0, 0, 0, "*"})));
+							update_edit_menu();
+							current_terrain->area_desc[j] = {0, 0, 0, 0, "*"};
+						}
 					} else {
 						edit_text_str(j,STRS_OUT_RECT);
 					}
@@ -620,7 +632,11 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							update_edit_menu();
 							town->area_desc.pop_back();
 						}
-						else town->area_desc[j] = {0, 0, 0, 0, "*"};
+						else{
+							undo_list.add(action_ptr(new aClearLocString(town, j, town->area_desc[j], {0, 0, 0, 0, "*"})));
+							update_edit_menu();
+							town->area_desc[j] = {0, 0, 0, 0, "*"};
+						}
 					} else {
 						edit_text_str(j,STRS_TOWN_RECT);
 					}
