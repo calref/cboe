@@ -115,5 +115,7 @@ enum ePalBtn {
 };
 
 extern std::string& fetch_str(eStrMode str_mode, size_t which);
+extern std::string edit_string_action_name(bool clear, eStrMode str_mode);
+
 
 #endif

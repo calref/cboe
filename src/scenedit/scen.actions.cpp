@@ -344,6 +344,13 @@ static bool handle_lb_click(location the_point) {
 	return false;
 }
 
+static void clear_string(eStrMode mode, size_t which) {
+	std::string& value = fetch_str(mode, which);
+	undo_list.add(action_ptr(new aEditClearString(edit_string_action_name(true, mode), mode, which, value, "*")));
+	update_edit_menu();
+	value = "*";
+}
+
 static bool handle_rb_action(location the_point, bool option_hit) {
 	long right_top = right_sbar->getPosition();
 	for(int i = 0; i < NRSONPAGE && i + right_top < NRS; i++)
@@ -426,7 +433,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.spec_strs.pop_back();
 						else if(j == size_before)
 							scenario.spec_strs.resize(size_before + 8, "*");
-						else scenario.spec_strs[j] = "*";
+						else clear_string(STRS_SCEN, j);
 					} else {
 						if(j == size_before)
 							scenario.spec_strs.emplace_back("*");
@@ -445,7 +452,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							current_terrain->spec_strs.pop_back();
 						else if(j == size_before)
 							current_terrain->spec_strs.resize(size_before + 8, "*");
-						else current_terrain->spec_strs[j] = "*";
+						else clear_string(STRS_OUT, j);
 					} else {
 						if(j == size_before)
 							current_terrain->spec_strs.emplace_back("*");
@@ -464,7 +471,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							town->spec_strs.pop_back();
 						else if(j == size_before)
 							town->spec_strs.resize(size_before + 8, "*");
-						else town->spec_strs[j] = "*";
+						else clear_string(STRS_TOWN, j);
 					} else {
 						if(j == size_before)
 							town->spec_strs.emplace_back("*");
@@ -517,7 +524,7 @@ static bool handle_rb_action(location the_point, bool option_hit) {
 							scenario.journal_strs.pop_back();
 						else if(j == size_before)
 							scenario.journal_strs.resize(size_before + 8, "*");
-						else scenario.journal_strs[j] = "*";
+						else clear_string(STRS_JOURNAL, j);
 					} else {
 						if(j == size_before)
 							scenario.journal_strs.emplace_back("*");
