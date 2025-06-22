@@ -1103,9 +1103,12 @@ static bool save_town_wand(cDialog& me, std::string, eKeyMod) {
 			town->wandering[i].monst[j] = me[id].getTextAsNum();
 			if(town->wandering[i].monst[j] != old_wandering[i].monst[j]) changed = true;
 		}
-		town->wandering_locs[i] = boost::lexical_cast<location>(me["group" + std::to_string(i+1) + "-loc"].getText());
+	}
+	for(int i = 0; i < town->wandering_locs.size(); i++){
+		town->wandering_locs[i] = boost::lexical_cast<location>(me["loc" + std::to_string(i+1)].getText());
 		if(town->wandering_locs[i] != old_wandering_locs[i]) changed = true;
 	}
+
 	if(changed){
 		undo_list.add(action_ptr(new aEditTownWandering(cur_town, old_wandering, old_wandering_locs, town->wandering, town->wandering_locs)));
 		update_edit_menu();
@@ -1120,7 +1123,9 @@ static void put_town_wand_in_dlog(cDialog& me) {
 			std::string id = base_id + "-monst" + std::to_string(j + 1);
 			me[id].setTextToNum(town->wandering[i].monst[j]);
 		}
-		me[base_id + "-loc"].setText(boost::lexical_cast<std::string>(town->wandering_locs[i]));
+	}
+	for(int i = 0; i < town->wandering_locs.size(); i++){
+		me["loc" + std::to_string(i + 1)].setText(boost::lexical_cast<std::string>(town->wandering_locs[i]));
 	}
 }
 
@@ -1133,10 +1138,10 @@ static bool edit_town_wand_event_filter(cDialog& me, std::string item_hit, eKeyM
 	};
 	short group = item_hit[4] - '0';
 	std::string base_id = "group" + std::to_string(group);
-	if(item_hit.substr(5) == "-loc"){
-		std::string id = base_id + "-loc";
+	if(item_hit.substr(0,8) == "pick-loc"){
+		std::string id = "loc" + item_hit.substr(8);
 		location current = boost::lexical_cast<location>(me[id].getText());
-		current = cLocationPicker(current, *town, "Choose wandering group " + std::to_string(group) + " location", &me).run();
+		current = cLocationPicker(current, *town, "Choose wandering monster location " + item_hit.substr(8), &me).run();
 		me[id].setText(boost::lexical_cast<std::string>(current));
 	}else{
 		short i = item_hit[11] - '1';
