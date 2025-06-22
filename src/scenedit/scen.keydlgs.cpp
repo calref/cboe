@@ -937,7 +937,7 @@ static bool commit_spec_enc(cDialog& me, std::string item_hit, node_stack_t& edi
 	edit_stack.pop_back();
 
 	// Update previous instances of the same node in the stack in case the designer looped
-	auto last_instance = std::find_if(edit_stack.rbegin(), edit_stack.rend(), [node](editing_node_t e){ return e.which == node; });
+	auto last_instance = std::find_if(edit_stack.rbegin(), edit_stack.rend(), [node, mode](editing_node_t e){ return e.which == node && e.mode == mode; });
 	if(last_instance != edit_stack.rend()){
 		last_instance->node = spec;
 		last_instance->is_new = false;
