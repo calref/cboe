@@ -986,7 +986,6 @@ bool aEditOutEncounter::undo_me() {
 	cOutdoors& outdoors = *scenario.outdoors[out_sec.x][out_sec.y];
 	auto& encounters = (mode == 0 ? outdoors.wandering : outdoors.special_enc);
 	encounters[which] = old_enc;
-	if(mode == 0) outdoors.wandering_locs[which] = old_loc;
 	return true;
 }
 
@@ -994,7 +993,17 @@ bool aEditOutEncounter::redo_me() {
 	cOutdoors& outdoors = *scenario.outdoors[out_sec.x][out_sec.y];
 	auto& encounters = (mode == 0 ? outdoors.wandering : outdoors.special_enc);
 	encounters[which] = new_enc;
-	if(mode == 0) outdoors.wandering_locs[which] = new_loc;
+	return true;
+}
+
+// as a cTerrainAction, this one will already have the correct outdoor section active
+bool aMoveOutEncounterLoc::undo_me() {
+	current_terrain->wandering_locs[which] = old_loc;
+	return true;
+}
+
+bool aMoveOutEncounterLoc::redo_me() {
+	current_terrain->wandering_locs[which] = area.where;
 	return true;
 }
 

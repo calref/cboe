@@ -655,18 +655,22 @@ class aEditOutEncounter : public cAction {
 	size_t which;
 	cOutdoors::cWandering old_enc;
 	cOutdoors::cWandering new_enc;
-	// Ignored for special encounters:
-	location old_loc;
-	location new_loc;
 	bool undo_me() override;
 	bool redo_me() override;
 public:
-	aEditOutEncounter(location out_sec, size_t which, cOutdoors::cWandering old_enc, location old_loc, cOutdoors::cWandering new_enc, location new_loc) :
-		cAction("Edit Outdoor Wandering Encounter"),
-		out_sec(out_sec), mode(0), which(which), old_enc(old_enc), old_loc(old_loc), new_enc(new_enc), new_loc(new_loc) {}
-	aEditOutEncounter(location out_sec, size_t which, cOutdoors::cWandering old_enc, cOutdoors::cWandering new_enc) :
-		cAction("Edit Outdoor Special Encounter"),
-		out_sec(out_sec), mode(1), which(which), old_enc(old_enc), new_enc(new_enc) {}
+	aEditOutEncounter(bool wandering, location out_sec, size_t which, cOutdoors::cWandering old_enc, cOutdoors::cWandering new_enc) :
+		cAction(wandering ? "Edit Outdoor Wandering Encounter" : "Edit Outdoor Special Encounter"),
+		out_sec(out_sec), mode(wandering ? 0 : 1), which(which), old_enc(old_enc), new_enc(new_enc) {}
+};
+
+class aMoveOutEncounterLoc : public cTerrainAction {
+	size_t which;
+	location old_loc;
+	bool undo_me() override;
+	bool redo_me() override;
+public:
+	aMoveOutEncounterLoc(size_t which, location old_loc, location new_loc) :
+		cTerrainAction("Move Outdoor Encounter Location", new_loc), which(which), old_loc(old_loc) {}
 };
 
 class aEditPersonality : public cAction {
