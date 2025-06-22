@@ -779,7 +779,7 @@ bool aDeleteGraphicsSheet::undo_me() {
 	}
 
 	image.saveToFile(sheetPath.string().c_str());
-	if(index <= spec_scen_g.numSheets) spec_scen_g.numSheets++;
+	if(index <= spec_scen_g.numSheets + 1) spec_scen_g.numSheets++;
 	return true;
 }
 

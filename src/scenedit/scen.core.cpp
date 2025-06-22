@@ -3719,8 +3719,7 @@ extern fs::path tempDir;
 extern std::string scenario_temp_dir_name;
 
 void edit_custom_sheets() {
-	// Creating and deleting graphics sheets happens immediately. Replacing graphics sheets, all actions
-	// are committed when you hit okay.
+	// Everything you do in this dialog can be undone when you hit cancel, leaving no trace in the main history.
 	std::vector<action_ptr> deferred_actions;
 
 	int max_pic = -1;
@@ -3768,7 +3767,7 @@ void edit_custom_sheets() {
 		ResMgr::graphics.pushPath(pic_dir);
 
 		// We'll update the edit menu after this dialog closes
-		undo_list.add(action_ptr(new aCreateGraphicsSheet(0)));
+		deferred_actions.push_back(action_ptr(new aCreateGraphicsSheet(0)));
 	}
 	
 	set_cursor(watch_curs);
@@ -3779,7 +3778,6 @@ void edit_custom_sheets() {
 	for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
 		sheets[i] = spec_scen_g.sheets[i]->copyToImage();
 	}
-	auto sheetsSave = sheets;
 	
 	using namespace std::placeholders;
 	
@@ -3865,7 +3863,7 @@ void edit_custom_sheets() {
 		sheets[cur].saveToFile(fpath.string().c_str());
 		return true;
 	});
-	pic_dlg["new"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+	pic_dlg["new"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
 		cChoiceDlog pickNum("add-new-sheet", {"cancel", "new"}, &me);
 		pickNum->getControl("num").setTextToNum(spec_scen_g.numSheets);
 		if(pickNum.show() == "cancel") return true;
@@ -3895,11 +3893,10 @@ void edit_custom_sheets() {
 		set_dlg_custom_sheet(me, all_pics[cur]);
 
 
-		// We'll update the edit menu after this dialog closes
-		undo_list.add(action_ptr(new aCreateGraphicsSheet(newSheet)));
+		deferred_actions.push_back(action_ptr(new aCreateGraphicsSheet(newSheet)));
 		return true;
 	});
-	pic_dlg["del"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog& me, std::string, eKeyMod) -> bool {
+	pic_dlg["del"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
 		int which_pic = all_pics[cur];
 
 		fs::path fpath = pic_dir/("sheet" + std::to_string(which_pic) + ".png");
@@ -3942,8 +3939,7 @@ void edit_custom_sheets() {
 		}
 		if(fs::exists(fpath)) fs::remove(fpath);
 
-		// We'll update the edit menu after this dialog closes
-		undo_list.add(action_ptr(new aDeleteGraphicsSheet(which_pic, moved, image_for_undo)));
+		deferred_actions.push_back(action_ptr(new aDeleteGraphicsSheet(which_pic, moved, image_for_undo)));
 
 		if(all_pics.size() == 1) {
 			me["left"].hide();
@@ -3980,16 +3976,18 @@ void edit_custom_sheets() {
 	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
 	pic_dlg.run();
 	
-	// Commit undo actions for the cancelable operations
+	// Commit undo actions for everything that was done
 	if(pic_dlg.accepted()){
 		for(action_ptr action : deferred_actions){
 			undo_list.add(action);
 		}
 	}
-	// Now, we need to restore the sheets if they pressed cancel
+	// On cancel, UWIND the stack of deferred actions, reversing creations and deletions too.
 	else{
-		for(auto p : sheetsSave) {
-			spec_scen_g.replace_sheet(p.first, p.second);
+		while(!deferred_actions.empty()){
+			action_ptr previous = deferred_actions.back();
+			deferred_actions.pop_back();
+			previous->undo();
 		}
 	}
 	
