@@ -67,6 +67,8 @@ extern location cur_out;
 bool small_any_drawn = false;
 extern bool change_made;
 
+extern void save_prefs();
+
 rectangle left_buttons[NLS][2]; // 0 - whole, 1 - blue button
 std::array<lb_t,NLS> left_button_status;
 std::vector<rb_t> right_button_status;
@@ -257,6 +259,7 @@ static bool handle_lb_action(int i){
 				file_to_load = nav_get_scenario();
 				if(!file_to_load.empty() && load_scenario(file_to_load, scenario)) {
 					set_pref("LastScenario", file_to_load.string());
+					save_prefs();
 					restore_editor_state();
 					undo_list.clear();
 					update_edit_menu();

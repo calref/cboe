@@ -37,6 +37,7 @@ fs::path temp_file_to_load;
 std::string last_load_file = "Blades of Exile Scenario";
 extern fs::path progDir, tempDir;
 extern bool cur_scen_is_mac;
+extern void save_prefs();
 
 void print_write_position ();
 void load_spec_graphics();
@@ -1110,6 +1111,7 @@ void save_scenario(bool rename) {
 	}
 	
 	set_pref("LastScenario", toFile.string());
+	save_prefs();
 
 	extern cUndoList undo_list;
 	undo_list.save();
