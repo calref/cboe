@@ -904,6 +904,7 @@ static bool prefs_event_filter (cDialog& me, std::string id, eKeyMod) {
 		set_pref("PlaySounds", dynamic_cast<cLed&>(me["nosound"]).getState() == led_off);
 		set_pref("ForceDefaultParty", dynamic_cast<cLed&>(me["force-default-party"]).getState() == led_red);
 		set_pref("DefaultPartyPath", dynamic_cast<cTextField&>(me["party-path"]).getText());
+		set_pref("ImageEditor", dynamic_cast<cTextField&>(me["image-editor"]).getText());
 	}
 	save_prefs();
 	return true;
@@ -975,11 +976,37 @@ void pick_preferences() {
 		return true;
 	});
 
+	cTextField& image_editor_field = dynamic_cast<cTextField&>(prefsDlog["image-editor"]);
+	image_editor_field.setText(get_string_pref("ImageEditor"));
+
+	image_editor_field.attachFocusHandler([](cDialog& me, std::string id, bool losing) -> bool {
+		if(!losing) return true;
+		std::string image_editor = me[id].getText();
+		// Validate the debug party
+		if(!image_editor.empty()){
+			if(!fs::exists(image_editor)){
+				showError("Your chosen image editor cannot be found.", "", &me);
+				me[id].setText(get_string_pref("ImageEditor"));
+				return false;
+			}
+		}
+		return true;
+	});
+
 	cButton& choose_button = dynamic_cast<cButton&>(prefsDlog["choose-party"]);
 	choose_button.attachClickHandler([&default_party_field](cDialog&, std::string, eKeyMod) -> bool {
 		fs::path new_path = nav_get_party();
 		if(!new_path.empty()){
 			default_party_field.setText(new_path.string());
+		}
+		return true;
+	});
+	
+	cButton& choose_img_button = dynamic_cast<cButton&>(prefsDlog["choose-image-editor"]);
+	choose_img_button.attachClickHandler([&image_editor_field](cDialog&, std::string, eKeyMod) -> bool {
+		fs::path new_path = nav_get_rsrc({"exe", "app", ""});
+		if(!new_path.empty()){
+			image_editor_field.setText(new_path.string());
 		}
 		return true;
 	});
