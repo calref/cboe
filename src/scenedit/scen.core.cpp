@@ -4007,7 +4007,19 @@ void edit_custom_sheets() {
 		pic_dlg["left"].hide();
 		pic_dlg["right"].hide();
 	}
-	pic_dlg.attachClickHandlers([&sheets,&cur,&all_pics](cDialog& me, std::string dir, eKeyMod) -> bool {
+
+	int icon_start = 0;
+	int icon_end = 0;
+	int icon_min = 0;
+	int icon_max = 0;
+	auto show_icon_selection = [&icon_min, &icon_max, &pic_dlg]() {
+		pic_dlg["icon-min"].setTextToNum(icon_min);
+		pic_dlg["icon-max"].setTextToNum(icon_max);
+		// TODO highlight the selected icons visually
+	};
+
+	pic_dlg.attachClickHandlers([&sheets,&cur,&all_pics,show_icon_selection,&icon_start,&icon_end,&icon_min,&icon_max](cDialog& me, std::string dir, eKeyMod) -> bool {
+		size_t old_cur = cur;
 		if(dir == "left") {
 			if(cur == 0)
 				cur = all_pics.size() - 1;
@@ -4017,17 +4029,21 @@ void edit_custom_sheets() {
 			if(cur >= all_pics.size())
 				cur = 0;
 		} else return true;
+		if(cur != old_cur){
+			icon_start = icon_end = icon_min = icon_max = 0;
+			show_icon_selection();
+		}
+
 		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	}, {"left", "right"});
 	
 	set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
 	
-	int icon_start = 0;
-	int icon_end = 0;
-	int icon_min = 0;
-	int icon_max = 0;
-	pic_dlg["sheet"].attachClickHandler([&all_pics, &cur, &icon_start, &icon_end, &icon_min, &icon_max](cDialog& me, std::string, eKeyMod mod) -> bool {
+
+	
+	
+	pic_dlg["sheet"].attachClickHandler([&all_pics, &cur, &icon_start, &icon_end, &icon_min, &icon_max, show_icon_selection](cDialog& me, std::string, eKeyMod mod) -> bool {
 		location where_curs = sf::Mouse::getPosition(me.getWindow());
 		where_curs = me.getWindow().mapPixelToCoords(where_curs);
 		rectangle sheet_bounds = me["sheet"].getBounds();
@@ -4045,9 +4061,7 @@ void edit_custom_sheets() {
 		}
 		icon_min = min(icon_start, icon_end);
 		icon_max = max(icon_start, icon_end);
-		me["icon-min"].setTextToNum(icon_min);
-		me["icon-max"].setTextToNum(icon_max);
-		// TODO highlight the selected icons visually
+		show_icon_selection();
 
 		return true;
 	});
