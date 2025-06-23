@@ -4022,6 +4022,36 @@ void edit_custom_sheets() {
 	}, {"left", "right"});
 	
 	set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+	
+	int icon_start = 0;
+	int icon_end = 0;
+	int icon_min = 0;
+	int icon_max = 0;
+	pic_dlg["sheet"].attachClickHandler([&all_pics, &cur, &icon_start, &icon_end, &icon_min, &icon_max](cDialog& me, std::string, eKeyMod mod) -> bool {
+		location where_curs = sf::Mouse::getPosition(me.getWindow());
+		where_curs = me.getWindow().mapPixelToCoords(where_curs);
+		rectangle sheet_bounds = me["sheet"].getBounds();
+		where_curs.x -= sheet_bounds.left;
+		where_curs.y -= sheet_bounds.top;
+		where_curs.x /= 28;
+		where_curs.y /= 36;
+
+		int icon_hit = 1000 + 100 * all_pics[cur] + 10 * where_curs.y + where_curs.x;
+
+		if(mod_contains(mod, mod_shift)){
+			icon_end = icon_hit;
+		}else{
+			icon_start = icon_end = icon_hit;
+		}
+		icon_min = min(icon_start, icon_end);
+		icon_max = max(icon_start, icon_end);
+		me["icon-min"].setTextToNum(icon_min);
+		me["icon-max"].setTextToNum(icon_max);
+		// TODO highlight the selected icons visually
+
+		return true;
+	});
+	
 	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
 	pic_dlg.run();
 	
