@@ -3830,13 +3830,28 @@ void edit_custom_sheets() {
 			showWarning("Choose an external image editor in the preferences window first.");
 			return true;
 		}
+		#ifdef SFML_SYSTEM_MACOS
+		// Find actual binary inside the .app bundle:
+
+		image_editor = image_editor / "Contents" / "MacOS" / image_editor.stem();
+
+		#endif
 
 		std::string resName = "sheet" + std::to_string(all_pics[cur]);
 		fs::path toPath = pic_dir/(resName + ".png");
 
 		std::vector<std::string> args = {toPath.string()};
-		bp::child ch(image_editor, args, bp::std_out > stdout);
-		ch.detach();
+		try{
+			bp::child ch(image_editor, args, bp::std_out > stdout);
+			ch.detach();
+		}
+		catch(std::exception& x) {
+			showError(std::string{"Error running your image editor: "} + x.what());
+		} catch(std::string& x) {
+			showError("Error running your image editor: " + x);
+		} catch(...) {
+			showError("An unknown error occurred running your image editor!");
+		}
 		return true;
 	});
 
