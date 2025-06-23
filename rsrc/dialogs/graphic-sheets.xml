@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- NOTE: This file should be updated to use relative positioning the next time it changes. -->
 <?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
 <dialog defbtn='okay' escbtn='cancel'>
 	<pict type='dlog' num='16' top='6' left='6'/>
@@ -8,10 +7,12 @@
 	<text name='num' top='36' left='242' width='40' height='16'/>
 	<pict name='sheet' framed='true' scaled='true' type='full' num='0' top='54' left='12' width='280' height='360'/>
 	<button name='copy' type='regular' def-key='ctrl c' top='54' left='304'>Copy</button>
-	<button name='paste' type='regular' def-key='ctrl v' top='80' left='304'>Paste</button>
-	<button name='open' type='regular' def-key='ctrl o' top='106' left='304'>Import</button>
-	<button name='save' type='regular' def-key='ctrl s' top='132' left='304'>Export</button>
-	<button name='del' type='regular' def-key='ctrl x' top='158' left='304'>Delete</button>
+	<button name='paste' type='regular' def-key='ctrl v' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Paste</button>
+	<button name='edit' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Edit</button>
+	<button name='reload' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Reload</button>
+	<button name='open' type='regular' def-key='ctrl o' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Import</button>
+	<button name='save' type='regular' def-key='ctrl s' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Export</button>
+	<button name='del' type='regular' def-key='ctrl x' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Delete</button>
 	<button name='left' type='left' def-key='left' top='426' left='20'/>
 	<button name='right' type='right' def-key='right' top='426' left='85'/>
 	<button name='new' type='regular' def-key='ctrl n' top='426' left='162'>New</button>

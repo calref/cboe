@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/process/child.hpp>
+#include <boost/process/io.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
@@ -3822,9 +3824,23 @@ void edit_custom_sheets() {
 		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	});
-	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
-		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
-		if(fpath.empty()) return true;
+	pic_dlg["edit"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+		fs::path image_editor = get_string_pref("ImageEditor");
+		if(image_editor.empty()){
+			showWarning("Choose an external image editor in the preferences window first.");
+			return true;
+		}
+
+		std::string resName = "sheet" + std::to_string(all_pics[cur]);
+		fs::path toPath = pic_dir/(resName + ".png");
+
+		std::vector<std::string> args = {toPath.string()};
+		bp::child ch(image_editor, args, bp::std_out > stdout);
+		ch.detach();
+		return true;
+	});
+
+	auto replace_from_file = [&pic_dlg,&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](std::string action_name, fs::path fpath) -> bool {
 		sf::Image img;
 		if(!img.loadFromFile(fpath.string().c_str())) {
 			beep();
@@ -3835,19 +3851,37 @@ void edit_custom_sheets() {
 			fs::path toPath = pic_dir/(resName + ".png");
 
 			sf::Image image_for_undo;
+			// TODO for reload, old image and new image will be the same! This could possibly be addressed by loading the image when edit is clicked?
+			// But there is no guarantee Edit is clicked first--the designer could externally edit the full-sheet image whenever they want.
+
+			// Also comparing image blobs for equality is probably expensive, but we should have a check to prevent adding undo actions if the same file was imported
+			// or reload is clicked when the file isn't changed.
 			image_for_undo.loadFromFile(toPath.string());
-			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], image_for_undo, img)));
+			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, img)));
 
 			img.saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
-			set_dlg_custom_sheet(me, all_pics[cur]);
+			set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
 			return true;
 		}
-		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], sheets[cur], img)));
+		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], sheets[cur], img)));
 
 		sheets[cur] = img;
 		spec_scen_g.replace_sheet(cur, img);
-		set_dlg_custom_sheet(me, all_pics[cur]);
+		set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+		return true;
+	};
+	
+	pic_dlg["reload"].attachClickHandler([replace_from_file, &all_pics, &cur, &pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+		std::string resName = "sheet" + std::to_string(all_pics[cur]);
+		fs::path sheetPath = pic_dir/(resName + ".png");
+		replace_from_file("Reload Graphics Sheet", sheetPath);
+		return true;
+	});
+	pic_dlg["open"].attachClickHandler([replace_from_file](cDialog& me, std::string, eKeyMod) -> bool {
+		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
+		if(fpath.empty()) return true;
+		replace_from_file("Import Graphics Sheet", fpath);
 		return true;
 	});
 	pic_dlg["save"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
