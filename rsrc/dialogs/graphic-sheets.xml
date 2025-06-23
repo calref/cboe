@@ -22,6 +22,10 @@
 	<text relative='pos pos-in' rel-anchor='prev' top='0' left='0'>-</text>
 	<text name='icon-max' relative='pos pos-in' rel-anchor='prev' top='0' left='0' width='30' framed='true'>0</text>
 
+	<button name='icon-terr' type='tiny' text-size='9' relative='pos-in pos' anchor='icon-min' top='2' left='0'>Import Terrain</button>
+	<button name='strip-terr' type='tiny' text-size='9' relative='pos-in pos' rel-anchor='prev' top='2' left='0'>Strip Terrain Background</button>
+	<button name='add-terr' type='tiny' text-size='9' relative='pos-in pos' rel-anchor='prev' top='2' left='0'>Add Terrain Background</button>
+
 	<button name='left' type='left' def-key='left' top='426' left='20'/>
 	<button name='right' type='right' def-key='right' top='426' left='85'/>
 	<button name='new' type='regular' def-key='ctrl n' top='426' left='162'>New</button>
