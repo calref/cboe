@@ -6,6 +6,8 @@
 	<text top='36' left='152' width='80' height='16'>Sheet Number:</text>
 	<text name='num' top='36' left='242' width='40' height='16'/>
 	<pict name='sheet' framed='true' scaled='true' type='full' num='0' top='54' left='12' width='280' height='360'/>
+
+	<!-- Whole-sheet operations -->
 	<button name='copy' type='regular' def-key='ctrl c' top='54' left='304'>Copy</button>
 	<button name='paste' type='regular' def-key='ctrl v' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Paste</button>
 	<button name='edit' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Edit</button>
@@ -13,9 +15,17 @@
 	<button name='open' type='regular' def-key='ctrl o' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Import</button>
 	<button name='save' type='regular' def-key='ctrl s' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Export</button>
 	<button name='del' type='regular' def-key='ctrl x' relative='pos-in pos-in' rel-anchor='prev' top='26' left='0'>Delete</button>
+	
+	<!-- Icon operations -->
+	<text name='icon-head' relative='pos-in pos' rel-anchor='prev' top='5' left='0'>Selected icons:</text>
+	<text name='icon-min' relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='30' framed='true'>0</text>
+	<text relative='pos pos-in' rel-anchor='prev' top='0' left='0'>-</text>
+	<text name='icon-max' relative='pos pos-in' rel-anchor='prev' top='0' left='0' width='30' framed='true'>0</text>
+
 	<button name='left' type='left' def-key='left' top='426' left='20'/>
 	<button name='right' type='right' def-key='right' top='426' left='85'/>
 	<button name='new' type='regular' def-key='ctrl n' top='426' left='162'>New</button>
+
 	<button name='cancel' type='regular' top='426' left='239'>Cancel</button>
 	<button name='okay' type='regular' top='426' left='304'>OK</button>
 </dialog>
