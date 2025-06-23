@@ -335,6 +335,8 @@ static void process_args(int argc, char* argv[]) {
 			// On first launch, no need to clear the undo_list
 
 			set_pref("LastScenario", file);
+			save_prefs();
+
 			restore_editor_state();
 			change_made = false;
 			ae_loading = true;
@@ -521,6 +523,7 @@ void handle_menu_choice(eMenu item_hit) {
 				undo_list.clear();
 				update_edit_menu();
 				set_pref("LastScenario", file_to_load.string());
+				save_prefs();
 				restore_editor_state();
 				change_made = false;
 			} else if(!file_to_load.empty())
