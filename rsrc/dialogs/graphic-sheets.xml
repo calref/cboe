@@ -24,6 +24,7 @@
 
 	<button name='icon-terr' type='tiny' text-size='9' relative='pos-in pos' anchor='icon-min' top='2' left='0'>Import Terrain</button>
 	<button name='strip-terr' type='tiny' text-size='9' relative='pos-in pos' rel-anchor='prev' top='2' left='0'>Strip Terrain Background</button>
+	<field name='diff-threshold' relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='40' height='12' type='uint'>0</field>
 	<button name='add-terr' type='tiny' text-size='9' relative='pos-in pos' rel-anchor='prev' top='2' left='0'>Add Terrain Background</button>
 
 	<button name='left' type='left' def-key='left' top='426' left='20'/>
