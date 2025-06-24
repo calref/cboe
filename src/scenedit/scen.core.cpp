@@ -3715,7 +3715,7 @@ void edit_custom_pics_types() {
 extern fs::path tempDir;
 extern std::string scenario_temp_dir_name;
 
-// Keep a single RenderTexture for splicing together custom graphics
+// Keep a single RenderTexture for splicing together custom graphics on a sheet
 bool canvas_created = false;
 static sf::RenderTexture& canvas() {
 	static sf::RenderTexture instance;
@@ -3726,9 +3726,14 @@ static sf::RenderTexture& canvas() {
 	return instance;
 }
 
-static void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
-	me["num"].setTextToNum(sheet);
-	dynamic_cast<cPict&>(me["sheet"]).setPict(sheet, PIC_FULL);
+bool scratch_created = false;
+static sf::RenderTexture& scratch() {
+	static sf::RenderTexture instance;
+	if(!scratch_created){
+		instance.create(28, 36);
+		scratch_created = true;
+	}
+	return instance;
 }
 
 static void set_up_canvas(size_t sheet){
@@ -3740,6 +3745,19 @@ static void set_up_canvas(size_t sheet){
 	sf::Sprite s(texture);
 	canvas().clear(sf::Color(0,0,0,0));
 	canvas().draw(s);
+}
+
+static void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
+	me["num"].setTextToNum(sheet);
+	dynamic_cast<cPict&>(me["sheet"]).setPict(sheet, PIC_FULL);
+}
+
+// Faster -- could this be used for threshold setting without sqrt?
+static int color_diff2(sf::Color c1, sf::Color c2) {
+	return pow(c1.r - c2.r, 2) + pow(c1.g - c2.g, 2) + pow(c1.b - c2.b, 2);
+}
+static float color_diff(sf::Color c1, sf::Color c2) {
+	return sqrt(color_diff2(c1, c2));
 }
 
 void edit_custom_sheets() {
@@ -4042,12 +4060,16 @@ void edit_custom_sheets() {
 		pic_dlg["icon-min"].setTextToNum(icon_min);
 		pic_dlg["icon-max"].setTextToNum(icon_max);
 		// TODO highlight the selected icons visually
-		for(auto name : icon_buttons){
-			if(icon_min != 0){
+		if(icon_min != 0){
+			for(auto name : icon_buttons){
 				pic_dlg[name].show();
-			}else{
+			}
+			pic_dlg["diff-threshold"].show();
+		}else{
+			for(auto name : icon_buttons){
 				pic_dlg[name].hide();
 			}
+			pic_dlg["diff-threshold"].hide();
 		}
 	};
 
@@ -4074,9 +4096,6 @@ void edit_custom_sheets() {
 	
 	set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
 	
-
-	
-	
 	pic_dlg["sheet"].attachClickHandler([&all_pics, &cur, &icon_start, &icon_end, &icon_min, &icon_max, show_icon_selection](cDialog& me, std::string, eKeyMod mod) -> bool {
 		location where_curs = sf::Mouse::getPosition(me.getWindow());
 		where_curs = me.getWindow().mapPixelToCoords(where_curs);
@@ -4100,11 +4119,13 @@ void edit_custom_sheets() {
 		return true;
 	});
 	
+	static sf::BlendMode blend_replace(sf::BlendMode::Factor::One, sf::BlendMode::Factor::Zero, sf::BlendMode::Equation::Add);
+
 	pic_dlg.attachClickHandlers([&icon_max, &icon_min, &all_pics, &cur, replace_from_image](cDialog& me, std::string item_hit, eKeyMod) -> bool {
+		int sheet_start = 1000 + 100 * all_pics[cur];
 		if(item_hit == "icon-terr"){
-			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
 			set_up_canvas(all_pics[cur]);
-			int sheet_start = 1000 + 100 * all_pics[cur];
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
 			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
 				int sheet_icon = icon_min + i - sheet_start;
 				int x = sheet_icon % 10;
@@ -4116,9 +4137,74 @@ void edit_custom_sheets() {
 			sf::Image img = canvas().getTexture().copyToImage();
 			return replace_from_image("Import Terrain Icon", img);
 		}else if(item_hit == "strip-terr"){
-		
-		}else if(item_hit == "add-terr"){
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
+			scratch().clear(sf::Color(0,0,0,0));
+			scratch().display();
+			sf::Image without_floor = scratch().getTexture().copyToImage();
+			cPict::drawAt(mainPtr(),scratch(),{0,0,36,28},icon,PIC_TER,false);
+			scratch().display();
+			sf::Image floor_to_strip = scratch().getTexture().copyToImage();
+			set_up_canvas(all_pics[cur]);
+			sf::Image canvas_image = canvas().getTexture().copyToImage();
+			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
+				sf::Image copy = without_floor;
+				int sheet_icon = icon_min + i - sheet_start;
+				int x = sheet_icon % 10;
+				int y = sheet_icon / 10;
+				rectangle dest {y * 36, x * 28, y * 36 + 36, x * 28 + 28};
+				for(int y = 0; y < 36; ++y){
+					for(int x = 0; x < 28; ++x){
+						sf::Color source = canvas_image.getPixel(dest.left + x, dest.top + y);
+						sf::Color floor_source = floor_to_strip.getPixel(x, y);
 
+						float epsilon = me["diff-threshold"].getTextAsNum();
+						if(color_diff(source, floor_source) > epsilon){
+							copy.setPixel(x, y, source);
+						}
+					}
+				}
+				sf::Texture t;
+				t.loadFromImage(copy);
+				sf::Sprite s(t);
+				s.setPosition(dest.left, dest.top);
+
+				canvas().draw(s, blend_replace);
+			}
+			canvas().display();
+			sf::Image img = canvas().getTexture().copyToImage();
+			return replace_from_image("Strip Terrain Background", img);
+		}else if(item_hit == "add-terr"){
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
+			set_up_canvas(all_pics[cur]);
+
+			scratch().clear(sf::Color(0,0,0,0));
+			cPict::drawAt(mainPtr(),scratch(),{0,0,36,28},icon,PIC_TER,false);
+			scratch().display();
+
+			sf::Image floor_to_add = scratch().getTexture().copyToImage();
+			sf::Texture floor_t;
+			floor_t.loadFromImage(floor_to_add);
+			sf::Sprite floor_s(floor_t);
+
+			sf::Texture sheet_t = canvas().getTexture();
+			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
+				int sheet_icon = icon_min + i - sheet_start;
+				int x = sheet_icon % 10;
+				int y = sheet_icon / 10;
+				rectangle dest {y * 36, x * 28, y * 36 + 36, x * 28 + 28};
+
+				scratch().clear(sf::Color(0,0,0,0));
+				scratch().draw(floor_s);
+				sf::Sprite ter_s(sheet_t, dest);
+				scratch().draw(ter_s, sf::BlendAlpha);
+				scratch().display();
+				sf::Sprite combined_s(scratch().getTexture());
+				combined_s.setPosition(dest.left, dest.top);
+				canvas().draw(combined_s, blend_replace);
+			}
+			canvas().display();
+			sf::Image img = canvas().getTexture().copyToImage();
+			return replace_from_image("Add Terrain Background", img);
 		}
 		return true;
 	},icon_buttons);
