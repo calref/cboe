@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/process/child.hpp>
+#include <boost/process/io.hpp>
 #include "scen.global.hpp"
 #include "scenario/scenario.hpp"
 #include "scenario/town.hpp"
@@ -3710,13 +3712,53 @@ void edit_custom_pics_types() {
 	pic_dlg.run();
 }
 
+extern fs::path tempDir;
+extern std::string scenario_temp_dir_name;
+
+// Keep a single RenderTexture for splicing together custom graphics on a sheet
+bool canvas_created = false;
+static sf::RenderTexture& canvas() {
+	static sf::RenderTexture instance;
+	if(!canvas_created){
+		instance.create(280, 360);
+		canvas_created = true;
+	}
+	return instance;
+}
+
+bool scratch_created = false;
+static sf::RenderTexture& scratch() {
+	static sf::RenderTexture instance;
+	if(!scratch_created){
+		instance.create(28, 36);
+		scratch_created = true;
+	}
+	return instance;
+}
+
+static void set_up_canvas(size_t sheet){
+	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
+	fs::path fromPath = pic_dir/("sheet" + std::to_string(sheet) + ".png");
+
+	sf::Texture texture;
+	texture.loadFromFile(fromPath.string());
+	sf::Sprite s(texture);
+	canvas().clear(sf::Color(0,0,0,0));
+	canvas().draw(s);
+}
+
 static void set_dlg_custom_sheet(cDialog& me, size_t sheet) {
 	me["num"].setTextToNum(sheet);
 	dynamic_cast<cPict&>(me["sheet"]).setPict(sheet, PIC_FULL);
 }
 
-extern fs::path tempDir;
-extern std::string scenario_temp_dir_name;
+// Faster -- could this be used for threshold setting without sqrt?
+static int color_diff2(sf::Color c1, sf::Color c2) {
+	return pow(c1.r - c2.r, 2) + pow(c1.g - c2.g, 2) + pow(c1.b - c2.b, 2);
+}
+static float color_diff(sf::Color c1, sf::Color c2) {
+	return sqrt(color_diff2(c1, c2));
+}
 
 void edit_custom_sheets() {
 	// Everything you do in this dialog can be undone when you hit cancel, leaving no trace in the main history.
@@ -3779,9 +3821,63 @@ void edit_custom_sheets() {
 		sheets[i] = spec_scen_g.sheets[i]->copyToImage();
 	}
 	
-	using namespace std::placeholders;
-	
 	cDialog pic_dlg(*ResMgr::dialogs.get("graphic-sheets"));
+
+	auto replace_from_file = [&pic_dlg,&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](std::string action_name, fs::path fpath) -> bool {
+		sf::Image img;
+		if(!img.loadFromFile(fpath.string().c_str())) {
+			beep();
+			return true;
+		}
+		if(cur >= spec_scen_g.numSheets) {
+			std::string resName = "sheet" + std::to_string(all_pics[cur]);
+			fs::path toPath = pic_dir/(resName + ".png");
+
+			sf::Image image_for_undo;
+			// TODO for reload, old image and new image will be the same! This could possibly be addressed by loading the image when edit is clicked?
+			// But there is no guarantee Edit is clicked first--the designer could externally edit the full-sheet image whenever they want.
+
+			// Also comparing image blobs for equality is probably expensive, but we should have a check to prevent adding undo actions if the same file was imported
+			// or reload is clicked when the file isn't changed.
+			image_for_undo.loadFromFile(toPath.string());
+			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, img)));
+
+			img.saveToFile(toPath.string().c_str());
+			ResMgr::graphics.free(resName);
+			set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+			return true;
+		}
+		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], sheets[cur], img)));
+
+		sheets[cur] = img;
+		spec_scen_g.replace_sheet(cur, img);
+		set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+		return true;
+	};
+
+	auto replace_from_image = [&cur, &all_pics, pic_dir, &deferred_actions, &sheets, &pic_dlg](std::string action_name, sf::Image& image) -> bool {
+		if(cur >= spec_scen_g.numSheets) {
+			std::string resName = "sheet" + std::to_string(all_pics[cur]);
+			fs::path toPath = pic_dir/(resName + ".png");
+
+			sf::Image image_for_undo;
+			image_for_undo.loadFromFile(toPath.string());
+			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, image)));
+
+			image.saveToFile(toPath.string().c_str());
+			ResMgr::graphics.free(resName);
+			set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+			return true;
+		}
+		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, cur, sheets[cur], image)));
+
+		sheets[cur] = image;
+		spec_scen_g.replace_sheet(cur, image);
+		set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+		return true;
+	};
+
+	using namespace std::placeholders;
 	pic_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, _1, false));
 	pic_dlg["okay"].attachClickHandler(std::bind(&cDialog::toast, _1, true));
 	pic_dlg["copy"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
@@ -3795,59 +3891,54 @@ void edit_custom_sheets() {
 		set_clipboard_img(sheets[cur]);
 		return true;
 	});
-	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
+	pic_dlg["paste"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions,replace_from_image](cDialog& me, std::string, eKeyMod) -> bool {
 		auto img = get_clipboard_img();
 		if(img == nullptr) {
 			beep();
 			return true;
 		}
-		sf::Image new_image = *img;
-		if(cur >= spec_scen_g.numSheets) {
-			std::string resName = "sheet" + std::to_string(all_pics[cur]);
-			fs::path toPath = pic_dir/(resName + ".png");
-
-			sf::Image image_for_undo;
-			image_for_undo.loadFromFile(toPath.string());
-			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Paste Graphics Sheet", all_pics[cur], image_for_undo, new_image)));
-
-			img->saveToFile(toPath.string().c_str());
-			ResMgr::graphics.free(resName);
-			set_dlg_custom_sheet(me, all_pics[cur]);
+		return replace_from_image("Paste Graphics Sheet", *img);
+	});
+	pic_dlg["edit"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+		fs::path image_editor = get_string_pref("ImageEditor");
+		if(image_editor.empty()){
+			showWarning("Choose an external image editor in the preferences window first.");
 			return true;
 		}
-		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Paste Graphics Sheet", cur, sheets[cur], new_image)));
+		#ifdef SFML_SYSTEM_MACOS
+		// Find actual binary inside the .app bundle:
 
-		sheets[cur] = *img;
-		spec_scen_g.replace_sheet(cur, *img);
-		set_dlg_custom_sheet(me, all_pics[cur]);
+		image_editor = image_editor / "Contents" / "MacOS" / image_editor.stem();
+
+		#endif
+
+		std::string resName = "sheet" + std::to_string(all_pics[cur]);
+		fs::path toPath = pic_dir/(resName + ".png");
+
+		std::vector<std::string> args = {toPath.string()};
+		try{
+			bp::child ch(image_editor, args, bp::std_out > stdout);
+			ch.detach();
+		}
+		catch(std::exception& x) {
+			showError(std::string{"Error running your image editor: "} + x.what());
+		} catch(std::string& x) {
+			showError("Error running your image editor: " + x);
+		} catch(...) {
+			showError("An unknown error occurred running your image editor!");
+		}
 		return true;
 	});
-	pic_dlg["open"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir,&deferred_actions](cDialog& me, std::string, eKeyMod) -> bool {
+	
+	pic_dlg["reload"].attachClickHandler([replace_from_file, &all_pics, &cur, &pic_dir](cDialog&, std::string, eKeyMod) -> bool {
+		std::string resName = "sheet" + std::to_string(all_pics[cur]);
+		fs::path sheetPath = pic_dir/(resName + ".png");
+		return replace_from_file("Reload Graphics Sheet", sheetPath);
+	});
+	pic_dlg["open"].attachClickHandler([replace_from_file](cDialog& me, std::string, eKeyMod) -> bool {
 		fs::path fpath = nav_get_rsrc({"png", "bmp", "jpg", "jpeg", "gif", "psd"});
 		if(fpath.empty()) return true;
-		sf::Image img;
-		if(!img.loadFromFile(fpath.string().c_str())) {
-			beep();
-			return true;
-		}
-		if(cur >= spec_scen_g.numSheets) {
-			std::string resName = "sheet" + std::to_string(all_pics[cur]);
-			fs::path toPath = pic_dir/(resName + ".png");
-
-			sf::Image image_for_undo;
-			image_for_undo.loadFromFile(toPath.string());
-			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], image_for_undo, img)));
-
-			img.saveToFile(toPath.string().c_str());
-			ResMgr::graphics.free(resName);
-			set_dlg_custom_sheet(me, all_pics[cur]);
-			return true;
-		}
-		deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet("Import Graphics Sheet", all_pics[cur], sheets[cur], img)));
-
-		sheets[cur] = img;
-		spec_scen_g.replace_sheet(cur, img);
-		set_dlg_custom_sheet(me, all_pics[cur]);
+		replace_from_file("Import Graphics Sheet", fpath);
 		return true;
 	});
 	pic_dlg["save"].attachClickHandler([&sheets,&cur,&all_pics,&pic_dir](cDialog&, std::string, eKeyMod) -> bool {
@@ -3958,7 +4049,33 @@ void edit_custom_sheets() {
 		pic_dlg["left"].hide();
 		pic_dlg["right"].hide();
 	}
-	pic_dlg.attachClickHandlers([&sheets,&cur,&all_pics](cDialog& me, std::string dir, eKeyMod) -> bool {
+
+	int icon_start = 0;
+	int icon_end = 0;
+	int icon_min = 0;
+	int icon_max = 0;
+	
+	std::vector<std::string> icon_buttons = {"icon-terr", "strip-terr", "add-terr"};
+	auto show_icon_selection = [&icon_min, &icon_max, &pic_dlg, icon_buttons]() {
+		pic_dlg["icon-min"].setTextToNum(icon_min);
+		pic_dlg["icon-max"].setTextToNum(icon_max);
+		// TODO highlight the selected icons visually
+		if(icon_min != 0){
+			for(auto name : icon_buttons){
+				pic_dlg[name].show();
+			}
+			pic_dlg["diff-threshold"].show();
+		}else{
+			for(auto name : icon_buttons){
+				pic_dlg[name].hide();
+			}
+			pic_dlg["diff-threshold"].hide();
+		}
+	};
+
+	show_icon_selection();
+	pic_dlg.attachClickHandlers([&sheets,&cur,&all_pics,show_icon_selection,&icon_start,&icon_end,&icon_min,&icon_max](cDialog& me, std::string dir, eKeyMod) -> bool {
+		size_t old_cur = cur;
 		if(dir == "left") {
 			if(cur == 0)
 				cur = all_pics.size() - 1;
@@ -3968,11 +4085,130 @@ void edit_custom_sheets() {
 			if(cur >= all_pics.size())
 				cur = 0;
 		} else return true;
+		if(cur != old_cur){
+			icon_start = icon_end = icon_min = icon_max = 0;
+			show_icon_selection();
+		}
+
 		set_dlg_custom_sheet(me, all_pics[cur]);
 		return true;
 	}, {"left", "right"});
 	
 	set_dlg_custom_sheet(pic_dlg, all_pics[cur]);
+	
+	pic_dlg["sheet"].attachClickHandler([&all_pics, &cur, &icon_start, &icon_end, &icon_min, &icon_max, show_icon_selection](cDialog& me, std::string, eKeyMod mod) -> bool {
+		location where_curs = sf::Mouse::getPosition(me.getWindow());
+		where_curs = me.getWindow().mapPixelToCoords(where_curs);
+		rectangle sheet_bounds = me["sheet"].getBounds();
+		where_curs.x -= sheet_bounds.left;
+		where_curs.y -= sheet_bounds.top;
+		where_curs.x /= 28;
+		where_curs.y /= 36;
+
+		int icon_hit = 1000 + 100 * all_pics[cur] + 10 * where_curs.y + where_curs.x;
+
+		if(mod_contains(mod, mod_shift)){
+			icon_end = icon_hit;
+		}else{
+			icon_start = icon_end = icon_hit;
+		}
+		icon_min = min(icon_start, icon_end);
+		icon_max = max(icon_start, icon_end);
+		show_icon_selection();
+
+		return true;
+	});
+	
+	static sf::BlendMode blend_replace(sf::BlendMode::Factor::One, sf::BlendMode::Factor::Zero, sf::BlendMode::Equation::Add);
+
+	pic_dlg.attachClickHandlers([&icon_max, &icon_min, &all_pics, &cur, replace_from_image](cDialog& me, std::string item_hit, eKeyMod) -> bool {
+		int sheet_start = 1000 + 100 * all_pics[cur];
+		if(item_hit == "icon-terr"){
+			set_up_canvas(all_pics[cur]);
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
+			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
+				int sheet_icon = icon_min + i - sheet_start;
+				int x = sheet_icon % 10;
+				int y = sheet_icon / 10;
+				rectangle dest {y * 36, x * 28, y * 36 + 36, x * 28 + 28};
+				cPict::drawAt(mainPtr(),canvas(),dest,icon+i,PIC_TER,false);
+			}
+			canvas().display();
+			sf::Image img = canvas().getTexture().copyToImage();
+			return replace_from_image("Import Terrain Icon", img);
+		}else if(item_hit == "strip-terr"){
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
+			scratch().clear(sf::Color(0,0,0,0));
+			scratch().display();
+			sf::Image without_floor = scratch().getTexture().copyToImage();
+			cPict::drawAt(mainPtr(),scratch(),{0,0,36,28},icon,PIC_TER,false);
+			scratch().display();
+			sf::Image floor_to_strip = scratch().getTexture().copyToImage();
+			set_up_canvas(all_pics[cur]);
+			sf::Image canvas_image = canvas().getTexture().copyToImage();
+			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
+				sf::Image copy = without_floor;
+				int sheet_icon = icon_min + i - sheet_start;
+				int x = sheet_icon % 10;
+				int y = sheet_icon / 10;
+				rectangle dest {y * 36, x * 28, y * 36 + 36, x * 28 + 28};
+				for(int y = 0; y < 36; ++y){
+					for(int x = 0; x < 28; ++x){
+						sf::Color source = canvas_image.getPixel(dest.left + x, dest.top + y);
+						sf::Color floor_source = floor_to_strip.getPixel(x, y);
+
+						float epsilon = me["diff-threshold"].getTextAsNum();
+						if(color_diff(source, floor_source) > epsilon){
+							copy.setPixel(x, y, source);
+						}
+					}
+				}
+				sf::Texture t;
+				t.loadFromImage(copy);
+				sf::Sprite s(t);
+				s.setPosition(dest.left, dest.top);
+
+				canvas().draw(s, blend_replace);
+			}
+			canvas().display();
+			sf::Image img = canvas().getTexture().copyToImage();
+			return replace_from_image("Strip Terrain Background", img);
+		}else if(item_hit == "add-terr"){
+			pic_num_t icon = choose_graphic(0, PIC_TER, &me);
+			set_up_canvas(all_pics[cur]);
+
+			scratch().clear(sf::Color(0,0,0,0));
+			cPict::drawAt(mainPtr(),scratch(),{0,0,36,28},icon,PIC_TER,false);
+			scratch().display();
+
+			sf::Image floor_to_add = scratch().getTexture().copyToImage();
+			sf::Texture floor_t;
+			floor_t.loadFromImage(floor_to_add);
+			sf::Sprite floor_s(floor_t);
+
+			sf::Texture sheet_t = canvas().getTexture();
+			for(int i = 0; i < (icon_max - icon_min) + 1; ++i){
+				int sheet_icon = icon_min + i - sheet_start;
+				int x = sheet_icon % 10;
+				int y = sheet_icon / 10;
+				rectangle dest {y * 36, x * 28, y * 36 + 36, x * 28 + 28};
+
+				scratch().clear(sf::Color(0,0,0,0));
+				scratch().draw(floor_s);
+				sf::Sprite ter_s(sheet_t, dest);
+				scratch().draw(ter_s, sf::BlendAlpha);
+				scratch().display();
+				sf::Sprite combined_s(scratch().getTexture());
+				combined_s.setPosition(dest.left, dest.top);
+				canvas().draw(combined_s, blend_replace);
+			}
+			canvas().display();
+			sf::Image img = canvas().getTexture().copyToImage();
+			return replace_from_image("Add Terrain Background", img);
+		}
+		return true;
+	},icon_buttons);
+
 	shut_down_menus(5); // So that cmd+O, cmd+N, cmd+S can work
 	pic_dlg.run();
 	
