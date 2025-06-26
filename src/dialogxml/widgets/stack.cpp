@@ -64,21 +64,20 @@ bool cStack::setPage(size_t n, bool call_focus_handlers) {
 	if(n == curPage) return true;
 	cTextField* focus = getDialog()->getFocus();
 	bool failed = false;
-	if(call_focus_handlers){
-		for(auto p : controls) {
-			const std::string& id = p.first;
-			cControl& ctrl = *p.second;
-			// Only trigger focus handlers if the current page still exists.
-			if(curPage < nPages) {
-				storage[curPage][id] = ctrl.store();
-				if(!ctrl.triggerFocusHandler(*getDialog(), id, true))
+	for(auto p : controls) {
+		const std::string& id = p.first;
+		cControl& ctrl = *p.second;
+		// Only trigger focus handlers if the current page still exists.
+		if(curPage < nPages) {
+			storage[curPage][id] = ctrl.store();
+
+			if(call_focus_handlers && !ctrl.triggerFocusHandler(*getDialog(), id, true))
+				failed = true;
+			if(!failed) {
+				ctrl.restore(storage[n][id]);
+				if(focus == &ctrl && !ctrl.triggerFocusHandler(*getDialog(), id, false)) {
 					failed = true;
-				if(!failed) {
-					ctrl.restore(storage[n][id]);
-					if(focus == &ctrl && !ctrl.triggerFocusHandler(*getDialog(), id, false)) {
-						failed = true;
-						ctrl.restore(storage[curPage][id]);
-					}
+					ctrl.restore(storage[curPage][id]);
 				}
 			}
 		}
