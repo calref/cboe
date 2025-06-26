@@ -1,5 +1,6 @@
 
 set Zip="C:\Program Files\7-Zip\7z.exe"
+%Zip% || @echo 7-zip must be installed first. && exit /B
 
 @echo Packing scenario %2...
 if exist %2 del /F %2
