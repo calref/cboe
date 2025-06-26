@@ -85,6 +85,8 @@ For Linux builds, the following additional dependencies are required:
   - or, if cmake is available when you call `scons`, TGUI will be built from source automatically
 - zenity command-line tools
 
+For Windows builds, [7-zip](https://7-zip.org/download.html) is required.
+
 If you are using the Visual Studio toolset, we recommend installing
 [vcpkg](https://github.com/Microsoft/vcpkg) to manage these dependencies.
 
