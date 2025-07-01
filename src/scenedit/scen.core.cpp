@@ -4016,7 +4016,29 @@ private:
 	void show_icon_selection() {
 		dlg["icon-min"].setTextToNum(icon_min);
 		dlg["icon-max"].setTextToNum(icon_max);
-		// TODO highlight the selected icons visually
+
+		// Clear selection lines
+		for(int y = 0; y < 11; ++y){
+			for(int x = 0; x < 11; ++x){
+				if(x < 10)
+					dlg["zrow-x" + std::to_string(x) + "y" + std::to_string(y)].hide();
+				if(y < 10)
+					dlg["zcol-x" + std::to_string(x) + "y" + std::to_string(y)].hide();
+			}
+		}
+		// highlight the selected icons visually
+		for(int y = 0; y < 10; ++y){
+			for(int x = 0; x < 10; ++x){
+				int icon = 1000 + 100 * all_pics[cur] + y * 10 + x;
+				if(icon >= icon_min && icon <= icon_max){
+					dlg["zrow-x" + std::to_string(x) + "y" + std::to_string(y)].show();
+					dlg["zrow-x" + std::to_string(x) + "y" + std::to_string(y+1)].show();
+					dlg["zcol-x" + std::to_string(x) + "y" + std::to_string(y)].show();
+					dlg["zcol-x" + std::to_string(x + 1) + "y" + std::to_string(y)].show();
+				}
+			}
+		}
+
 		if(icon_min != 0){
 			for(auto name : icon_buttons){
 				dlg[name].show();
