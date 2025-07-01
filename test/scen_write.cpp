@@ -14,6 +14,7 @@ using namespace ticpp;
 extern Document xmlDocFromStream(istream& stream, string name);
 extern void readScenarioFromXml(Document&& data, cScenario& scenario);
 extern void writeScenarioToXml(Printer&& data, cScenario& scenario);
+bool save_prefs() {return true;}
 
 static void in_and_out(string name, cScenario& scen) {
 	string fpath = "junk/";

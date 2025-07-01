@@ -66,6 +66,7 @@ public:
 	static void advanceAnim();
 	virtual ~cPict();
 	void draw() override;
+	void draw(sf::RenderTarget& target);
 	/// A utility function to draw an icon into an arbitrary window.
 	/// @param win The window to draw in.
 	/// @param dest The bounding rect to draw in (ignored for drawing the actual, but used for background fill and framing)
@@ -73,6 +74,7 @@ public:
 	/// @param type_g The type of icon to draw.
 	/// @param framed Whether to draw a frame around the icon.
 	static void drawAt(sf::RenderWindow& win, rectangle dest, pic_num_t which_g, ePicType type_g, bool framed);
+	static void drawAt(sf::RenderWindow& win, sf::RenderTarget& targ, rectangle dest, pic_num_t which_g, ePicType type_g, bool framed);
 	/// A convenience constant that can be passed as the pic number to setPict(pic_num_t num).
 	/// It sets the icon to nothing, showing as just black.
 	static const pic_num_t BLANK;
@@ -102,49 +104,49 @@ private:
 	sf::Color fillClr = sf::Color::Black;
 	// Transient parse flags
 	bool wide = false, tall = false, tiny = false, custom = false, blank = false, filled = true;
-	void drawPresetTer(short num, rectangle to_rect);
-	void drawPresetTerAnim(short num, rectangle to_rect);
-	void drawPresetMonstSm(short num, rectangle to_rect);
-	void drawPresetMonstWide(short num, rectangle to_rect);
-	void drawPresetMonstTall(short num, rectangle to_rect);
-	void drawPresetMonstLg(short num, rectangle to_rect);
-	void drawPresetDlog(short num, rectangle to_rect);
-	void drawPresetDlogLg(short num, rectangle to_rect);
-	void drawPresetTalk(short num, rectangle to_rect);
-	void drawPresetScen(short num, rectangle to_rect);
-	void drawPresetScenLg(short num, rectangle to_rect);
-	void drawPresetItem(short num, rectangle to_rect);
-	void drawPresetTinyItem(short num, rectangle to_rect);
-	void drawPresetPc(short num, rectangle to_rect);
-	void drawPresetField(short num, rectangle to_rect);
-	void drawPresetBoom(short num, rectangle to_rect);
-	void drawPresetMissile(short num, rectangle to_rect);
-	void drawPresetTerMap(short num, rectangle to_rect);
-	void drawStatusIcon(short num, rectangle to_rect);
-	void drawFullSheet(short num, rectangle to_rect);
-	void drawCustomTer(short num, rectangle to_rect);
-	void drawCustomTerAnim(short num, rectangle to_rect);
-	void drawCustomMonstSm(short num, rectangle to_rect);
-	void drawCustomMonstWide(short num, rectangle to_rect);
-	void drawCustomMonstTall(short num, rectangle to_rect);
-	void drawCustomMonstLg(short num, rectangle to_rect);
-	void drawCustomDlog(short num, rectangle to_rect);
-	void drawCustomDlogLg(short num, rectangle to_rect);
-	void drawCustomTalk(short num, rectangle to_rect);
-	void drawCustomItem(short num, rectangle to_rect);
-	void drawCustomTinyItem(short num, rectangle to_rect);
-	void drawCustomBoom(short num, rectangle to_rect);
-	void drawCustomMissile(short num, rectangle to_rect);
-	void drawCustomTerMap(short num, rectangle to_rect);
-	void drawPartyMonstSm(short num, rectangle to_rect);
-	void drawPartyMonstWide(short num, rectangle to_rect);
-	void drawPartyMonstTall(short num, rectangle to_rect);
-	void drawPartyMonstLg(short num, rectangle to_rect);
-	void drawPartyScen(short num, rectangle to_rect);
-	void drawPartyItem(short num, rectangle to_rect);
-	void drawPartyPc(short num, rectangle to_rect);
-	void drawInvenBtn(short num, rectangle to_rect);
-	static std::map<ePicType,void(cPict::*)(short,rectangle)>& drawPict();
+	void drawPresetTer(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetTerAnim(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetMonstSm(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetMonstWide(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetMonstTall(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetMonstLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetDlog(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetDlogLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetTalk(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetScen(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetScenLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetItem(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetTinyItem(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetPc(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetField(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetBoom(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetMissile(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPresetTerMap(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawStatusIcon(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawFullSheet(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomTer(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomTerAnim(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomMonstSm(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomMonstWide(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomMonstTall(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomMonstLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomDlog(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomDlogLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomTalk(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomItem(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomTinyItem(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomBoom(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomMissile(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawCustomTerMap(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyMonstSm(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyMonstWide(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyMonstTall(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyMonstLg(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyScen(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyItem(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawPartyPc(short num, rectangle to_rect, sf::RenderTarget& targ);
+	void drawInvenBtn(short num, rectangle to_rect, sf::RenderTarget& targ);
+	static std::map<ePicType,void(cPict::*)(short,rectangle,sf::RenderTarget&)>& drawPict();
 };
 
 #endif
