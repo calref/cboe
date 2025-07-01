@@ -379,7 +379,7 @@ if not env.GetOption('clean'):
 			Exit(1)
 
 	boost_versions = ['-1_84'] # This is a bit of a hack. :(
-	suffixes = ['-mt', f'-mt-x{env["bits"]}']
+	suffixes = ['-mt', f'-mt-x{env["bits"]}', f'-vc143-mt-x{env["bits"]}', f'-vc144-mt-x{env["bits"]}']
 
 	zlib = 'zlib' if (platform == "win32" and 'mingw' not in env["TOOLS"]) else 'z'
 	check_lib(zlib, 'zlib', ['d'], [])
