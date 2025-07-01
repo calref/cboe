@@ -125,7 +125,7 @@
 			]
 		},
 		win-scons: {
-			runs-on: windows-2019,
+			runs-on: windows-2022,
 			env: {
 				VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
 			},
@@ -164,7 +164,7 @@
 			]
 		},
 		# win-mingw: {
-		# 	runs-on: windows-2019,
+		# 	runs-on: windows-2022,
 		# 	steps: [
 		# 		{
 		# 			name: checkout,
