@@ -13,6 +13,8 @@ using namespace ticpp;
 extern Document xmlDocFromStream(istream& stream, string name);
 extern void readScenarioFromXml(Document&& data, cScenario& scenario);
 
+void save_prefs() {}
+
 TEST_CASE("Loading a new-format scenario record") {
 	ifstream fin;
 	cScenario scen;
