@@ -8,12 +8,12 @@
 	<led name='nosound' relative='pos-in pos' rel-anchor='prev' top='10' left='0'>No UI Sounds</led>
 	<text name='scale-head' size='large' relative='neg pos' rel-anchor='prev' top='17' left='10' width='260' height='17'>Scale UI:</text>
 	<group name='scaleui'>
-		<led name='1' relative='pos-in pos' anchor='scale-head' top='4' left='15'>1</led>
-		<led name='1_5' relative='pos-in pos' anchor='scale-head' top='4' left='55'>1.5</led>
-		<led name='2' relative='pos-in pos' anchor='scale-head' top='4' left='95'>2</led>
-		<led name='3' relative='pos-in pos' anchor='scale-head' top='4' left='135'>3</led>
-		<led name='4' relative='pos-in pos' anchor='scale-head' top='4' left='175'>4</led>
-		<led name='other' relative='pos-in pos' anchor='scale-head' top='4' left='215'/>
+		<led name='1' relative='neg pos' anchor='scale-head' top='4' left='20'>1</led>
+		<led name='1_5' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>1.5</led>
+		<led name='2' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>2</led>
+		<led name='3' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>3</led>
+		<led name='4' relative='pos pos-in' rel-anchor='prev' top='0' left='3'>4</led>
+		<led name='other' relative='pos pos-in' rel-anchor='prev' top='0' left='3'/>
 	</group>
 	
 	<text name='debug-party-head' size='large' relative='pos pos-in' anchor='nosound' top='0' left='50'>Debug Party:</text>
@@ -21,6 +21,10 @@
 	<button name='choose-party' relative='pos neg' rel-anchor='prev' type='regular' top='3' left='2'>Choose</button>
 	<led name='force-default-party' relative='pos-in pos' anchor='debug-party-head' top='2' left='0'>Force default party (ignore above)</led>
 
-	<button name='okay' relative='abs pos' anchor='scale-head' type='regular' top='7' left='354'>OK</button>
+	<text name='image-editor-head' size='large' relative='pos-in pos-in' anchor='force-default-party' top='30' left='0'>Image Editor:</text>
+	<field name='image-editor' type='text' relative='neg-in neg' rel-anchor='prev' top='2' left='5' width='100' height='15'/>
+	<button name='choose-image-editor' relative='pos neg' rel-anchor='prev' type='regular' top='3' left='2'>Choose</button>
+
+	<button name='okay' relative='abs pos' anchor='scale-head' type='regular' top='37' left='354'>OK</button>
 	<button name='cancel' relative='neg pos-in' anchor='okay' type='regular' top='0' left='73'>Cancel</button>
 </dialog>
