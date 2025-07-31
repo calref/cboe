@@ -3766,6 +3766,8 @@ private:
 		sf::Sprite s(texture);
 		canvas().clear(sf::Color(0,0,0,0));
 		canvas().draw(s);
+		// For some reason, without this call, the canvas becomes black!
+		canvas().getTexture().copyToImage();
 	}
 
 	// Set which custom sheet is viewed
