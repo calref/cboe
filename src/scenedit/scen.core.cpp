@@ -3796,7 +3796,7 @@ private:
 			// we should have a check to prevent adding undo actions if the same
 			// file was imported or reload is clicked when the file isn't changed.
 			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, img)));
-
+			sheets[all_pics[cur]] = img;
 			img.saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
 			set_dlg_custom_sheet(all_pics[cur]);
@@ -3819,6 +3819,7 @@ private:
 			sf::Image image_for_undo;
 			image_for_undo.loadFromFile(toPath.string());
 			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, image)));
+			sheets[all_pics[cur]] = image;
 
 			image.saveToFile(toPath.string().c_str());
 			ResMgr::graphics.free(resName);
