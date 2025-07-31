@@ -3791,13 +3791,10 @@ private:
 			std::string resName = "sheet" + std::to_string(all_pics[cur]);
 			fs::path toPath = pic_dir/(resName + ".png");
 
-			sf::Image image_for_undo;
-			// TODO for reload, old image and new image will be the same! This could possibly be addressed by loading the image when edit is clicked?
-			// But there is no guarantee Edit is clicked first--the designer could externally edit the full-sheet image whenever they want.
-
-			// Also comparing image blobs for equality is probably expensive, but we should have a check to prevent adding undo actions if the same file was imported
-			// or reload is clicked when the file isn't changed.
-			image_for_undo.loadFromFile(toPath.string());
+			sf::Image image_for_undo = sheets[all_pics[cur]];
+			// Comparing image blobs for equality is probably expensive, but maybe
+			// we should have a check to prevent adding undo actions if the same
+			// file was imported or reload is clicked when the file isn't changed.
 			deferred_actions.push_back(action_ptr(new aReplaceGraphicsSheet(action_name, all_pics[cur], image_for_undo, img)));
 
 			img.saveToFile(toPath.string().c_str());
@@ -3944,7 +3941,7 @@ private:
 			cur = iter - all_pics.begin();
 			sf::Image img;
 			img.create(280, 360);
-			img.saveToFile(sheetPath.string().c_str());
+			img.saveToFile(sheetPath.string());
 		}
 		dlg["left"].show();
 		dlg["right"].show();
@@ -4234,7 +4231,7 @@ public:
 			spec_scen_g.sheets.resize(1);
 			spec_scen_g.numSheets = 1;
 			spec_scen_g.init_sheet(0);
-			spec_scen_g.sheets[0]->copyToImage().saveToFile((pic_dir/"sheet0.png").string().c_str());
+			spec_scen_g.sheets[0]->copyToImage().saveToFile((pic_dir/"sheet0.png").string());
 			all_pics.insert(all_pics.begin(), 0);
 			ResMgr::graphics.pushPath(pic_dir);
 
@@ -4244,9 +4241,17 @@ public:
 
 		set_cursor(watch_curs);
 
-		// Get image data from the sheets in memory
-		for(size_t i = 0; i < spec_scen_g.numSheets; i++) {
-			sheets[i] = spec_scen_g.sheets[i]->copyToImage();
+		for(size_t idx : all_pics) {
+			// Get image data from the sheets in memory
+			if(idx < spec_scen_g.numSheets){
+				sheets[idx] = spec_scen_g.sheets[idx]->copyToImage();
+			}
+			// Get image data from sheets not in memory
+			else{
+				sf::Texture texture;
+				texture.loadFromFile((pic_dir/("sheet" + std::to_string(idx) + ".png")).string());
+				sheets[idx] = texture.copyToImage();
+			}
 		}
 
 		using namespace std::placeholders;
