@@ -45,7 +45,7 @@ jobs:
 #          scons-script: scons
         - name: windows
           suffix: ''
-          version: 2019
+          version: 2022
           scons-script: './.github/workflows/scripts/win/scons-build.bat'
         configuration:
         - Release
