@@ -148,7 +148,7 @@ public:
 		towns.back()->init_start();
 	}
 	
-	void import_legacy(legacy::scenario_data_type& old);
+	void import_legacy(legacy::scenario_data_type& old, bool header_only = false);
 	void import_legacy(legacy::scen_item_data_type& old);
 	void writeTo(cTagFile& file) const;
 	void readFrom(const cTagFile& file);

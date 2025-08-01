@@ -231,7 +231,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-void cScenario::import_legacy(legacy::scenario_data_type& old){
+void cScenario::import_legacy(legacy::scenario_data_type& old, bool header_only){
 	is_legacy = true;
 	// TODO eventually the absence of feature flags here will replace is_legacy altogether
 	feature_flags = {};
@@ -267,6 +267,9 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	rating = eContentRating(old.rating);
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
+
+	if(header_only) return;
+
 	boats.resize(30);
 	horses.resize(30);
 	for(short i = 0; i < 30; i++) {
