@@ -293,8 +293,11 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 		return false;
 	}
 	port_item_list(&item_data);
-	scenario.import_legacy(temp_scenario);
-	scenario.import_legacy(item_data);
+	scenario.import_legacy(temp_scenario, load_type == eLoadScenario::ONLY_HEADER);
+	if(load_type == eLoadScenario::FULL){
+		scenario.ter_types[23].fly_over = false;
+		scenario.import_legacy(item_data);
+	}
 	
 	// TODO: Consider skipping the fread and assignment when len is 0
 	scenario.special_items.resize(50);
@@ -321,8 +324,6 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 	}
 	
 	fclose(file_id);
-	
-	scenario.ter_types[23].fly_over = false;
 	
 	scenario.scen_file = file_to_load;
 	if(load_type == eLoadScenario::ONLY_HEADER) return true;
