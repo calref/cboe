@@ -561,6 +561,7 @@
     <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\valleydy $(SolutionDir)..\..\rsrc\scenarios\valleydy.boes" />
     <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\stealth $(SolutionDir)..\..\rsrc\scenarios\stealth.boes" />
     <Exec Command="$(SolutionDir)..\..\pkg\win\build-scen.bat $(SolutionDir)..\..\rsrc\scenarios\zakhazi $(SolutionDir)..\..\rsrc\scenarios\zakhazi.boes" />
+    <Exec Command='xcopy $(SolutionDir)..\..\rsrc\scenarios\custom "$(TargetDir)\Blades of Exile Scenarios\custom\" /S /Y' />
   </Target>
   <!--COPY FILES TO OUTPUT DIRECTORY-->
   <Target Name="CopyFiles" AfterTargets="BuildScenarios">

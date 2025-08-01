@@ -11,3 +11,6 @@
 [submodule "deps/fix-rpaths"]
 	path = deps/fix-rpaths
 	url = https://gist.github.com/NQNStudios/7145bcf6621891f5176c8caa165d6b93
+[submodule "rsrc/scenarios/custom"]
+	path = rsrc/scenarios/custom
+	url = https://github.com/NQNStudios/cboe-scenarios

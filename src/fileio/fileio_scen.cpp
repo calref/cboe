@@ -79,6 +79,9 @@ std::vector<fs::path> all_scen_dirs() {
 		scen_dirs.push_back(scen_dir);
 	}
 
+	// Experimental: ship with the full scenario archive
+	scen_dirs.push_back(progDir/"Blades of Exile Scenarios/custom");
+
 	#ifdef DEBUG
 	fs::path replay_scenarios_dir = boost::filesystem::current_path();
 	replay_scenarios_dir = replay_scenarios_dir/".."/".."/"test"/"replays"/"scenarios";
