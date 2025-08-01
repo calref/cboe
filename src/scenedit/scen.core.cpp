@@ -4249,9 +4249,7 @@ public:
 			}
 			// Get image data from sheets not in memory
 			else{
-				sf::Texture texture;
-				texture.loadFromFile((pic_dir/("sheet" + std::to_string(idx) + ".png")).string());
-				sheets[idx] = texture.copyToImage();
+				sheets[idx].loadFromFile((pic_dir/("sheet" + std::to_string(idx) + ".png")).string());
 			}
 		}
 
