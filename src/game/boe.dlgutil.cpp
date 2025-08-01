@@ -1786,8 +1786,16 @@ class cChooseScenario {
 		for(auto& hdr : scen_headers){
 			// I just checked, and the scenario editor will let you name your scenario "" or " "!
 			std::string name = name_alphabetical(hdr.name);
-			if(!name.empty())
-				me[name.substr(0, 1)].show();
+			if(!name.empty()){
+				// Starts with a letter:
+				if(me.hasControl(name.substr(0, 1))){
+					me[name.substr(0, 1)].show();
+				}
+				// Starts with a digit:
+				else if(name[0] >= '0' && name[0] <= '9'){
+					me["#"].show();
+				}
+			}
 		}
 	}
 
@@ -1870,6 +1878,7 @@ public:
 			stk.setPage(0);
 			return true;
 		});
+		// Letter buttons scroll to an alphabetical position:
 		for(int i = 0; i < 26; ++i){
 			std::string letter(1, (char)('a' + i));
 			me[letter].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
@@ -1883,6 +1892,12 @@ public:
 				return true;
 			});
 		}
+		// Number button scrolls to scenarios that start with symbols or digits:
+		me["#"].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
+			auto& stk = dynamic_cast<cStack&>(me["list"]);
+			stk.setPage(1);
+			return true;
+		});
 		
 		put_scen_info();
 		
