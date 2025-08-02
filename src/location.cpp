@@ -178,23 +178,23 @@ const rectangle_size_delegate rectangle::height() const {
 	return rectangle_size_delegate(*const_cast<rectangle*>(this), &rectangle::top, &rectangle::bottom);
 }
 
-location rectangle::centre() const {
+const location rectangle::centre() const {
 	return location((left + right) / 2, (top + bottom) / 2);
 }
 
-location rectangle::topLeft() const {
+const location rectangle::topLeft() const {
 	return location(left, top);
 }
 
-location rectangle::topRight() const {
+const location rectangle::topRight() const {
 	return location(right, top);
 }
 
-location rectangle::bottomLeft() const {
+const location rectangle::bottomLeft() const {
 	return location(left, bottom);
 }
 
-location rectangle::bottomRight() const {
+const location rectangle::bottomRight() const {
 	return location(right, bottom);
 }
 

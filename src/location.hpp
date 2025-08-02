@@ -81,11 +81,11 @@ struct rectangle {
 	rectangle_size_delegate height();
 	const rectangle_size_delegate width() const;
 	const rectangle_size_delegate height() const;
-	location centre() const;
-	location topLeft() const;
-	location topRight() const;
-	location bottomLeft() const;
-	location bottomRight() const;
+	const location centre() const;
+	const location topLeft() const;
+	const location topRight() const;
+	const location bottomLeft() const;
+	const location bottomRight() const;
 	bool contains(location p) const;
 	bool contains(int x, int y) const;
 	bool empty() const;
