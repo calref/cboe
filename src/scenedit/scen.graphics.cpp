@@ -726,6 +726,7 @@ void set_up_type_buttons(bool reset) {
 
 	// How transparent to make non-matching elements in the palette
 	static const sf::Uint8 FILTER_ALPHA = 255 / 8;
+	location mouse = translate_mouse_coordinates(sf::Mouse::getPosition(mainPtr()));
  	
 	// first make terrain buttons
 	sf::Texture& editor_mixed = *ResMgr::graphics.get("edbuttons");
@@ -924,6 +925,9 @@ void set_up_type_buttons(bool reset) {
 					rect_draw_some_item(*ResMgr::graphics.get("tinyobj"), tiny_from, mainPtr(), tiny_to, sf::BlendAlpha, colour);
 				}
 			}break;
+		}
+		if(mouse.in(draw_rect)) {
+			fill_rect(mainPtr(), draw_rect, hilite_colour);
 		}
 	}
 	
