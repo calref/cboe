@@ -2070,10 +2070,6 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	return true;
 }
 
-static eCastStatus check_can_cast(const cPlayer&, eSkill) {
-	return CAST_OK;	
-}
-
 void print_cast_status(eCastStatus status, eSkill type, std::string pc_name) {
 	std::string prefix = "Cast";
 	// When multiple PCs are checked, explain why each one can't cast.
@@ -2155,7 +2151,7 @@ eSpell pick_spell(short pc_num,const eSkill type, bool check_done) { // 70 - no 
 	}
 	
 	if(!can_choose_caster && !check_done) {
-		eCastStatus status = check_can_cast(univ.party[pc_casting], type);
+		eCastStatus status = pc_can_cast_spell(univ.party[pc_casting], type);
 		if(status != CAST_OK){
 			print_cast_status(status, type);	
 			return eSpell::NONE;
