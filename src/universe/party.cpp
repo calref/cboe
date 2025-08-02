@@ -283,7 +283,10 @@ void cParty::import_legacy(legacy::setup_save_type& old){
 }
 
 void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
-	who_said = scenario.towns[old.personality / 10]->talking.people[old.personality % 10].title;
+	size_t town = old.personality / 10;
+	size_t npc = old.personality % 10;
+	if(town >= scenario.towns.size()) return;
+	who_said = scenario.towns[town]->talking.people[npc].title;
 	in_town = scenario.towns[old.town_num]->name;
 	int strnums[2] = {old.str1, old.str2};
 	std::string* strs[2] = {&the_str1, &the_str2};
