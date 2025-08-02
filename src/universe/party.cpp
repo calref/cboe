@@ -274,10 +274,12 @@ void cParty::import_legacy(legacy::stored_items_list_type& old,short which_list)
 }
 
 void cParty::import_legacy(legacy::setup_save_type& old){
-	for(int n = 0; n < 4; n++)
+	for(int n = 0; n < 4; n++){
+		setup[n].resize(64, 64);
 		for(int i = 0; i < 64; i++)
 			for(int j = 0; j < 64; j++)
 				setup[n][i][j] = old.setup[n][i][j];
+	}
 }
 
 void cParty::cConvers::import_legacy(legacy::talk_save_type old, const cScenario& scenario){
