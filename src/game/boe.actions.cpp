@@ -2,6 +2,7 @@
 #include <cmath>
 #include <queue>
 #include <boost/algorithm/string/replace.hpp>
+#include <fmt/format.h>
 
 #include "boe.global.hpp"
 #include "tools/replay.hpp"
@@ -833,7 +834,7 @@ void handle_talk(location destination, bool& did_something, bool& need_redraw, b
 					if(small_talk > 1000 && small_talk < 1000 + univ.scenario.spec_strs.size())
 						str = univ.scenario.spec_strs[small_talk - 1000];
 					// TODO: Come up with a set of pre-cooked responses.
-					add_string_to_buf("Talk: " + str, 4);
+					add_string_to_buf(fmt::format("Talk: {}", str), 4);
 				} else if(univ.town.monst[i].is_alive()) {
 					start_talk_mode(i,univ.town.monst[i].personality,univ.town.monst[i].number,univ.town.monst[i].facial_pic);
 					did_something = false;
@@ -1006,7 +1007,7 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_SHOPPING && overall_mode != MODE_TALKING && overall_mode != MODE_ITEM_TARGET)
-		add_string_to_buf("Set active: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Set active: {}", FINISH_FIRST));
 	else if(is_combat()) {
 		if(univ.debug_mode && pc.ap <= 0){
 			pc.ap = 4;
@@ -1031,7 +1032,7 @@ void handle_switch_pc(short which_pc, bool& need_redraw, bool& need_reprint) {
 			store_cur_pc = -1;
 
 		set_stat_window_for_pc(which_pc);
-		add_string_to_buf("Now " + std::string(overall_mode == MODE_SHOPPING ? "shopping" : "active") + ": " + pc.name);
+		add_string_to_buf(fmt::format(overall_mode == MODE_SHOPPING ? "Now shopping: {}" : "Now active: {}", pc.name));
 		adjust_spell_menus();
 		need_redraw = true;
 	}
@@ -1045,14 +1046,14 @@ void handle_switch_pc_items(short which_pc, bool& need_redraw) {
 
 	cPlayer& pc = univ.party[which_pc];
 	if(!prime_time() && overall_mode != MODE_TALKING && overall_mode != MODE_SHOPPING)
-		add_string_to_buf("Set active: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Set active: {}", FINISH_FIRST));
 	else {
 		if(!is_combat()) {
 			if(pc.main_status != eMainStatus::ALIVE && (overall_mode != MODE_SHOPPING || active_shop.getType() != eShopType::ALLOW_DEAD))
 				add_string_to_buf("Set active: PC must be here & active.");
 			else {
 				univ.cur_pc = which_pc;
-				add_string_to_buf("Now active: " + pc.name);
+				add_string_to_buf(fmt::format("Now active: {}", pc.name));
 				adjust_spell_menus();
 				need_redraw = true;
 			}
@@ -1083,7 +1084,7 @@ void handle_equip_item(short item_hit, bool& need_redraw) {
 	} else if(stat_screen_mode > MODE_SHOP) {
 		// TODO: For some reason, the game didn't do anything at all in this case.
 		// I'm not sure why; maybe it intended to forward to the sell button?
-	} else add_string_to_buf("Equip: " + FINISH_FIRST);
+	} else add_string_to_buf(fmt::format("Equip: {}", FINISH_FIRST));
 }
 
 void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
@@ -1092,7 +1093,7 @@ void handle_use_item(short item_hit, bool& did_something, bool& need_redraw) {
 	}
 
 	if(!prime_time()) {
-		add_string_to_buf("Use item: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Use item: {}", FINISH_FIRST));
 		return;
 	}
 	use_item(stat_window, item_hit);
@@ -1108,7 +1109,7 @@ void handle_give_item(short item_hit, bool& did_something, bool& need_redraw) {
 	}
 
 	if(!prime_time()) {
-		add_string_to_buf("Give item: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Give item: {}", FINISH_FIRST));
 		return;
 	}
 	give_thing(stat_window, item_hit);
@@ -1126,7 +1127,7 @@ void handle_drop_item(short item_hit, bool& need_redraw) {
 		add_string_to_buf("Drop item: Cancelled");
 		overall_mode = is_town() ? MODE_TOWN : MODE_COMBAT;
 	} else if(!prime_time())
-		add_string_to_buf("Drop item: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Drop item: {}", FINISH_FIRST));
 	else if(is_out())
 		drop_item(stat_window,item_hit,univ.party.out_loc);
 	else {
@@ -1226,7 +1227,7 @@ void handle_alchemy(bool& need_redraw, bool& need_reprint) {
 	}
 	else if(is_combat()) add_string_to_buf("Alchemy: Not in combat.");
 	else if(!is_town()) add_string_to_buf("Alchemy: Only in town.");
-	else add_string_to_buf("Alchemy: " + FINISH_FIRST);
+	else add_string_to_buf(fmt::format("Alchemy: {}", FINISH_FIRST));
 }
 
 static void handle_town_wait(bool& need_redraw, bool& need_reprint) {
@@ -1297,7 +1298,7 @@ void handle_wait(bool& did_something, bool& need_redraw, bool& need_reprint) {
 		handle_stand_ready(need_redraw, need_reprint);
 		advance_time(did_something, need_redraw, need_reprint);
 	} else {
-		add_string_to_buf("Wait: " + FINISH_FIRST);
+		add_string_to_buf(fmt::format("Wait: {}", FINISH_FIRST));
 		print_buf();
 	}
 }
@@ -1506,7 +1507,7 @@ void handle_trade_places(int which_pc, bool& need_reprint) {
 		record_action("handle_trade_places", boost::lexical_cast<std::string>(which_pc));
 	}
 	if(!prime_time())
-		add_string_to_buf("Trade places: " + FINISH_FIRST, 2);
+		add_string_to_buf(fmt::format("Trade places: {}", FINISH_FIRST), 2);
 	else if(is_combat())
 		add_string_to_buf("Trade places: Can't do this in combat.");
 	else {
@@ -1994,7 +1995,7 @@ void handle_menu_spell(eSpell spell_picked) {
 
 	eSkill spell_type = (*spell_picked).type;
 	if(!prime_time()) {
-		ASB("Cast: " + FINISH_FIRST);
+		ASB(fmt::format("Cast: {}", FINISH_FIRST));
 		print_buf();
 		return;
 	}
@@ -2162,11 +2163,11 @@ void debug_give_item() {
 
 	bool given = univ.current_pc().give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK;
 	if(!given){
-		ASB("Debug: can't give to " + univ.current_pc().name);
+		ASB(fmt::format("Debug: can't give to {}", univ.current_pc().name));
 		given = univ.party.give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
 	}
 	if(!given)
-		ASB("Debug: can't give anyone " + univ.scenario.scen_items[i].full_name);
+		ASB(fmt::format("Debug: can't give anyone {}" + univ.scenario.scen_items[i].full_name));
 
 	univ.scenario.scen_items[i].ident = was_ident;
 	print_buf();
@@ -2186,9 +2187,9 @@ void debug_overburden() {
 	// Give the PC very heavy objects that do nothing:
 	while(pc.give_item(item, GIVE_ALLOW_OVERLOAD) == eBuyStatus::OK){}
 	if(pc.has_space()){
-		ASB("Debug: failed to fill " + pc.name + "'s inventory.");
+		ASB(fmt::format("Debug: failed to fill {}'s inventory.", pc.name));
 	}else{
-		ASB("Debug: filled " + pc.name + "'s inventory.");
+		ASB(fmt::format("Debug: filled {}'s inventory.", pc.name));
 	}
 	print_buf();
 	stat_window = eItemWinMode(univ.cur_pc);
@@ -3009,7 +3010,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			else if(is_out())
 				ASB("Use: not outdoors");
 			else
-				ASB("Use: " + FINISH_FIRST);
+				ASB(fmt::format("Use: {}", FINISH_FIRST));
 			break;
 			
 		case 'b': // Bash door
@@ -3020,7 +3021,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			else if(is_out())
 				ASB("Bash Door: not outdoors");
 			else
-				ASB("Bash Door: " + FINISH_FIRST);
+				ASB(fmt::format("Bash Door: {}", FINISH_FIRST));
 			break;
 			
 		case 'L': // Pick lock
@@ -3031,7 +3032,7 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 			else if(is_out())
 				ASB("Pick Lock: not outdoors");
 			else
-				ASB("Pick Lock: " + FINISH_FIRST);
+				ASB(fmt::format("Pick Lock: {}", FINISH_FIRST));
 			break;
 			
 		case 'A': // Alchemy
@@ -3605,7 +3606,7 @@ void handle_drop_pc() {
 		record_action("handle_drop_pc", "");
 	}
 	if(!prime_time()) {
-		ASB("Delete PC: " + FINISH_FIRST);
+		ASB(fmt::format("Delete PC: {}", FINISH_FIRST));
 		print_buf();
 	}else if(is_combat()){
 		add_string_to_buf("Delete PC: Not in combat.");
@@ -3874,7 +3875,7 @@ static void run_waterfalls(short mode){ // mode 0 - town, 1 - outdoors
 			if(lost >= ter.flag3) {
 				lost = ter.flag3;
 				add_string_to_buf("  (Many supplies lost.)");
-			} else add_string_to_buf("  (" + std::to_string(lost) + " supplies lost.)");
+			} else add_string_to_buf(fmt::format("  ({} supplies lost.)", lost));
 			univ.party.food -= lost;
 		}
 		put_pc_screen();
@@ -4074,7 +4075,7 @@ bool outd_move_party(location destination,bool forced) {
 			univ.party.i_w_c.x = (univ.party.out_loc.x > 47) ? 1 : 0;
 			univ.party.i_w_c.y = (univ.party.out_loc.y > 47) ? 1 : 0;
 			univ.party.loc_in_sec = global_to_local(univ.party.out_loc);
-			add_string_to_buf("Moved: " + dir_str);
+			add_string_to_buf(fmt::format("Moved: {}", dir_str));
 			move_sound(univ.out[real_dest.x][real_dest.y],num_out_moves);
 			num_out_moves++;
 			
@@ -4096,7 +4097,7 @@ bool outd_move_party(location destination,bool forced) {
 			return true;
 		}
 		else {
- 			add_string_to_buf("Blocked: " + dir_str);
+ 			add_string_to_buf(fmt::format("Blocked: {}", dir_str));
 			return false;
 		}
 	}
@@ -4203,7 +4204,7 @@ bool town_move_party(location destination,short forced) {
 				
 			}
 			univ.party.town_loc = destination;
-			add_string_to_buf("Moved: " + dir_str);
+			add_string_to_buf(fmt::format("Moved: {}", dir_str));
 //			place_treasure(destination,5,3);
 			
 			move_sound(univ.town->terrain(destination.x,destination.y),(short) univ.party.age);
@@ -4359,7 +4360,7 @@ void preview_every_dialog_xml() {
 	std::string confirm = dlog.show();
 	if(confirm == "yes"){
 		std::for_each(dialog_paths.begin(), dialog_paths.end(), [](fs::path path) {
-			LOG("Previewing dialog: " + path.stem().string());
+			LOG(fmt::format("Previewing dialog: {}", path.stem().string()));
 			preview_dialog_xml(path);
 		});
 	}
