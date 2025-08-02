@@ -724,7 +724,6 @@ void draw_text_bar(std::pair<std::string,std::string> text) {
 	static bool had_statuses = false;
 	bool has_statuses = false;
 	for(auto next : univ.party.status) {
-		const auto& statInfo = *next.first;
 		if(next.second > 0) {
 			has_statuses = true;
 		}

@@ -2165,7 +2165,7 @@ class cFilePicker {
 		return true;
 	}
 
-	bool dummyShowAuto(fs::path auto_folder, fs::path file) {
+	bool dummyShowAuto(fs::path auto_folder, fs::path) {
 		cFilePicker dummyAuto(auto_folder, false, &me, true);
 		dummyAuto.run();
 		if(dummyAuto.dummy_picker_chose){

@@ -1599,7 +1599,6 @@ bool handle_action(const sf::Event& event, cFramerateLimiter& fps_limiter) {
 	}
 
 	// Otherwise they're in a terrain view mode
-	location cur_loc = is_out() ? univ.party.out_loc : center;
 	auto button_hit = UI::toolbar.button_hit(mainPtr(), the_point, fps_limiter);
 
 	// MARK: Then, handle a button being hit.
@@ -2908,7 +2907,6 @@ bool handle_keystroke(const sf::Event& event, cFramerateLimiter& fps_limiter){
 					chr2 = Key::Z;
 				}
 				else {
-					location cur_loc = is_out() ? univ.party.out_loc : center;
 					location delta = directional_delta[i];
 					if(!handle_screen_shift(delta, need_redraw)){
 						if(handle_terrain_screen_actions(delta, false, false, did_something, need_redraw, need_reprint)){

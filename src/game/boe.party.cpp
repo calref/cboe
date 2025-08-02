@@ -2070,7 +2070,7 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 	return true;
 }
 
-eCastStatus check_can_cast(const cPlayer& pc, eSkill type) {
+static eCastStatus check_can_cast(const cPlayer&, eSkill) {
 	return CAST_OK;	
 }
 
@@ -2080,6 +2080,7 @@ void print_cast_status(eCastStatus status, eSkill type, std::string pc_name) {
 	if(!pc_name.empty()) prefix += " (" + pc_name + ")";
 	prefix += ": ";
 	switch(status){
+		case CAST_OK: break;
 		case NO_CAST_ANAMA:
 			add_string_to_buf(prefix + "You're an Anama!");
 			break;

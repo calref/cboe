@@ -246,11 +246,11 @@ static void handleFatalError(std::string what) {
 	}
 }
 
-void dialog_lost_focus(sf::RenderWindow& win) {
+static void dialog_lost_focus(sf::RenderWindow&) {
 	setWindowFloating(mini_map(), false);
 }
 
-void dialog_gained_focus(sf::RenderWindow& win) {
+static void dialog_gained_focus(sf::RenderWindow&) {
 	setWindowFloating(mini_map(), true);
 	if(map_visible){
 		makeFrontWindow(mini_map());
