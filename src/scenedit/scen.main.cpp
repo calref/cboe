@@ -223,7 +223,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name
 	static cParentless mainWin(mainPtr());
 	sbar.reset(new cScrollbar(mainWin));
 	sbar->setBounds(rect);
-	sbar->set_wheel_event_rect(events_rect);
+	sbar->setWheelEventRect(events_rect);
 	sbar->setPageSize(pgSz);
 	sbar->hide();
 	

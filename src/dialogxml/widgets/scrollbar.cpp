@@ -83,7 +83,7 @@ void cScrollbar::setStyle(eScrollStyle newStyle) {
 	style = newStyle;
 }
 
-void cScrollbar::set_wheel_event_rect(rectangle rect) {
+void cScrollbar::setWheelEventRect(rectangle rect) {
 	this->wheel_event_rect = rect;
 }
 

@@ -124,7 +124,7 @@ public:
 	/// Set the scrollbar style.
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
-	void set_wheel_event_rect(rectangle);
+	void setWheelEventRect(rectangle);
 	virtual void draw() override;
 	virtual bool handle_event(const sf::Event&) override;
 	/// @copydoc cControl::getSupportedHandlers

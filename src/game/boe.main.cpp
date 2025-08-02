@@ -318,7 +318,7 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name
 	sbar->setMaximum(max);
 	sbar->setPosition(start);
 	sbar->setPageSize(pgSz);
-	sbar->set_wheel_event_rect(events_rect);
+	sbar->setWheelEventRect(events_rect);
 	sbar->hide();
 	
 	drawable_mgr.add_drawable(UI_LAYER_DEFAULT, name, sbar);
