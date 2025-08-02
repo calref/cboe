@@ -380,6 +380,12 @@ std::vector<scen_header_type> build_scen_headers() {
 			}
 		}
 	}else{
+		scen_header_type scen_head;
+
+		// Include Bandit Busywork in custom section:
+		if(load_scenario_header(progDir / "Blades of Exile Scenarios/busywork.boes", scen_head))
+			scen_headers.push_back(scen_head);
+
 		for(fs::path scenDir : all_scen_dirs()){
 			std::cout << scenDir << std::endl;
 			fs::recursive_directory_iterator iter(scenDir);
@@ -394,7 +400,6 @@ std::vector<scen_header_type> build_scen_headers() {
 						continue;
 					}
 
-					scen_header_type scen_head;
 					if(load_scenario_header(iter->path(), scen_head))
 						scen_headers.push_back(scen_head);
 				}
