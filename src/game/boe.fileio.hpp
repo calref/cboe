@@ -37,4 +37,7 @@ void try_auto_save(std::string reason);
 // Turn lower-case and strip articles from the front of a scenario title, for alphabetization
 std::string name_alphabetical(std::string scenario_name);
 
+// Find extra files packaged with legacy scenarios (such as readme, prefab party):
+std::vector<fs::path> extra_files(fs::path scen_file);
+
 #endif

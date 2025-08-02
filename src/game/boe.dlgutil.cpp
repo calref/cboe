@@ -28,6 +28,7 @@
 #include "utility.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/btnpanel.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "gfx/render_shapes.hpp"
 #include "tools/winutil.hpp"
@@ -60,8 +61,10 @@ extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
 extern cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
+extern void post_load();
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1825,12 +1828,55 @@ class cChooseScenario {
 			prefab.prog_make_ver[1] = 0;
 			prefab.prog_make_ver[2] = 0;
 			me.setResult<scen_header_type>(prefab);
+			me.toast(true);
 		} else {
 			int scen_hit = which + (page - 1) * 3;
 			if(scen_hit >= scen_headers.size()) return false;
-			me.setResult<scen_header_type>(scen_headers[scen_hit]);
+			
+			// Show text files, Offer to load prefab party
+			auto scen = scen_headers[scen_hit];
+			std::vector<fs::path> files = extra_files(locate_scenario(scen.file));
+			if(!files.empty()){
+				std::vector<std::string> choices;
+				std::vector<std::function<void(cButtonPanel&)>> handlers;
+
+				for(fs::path file : files){
+					std::string ext = file.extension().string();
+					std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+					if(ext == ".sav"){
+						choices.push_back("Load premade party: " + file.filename().string());
+						handlers.push_back([file](cButtonPanel&) -> void {
+							if(!load_party(file, univ, spec_scen_g)) {
+								std::cout << "Failed to load save file: " << file << std::endl;
+							}else{
+								finish_load_party();
+								if(overall_mode != MODE_STARTUP)
+									post_load();
+							}
+						});
+					}else{
+						choices.push_back("Open file: " + file.filename().string());
+						handlers.push_back([file](cButtonPanel&) -> void {
+							launchURL("file://" + file.string());
+						});
+					}
+				}
+
+				cButtonPanel panel(choices, handlers, scen.name, "Launch", &me);
+				dynamic_cast<cPict&>(panel->getControl("pic")).setPict(scen.intro_pic,PIC_SCEN);
+				if(panel.show()){
+					// Launch pressed.
+					me.setResult<scen_header_type>(scen);
+					me.toast(true);
+				};
+			}
+			// No extra files. Just launch
+			else{
+				me.setResult<scen_header_type>(scen);
+				me.toast(true);
+			}
+
 		}
-		me.toast(true);
 		return true;
 	}
 

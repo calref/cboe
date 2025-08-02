@@ -552,3 +552,27 @@ void try_auto_save(std::string reason) {
 	}
 	print_buf();
 }
+
+std::vector<std::string> extra_extensions = {".sav", ".txt", ".rtf", ".htm", ".html"};
+
+std::vector<fs::path> extra_files(fs::path scen_file) {
+	std::vector<fs::path> files;
+
+	std::string scen_extension = scen_file.extension().string();
+	std::transform(scen_extension.begin(), scen_extension.end(), scen_extension.begin(), tolower);
+	if(scen_extension != ".exs") return files;
+
+	fs::path directory = scen_file.parent_path();
+
+	fs::recursive_directory_iterator file_iter(directory);
+	for(; file_iter != fs::recursive_directory_iterator(); file_iter++) {
+		fs::path file = *file_iter;
+		std::string extension = file.extension().string();
+		std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+		if(std::find(extra_extensions.begin(), extra_extensions.end(), extension) != extra_extensions.end()){
+			files.push_back(file);
+		}
+	}
+
+	return files;
+}
