@@ -855,7 +855,7 @@ static void save_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 	the_node.jumpto = me["jump"].getTextAsNum();
 }
 
-static bool preview_spec_enc_dlog(cDialog& me, std::string item_hit, cSpecial& special, short mode) {
+static bool preview_spec_enc_dlog(cDialog& me, std::string, cSpecial& special, short mode) {
 	eSpecCtxType cur_type = static_cast<eSpecCtxType>(mode);
 
 	// Not pretty, but works:

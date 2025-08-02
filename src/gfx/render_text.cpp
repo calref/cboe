@@ -16,7 +16,7 @@
 #include <utility>
 #include "winutil.hpp"
 
-sf::Font& get_font_rsrc(eFont font) {
+static sf::Font& get_font_rsrc(eFont font) {
 	switch(font) {
 		case FONT_PLAIN:
 			return *ResMgr::fonts.get("plain");
@@ -38,7 +38,7 @@ void TextStyle::applyTo(sf::Text& text, double scale) const {
 	if(font_texture.getSize().x < min_texture_size){
 		int texture_scale = 2;
 		while(128 * texture_scale < min_texture_size){
-			texture_scale << 1;
+			texture_scale <<= 1;
 		}
 		if(!font_texture.create(128 * texture_scale, 128 * texture_scale)){
 			throw std::string { "Failed to create large enough font texture!" };
@@ -288,7 +288,6 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 
 	if(mode == eTextMode::ELLIPSIS){
 		str = truncate_with_ellipsis(str, options.style, dest_rect.width());
-		mode = eTextMode::LEFT_TOP;
 	}
 	if(mode == eTextMode::WRAP){
 		break_info_t break_info = options.break_info;
@@ -321,6 +320,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 				adjust_y = moveTo.y - dest_rect.top;
 				break;
 			case eTextMode::LEFT_TOP:
+			case eTextMode::ELLIPSIS:
 				moveTo = location(dest_rect.left + adjust_x, dest_rect.top + adjust_y);
 				break;
 			case eTextMode::LEFT_BOTTOM:

@@ -97,8 +97,6 @@ rectangle search_field_rect;
 
 extern void set_up_apple_events();
 
-extern void clamp_view_center(cTown* town);
-
 // TODO: these should be members of some global entity instead of being here
 std::unordered_map<std::string, std::shared_ptr <iEventListener>> event_listeners;
 cDrawableManager drawable_mgr;
@@ -357,7 +355,7 @@ void init_scened(int argc, char* argv[]) {
 	// 1. it is very unsafe to pop from the stack while any edit operation is underway
 	// 2. the menu item must be disabled for cDialog to receive undo/redo keyboard shortcuts
 	//    for text field editing
-	cDialog::onOpen = cDialog::onClose = [](const cDialog& dialog) {
+	cDialog::onOpen = cDialog::onClose = [](const cDialog&) {
 		update_edit_menu();
 	};
 #ifdef SFML_SYSTEM_MACOS

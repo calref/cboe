@@ -35,7 +35,7 @@ void clear_profile_info() {
 	context_stack.clear();
 }
 
-bool compare_time(const std::pair<std::string, sf::Time>& a, const std::pair<std::string, sf::Time>& b) {
+static bool compare_time(const std::pair<std::string, sf::Time>& a, const std::pair<std::string, sf::Time>& b) {
 	return a.second > b.second;
 }
 

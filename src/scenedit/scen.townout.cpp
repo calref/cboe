@@ -382,7 +382,7 @@ static bool edit_placed_item_abil(cDialog& me, std::string item_hit, cTown::cIte
 	return true;
 }
 
-static bool edit_placed_item_loc(cDialog& me, std::string item_hit, cTown::cItem& item, const short which) {
+static bool edit_placed_item_loc(cDialog& me, std::string, cTown::cItem& item, const short which) {
 	cArea* area = get_current_area();
 	cLocationPicker picker(item.loc, *area, "Move Item", &me);
 	item.loc = picker.run();
@@ -855,7 +855,7 @@ void edit_town_details() {
 	town_dlg["cancel"].attachClickHandler(std::bind(&cDialog::toast, &town_dlg, false));
 	town_dlg["chop"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10000, "The day the town becomes abandoned", "-1 if it doesn't"));
 	town_dlg["key"].attachFocusHandler(std::bind(check_range_msg, _1, _2, _3, -1, 10, "The event which prevents the town from becoming abandoned", "-1 or 0 for none"));
-	town_dlg["choose-key"].attachClickHandler([](cDialog& me, std::string id, bool losing) -> bool {
+	town_dlg["choose-key"].attachClickHandler([](cDialog& me, std::string, bool) -> bool {
 		int value = me["key"].getTextAsNum();
 		value = choose_text_editable(scenario.evt_names, value, &me, "Select an event:");
 		me["key"].setTextToNum(value);
@@ -1181,7 +1181,7 @@ void edit_town_wand() {
 }
 
 // return true if the left/right buttons can continue their shift
-bool save_basic_dlog(cDialog& me, short& which, bool need_confirm) {
+static bool save_basic_dlog(cDialog& me, short& which, bool need_confirm) {
 	auto& the_node = town->talking.people[which];
 
 	auto new_node = the_node;

@@ -424,7 +424,7 @@ void redraw_screen() {
 
 extern size_t num_strs(short mode); // defined in scen.keydlgs.cpp
 
-void apply_mode_buttons() {
+static void apply_mode_buttons() {
 	right_button_status.clear();
 	int num_options;
 	switch(overall_mode){

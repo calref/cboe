@@ -2680,7 +2680,6 @@ void set_terrain(location l,ter_num_t terrain_type,stroke_ter_changes_t& stroke_
 			}
 		}
 		static_cast<location&>(*iter) = l;
-		ter_num_t terrain_type = cur_area->terrain(iter->x,iter->y);
 		// Let the designer know the terrain was placed:
 		draw_terrain();
 		redraw_screen();

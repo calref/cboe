@@ -10,6 +10,8 @@
 #include "scenario/scenario.hpp"
 #include "scenario/area.hpp"
 #include "scen.actions.hpp"
+#include "scen.core.hpp"
+#include "scen.townout.hpp"
 
 extern bool editing_town;
 extern short cur_town;
@@ -23,13 +25,8 @@ extern cOutdoors* current_terrain;
 extern void start_town_edit();
 extern void start_out_edit();
 extern void redraw_screen();
-extern void set_current_town(int,bool first_restore = false);
-extern void set_current_out(location,bool continuous_shift = false,bool first_restore = false);
 extern eScenMode overall_mode;
 extern eDrawMode draw_mode;
-extern void apply_outdoor_shift(rectangle mod);
-extern void clamp_current_section();
-extern void clamp_view_center(cTown* town);
 extern void make_field_type(short i,short j,eFieldType field_type,field_stroke_t& stroke);
 extern void take_field_type(short i,short j,eFieldType field_type,clear_field_stroke_t& stroke);
 
@@ -727,7 +724,7 @@ bool aToggleOutFields::redo_me() {
 	return true;
 }
 
-fs::path get_pic_dir() {
+static fs::path get_pic_dir() {
 	extern fs::path tempDir;
 	extern std::string scenario_temp_dir_name;
 	fs::path pic_dir = tempDir/scenario_temp_dir_name/"graphics";
@@ -837,8 +834,6 @@ bool aReplaceGraphicsSheet::redo_me() {
 
 	return true;
 }
-
-extern fs::path get_snd_path(size_t index);
 
 bool aCreateDeleteSound::undo_me() {
 	fs::remove(get_snd_path(index).string());

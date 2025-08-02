@@ -255,7 +255,6 @@ void clip_rect(sf::RenderTarget& where, rectangle rect) {
 	}
 
 	setActiveRenderTarget(where);
-	auto viewport = where.getView().getViewport();
 	rectangle winRect(where);
 	location pivot = rect.bottomLeft();
 	pivot = where.mapCoordsToPixel(pivot);

@@ -165,12 +165,12 @@ static void draw_stored_scale_aware_text(sf::RenderTexture& texture, sf::RenderT
 }
 
 void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,sf::RenderTarget& targ_gworld,rectangle targ_rect,sf::BlendMode mode, sf::Color colour) {
-	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, targ_gworld, targ_rect, mode);
+	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, targ_gworld, targ_rect, mode, colour);
 	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
 
 void rect_draw_some_item(sf::RenderTexture& src_render_gworld,rectangle src_rect,const sf::Texture& mask_gworld,sf::RenderTarget& targ_gworld,rectangle targ_rect, sf::Color colour) {
-	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, mask_gworld, targ_gworld, targ_rect);
+	rect_draw_some_item(src_render_gworld.getTexture(), src_rect, mask_gworld, targ_gworld, targ_rect, colour);
 	draw_stored_scale_aware_text(src_render_gworld, targ_gworld, targ_rect);
 }
 
