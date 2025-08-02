@@ -319,6 +319,7 @@ env.Append(CPPPATH=Split("""
 	#src/
 	#src/fileio/gzstream/
 	#src/fileio/xml-parser/
+	#src/deps/fmtlib/include/
 """))
 
 env['CONFIGUREDIR'] = '#build/conf'
