@@ -87,6 +87,10 @@ void cScrollbar::setWheelEventRect(rectangle rect) {
 	this->wheel_event_rect = rect;
 }
 
+rectangle cScrollbar::getWheelEventRect() const {
+	return wheel_event_rect;
+}
+
 long cScrollbar::getPosition() const {
 	return pos;
 }

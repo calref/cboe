@@ -232,20 +232,21 @@ static void init_sbar(std::shared_ptr<cScrollbar>& sbar, const std::string& name
 }
 
 static void init_scrollbars() {
-	right_sbar_rect.top = RIGHT_AREA_UL_Y - 1;
+	right_sbar_rect.top = RIGHT_AREA_UL_Y;
 	right_sbar_rect.left = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1 - 16;
-	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT + 1;
+	right_sbar_rect.bottom = RIGHT_AREA_UL_Y + RIGHT_AREA_HEIGHT;
 	right_sbar_rect.right = RIGHT_AREA_UL_X + RIGHT_AREA_WIDTH - 1;
 	rectangle pal_sbar_rect = terrain_buttons_rect;
-	pal_sbar_rect.offset(RIGHT_AREA_UL_X,RIGHT_AREA_UL_Y);
 	pal_sbar_rect.left = pal_sbar_rect.right - 16;
-	pal_sbar_rect.height() = 17 * 16;
 	
-	rectangle const right_sbar_event_rect { 5, 287, 405, 577 };
-	rectangle const pal_sbar_event_rect   { 5, 287, 279, 581 };
+	rectangle right_sbar_event_rect;
+	right_sbar_event_rect.top = RIGHT_AREA_UL_Y;
+	right_sbar_event_rect.left = RIGHT_AREA_UL_X;
+	right_sbar_event_rect.width() = RIGHT_AREA_WIDTH;
+	right_sbar_event_rect.height() = RIGHT_AREA_HEIGHT;
 		
 	init_sbar(right_sbar, "right_sbar", right_sbar_rect, right_sbar_event_rect, NRSONPAGE - 1);
-	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, pal_sbar_event_rect, 16);
+	init_sbar(pal_sbar, "pal_sbar", pal_sbar_rect, terrain_buttons_rect, 16);
 }
 
 static void init_search_field() {
@@ -377,13 +378,13 @@ void init_scened(int argc, char* argv[]) {
 		
 	cen_x = 18;
 	cen_y = 18;
-		
+	
+	Set_up_win();
 	init_scrollbars();
 	init_search_field();
 	init_lb();
 	init_rb();
 	
-	Set_up_win();
 	init_screen_locs();
 	load_graphics();
 	cDialog::init();

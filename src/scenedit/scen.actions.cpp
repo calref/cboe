@@ -3062,6 +3062,12 @@ void start_town_edit() {
 	shut_down_menus(2);
 	right_sbar->hide();
 	pal_sbar->show();
+	rectangle pal_rect = pal_sbar->getWheelEventRect();
+	pal_rect.height() = 1 + TYPE_ROWS_DRAWING * 17;
+	pal_sbar->setWheelEventRect(pal_rect);
+	pal_rect = pal_sbar->getBounds();
+	pal_rect.height() = 1 + TYPE_ROWS_DRAWING * 17;
+	pal_sbar->setBounds(pal_rect);
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
 	place_location();
 	// TODO this is hardcoding cave floor and grass as the only ground terrains
@@ -3107,6 +3113,12 @@ void start_out_edit() {
 	set_up_type_buttons(true);
 	right_sbar->hide();
 	pal_sbar->show();
+	rectangle pal_rect = pal_sbar->getWheelEventRect();
+	pal_rect.height() = 1 + TYPE_ROWS_DRAWING * 17;
+	pal_sbar->setWheelEventRect(pal_rect);
+	pal_rect = pal_sbar->getBounds();
+	pal_rect.height() = 1 + TYPE_ROWS_DRAWING * 17;
+	pal_sbar->setBounds(pal_rect);
 	shut_down_menus(4);
 	shut_down_menus(1);
 	set_string("Drawing mode",scenario.ter_types[current_terrain_type].name);
@@ -3125,6 +3137,12 @@ void start_out_edit() {
 void start_type_editing(eDrawMode mode) {
 	right_sbar->hide();
 	pal_sbar->show();
+	rectangle pal_rect = pal_sbar->getWheelEventRect();
+	pal_rect.height() = terrain_buttons_rect.height();
+	pal_sbar->setWheelEventRect(pal_rect);
+	pal_rect = pal_sbar->getBounds();
+	pal_rect.height() = terrain_buttons_rect.height();
+	pal_sbar->setBounds(pal_rect);
 	overall_mode = MODE_EDIT_TYPES;
 	// Remember non-drawing modes
 	scenario.editor_state.overall_mode = MODE_EDIT_TYPES;

@@ -125,6 +125,7 @@ public:
 	/// @param newStyle The new style.
 	void setStyle(eScrollStyle newStyle);
 	void setWheelEventRect(rectangle);
+	rectangle getWheelEventRect() const;
 	virtual void draw() override;
 	virtual bool handle_event(const sf::Event&) override;
 	/// @copydoc cControl::getSupportedHandlers
