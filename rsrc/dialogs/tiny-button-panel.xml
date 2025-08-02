@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<?xml-stylesheet href="dialog.xsl" type="text/xsl"?>
+<dialog defbtn='done' escbtn='cancel'>
+	<pict name='pic' type='dlog' num='16' top='8' left='8'/>
+	<text name='title' size='large' top='6' left='50' width='256' height='14'>Select:</text>
+	<!-- Column 1 -->
+	<button type='tiny' name='button1' top='54' left='8'/>
+	<button type='tiny' name='button2' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+	<button type='tiny' name='button3' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+	<button type='tiny' name='button4' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+	<button type='tiny' name='button5' relative='pos-in pos-in' rel-anchor='prev' top='15' left='0'/>
+	<button name='left' type='left' def-key='left' relative='pos-in pos-in' anchor='button5' top='19' left='0'/>
+	<button name='right' type='right' def-key='right' relative='pos-in pos-in' rel-anchor='prev' top='0' left='63'/>
+	<button name='cancel' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='0' left='101'>Cancel</button>
+	<button name='done' type='regular' relative='pos-in pos-in' rel-anchor='prev' top='0' left='66'>OK</button>
+</dialog>

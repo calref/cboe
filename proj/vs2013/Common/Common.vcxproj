@@ -192,6 +192,7 @@
     <Xml Include="..\..\..\rsrc\dialogs\welcome.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\dialogxml\dialogs\btnpanel.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\keycodes.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\dialogs\3choice.cpp" />
     <ClCompile Include="..\..\..\src\dialogxml\dialogs\choicedlog.cpp" />
@@ -287,6 +288,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\src\alchemy.hpp" />
     <ClInclude Include="..\..\..\src\damage.hpp" />
+    <ClInclude Include="..\..\..\src\dialogxml\dialogs\btnpanel.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\keycodes.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\3choice.hpp" />
     <ClInclude Include="..\..\..\src\dialogxml\dialogs\choicedlog.hpp" />
