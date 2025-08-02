@@ -91,9 +91,6 @@ void handle_startup_button_click(eStartButton btn, eKeyMod mods) {
 
 					force_party = true;
 					start_new_game(true);
-				} else {
-					cChoiceDlog("need-party").show();
-					break;
 				}
 			}
 			

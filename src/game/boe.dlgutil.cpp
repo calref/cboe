@@ -65,6 +65,8 @@ extern cCustomGraphics spec_scen_g;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
 extern void post_load();
+extern void start_new_game(bool force = false);
+extern void do_load();
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -1815,6 +1817,7 @@ class cChooseScenario {
 	
 	bool doSelectScenario(int which) {
 		int page = dynamic_cast<cStack&>(me["list"]).getPage();
+		scen_header_type scen;
 		if(page == 0) {
 			scen_header_type prefab;
 			switch(which) {
@@ -1827,56 +1830,75 @@ class cChooseScenario {
 			prefab.prog_make_ver[0] = 2;
 			prefab.prog_make_ver[1] = 0;
 			prefab.prog_make_ver[2] = 0;
-			me.setResult<scen_header_type>(prefab);
-			me.toast(true);
+			scen = prefab;
 		} else {
 			int scen_hit = which + (page - 1) * 3;
 			if(scen_hit >= scen_headers.size()) return false;
-			
-			// Show text files, Offer to load prefab party
-			auto scen = scen_headers[scen_hit];
-			std::vector<fs::path> files = extra_files(locate_scenario(scen.file));
-			if(!files.empty()){
-				std::vector<std::string> choices;
-				std::vector<std::function<void(cButtonPanel&)>> handlers;
-
-				for(fs::path file : files){
-					std::string ext = file.extension().string();
-					std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
-					if(ext == ".sav"){
-						choices.push_back("Load premade party: " + file.filename().string());
-						handlers.push_back([file](cButtonPanel&) -> void {
-							if(!load_party(file, univ, spec_scen_g)) {
-								std::cout << "Failed to load save file: " << file << std::endl;
-							}else{
-								finish_load_party();
-								if(overall_mode != MODE_STARTUP)
-									post_load();
-							}
-						});
-					}else{
-						choices.push_back("Open file: " + file.filename().string());
-						handlers.push_back([file](cButtonPanel&) -> void {
-							launchURL("file://" + file.string());
-						});
-					}
+			scen = scen_headers[scen_hit];
+		}
+		std::vector<std::string> choices;
+		std::vector<std::function<void(cButtonPanel&)>> handlers;
+		// If no party is loaded, offer to load default or create new
+		if(!party_in_memory){
+			choices.push_back("Create new party");
+			handlers.push_back([](cButtonPanel& dlg) -> void {
+				start_new_game();
+				if(party_in_memory){
+					dlg->getControl("done").show();
 				}
+			});
+			choices.push_back("Load a party");
+			handlers.push_back([](cButtonPanel& dlg) -> void {
+				do_load();
+				if(party_in_memory){
+					dlg->getControl("done").show();
+				}
+			});
+		}
 
-				cButtonPanel panel(choices, handlers, scen.name, "Launch", &me);
-				dynamic_cast<cPict&>(panel->getControl("pic")).setPict(scen.intro_pic,PIC_SCEN);
-				if(panel.show()){
-					// Launch pressed.
-					me.setResult<scen_header_type>(scen);
-					me.toast(true);
-				};
+		// Show text files, Offer to load prefab party
+		std::vector<fs::path> files = extra_files(locate_scenario(scen.file));
+		for(fs::path file : files){
+			std::string ext = file.extension().string();
+			std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+			if(ext == ".sav"){
+				choices.push_back("Load premade party: " + file.filename().string());
+				handlers.push_back([file](cButtonPanel& dlg) -> void {
+					if(!load_party(file, univ, spec_scen_g)) {
+						std::cout << "Failed to load save file: " << file << std::endl;
+					}else{
+						finish_load_party();
+						if(overall_mode != MODE_STARTUP)
+							post_load();
+						dlg->getControl("done").show();
+					}
+				});
+			}else{
+				choices.push_back("Open file: " + file.filename().string());
+				handlers.push_back([file](cButtonPanel&) -> void {
+					launchURL("file://" + file.string());
+				});
 			}
-			// No extra files. Just launch
-			else{
+		}
+
+		if(!choices.empty()){
+			cButtonPanel panel(choices, handlers, scen.name, "Launch", &me);
+			if(!party_in_memory){
+				panel->getControl("done").hide();
+			}
+			dynamic_cast<cPict&>(panel->getControl("pic")).setPict(scen.intro_pic,PIC_SCEN);
+			if(panel.show()){
+				// Launch pressed.
 				me.setResult<scen_header_type>(scen);
 				me.toast(true);
-			}
-
+			};
 		}
+		// No extra files. Just launch
+		else{
+			me.setResult<scen_header_type>(scen);
+			me.toast(true);
+		}
+
 		return true;
 	}
 
