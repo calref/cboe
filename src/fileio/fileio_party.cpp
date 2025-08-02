@@ -284,6 +284,7 @@ bool load_party_v1(fs::path file_to_load, cUniverse& real_univ, bool town_restor
 		univ.file = path;
 	}else{
 		univ.party.scen_name = "";
+		store_party.scen_name[0] = '\0';
 	}
 	
 	univ.party.import_legacy(store_party, univ);
