@@ -340,6 +340,8 @@ std::string name_alphabetical(std::string a) {
 	// The scenario editor will let you prepend whitespace to a scenario name :(
 	boost::algorithm::trim_left(a);
 	std::transform(a.begin(), a.end(), a.begin(), tolower);
+	// Some party makers start with the name of the corresponding scenario in quotes
+	if(a.substr(0,1) == "\"") a.erase(a.begin(), a.begin() + 1);
 	if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
 	else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
 	return a;
