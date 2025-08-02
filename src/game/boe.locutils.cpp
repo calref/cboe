@@ -138,6 +138,7 @@ bool loc_off_world(location p1) {
 }
 
 bool loc_off_act_area(location p1) {
+	if(is_out()) return false; // How should this check be handled?
 	if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
 		(p1.y > univ.town->in_town_rect.top) && (p1.y < univ.town->in_town_rect.bottom))
 	 	return false;
