@@ -236,7 +236,7 @@ elif platform == "win32":
 		include_paths=[path.join(vcpkg_installed, 'include')] + vcpkg_other_includes
 		env.Append(
 			LINKFLAGS=['/SUBSYSTEM:WINDOWS','/ENTRY:mainCRTStartup',f'/MACHINE:X{arch_short}'],
-			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp'],
+			CXXFLAGS=['/EHsc','/MD','/FIglobal.hpp','/utf-8'],
 			CPPPATH=include_paths,
 			LIBPATH=[path.join(vcpkg_installed, 'lib')] + vcpkg_other_libs + vcpkg_other_bins,
 			LIBS=Split("""
