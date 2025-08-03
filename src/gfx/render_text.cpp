@@ -108,9 +108,17 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 	} while(start < upper_bound);
 }
 
+std::map<std::string, std::string> substitutions = {
+	{"–", "--"}
+};
+
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style) {
 	break_info_t break_info;
 	if(str.empty()) return break_info; // Nothing to do!
+
+	for(auto it : substitutions){
+		boost::replace_all(str, it.first, it.second);
+	}
 
 	sf::Text str_to_draw;
 	style.applyTo(str_to_draw);
@@ -240,10 +248,6 @@ std::string truncate_with_ellipsis(std::string str, const TextStyle& style, int 
 	}
 	return str;
 }
-
-std::map<std::string, std::string> substitutions = {
-	{"–", "--"}
-};
 
 static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,std::string str,text_params_t& options) {
 	if(str.empty()) return; // Nothing to do!
