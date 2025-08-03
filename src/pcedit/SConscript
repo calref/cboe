@@ -8,6 +8,8 @@ pced_sources = Split("""
 	pc.graphics.cpp
 	pc.main.cpp
 	../fileio/fileio_party.cpp
+	../deps/fmtlib/src/format.cc
+	../deps/fmtlib/src/os.cc
 """)
 
 if str(platform) == "darwin":
