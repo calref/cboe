@@ -657,16 +657,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 		if(bonus_dam)
 			inflicted_bonus_damage   = damage_target(target, bonus_dam, dmg_tp, 0, false, who_att, race);
 
-		if(inflicted_weapon_damage || inflicted_special_damage || inflicted_bonus_damage){
-			if(cCreature* monst = dynamic_cast<cCreature*>(&target)) {
-				monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
-			} else if(cPlayer* who = dynamic_cast<cPlayer*>(&target)) {
-				std::string msg = "  " + who->name + " takes " + std::to_string(inflicted_weapon_damage);
-				if(inflicted_special_damage + inflicted_bonus_damage)
-					msg += '+' + std::to_string(inflicted_special_damage + inflicted_bonus_damage);
-				add_string_to_buf(msg + '.');
-			}
-		}
+		target.damaged_msg(inflicted_weapon_damage, inflicted_special_damage + inflicted_bonus_damage);
 		if(do_poison) {
 			// poison
 			if(attacker.status[eStatus::POISONED_WEAPON] > 0) {
@@ -1667,19 +1658,14 @@ void fire_missile(location target) {
 					inflicted_weapon_damage = damage_monst(*monst, univ.cur_pc, r2, eDamageType::WEAPON,13,false);
 					if(spec_dam > 0)
 						inflicted_special_damage = damage_monst(*monst, univ.cur_pc, spec_dam, dmg_tp, 0,false);
-					if(inflicted_weapon_damage || inflicted_special_damage)
-						monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
+					monst->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
 				} else if(cPlayer* who = dynamic_cast<cPlayer*>(victim)) {
 					// TODO: Should the race really be included here? Maybe it's meant for melee attacks only.
 					eRace race = missile_firer.race;
 					inflicted_weapon_damage = damage_pc(*who, r2, eDamageType::WEAPON, race, 0, false);
 					if(spec_dam > 0)
 						inflicted_special_damage = damage_pc(*who, spec_dam, dmg_tp, race, 0, false);
-					if(inflicted_weapon_damage || inflicted_special_damage) {
-						std::string msg = "  " + who->name + " takes " + std::to_string(inflicted_weapon_damage);
-						if(spec_dam) msg += '+' + std::to_string(inflicted_special_damage);
-						add_string_to_buf(msg + '.');
-					}
+					who->damaged_msg(inflicted_weapon_damage, inflicted_special_damage);
 				}
 				// poison
 				if(missile_firer.status[eStatus::POISONED_WEAPON] > 0 && missile_firer.weap_poisoned.slot == ammo_inv_slot) {

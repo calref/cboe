@@ -284,6 +284,7 @@ void iLiving::cast_spell_note(eSpell spell) const {
 
 void iLiving::damaged_msg(int how_much,int how_much_spec) const {
 	if(!print_result) return;
+	if(how_much == 0 && how_much_spec == 0) return;
 	if(how_much_spec > 0)
 		print_result(fmt::format("  {} takes {}+{}", get_name(), how_much, how_much_spec));
 	else print_result(fmt::format("  {} takes {}", get_name(), how_much));
