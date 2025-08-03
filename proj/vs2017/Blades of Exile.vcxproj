@@ -83,6 +83,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -101,6 +102,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -117,6 +119,7 @@
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OmitFramePointers>false</OmitFramePointers>
@@ -136,6 +139,7 @@
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <OmitFramePointers>false</OmitFramePointers>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
