@@ -1197,11 +1197,10 @@ static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rec
 	dest_rect.bottom = (src_rect.bottom - 1) % 36 + 1;
 	dest_rect.left = src_rect.left % 28;
 	dest_rect.right = (src_rect.right - 1) % 28 + 1;
-	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
 	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
-	render.display();
+	// render.display(); // Using it as a mask, we don't need to flip
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
 	mask->update(render.getTexture().copyToImage());
