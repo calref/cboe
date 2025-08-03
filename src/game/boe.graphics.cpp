@@ -1186,7 +1186,12 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 }
 
 static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rect) {
-	sf::RenderTexture render;
+	static sf::RenderTexture render;
+	static bool init = false;
+	if(!init){
+		render.create(28, 36);
+		init = true;
+	}
 	rectangle dest_rect;
 	dest_rect.top = src_rect.top % 36;
 	dest_rect.bottom = (src_rect.bottom - 1) % 36 + 1;
