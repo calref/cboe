@@ -39,6 +39,7 @@
 #include "tools/prefs.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
 
 
 #ifndef MSBUILD_GITREV
@@ -375,36 +376,35 @@ void draw_startup_stats() {
 			}
 			style.pointSize = 12;
 			pc_rect.offset(12,16);
-			std::string status = "Level " + std::to_string(univ.party[i].level);
+			std::string status = "Level {} {}", raceName;
 			switch(univ.party[i].main_status) {
 				case eMainStatus::ALIVE:
 					switch(univ.party[i].race) {
-						case eRace::HUMAN: status += " Human"; break;
-						case eRace::NEPHIL: status += " Nephilim"; break;
-						case eRace::SLITH: status += " Slithzerikai"; break;
-						case eRace::VAHNATAI: status += " Vahnatai"; break;
-						case eRace::REPTILE: status += " Reptile"; break;
-						case eRace::BEAST: status += " Beast"; break;
-						case eRace::IMPORTANT: status += " V.I.P."; break;
-						case eRace::MAGE: status += " Human Mage"; break;
-						case eRace::PRIEST: status += " Human Priest"; break;
-						case eRace::HUMANOID: status += " Humanoid"; break;
-						case eRace::DEMON: status += " Demon"; break;
-						case eRace::UNDEAD: status += " Undead"; break;
-						case eRace::GIANT: status += " Giant"; break;
-						case eRace::SLIME: status += " Slime"; break;
-						case eRace::STONE: status += " Golem"; break;
-						case eRace::BUG: status += " Bug"; break;
-						case eRace::DRAGON: status += " Dragon"; break;
-						case eRace::MAGICAL: status += " Magical Creature"; break;
-						case eRace::PLANT: status += " Plant"; break;
-						case eRace::BIRD: status += " Bird"; break;
-						default: status += " *ERROR INVALID RACE*"; break;
+						case eRace::HUMAN: raceName += "Human"; break;
+						case eRace::NEPHIL: raceName += "Nephilim"; break;
+						case eRace::SLITH: raceName += "Slithzerikai"; break;
+						case eRace::VAHNATAI: raceName += "Vahnatai"; break;
+						case eRace::REPTILE: raceName += "Reptile"; break;
+						case eRace::BEAST: raceName += "Beast"; break;
+						case eRace::IMPORTANT: raceName += "V.I.P."; break;
+						case eRace::MAGE: raceName += "Human Mage"; break;
+						case eRace::PRIEST: raceName += "Human Priest"; break;
+						case eRace::HUMANOID: raceName += "Humanoid"; break;
+						case eRace::DEMON: raceName += "Demon"; break;
+						case eRace::UNDEAD: raceName += "Undead"; break;
+						case eRace::GIANT: raceName += "Giant"; break;
+						case eRace::SLIME: raceName += "Slime"; break;
+						case eRace::STONE: raceName += "Golem"; break;
+						case eRace::BUG: raceName += "Bug"; break;
+						case eRace::DRAGON: raceName += "Dragon"; break;
+						case eRace::MAGICAL: raceName += "Magical Creature"; break;
+						case eRace::PLANT: raceName += "Plant"; break;
+						case eRace::BIRD: raceName += "Bird"; break;
+						default: status += "*ERROR INVALID RACE*"; break;
 					}
-					win_draw_string(mainPtr(),pc_rect,status,eTextMode::WRAP,style);
+					win_draw_string(mainPtr(),pc_rect,fmt::format(status, univ.party[i].level, raceName),eTextMode::WRAP,style);
 					pc_rect.offset(0,13);
-					status = "Health " + std::to_string(univ.party[i].max_health);
-					status += ", Spell pts. " + std::to_string(univ.party[i].max_sp);
+					status = fmt::format("Health {}, Spell pts. {}", univ.party[i].max_health, univ.party[i].max_sp);
 					break;
 				case eMainStatus::DEAD:
 					status = "Dead";
