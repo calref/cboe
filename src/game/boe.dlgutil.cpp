@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <string>
 #include <boost/algorithm/string/replace.hpp>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+#include <fmt/compile.h>
 
 #include "boe.global.hpp"
 
@@ -772,15 +775,15 @@ static void fill_job_bank(cDialog& me, job_bank_t& bank, std::string) {
 		std::string id = std::to_string(i + 1);
 		if(bank.jobs[i] >= 0 && bank.jobs[i] < univ.scenario.quests.size()) {
 			cQuest& quest = univ.scenario.quests[bank.jobs[i]];
-			std::string description = quest.descr;
+			std::vector<std::string> lines{quest.descr};
 			if(quest.deadline > 0) {
 				if(quest.deadline_is_relative)
-					description += " Must be completed in " + std::to_string(quest.deadline) + " days.";
-				else description += " Must be completed by day " + std::to_string(quest.deadline) + ".";
+					lines.push_back(fmt::format("Must be completed in {} days.", quest.deadline));
+				else lines.push_back(fmt::format("Must be completed by day {}.", quest.deadline));
 			}
-			description += " Pay is " + std::to_string(quest.gold) + " gold.";
+			lines.push_back(fmt::format("Pay is {} gold.", quest.gold));
 			me["take" + id].show();
-			me["job" + id].setText(description);
+			me["job" + id].setText(fmt::format("{}", fmt::join(lines, " ")));
 		} else {
 			me["take" + id].hide();
 			me["job" + id].setText("");
@@ -1736,6 +1739,13 @@ void tip_of_day() {
 	
 }
 
+static const auto scen_descr_tmpl = FMT_COMPILE(""
+	"{name} v{version_major}.{version_minor}.{version_patch} - |"
+	"  Difficulty: {difficulty}, Rating: {rating} |"
+	"{teaser1}|"
+	"{teaser2}"
+);
+
 class cChooseScenario {
 	cDialog me{*ResMgr::dialogs.get("pick-scenario")};
 	std::vector<scen_header_type> scen_headers;
@@ -1755,16 +1765,18 @@ class cChooseScenario {
 				if(scen_headers.size() > (page * 3 + i)) {
 					me["pic" + n].show();
 					dynamic_cast<cPict&>(me["pic" + n]).setPict(scen_headers[page * 3 + i].intro_pic);
-					clear_sstr(sout);
-					sout << scen_headers[page * 3 + i].name;
-					sout << " v" << int(scen_headers[page * 3 + i].ver[0]);
-					sout << '.' << int(scen_headers[page * 3 + i].ver[1]);
-					sout << '.' << int(scen_headers[page * 3 + i].ver[2]);
-					sout << " - |  Difficulty: " << difficulty[scen_headers[page * 3 + i].difficulty];
-					sout << ", Rating: " << scen_headers[page * 3 + i].rating;
-					sout << " |" << scen_headers[page * 3 + i].teaser1;
-					sout << " |" << scen_headers[page * 3 + i].teaser2;
-					me["desc" + n].setText(sout.str());
+					auto& header = scen_headers[page * 3 + i];
+					std::string description = fmt::format(scen_descr_tmpl,
+						fmt::arg("name", header.name),
+						fmt::arg("version_major", header.ver[0]),
+						fmt::arg("version_minor", header.ver[1]),
+						fmt::arg("version_patch", header.ver[2]),
+						fmt::arg("difficuly", difficulty[header.difficulty]),
+						fmt::arg("rating", header.rating),
+						fmt::arg("teaser1", header.teaser1),
+						fmt::arg("teaser2", header.teaser2)
+					);
+					me["desc" + n].setText(description);
 					me["start" + n].show();
 				} else {
 					me["pic" + n].hide();
