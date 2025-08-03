@@ -89,6 +89,7 @@
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\cppcodec;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
@@ -106,6 +107,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\cppcodec;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
@@ -127,6 +129,7 @@
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\cppcodec;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
@@ -149,6 +152,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>MSBUILD_GITREV;WIN32;_WINDOWS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;TIXML_USE_TICPP;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\cppcodec;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
     </ClCompile>
