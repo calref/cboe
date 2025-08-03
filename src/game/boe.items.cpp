@@ -30,6 +30,7 @@
 #include "tools/cursors.hpp"
 #include "fileio/resmgr/res_dialog.hpp"
 #include "gfx/render_shapes.hpp"
+#include <fmt/format.h>
 
 extern short which_combat_type;
 extern eGameMode overall_mode;
@@ -415,7 +416,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 				pic.setPict(item.graphic_num - 1000, PIC_CUSTOM_ITEM);
 			else pic.setPict(item.graphic_num, PIC_ITEM);
 			me[detail].setText(item.interesting_string());
-			me[weight].setText("Weight: " + std::to_string(item.item_weight()));
+			me[weight].setText(fmt::format("Weight: {}", item.item_weight()));
 			me[key].setText(key_stash);
 		} else { // erase the spot
 			me[pict].hide();
@@ -427,10 +428,8 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	}
 	
 	if(current_getting_pc < 6) {
-		std::ostringstream sout;
-		sout << univ.party[current_getting_pc].name << " is carrying ";
-		sout << univ.party[current_getting_pc].cur_weight() << " out of " << univ.party[current_getting_pc].max_weight() << '.';
-		me["prompt"].setText(sout.str());
+		auto& who = univ.party[current_getting_pc];
+		me["prompt"].setText(fmt::format("{} is carrying {} out of {}.", who.name, who.cur_weight(), who.max_weight()));
 	}
 	
 	for(short i = 0; i < 6; i++)
@@ -651,7 +650,7 @@ short get_num_of_items(short max_num) {
 	numPanel["extra-led"].hide();
 	numPanel.attachClickHandlers(get_num_of_items_event_filter, {"okay", "cancel"});
 	
-	numPanel["prompt"].setText("How many? (0-" + std::to_string(max_num) + ") ");
+	numPanel["prompt"].setText(fmt::format("How many? ({}-{})", 0, max_num));
 	numPanel["number"].setTextToNum(max_num);
 	numPanel.run();
 	
@@ -974,7 +973,7 @@ short select_pc(eSelectPC mode, std::string title, eSkill highlight_highest, boo
 					const cItem& picks = *pick_slot;
 					std::string pick_name = picks.name;
 					if(picks.ident) pick_name = picks.full_name;
-					extra_info = pick_name + " x " + std::to_string(picks.charges);
+					extra_info = fmt::format("{} x{}", pick_name, picks.charges);
 				}
 			}break;
 			// Suppress a compiler warning:
