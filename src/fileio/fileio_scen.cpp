@@ -9,10 +9,13 @@
 #include "fileio.hpp"
 
 #include <fstream>
+#include <boost/locale.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
+#include "tools/replay.hpp"
+#include "dialogxml/dialogs/strchoice.hpp"
 
 #include "dialogxml/dialogs/strdlog.hpp"
 
@@ -303,26 +306,83 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 	scenario.special_items.resize(50);
 	scenario.journal_strs.resize(50);
 	scenario.spec_strs.resize(100);
+	
+	static std::vector<std::string> encodings_to_try = {"Latin1", "Windows-1252", "MacRoman"};
+	fs::path meta = file_to_load.parent_path() / "meta.xml";
+	using namespace ticpp;
+	ticpp::Document meta_doc;
+	if(!fs::exists(meta)){
+		ticpp::Element root_element("meta");
+		meta_doc.InsertEndChild(root_element);
+	}else{
+		meta_doc.LoadFile(meta.string());
+	}
+
+	auto info = info_from_action(*meta_doc.FirstChildElement());
+	
 	for(short i = 0; i < 270; i++) {
 		len = (long) (temp_scenario.scen_str_len[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) scenario.scen_name = temp_str;
+		
+		std::string decoded;
+		std::vector<std::string> options;
+		if(info.find("encoding") != info.end()){
+			std::string encoding = info["encoding"];
+			decoded = boost::locale::conv::to_utf<char>(temp_str, encoding);
+		}else{
+			bool different = false;
+			for(std::string encoding : encodings_to_try){
+				std::string enc = boost::locale::conv::to_utf<char>(temp_str, encoding);
+				if(!options.empty() && enc != options.back()) different = true;
+				options.push_back(enc);
+			}
+			if(different){
+				LOG_VALUE(file_to_load);
+				for(std::string enc : options){
+					LOG_VALUE(enc);
+				}
+				int which = -1;
+				// Comment this out if you're not messing with the metadata:
+				// which = cStringChoice(options, "Which is best?").show(-1);
+				if(which != -1){
+					info["encoding"] = encodings_to_try[which];
+					decoded = options[which];
+				}
+				else{
+					decoded = options[0]; // temp!
+				}
+			}else{
+				decoded = options.back();
+			}
+		}
+		
+		if(i == 0) scenario.scen_name = decoded;
 		else if(i == 1 || i == 2)
-			scenario.teaser_text[i-1] = temp_str;
+			scenario.teaser_text[i-1] = decoded;
 		else if(i == 3)
-			scenario.contact_info[1] = temp_str;
+			scenario.contact_info[1] = decoded;
 		else if(i >= 4 && i < 10)
-			scenario.intro_strs[i-4] = temp_str;
+			scenario.intro_strs[i-4] = decoded;
 		else if(i >= 10 && i < 60)
-			scenario.journal_strs[i-10] = temp_str;
+			scenario.journal_strs[i-10] = decoded;
 		else if(i >= 60 && i < 160) {
-			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = temp_str;
-			else scenario.special_items[(i-60)/2].descr = temp_str;
+			if(i % 2 == 0) scenario.special_items[(i-60)/2].name = decoded;
+			else scenario.special_items[(i-60)/2].descr = decoded;
 		} else if(i >= 260) continue; // These were never ever used, for some reason.
-		else scenario.spec_strs[i-160] = temp_str;
+		else scenario.spec_strs[i-160] = decoded;
 	}
-	
+	Element new_root("meta");
+	ticpp::Document new_doc;
+	for(auto& p : info){
+		Element next_child(p.first);
+		Text child_text(p.second);
+		next_child.InsertEndChild(child_text);
+		new_root.InsertEndChild(next_child);
+	}
+	new_doc.InsertEndChild(new_root);
+	new_doc.SaveFile(meta.string());
+
 	fclose(file_id);
 	
 	scenario.scen_file = file_to_load;

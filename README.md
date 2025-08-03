@@ -110,7 +110,7 @@ correct place to search. For example, if you installed Boost via Homebrew, you m
 add something like the following to the Project Build Settings, under Linking->Other
 Linking Flags:
 
-    -lboost_filesystem -lboost_system -L/usr/local/Cellar/boost/1.57.0/lib
+    -lboost_filesystem -lboost_system -lboost_locale -L/usr/local/Cellar/boost/1.57.0/lib
 
 Again with Homebrew, you may also need to add the following to Apple LLVM Custom
 Compiler Flags -> Other C++ Flags:

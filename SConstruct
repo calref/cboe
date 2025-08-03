@@ -397,6 +397,7 @@ if not env.GetOption('clean'):
 	check_header('boost/spirit/include/classic.hpp', 'Boost.Spirit.Classic')
 	check_lib('boost_system', 'Boost.System', suffixes, boost_versions)
 	check_lib('boost_filesystem', 'Boost.Filesystem', suffixes, boost_versions)
+	check_lib('boost_locale', 'Boost.Locale', suffixes, boost_versions)
 	sfml_suffixes = ['-d']
 	check_lib('sfml-system', 'SFML-system', sfml_suffixes)
 	check_lib('sfml-window', 'SFML-window', sfml_suffixes)

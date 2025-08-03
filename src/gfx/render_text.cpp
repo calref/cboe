@@ -109,7 +109,11 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 }
 
 std::map<std::string, std::string> substitutions = {
-	{"–", "--"}
+	{"–", "--"},
+	{"´", "'"},
+	{"©", "(C)"},
+	{"…", "..."},
+	{"™", "TM"}
 };
 
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style) {
