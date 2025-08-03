@@ -30,6 +30,7 @@
 #include "tools/cursors.hpp"
 #include "utility.hpp"
 #include "replay.hpp"
+#include <fmt/format.h>
 
 short mage_spell_pos = 0,priest_spell_pos = 0,skill_pos = 0;
 
@@ -636,7 +637,7 @@ static void fill_journal(cDialog& me) {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if((long)univ.party.journal.size() > i + (store_page_on * 3)) {
 			me["str" + n].setText(univ.party.journal[i].the_str);
-			me["day" + n].setText("Day: " + std::to_string(univ.party.journal[i].day));
+			me["day" + n].setText(fmt::format("Day: {}", univ.party.journal[i].day));
 		}
 		else{
 			me["str" + n].setText("");
@@ -684,12 +685,12 @@ void put_quest_info(short which_i) {
 	quest_dlg["name"].setText(quest.name);
 	quest_dlg["descr"].setText(quest.descr);
 	int start = univ.party.active_quests[which_i].start;
-	quest_dlg["start"].setText("Day " + std::to_string(start));
+	quest_dlg["start"].setText(fmt::format("Day {}", start));
 	if(quest.deadline > 0)
-		quest_dlg["chop"].setText("Day " + std::to_string(quest.deadline + int(quest.deadline_is_relative) * start));
+		quest_dlg["chop"].setText(fmt::format("Day {}", quest.deadline + int(quest.deadline_is_relative) * start));
 	else quest_dlg["chop"].setText("None");
 	if(quest.gold > 0)
-		quest_dlg["pay"].setText(std::to_string(quest.gold) + " gold");
+		quest_dlg["pay"].setText(fmt::format("{} gold", quest.gold));
 	else quest_dlg["pay"].setText("Unknown");
 	quest_dlg["done"].attachClickHandler(std::bind(&cDialog::toast, &quest_dlg, false));
 	quest_dlg.run();
