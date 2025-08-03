@@ -28,6 +28,8 @@ tools = Split("""
 	../fileio/tarball.cpp
 	../fileio/tagfile.cpp
 	../fileio/gzstream/gzstream.cpp
+	../deps/fmtlib/src/format.cc
+	../deps/fmtlib/src/os.cc
 """) + Glob("../fileio/resmgr/*.cpp") + Glob("../gfx/*.cpp") + Glob("../scenario/*.cpp")
 
 if str(platform) == "darwin":
