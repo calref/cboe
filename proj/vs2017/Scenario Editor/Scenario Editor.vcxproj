@@ -81,7 +81,7 @@
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -119,7 +119,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\deps\Catch2\include\external;$(SolutionDir)..\..\deps\fmtlib\include;$(SolutionDir)..\..\src\fileio\gzstream;$(SolutionDir)..\..\src\fileio\xml-parser;$(SolutionDir)..\..\src\fileio\resmgr;$(SolutionDir)..\..\src\dialogxml\widgets;$(SolutionDir)..\..\src\dialogxml\dialogs;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\tools;$(SolutionDir)..\..\src\scenario;$(SolutionDir)..\..\src\universe;$(SolutionDir)..\..\src\fileio;$(SolutionDir)..\..\src\dialogxml;$(SolutionDir)..\..\src\gfx;$(SolutionDir)..\..\src;$(SolutionDir)..\..\rsrc\menus</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(SolutionDir)..\..\src\global.hpp</ForcedIncludeFiles>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
