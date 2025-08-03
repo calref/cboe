@@ -1864,6 +1864,11 @@ class cChooseScenario {
 			if(ext == ".sav"){
 				choices.push_back("Load premade party: " + file.filename().string());
 				handlers.push_back([file](cButtonPanel& dlg) -> void {
+					if(replaying){
+						// The next action encodes loading the prefab party,
+						// which is redundant here
+						pop_next_action();
+					}
 					if(!load_party(file, univ, spec_scen_g)) {
 						std::cout << "Failed to load save file: " << file << std::endl;
 					}else{
