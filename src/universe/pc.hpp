@@ -132,6 +132,7 @@ public:
 	int get_magic() const override;
 	int get_level() const override;
 	location get_loc() const override;
+	std::string get_name() const override;
 	
 	void finish_create();
 	void void_sanctuary() override;

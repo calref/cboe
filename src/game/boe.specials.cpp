@@ -1512,7 +1512,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	
 	if(how_much <= 0) {
 		if(is_combat())
-			victim.spell_note(7);
+			victim.spell_note(eSpellNote::UNDAMAGED);
 		if(how_much <= 0 && (dam_type == eDamageType::WEAPON || dam_type == eDamageType::UNDEAD || dam_type == eDamageType::DEMON)) {
 			draw_terrain(2);
 			play_sound(2);
@@ -1536,7 +1536,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 			if((which_spot = place_monster(victim.number,where_put)) < univ.town.monst.size()) {
 				static_cast<cTownperson&>(univ.town.monst[which_spot]) = victim;
 				univ.town.monst[which_spot].health = victim.health;
-				victim.spell_note(27);
+				victim.spell_note(eSpellNote::SPLITS);
 			}
 	}
 	if(who_hit < 7)
@@ -1555,7 +1555,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 	}
 	
 	if(victim.health < 0) {
-		victim.killed_msg();
+		victim.spell_note(eSpellNote::DIES);
 		kill_monst(victim,who_hit);
 	}
 	else {
@@ -1580,7 +1580,7 @@ short damage_monst(cCreature& victim, short who_hit, short how_much, eDamageType
 }
 
 void petrify_monst(cCreature& which_m,int strength) {
-	which_m.spell_note(9);
+	which_m.spell_note(eSpellNote::GAZES);
 	short r1 = get_ran(1,0,20);
 	r1 += which_m.level / 4;
 	r1 += which_m.status[eStatus::BLESS_CURSE];
@@ -1588,9 +1588,9 @@ void petrify_monst(cCreature& which_m,int strength) {
 	
 	// TODO: This should probably do something similar to charm_monst with the magic resistance
 	if(r1 > 14 || which_m.resist[eDamageType::MAGIC] == 0)
-		which_m.spell_note(10);
+		which_m.spell_note(eSpellNote::RESISTS);
 	else {
-		which_m.spell_note(8);
+		which_m.spell_note(eSpellNote::STONED);
 		kill_monst(which_m,7,eMainStatus::STONE);
 	}
 }
@@ -2863,8 +2863,8 @@ void affect_spec(const runtime_state& ctx) {
 			else pc.heal(-spec.ex1a);
 			if(cCreature* who = dynamic_cast<cCreature*>(&pc)) {
 				if(spec.ex1b == 0)
-					who->spell_note(41);
-				else who->spell_note(42);
+					who->spell_note(eSpellNote::HEALED);
+				else who->spell_note(eSpellNote::DRAINED_HP);
 			}
 			break;
 		case eSpecType::AFFECT_SP:
@@ -2873,8 +2873,8 @@ void affect_spec(const runtime_state& ctx) {
 			else pc.drain_sp(spec.ex1a, spec.ex1c);
 			if(cCreature* who = dynamic_cast<cCreature*>(&pc)) {
 				if(spec.ex1b == 0)
-					who->spell_note(43);
-				else who->spell_note(44);
+					who->spell_note(eSpellNote::SP_RECHARGED);
+				else who->spell_note(eSpellNote::DRAINED_SP);
 			}
 			break;
 		case eSpecType::AFFECT_XP:
@@ -2944,18 +2944,18 @@ void affect_spec(const runtime_state& ctx) {
 				if(who.is_alive() && spec.ex1b > 0) {
 					switch(spec.ex1a) {
 						case 0:
-							who.spell_note(46);
+							who.spell_note(eSpellNote::DIES);
 							kill_monst(who,7,eMainStatus::DEAD);
 							break;
 						case 1:
-							who.spell_note(51);
+							who.spell_note(eSpellNote::OBLITERATED);
 							kill_monst(who,7,eMainStatus::DUST);
 							break;
 						case 2:
 							if(spec.ex1c > 0)
 								petrify_monst(who,spec.ex1c);
 							else {
-								who.spell_note(8);
+								who.spell_note(eSpellNote::STONED);
 								kill_monst(who,7,eMainStatus::STONE);
 							}
 							break;
@@ -2967,7 +2967,7 @@ void affect_spec(const runtime_state& ctx) {
 				// Bring back to life
 				else if(who.active == eCreatureStatus::DEAD && spec.ex1b == 0) {
 					who.active = eCreatureStatus::IDLE;
-					who.spell_note(45);
+					who.spell_note(eSpellNote::REVIVED);
 				}
 			}
 			break;

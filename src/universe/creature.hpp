@@ -61,15 +61,10 @@ public:
 	bool is_shielded() const override;
 	int get_shared_dmg(int base_dmg) const override;
 	location get_loc() const override;
+	std::string get_name() const override;
 	
 	int magic_adjust(int base);
 	
-	void spell_note(int which) const;
-	void cast_spell_note(eSpell spell) const;
-	void print_attacks(iLiving* target) const;
-	void breathe_note() const;
-	void damaged_msg(int how_much, int extra) const;
-	void killed_msg() const;
 	bool on_space(location loc) const;
 	
 	void import_legacy(legacy::creature_data_type old);
