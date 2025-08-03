@@ -23,6 +23,7 @@
 #include "replay.hpp"
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <fmt/format.h>
 
 #define	DONE_BUTTON_ITEM	1
 
@@ -468,12 +469,12 @@ bool load_scenario_header(fs::path file,scen_header_type& scen_head){
 	// V2 meta display: By {Author}, Contact: {Contact}|{Teaser!}
 	else{
 		if(!temp_scenario.contact_info[0].empty()){
-			scen_head.teaser1 = "By " + temp_scenario.contact_info[0];
+			scen_head.teaser1 = fmt::format("By {}", temp_scenario.contact_info[0]);
 		}
 		if(!temp_scenario.contact_info[1].empty()){
 			if(!scen_head.teaser1.empty()) scen_head.teaser1 += ", ";
 
-			scen_head.teaser1 += "Contact: " + temp_scenario.contact_info[1];
+			scen_head.teaser1 += fmt::format("Contact: {}", temp_scenario.contact_info[1]);
 		}
 		if(scen_head.teaser1.empty())
 			scen_head.teaser1 = temp_scenario.teaser_text[0];
