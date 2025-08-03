@@ -1372,67 +1372,6 @@ void place_road(short q,short r,location where,bool here) {
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld(), to_rect);
 		}
-	}else{
-		// TODO: I suspect this branch is now irrelevant.
-		ter_num_t ter = coord_to_ter(where.x, where.y);
-		ter_num_t ref = coord_to_ter(where.x,where.y);
-		bool horz = false, vert = false;
-		eTrimType trim = eTrimType::NONE, vertTrim = eTrimType::NONE;
-		if(ref < univ.scenario.ter_types.size()) {
-			trim = univ.scenario.ter_types[ref].trim_type;
-		}
-		if(ter < univ.scenario.ter_types.size()) {
-			vertTrim = univ.scenario.ter_types[ter].trim_type;
-		}
-		if(where.y > 0)
-			ter = coord_to_ter(where.x,where.y - 1);
-		if((where.y == 0) || connect_roads(ter))
-			vert = can_build_roads_on(ref);
-		else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
-			vert = can_build_roads_on(ref);
-		
-		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
-			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
-		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
-			|| connect_roads(ter))
-			horz = can_build_roads_on(ref);
-		else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
-			horz = can_build_roads_on(ref);
-		
-		if(vert){
-			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
-				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
-			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
-				|| connect_roads(ter))
-				vert = can_build_roads_on(ref);
-			else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
-				vert = can_build_roads_on(ref);
-			else vert = false;
-		}
-		
-		if(horz){
-			if(where.x > 0)
-				ter = coord_to_ter(where.x - 1,where.y);
-			eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
-			if((where.x == 0) || connect_roads(ter))
-				horz = can_build_roads_on(ref);
-			else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
-				horz = can_build_roads_on(ref);
-			else horz = false;
-		}
-		
-		if(horz){
-			to_rect = road_dest_rects[5];
-			to_rect.offset(13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[2], terrain_screen_gworld(), to_rect);
-		}
-		if(vert){
-			to_rect = road_dest_rects[4];
-			to_rect.offset(13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld(), to_rect);
-		}
 	}
 }
 
