@@ -163,6 +163,7 @@ public:
 	bool is_shielded() const override;
 	int get_shared_dmg(int base_dmg) const override;
 	location get_loc() const override;
+	std::string get_name() const override;
 	
 	void apply_status(eStatus which, int how_much) override;
 	void heal(int how_much) override;
