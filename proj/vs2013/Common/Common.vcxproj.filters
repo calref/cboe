@@ -831,6 +831,8 @@
     <ClCompile Include="..\..\..\src\scenario\quest.cpp">
       <Filter>Scenario</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\deps\fmtlib\src\format.cc" />
+    <ClCompile Include="..\..\..\src\deps\fmtlib\src\os.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\view_dialogs.hpp" />
