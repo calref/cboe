@@ -398,6 +398,10 @@ location cPlayer::get_loc() const {
 	return combat_pos;
 }
 
+std::string cPlayer::get_name() const {
+	return name;
+}
+
 int cPlayer::get_health() const {
 	return cur_health;
 }

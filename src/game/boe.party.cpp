@@ -1520,7 +1520,7 @@ void do_mindduel(short pc_num,cCreature *monst) {
 			balance--;
 			if(monst->mp == 0) {
 				monst->status[eStatus::DUMB] += 2;
-				monst->spell_note(22);
+				monst->spell_note(eSpellNote::DUMBFOUNDED);
 				if(monst->status[eStatus::DUMB] > 7) {
 					kill_monst(*monst,pc_num);
 				}

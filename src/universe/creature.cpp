@@ -132,9 +132,9 @@ void cCreature::poison(int how_much) {
 	}
 	apply_status(eStatus::POISON, how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 4);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::POISONED);
 	else
-		spell_note(34);
+		spell_note(eSpellNote::CURED);
 	
 }
 
@@ -142,18 +142,18 @@ void cCreature::acid(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::ACID, how_much);
 	if(how_much >= 0)
-		spell_note(31);
+		spell_note(eSpellNote::ACID);
 	else
-		spell_note(48);
+		spell_note(eSpellNote::CLEANS_ACID);
 }
 
 void cCreature::slow(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::HASTE_SLOW, -how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 2);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::SLOWED);
 	else
-		spell_note(35);
+		spell_note(eSpellNote::HASTED);
 	
 }
 
@@ -161,9 +161,9 @@ void cCreature::curse(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::BLESS_CURSE, -how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 5);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::CURSED);
 	else
-		spell_note(36);
+		spell_note(eSpellNote::BLESSED);
 	
 }
 
@@ -171,9 +171,9 @@ void cCreature::web(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::WEBS, how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 19);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::WEBBED);
 	else
-		spell_note(37);
+		spell_note(eSpellNote::CLEANS_WEBS);
 	
 }
 
@@ -181,9 +181,9 @@ void cCreature::scare(int how_much) {
 	how_much = magic_adjust(how_much);
 	morale -= how_much;
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 1);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::SCARED);
 	else
-		spell_note(47);
+		spell_note(eSpellNote::RALLIES);
 	
 }
 
@@ -191,9 +191,9 @@ void cCreature::disease(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::DISEASE, how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 25);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::DISEASED);
 	else
-		spell_note(38);
+		spell_note(eSpellNote::FEEL_BETTER);
 	
 }
 
@@ -201,9 +201,9 @@ void cCreature::dumbfound(int how_much) {
 	how_much = magic_adjust(how_much);
 	apply_status(eStatus::DUMB, how_much);
 	if(how_much >= 0)
-		spell_note((how_much == 0) ? 10 : 22);
+		spell_note((how_much == 0) ? eSpellNote::RESISTS : eSpellNote::DUMBFOUNDED);
 	else
-		spell_note(39);
+		spell_note(eSpellNote::MIND_CLEAR);
 	
 }
 
@@ -237,24 +237,24 @@ void cCreature::sleep(eStatus which_status,int amount,int penalty) {
 	
 	if(r1 > charm_odds[level / 2]) {
 		//one_sound(68);
-		spell_note(10);
+		spell_note(eSpellNote::RESISTS);
 	}
 	else {
 		if(which_status == eStatus::CHARM) {
 			if(amount <= 0 || amount > 3) amount = 2;
 			attitude = eAttitude(amount);
-			spell_note(23);
+			spell_note(eSpellNote::CHARMED);
 		} else if(which_status == eStatus::FORCECAGE) {
 			status[eStatus::FORCECAGE] = amount;
-			spell_note(52);
+			spell_note(eSpellNote::TRAPPED);
 		} else {
 			status[which_status] = amount;
 			if(which_status == eStatus::ASLEEP && (amount >= 0))
-				spell_note(28);
+				spell_note(eSpellNote::ASLEEP);
 			if(which_status == eStatus::PARALYZED && (amount >= 0))
-				spell_note(30);
+				spell_note(eSpellNote::PARALYZED);
 			if(amount < 0)
-				spell_note(40);
+				spell_note(eSpellNote::ALERT);
 		}
 		//one_sound(53);
 	}
@@ -281,6 +281,10 @@ bool cCreature::is_friendly(const iLiving& other) const {
 
 location cCreature::get_loc() const {
 	return cur_loc;
+}
+
+std::string cCreature::get_name() const {
+	return m_name;
 }
 
 bool cCreature::is_shielded() const {
@@ -384,237 +388,4 @@ void cCreature::readFrom(const cTagFile_Page& page) {
 	page["MORALE"] >> morale;
 	page["DIRECTION"] >> direction;
 	active = alert ? eCreatureStatus::ALERTED : eCreatureStatus::IDLE;
-}
-
-void cCreature::print_attacks(iLiving* target) const {
-	if(!print_result) return;
-	std::string msg = m_name;
-	msg += " attacks ";
-	if(cPlayer* who = dynamic_cast<cPlayer*>(target))
-		msg += who->name;
-	else if(cCreature* monst = dynamic_cast<cCreature*>(target))
-		msg += monst->m_name;
-	else msg += "you";
-	print_result(msg);
-}
-
-void cCreature::spell_note(int which_mess) const {
-	if(!print_result) return;
-	std::string msg = m_name;
-	switch(which_mess) {
-		case 1:
-			msg = "  " + msg + " scared.";
-			break;
-			
-		case 2:
-			msg = "  " + msg + " slowed.";
-			break;
-			
-		case 3:
-			msg = "  " + msg + " weakened.";
-			break;
-			
-		case 4:
-			msg = "  " + msg + " poisoned.";
-			break;
-			
-		case 5:
-			msg = "  " + msg + " cursed.";
-			break;
-			
-		case 6:
-			msg = "  " + msg + " ravaged.";
-			break;
-			
-		case 7:
-			msg = "  " + msg + " undamaged.";
-			break;
-			
-		case 8:
-			msg = "  " + msg + " is stoned.";
-			break;
-		case 9:
-			msg = "  Gazes at " + msg + '.';
-			break;
-		case 10:
-			msg = "  " + msg + " resists.";
-			break;
-		case 11:
-			msg = "  Drains " + msg + '.';
-			break;
-		case 12:
-			msg = "  Shoots at " + msg + '.';
-			break;
-		case 13:
-			msg = "  Throws spear at " + msg + '.';
-			break;
-		case 14:
-			msg = "  Throws rock at " + msg + '.';
-			break;
-		case 15:
-			msg = "  Throws razordisk at " + msg + '.';
-			break;
-		case 16:
-			msg = "  Hits " + msg + '.';
-			break;
-		case 17:
-			msg = "  " + msg + " disappears.";
-			break;
-		case 18:
-			msg = "  Misses " + msg + '.';
-			break;
-		case 19:
-			msg = "  " + msg + " is webbed.";
-			break;
-		case 20:
-			msg = "  " + msg + " chokes.";
-			break;
-		case 21:
-			msg = "  " + msg + " summoned.";
-			break;
-		case 22:
-			msg = "  " + msg + " is dumbfounded.";
-			break;
-		case 23:
-			msg = "  " + msg + " is charmed.";
-			break;
-		case 24:
-			msg = "  " + msg + " is recorded.";
-			break;
-		case 25:
-			msg = "  " + msg + " is diseased.";
-			break;
-		case 26:
-			msg = "  " + msg + " is an avatar!";
-			break;
-		case 27:
-			msg = "  " + msg + " splits!";
-			break;
-		case 28:
-			msg = "  " + msg + " falls asleep.";
-			break;
-		case 29:
-			msg = "  " + msg + " wakes up.";
-			break;
-		case 30:
-			msg = "  " + msg + " paralyzed.";
-			break;
-		case 31:
-			msg = "  " + msg + " covered with acid.";
-			break;
-		case 32:
-			msg = "  Fires spines at " + msg + '.';
-			break;
-		case 33:
-			msg = "  " + msg + " summons aid.";
-			break;
-		case 34:
-			msg = "  " + msg + " is cured.";
-			break;
-		case 35:
-			msg = "  " + msg + " is hasted.";
-			break;
-		case 36:
-			msg = "  " + msg + " is blessed.";
-			break;
-		case 37:
-			msg = "  " + msg + " cleans webs.";
-			break;
-		case 38:
-			msg = "  " + msg + " feels better.";
-			break;
-		case 39:
-			msg = "  " + msg + " mind cleared.";
-			break;
-		case 40:
-			msg = "  " + msg + " feels alert.";
-			break;
-		case 41:
-			msg = "  " + msg + " is healed.";
-			break;
-		case 42:
-			msg = "  " + msg + " drained of health.";
-			break;
-		case 43:
-			msg = "  " + msg + " magic recharged.";
-			break;
-		case 44:
-			msg = "  " + msg + " drained of magic.";
-			break;
-		case 45:
-			msg = "  " + msg + " returns to life!";
-			break;
-		case 46:
-			msg = "  " + msg + " dies.";
-			break;
-		case 47:
-			msg = "  " + msg + " rallies its courage.";
-			break;
-		case 48:
-			msg = "  " + msg + " cleans off acid.";
-			break;
-		case 49:
-			msg = "  " + msg + " breaks barrier.";
-			break;
-		case 50:
-			msg = "  " + msg + " breaks force cage.";
-			break;
-		case 51:
-			msg = "  " + msg + " is obliterated!";
-			break;
-		case 52:
-			msg = "  " + msg + " is trapped!";
-			break;
-		case 53:
-			msg = "  Throws dart at " + msg + '.';
-			break;
-		case 54:
-			msg = "  Throws knife at " + msg + '.';
-			break;
-		case 55:
-			msg = "  Fires ray at " + msg + '.';
-			break;
-		case 56:
-			msg = "  Gazes at " + msg + '.';
-			break;
-		case 57:
-			msg = "  Breathes on " + msg + '.';
-			break;
-		case 58:
-			msg = "  Throws web at " + msg + '.';
-			break;
-		case 59:
-			msg = "  Spits at " + msg + '.';
-			break;
-		default:
-			msg += ": Unknown action " + std::to_string(which_mess);
-	}
-	
-	if(which_mess > 0)
-		print_result((char *) msg.c_str());
-}
-
-void cCreature::cast_spell_note(eSpell spell) const {
-	if(!print_result) return;
-	print_result(m_name + " casts:");
-	print_result("  " + (*spell).name());
-}
-
-void cCreature::breathe_note() const {
-	if(!print_result) return;
-	print_result(m_name + " breathes.");
-}
-
-void cCreature::damaged_msg(int how_much,int how_much_spec) const {
-	if(!print_result) return;
-	std::ostringstream sout;
-	sout << "  " << m_name << " takes " << how_much;
-	if(how_much_spec > 0)
-		sout << '+' << how_much_spec;
-	print_result(sout.str());
-}
-
-void cCreature::killed_msg() const {
-	if(!print_result) return;
-	print_result("  " + m_name + " dies.");
 }

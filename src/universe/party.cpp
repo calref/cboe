@@ -575,6 +575,10 @@ location cParty::get_loc() const {
 	return town_loc;
 }
 
+std::string cParty::get_name() const {
+	return "you";
+}
+
 int cParty::calc_day() const {
 	return (age / 3700) + 1;
 }
