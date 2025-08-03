@@ -256,6 +256,9 @@ void iLiving::spell_note(eSpellNote which_mess) const {
 		case eSpellNote::BREATHES:
 			msg = "  {} breaths.";
 			break;
+		case eSpellNote::HEAT_RAY:
+			msg = "  Hits {} with heat ray!";
+			break;
 		default:
 			msg += "{}: Unknown action " + std::to_string(int(which_mess));
 	}
