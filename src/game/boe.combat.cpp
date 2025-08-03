@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <fmt/format.h>
 
 #include "boe.global.hpp"
 
@@ -459,67 +460,67 @@ static void apply_weapon_status(eStatus status, int how_much, int dmg, iLiving& 
 	switch(status) {
 		case eStatus::MAIN: break; // Not a valid status
 		case eStatus::INVISIBLE:
-			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			add_string_to_buf(fmt::format("  {} leaks an odd-coloured aura.", weap_type));
 			which_m.apply_status(eStatus::INVISIBLE, how_much / -2);
 			break;
 		case eStatus::MAGIC_RESISTANCE:
-			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			add_string_to_buf(fmt::format("  {} leaks an odd-coloured aura.", weap_type));
 			which_m.apply_status(eStatus::MAGIC_RESISTANCE, how_much / -2);
 			break;
 		case eStatus::INVULNERABLE:
-			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			add_string_to_buf(fmt::format("  {} leaks an odd-coloured aura.", weap_type));
 			which_m.apply_status(eStatus::INVULNERABLE, how_much / -2);
 			break;
 		case eStatus::POISONED_WEAPON:
-			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			add_string_to_buf(fmt::format("  {} leaks an odd-coloured aura.", weap_type));
 			which_m.apply_status(eStatus::POISONED_WEAPON, how_much / -2);
 			break;
 		case eStatus::POISON:
-			add_string_to_buf("  " + weap_type + " drips venom.");
+			add_string_to_buf(fmt::format("  {} drips venom.", weap_type));
 			which_m.poison(how_much / 2);
 			break;
 		case eStatus::ACID:
-			add_string_to_buf("  " + weap_type + " drips acid.");
+			add_string_to_buf(fmt::format("  {} drips acid.", weap_type));
 			which_m.acid(how_much / 2);
 			break;
 		case eStatus::BLESS_CURSE:
-			add_string_to_buf("  " + weap_type + " leaks a dark aura.");
+			add_string_to_buf(fmt::format("  {} leaks a dark aura.", weap_type));
 			which_m.curse(how_much / 2);
 			break;
 		case eStatus::HASTE_SLOW:
-			add_string_to_buf("  " + weap_type + " leaks a smoky aura.");
+			add_string_to_buf(fmt::format("  {} leaks a smoky aura.", weap_type));
 			which_m.slow(how_much / 2);
 			break;
 		case eStatus::WEBS:
-			add_string_to_buf("  " + weap_type + " drips goo.");
+			add_string_to_buf(fmt::format("  {} drips goo.", weap_type));
 			which_m.web(how_much / 2);
 			break;
 		case eStatus::DISEASE:
-			add_string_to_buf("  " + weap_type + " drips bile.");
+			add_string_to_buf(fmt::format("  {} drips bile.", weap_type));
 			which_m.disease(how_much / 2);
 			break;
 		case eStatus::DUMB:
-			add_string_to_buf("  " + weap_type + " leaks a misty aura.");
+			add_string_to_buf(fmt::format("  {} leaks a misty aura.", weap_type));
 			which_m.dumbfound(how_much / 2);
 			break;
 		case eStatus::ASLEEP:
-			add_string_to_buf("  " + weap_type + " emits coruscating lights.");
+			add_string_to_buf(fmt::format("  {} emits coruscating lights.", weap_type));
 			which_m.sleep(eStatus::ASLEEP, how_much / 2, 20 + dmg);
 			break;
 		case eStatus::PARALYZED:
-			add_string_to_buf("  " + weap_type + " emits a purple flash.");
+			add_string_to_buf(fmt::format("  {} emits a purple flash.", weap_type));
 			which_m.sleep(eStatus::PARALYZED, how_much / 2, 20 + dmg);
 			break;
 		case eStatus::CHARM:
-			add_string_to_buf("  " + weap_type + " leaks a bright aura.");
+			add_string_to_buf(fmt::format("  {} leaks a bright aura.", weap_type));
 			which_m.sleep(eStatus::CHARM, 0, 20 + dmg - how_much / 2);
 			break;
 		case eStatus::FORCECAGE:
-			add_string_to_buf("  " + weap_type + " emits a green flash.");
+			add_string_to_buf(fmt::format("  {} emits a green flash.", weap_type));
 			which_m.sleep(eStatus::FORCECAGE, how_much, dmg - how_much / 2);
 			break;
 		case eStatus::MARTYRS_SHIELD:
-			add_string_to_buf("  " + weap_type + " leaks an odd-coloured aura.");
+			add_string_to_buf(fmt::format("  {} leaks an odd-coloured aura.", weap_type));
 			which_m.apply_status(eStatus::MARTYRS_SHIELD, how_much / -2);
 			break;
 	}
@@ -708,8 +709,7 @@ void pc_attack_weapon(short who_att,iLiving& target,short hit_adj,short dam_adj,
 	}
 	else {
 		draw_terrain(2);
-		create_line = "  " + attacker.name + " misses.";
-		add_string_to_buf(create_line);
+		add_string_to_buf(fmt::format("  {} misses.", attacker.name));
 		if(weap.weap_type == eSkill::POLE_WEAPONS)
 			play_sound(19);
 		else play_sound(2);
@@ -1183,7 +1183,7 @@ void do_combat_cast(location target) {
 										}
 										break;
 									default:
-										add_string_to_buf("  Error: Summoning spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
+										add_string_to_buf(fmt::format("  Error: Summoning spell {} not implemented for combat mode.", (*spell_being_cast).name()), 4);
 										break;
 								}
 								break;
@@ -1398,7 +1398,7 @@ void do_combat_cast(location target) {
 											store_sound = 24;
 											break;
 										default:
-											add_string_to_buf("  Error: Spell " + (*spell_being_cast).name() + " not implemented for combat mode.", 4);
+											add_string_to_buf(fmt::format("  Error: Spell not implemented for combat mode. {}", (*spell_being_cast).name()), 4);
 											break;
 									}
 									if(store_m_type >= 0) {
@@ -3577,7 +3577,7 @@ bool monst_cast_mage(cCreature *caster,short targ) {
 				do_shockwave(caster->cur_loc);
 				break;
 			default:
-				add_string_to_buf("  Error: Mage spell " + (*spell).name() + " not implemented for monsters.", 4);
+				add_string_to_buf(fmt::format("  Error: Mage spell {} not implemented for monsters.", (*spell).name()), 4);
 				break;
 		}
 	}
@@ -3836,7 +3836,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 					case eSpell::HEAL_MAJOR: r1 = get_ran(5,1,6) + 3; break;
 					case eSpell::HEAL_ALL: r1 = 50; break;
 					default:
-						add_string_to_buf("  Error: Healing spell " + (*spell).name() + " not implemented for monsters.", 4);
+						add_string_to_buf(fmt::format("  Error: Healing spell {} not implemented for monsters.", (*spell).name()), 4);
 						break;
 				}
 				caster->heal(r1);
@@ -3886,7 +3886,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				// doesn't describe fire or combustion, only force.
 				break;
 			default:
-				add_string_to_buf("  Error: Priest spell " + (*spell).name() + " not implemented for monsters.", 4);
+				add_string_to_buf(fmt::format("  Error: Priest spell {} not implemented for monsters.", (*spell).name()), 4);
 				break;
 		}
 		
@@ -4472,7 +4472,7 @@ void handle_disease() {
 							adjust_spell_menus();
 							break;
 						case 9: case 10:
-							add_string_to_buf("  " + pc.name + " unaffected.");
+							add_string_to_buf(fmt::format("  {} unaffected.", pc.name));
 							break;
 					}
 					r1 = get_ran(1,0,7);
@@ -4670,32 +4670,32 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				if(!freebie)
 					caster.cur_sp -= (*spell_num).cost;
 				play_sound(4);
-				std::string c_line = "  " + target_pc.name;
+				std::string c_line;
 				switch(spell_num) {
 					case eSpell::ENVENOM:
-						c_line += " receives venom.";
+						c_line += "  {} receives venom.";
 						poison_weapon(target,3 + bonus,true);
 						store_m_type = 11;
 						break;
 						
 					case eSpell::STRENGTH:
-						c_line += " stronger.";
+						c_line += "  {} stronger.";
 						target_pc.curse(-3);
 						store_m_type = 8;
 						break;
 					case eSpell::RESIST_MAGIC:
-						c_line += " resistant.";
+						c_line += "  {} resistant.";
 						target_pc.status[eStatus::MAGIC_RESISTANCE] += 5 + bonus;
 						store_m_type = 15;
 						break;
 						
 					default:
 						target_pc.slow((spell_num == eSpell::HASTE_MINOR) ? -2 : -max(2,level / 2 + bonus));
-						c_line += " hasted.";
+						c_line += "  {} hasted.";
 						store_m_type = 8;
 						break;
 				}
-				add_string_to_buf(c_line);
+				add_string_to_buf(fmt::format(c_line, target_pc.name));
 				add_missile(target_pc.combat_pos,store_m_type,0,0,0);
 			}
 			break;
@@ -4739,7 +4739,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 				case eSpell::PARALYSIS_MASS: add_string_to_buf("  Enemy paralyzed:"); break;
 				case eSpell::SLEEP_MASS: add_string_to_buf("  Enemy drowsy:"); break;
 				default:
-					add_string_to_buf("  Error: Mage group spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+					add_string_to_buf(fmt::format("  Error: Mage group spell {} not implemented for combat mode.", (*spell_num).name()), 4);
 					break;
 			}
 			for(short i = 0; i < univ.town.monst.size(); i++) {
@@ -4784,7 +4784,7 @@ void combat_immed_mage_cast(short current_pc, eSpell spell_num, bool freebie) {
 			place_spell_pattern(PAT_OPENSQ, caster.combat_pos, eDamageType::FIRE, 6, current_pc);
 			break;
 		default:
-			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+			add_string_to_buf(fmt::format("  Error: Mage spell {} not implemented for combat mode.", (*spell_num).name()), 4);
 			break;
 	}
 	if(num_opp < 10)
@@ -4882,7 +4882,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 		case eSpell::AVATAR:
 			if(!freebie)
 				caster.cur_sp -= (*spell_num).cost;
-			add_string_to_buf("  " + caster.name + " is an avatar!");
+			add_string_to_buf(fmt::format("  {} is an avatar!", caster.name));
 			caster.avatar();
 			break;
 			
@@ -4914,7 +4914,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 							store_m_type = 0;
 							break;
 						default:
-							add_string_to_buf("  Error: Priest group spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+							add_string_to_buf(fmt::format("  Error: Priest group spell {} not implemented for combat mode.", (*spell_num).name()), 4);
 							break;
 					}
 					num_opp++;
@@ -4949,7 +4949,7 @@ void combat_immed_priest_cast(short current_pc, eSpell spell_num, bool freebie) 
 			}
 			break;
 		default:
-			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for combat mode.", 4);
+			add_string_to_buf(fmt::format("  Error: Priest spell {} not implemented for combat mode.", (*spell_num).name()), 4);
 			break;
 	}
 	if(num_opp < 10)
@@ -4997,7 +4997,7 @@ void start_spell_targeting(eSpell num, bool freebie, int spell_range, eSpellPat 
 		default:
 			pat = PAT_SINGLE;
 			if((*num).refer != REFER_TARGET)
-				add_string_to_buf("  Error: Entered targeting for non-targeted spell " + (*num).name(), 4);
+				add_string_to_buf(fmt::format("  Error: Entered targeting for non-targeted spell {}", (*num).name()), 4);
 			break;
 	}
 	
@@ -5067,7 +5067,7 @@ void start_fancy_spell_targeting(eSpell num, bool freebie, int spell_range, eSpe
 		default:
 			if((*num).refer == REFER_FANCY)
 				std::cout << "  Warning: Spell " << (*num).name() << " didn't assign target shape and count." << std::endl;
-			else add_string_to_buf("  Error: Entered fancy targeting for non-fancy-targeted spell " + (*num).name(), 4);
+			else add_string_to_buf(fmt::format("  Error: Entered fancy targeting for non-fancy-targeted spell {}", (*num).name()), 4);
 			pat = PAT_SINGLE;
 			break;
 	}
@@ -5141,7 +5141,7 @@ void process_force_cage(location loc, short i, short adjust) {
 		short bonus = 5 + who.skill(eSkill::MAGE_LORE) + adjust;
 		if(get_ran(1,1,100) < who.skill(eSkill::MAGE_SPELLS)*10 + who.skill(eSkill::PRIEST_SPELLS)*4 + bonus) {
 			play_sound(60);
-			add_string_to_buf("  " + who.name + " breaks force cage.");
+			add_string_to_buf(fmt::format("  {} breaks force cage.", who.name));
 			break_force_cage(loc);
 		}
 	}
