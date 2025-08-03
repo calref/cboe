@@ -2167,7 +2167,7 @@ void debug_give_item() {
 		given = univ.party.give_item(univ.scenario.scen_items[i], GIVE_DO_PRINT | GIVE_ALLOW_OVERLOAD);
 	}
 	if(!given)
-		ASB(fmt::format("Debug: can't give anyone {}" + univ.scenario.scen_items[i].full_name));
+		ASB(fmt::format("Debug: can't give anyone {}", univ.scenario.scen_items[i].full_name));
 
 	univ.scenario.scen_items[i].ident = was_ident;
 	print_buf();
