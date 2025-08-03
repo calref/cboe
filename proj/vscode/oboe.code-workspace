@@ -10,6 +10,62 @@
 			"ms-vscode.cpptools",
 		]
 	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Build (Debug)",
+				"windows": {
+					"type": "process",
+					"command": "powershell",
+					"args": [
+						"${workspaceFolder}/proj/vscode/build.ps1",
+						"/property:GenerateFullPaths=true",
+						"/property:VcpkgConfiguration=Debug",
+						"/t:build",
+						"\"${workspaceRoot}\\proj\\vs2017\\Blades of Exile.sln\""
+					],
+					"problemMatcher": "$msCompile",
+				},
+				"group": "build"
+			},
+			{
+				"label": "Build (Release)",
+				"windows": {
+					"type": "process",
+					"command": "powershell",
+					"args": [
+						"${workspaceFolder}/proj/vscode/build.ps1",
+						"/property:GenerateFullPaths=true",
+						"/property:VcpkgConfiguration=Release",
+						"/t:build",
+						"${workspaceRoot}\\proj\\vs2013\\Blades of Exile.sln"
+					],
+					"problemMatcher": "$msCompile",
+				},
+				"group": "build"
+			},
+			{
+				"label": "Run tests",
+				"windows": {
+					"type": "process",
+					"command": "${workspaceRoot}\\proj\\vs2013\\Release\\OBoE Tests.exe",
+					"problemMatcher": {
+						"fileLocation": ["relative", "${workspaceRoot}"],
+						"pattern": {
+							"regexp": "^\\.(.*)\\((\\d+)\\): FAILED$",
+							"file": 1,
+							"line": 2
+						}
+					},
+				},
+				"options": {
+					"cwd": "${workspaceRoot}/test"
+				},
+				"group": "test"
+			}
+		]
+	},
 	"settings": {
 		"xml.fileAssociations": [
 			{
