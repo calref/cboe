@@ -2156,7 +2156,7 @@ void do_monster_turn() {
 			if(cur_monst->summon_time == 1) {
 				cur_monst->active = eCreatureStatus::DEAD;
 				cur_monst->ap = 0;
-				cur_monst->spell_note(17);
+				cur_monst->spell_note(eSpellNote::DISAPPEARS);
 			}
 			move_to_zero(cur_monst->summon_time);
 		}
@@ -2529,7 +2529,7 @@ void do_monster_turn() {
 					if(what_summon) r1 = get_ran(1, abil.summon.min, abil.summon.max);
 					else r1 = 0;
 					if(r1 && summon_monster(what_summon, cur_monst->cur_loc,abil.summon.len,cur_monst->attitude,cur_monst->is_friendly())) {
-						cur_monst->spell_note(33);
+						cur_monst->spell_note(eSpellNote::SUMMONS);
 						play_sound(61);
 						bool failed = false;
 						while(--r1 && !failed) {
@@ -2578,7 +2578,7 @@ void do_monster_turn() {
 			}
 			
 			if(cur_monst->status[eStatus::ASLEEP] == 1)
-				cur_monst->spell_note(29);
+				cur_monst->spell_note(eSpellNote::AWAKE);
 			move_to_zero(cur_monst->status[eStatus::ASLEEP]);
 			move_to_zero(cur_monst->status[eStatus::PARALYZED]);
 			move_to_zero(cur_monst->status[eStatus::INVISIBLE]);
@@ -2660,7 +2660,7 @@ void monster_attack(short who_att,iLiving* target) {
 	
 	for(const auto& att : attacker->a)
 		if(att.dice != 0) {
-			attacker->print_attacks(target);
+			attacker->print_attacks(*target);
 			break;
 		}
 			
@@ -2903,44 +2903,44 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				if(pc_target != nullptr)
 					add_string_to_buf("  Shoots at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(12);
+					m_target->spell_note(eSpellNote::SHOOTS);
 				break;
 			case eMonstMissile::SPEAR:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws spear at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(13);
+					m_target->spell_note(eSpellNote::THROWS_SPEAR);
 				break;
 			case eMonstMissile::RAZORDISK:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws razordisk at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(15);
+					m_target->spell_note(eSpellNote::THROWS_RAZORDISK);
 				break;
 			case eMonstMissile::SPINE:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Fires spines at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(32);
+					m_target->spell_note(eSpellNote::SPINES);
 				break;
 			case eMonstMissile::DART:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws dart at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(53);
+					m_target->spell_note(eSpellNote::THROWS_DART);
 				break;
 			case eMonstMissile::ROCK:
 			case eMonstMissile::BOULDER:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws rock at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(14);
+					m_target->spell_note(eSpellNote::THROWS_ROCK);
 				break;
 			case eMonstMissile::KNIFE:
 				if(pc_target != nullptr)
 					add_string_to_buf("  Throws knife at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(54);
+					m_target->spell_note(eSpellNote::THROWS_KNIFE);
 				break;
 		}
 		if(abil.second.missile.type == eMonstMissile::ARROW || abil.second.missile.type == eMonstMissile::RAPID_ARROW || abil.second.missile.type == eMonstMissile::BOLT)
@@ -2972,14 +2972,14 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				// TODO: Should we pass in the monster's actual race here?
 				damage_pc(*pc_target,r2,eDamageType::WEAPON,eRace::UNKNOWN,13);
 			} else if(m_target != nullptr) {
-				m_target->spell_note(16);
+				m_target->spell_note(eSpellNote::HITS);
 				damage_monst(*m_target,7,r2,eDamageType::WEAPON,13);
 			}
 		} else {
 			if(pc_target != nullptr)
 				add_string_to_buf("  Misses " + pc_target->name + '.');
 			else if(m_target != nullptr)
-				m_target->spell_note(18);
+				m_target->spell_note(eSpellNote::MISSES);
 		}
 		if(pc_target != nullptr) {
 			if(cInvenSlot spec_item = pc_target->has_abil_equip(eItemAbil::HIT_CALL_SPECIAL)) {
@@ -3005,13 +3005,13 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 		if(pc_target != nullptr)
 			add_string_to_buf("  Throws web at " + pc_target->name + '.');
 		else if(m_target != nullptr)
-			m_target->spell_note(58);
+			m_target->spell_note(eSpellNote::THROWS_WEB);
 		run_a_missile(source, targ_space, 8, 0, 14, 0, 0, 100);
 		web_space(targ_space.x, targ_space.y);
 	} else if(abil.first == eMonstAbil::RAY_HEAT) {
 		if(pc_target != nullptr) add_string_to_buf("  Hits " + pc_target->name + " with heat ray!");
 		else if(m_target != nullptr)
-			m_target->spell_note(55);
+			m_target->spell_note(eSpellNote::FIRES_RAY);
 		run_a_missile(source, targ_space, 13, 0, 51, 0, 0, 100);
 		uAbility proxy = {true};
 		proxy.gen.strength = abil.second.special.extra3;
@@ -3063,21 +3063,21 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				if(pc_target != nullptr)
 					add_string_to_buf("  Fires ray at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(55);
+					m_target->spell_note(eSpellNote::FIRES_RAY);
 				break;
 			case eMonstGen::GAZE:
 				snd = 43;
 				if(pc_target != nullptr)
 					add_string_to_buf("  Gazes at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(56);
+					m_target->spell_note(eSpellNote::GAZES2);
 				break;
 			case eMonstGen::BREATH:
 				snd = 44;
 				if(pc_target != nullptr)
 					add_string_to_buf("  Breathes on " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(57);
+					m_target->spell_note(eSpellNote::BREATHES_ON);
 				break;
 			case eMonstGen::SPIT:
 				path_type = 1;
@@ -3085,7 +3085,7 @@ void monst_fire_missile(short m_num,short bless,std::pair<eMonstAbil,uAbility> a
 				if(pc_target != nullptr)
 					add_string_to_buf("  Spits at " + pc_target->name + '.');
 				else if(m_target != nullptr)
-					m_target->spell_note(59);
+					m_target->spell_note(eSpellNote::SPITS);
 				break;
 		}
 		if(abil.second.gen.pic < 0) play_sound(snd);
@@ -3188,7 +3188,7 @@ void monst_basic_abil(short m_num, std::pair<eMonstAbil,uAbility> abil, iLiving*
 				add_string_to_buf("  Drains " + pc_target->name + '.');
 				pc_target->cur_sp = percent(pc_target->cur_sp, abil.second.gen.strength);
 			} else {
-				m_target->spell_note(11);
+				m_target->spell_note(eSpellNote::DRAINS);
 				// TODO: If mp < 4 it used to set monster's skill to 1. Should that be restored?
 				m_target->mp = percent(m_target->mp, abil.second.gen.strength);
 			}
@@ -3246,7 +3246,7 @@ bool monst_breathe(cCreature *caster,location targ_space,uAbility abil) {
 		run_a_missile(l,targ_space,abil.gen.pic,0,44,0,0,100);
 	else play_sound(44);
 	
-	caster->breathe_note();
+	caster->spell_note(eSpellNote::BREATHES);
 	short level = get_ran(abil.gen.strength,1,8);
 	if(!is_combat())
 		level = level / 3;
@@ -3873,7 +3873,7 @@ bool monst_cast_priest(cCreature *caster,short targ) {
 				break;
 			case eSpell::AVATAR:
 				play_sound(24);
-				caster->spell_note(26);
+				caster->spell_note(eSpellNote::AVATAR);
 				caster->avatar();
 				break;
 			case eSpell::DIVINE_THUD:
@@ -5121,7 +5121,7 @@ void process_force_cage(location loc, short i, short adjust) {
 		if(!which_m.is_friendly() && get_ran(1,1,100) < which_m.mu * 10 + which_m.cl * 4 + 5 + adjust) {
 			// TODO: This sound is not right
 			play_sound(60);
-			which_m.spell_note(50);
+			which_m.spell_note(eSpellNote::BREAKS_FORCECAGE);
 			break_force_cage(loc);
 		}
 	} else if(i < 0) {

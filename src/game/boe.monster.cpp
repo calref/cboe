@@ -850,7 +850,7 @@ void monst_inflict_fields(short which_monst) {
 					break;
 				}
 				if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
-					which_m->spell_note(19);
+					which_m->spell_note(eSpellNote::WEBBED);
 					r1 = get_ran(1,2,3);
 					which_m->web(r1);
 					univ.town.set_web(where_check.x,where_check.y,false);
@@ -967,7 +967,7 @@ static bool monst_check_one_special_terrain(location where_check,short mode,shor
 			// Monster breaks the barrier
 			// TODO: Are these barrier sounds right?
 			play_sound(60);
-			which_m->spell_note(49);
+			which_m->spell_note(eSpellNote::BREAKS_BARRIER);
 			univ.town.set_fire_barr(where_check.x,where_check.y,false);
 		}
 		else {
@@ -982,7 +982,7 @@ static bool monst_check_one_special_terrain(location where_check,short mode,shor
 			&& (!univ.town->strong_barriers)) {
 			// Monster breaks the barrier
 			play_sound(60);
-			which_m->spell_note(49);
+			which_m->spell_note(eSpellNote::BREAKS_BARRIER);
 			univ.town.set_force_barr(where_check.x,where_check.y,false);
 		}
 		else can_enter = false;
@@ -1094,11 +1094,11 @@ void record_monst(cCreature* which_m, bool forced) {
 	// TODO: Are these two sounds right?
 	else if(r1 > cCreature::charm_odds[which_m->level / 2] || which_m->abil[eMonstAbil::SPLITS].active
 			 || which_m->m_type == eRace::IMPORTANT) {
-		which_m->spell_note(10);
+		which_m->spell_note(eSpellNote::RESISTS);
 		play_sound(68);
 	}
 	else {
-		which_m->spell_note(24);
+		which_m->spell_note(eSpellNote::RECORDED);
 		r1 = get_ran(1,0,univ.party.imprisoned_monst.size() - 1);
 		if(univ.party.imprisoned_monst[r1] == 0)
 			univ.party.imprisoned_monst[r1] = which_m->number;
@@ -1183,7 +1183,7 @@ bool summon_monster(mon_num_t which,location where,short duration,eAttitude give
 	
 	univ.town.monst[spot].summon_time = duration;
 	univ.town.monst[spot].party_summoned = by_party;
-	univ.town.monst[spot].spell_note(21);
+	univ.town.monst[spot].spell_note(eSpellNote::SUMMONED);
 	
 	return true;
 }
