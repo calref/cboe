@@ -84,7 +84,7 @@ print('C++ compiler:', cxx)
 
 env.VariantDir('#build/obj', 'src')
 env.VariantDir('#build/obj/test', 'test')
-env.VariantDir('#build/obj/test/deps', 'deps')
+env.VariantDir('#build/obj/deps', 'deps')
 
 if not env['release']:
 	if platform in ['posix', 'darwin']:
@@ -319,7 +319,6 @@ env.Append(CPPPATH=Split("""
 	#src/
 	#src/fileio/gzstream/
 	#src/fileio/xml-parser/
-	#src/deps/fmtlib/include/
 """))
 
 env['CONFIGUREDIR'] = '#build/conf'
@@ -411,6 +410,12 @@ if not env.GetOption('clean'):
 		subprocess.call(["git", "submodule", "update", "--init", "deps/cppcodec"])
 
 	env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/cppcodec')])
+
+	# Make sure fmtlib is cloned
+	if not path.exists('deps/fmtlib/fmt/format.h'):
+		subprocess.call(["git", "submodule", "update", "--init", "deps/fmtlib"])
+
+	env.Append(CPPPATH=[path.join(os.getcwd(), 'deps/fmtlib/include')])
 
 	# On Linux, build TGUI from the subtree if necessary
 	if platform == 'posix':
