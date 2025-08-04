@@ -46,8 +46,8 @@ void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type);
-static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario);
-static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops);
+static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario, std::string encoding);
+static bool load_town_v1(fs::path scen_file,short which_town,cTown& the_town,legacy::scenario_data_type& scenario,std::vector<shop_info_t>& shops, std::string encoding);
 // Load new scenarios
 static bool load_scenario_v2(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type);
 // Some of these are non-static so that the test cases can access them.
@@ -319,6 +319,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 	}
 
 	auto info = info_from_action(*meta_doc.FirstChildElement());
+	std::string encoding = "";
 	
 	for(short i = 0; i < 270; i++) {
 		len = (long) (temp_scenario.scen_str_len[i]);
@@ -328,7 +329,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 		std::string decoded;
 		std::vector<std::string> options;
 		if(info.find("encoding") != info.end()){
-			std::string encoding = info["encoding"];
+			encoding = info["encoding"];
 			decoded = boost::locale::conv::to_utf<char>(temp_str, encoding);
 		}else{
 			bool different = false;
@@ -346,7 +347,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 				// Comment this out if you're not messing with the metadata:
 				// which = cStringChoice(options, "Which is best?").show(-1);
 				if(which != -1){
-					info["encoding"] = encodings_to_try[which];
+					encoding = info["encoding"] = encodings_to_try[which];
 					decoded = options[which];
 				}
 				else{
@@ -394,7 +395,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 	for(int x = 0; x < temp_scenario.out_width; x++) {
 		for(int y = 0; y < temp_scenario.out_height; y++) {
 			scenario.outdoors[x][y] = new cOutdoors(scenario);
-			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], temp_scenario);
+			load_outdoors_v1(scenario.scen_file, loc(x,y), *scenario.outdoors[x][y], temp_scenario, encoding);
 		}
 	}
 	
@@ -409,7 +410,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 			case 1: scenario.towns[i] = new cTown(scenario, AREA_MEDIUM); break;
 			case 2: scenario.towns[i] = new cTown(scenario, AREA_SMALL); break;
 		}
-		load_town_v1(scenario.scen_file, i, *scenario.towns[i], temp_scenario, shops);
+		load_town_v1(scenario.scen_file, i, *scenario.towns[i], temp_scenario, shops, encoding);
 	}
 	// Enable character creation in starting town
 	scenario.towns[scenario.which_town_start]->has_tavern = true;
@@ -2530,7 +2531,7 @@ static long get_town_offset(short which_town, legacy::scenario_data_type& scenar
 	return len_to_jump;
 }
 
-bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario, std::vector<shop_info_t>& shops) {
+bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy::scenario_data_type& scenario, std::vector<shop_info_t>& shops, std::string encoding) {
 	long len,len_to_jump = 0;
 	char temp_str[256];
 	legacy::town_record_type store_town;
@@ -2594,8 +2595,11 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_town.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
 		std::string temp_str_trimmed = temp_str;
+		if(!encoding.empty()){
+			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+		}
+		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
 		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
 		if(i == 0) the_town.name = temp_str_trimmed;
 		else if(i >= 1 && i < 17)
@@ -2621,20 +2625,26 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		len = (long) (store_talk.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
+		std::string temp_str_trimmed = temp_str;
+		if(!encoding.empty()){
+			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+		}
+		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
+		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
 		if(i >= 0 && i < 10)
-			the_town.talking.people[i].title = temp_str;
+			the_town.talking.people[i].title = temp_str_trimmed;
 		else if(i >= 10 && i < 20)
-			the_town.talking.people[i-10].look = temp_str;
+			the_town.talking.people[i-10].look = temp_str_trimmed;
 		else if(i >= 20 && i < 30)
-			the_town.talking.people[i-20].name = temp_str;
+			the_town.talking.people[i-20].name = temp_str_trimmed;
 		else if(i >= 30 && i < 40)
-			the_town.talking.people[i-30].job = temp_str;
+			the_town.talking.people[i-30].job = temp_str_trimmed;
 		else if(i >= 160)
-			the_town.talking.people[i-160].dunno = temp_str;
+			the_town.talking.people[i-160].dunno = temp_str_trimmed;
 		else {
 			if(i % 2 == 0)
-				the_town.talking.talk_nodes[(i-40)/2].str1 = temp_str;
-			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str;
+				the_town.talking.talk_nodes[(i-40)/2].str1 = temp_str_trimmed;
+			else the_town.talking.talk_nodes[(i-40)/2].str2 = temp_str_trimmed;
 		}
 	}
 	
@@ -2671,7 +2681,7 @@ static long get_outdoors_offset(location& which_out, legacy::scenario_data_type&
 }
 
 //mode -> 0 - primary load  1 - add to top  2 - right  3 - bottom  4 - left
-bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario){
+bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario, std::string encoding){
 	long len,len_to_jump;
 	char temp_str[256];
 	legacy::outdoor_record_type store_out;
@@ -2707,13 +2717,19 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		len = (long) (store_out.strlens[i]);
 		fread(temp_str, len, 1, file_id);
 		temp_str[len] = 0;
-		if(i == 0) the_out.name = temp_str;
-		else if(i == 9) the_out.comment = temp_str;
-		else if(i < 9) the_out.area_desc[i-1].descr = temp_str;
+		std::string temp_str_trimmed = temp_str;
+		if(!encoding.empty()){
+			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+		}
+		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
+		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
+		if(i == 0) the_out.name = temp_str_trimmed;
+		else if(i == 9) the_out.comment = temp_str_trimmed;
+		else if(i < 9) the_out.area_desc[i-1].descr = temp_str_trimmed;
 		else if(i >= 10 && i < 100)
-			the_out.spec_strs[i-10] = temp_str;
+			the_out.spec_strs[i-10] = temp_str_trimmed;
 		else if(i >= 100 && i < 108)
-			the_out.sign_locs[i-100].text = temp_str;
+			the_out.sign_locs[i-100].text = temp_str_trimmed;
 	}
 	
 	if(fclose(file_id) != 0) {
