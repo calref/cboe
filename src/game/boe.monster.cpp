@@ -340,7 +340,7 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 			hate_spot = true;
 	}
 	if(hate_spot) {
-		prospect = find_clear_spot(loc,1);
+		prospect = find_clear_spot(loc,1,univ.town.monst[which_m].x_width,univ.town.monst[which_m].y_width);
 		if(prospect.x > 0) {
 			*good_loc = prospect;
 			return true;
@@ -707,10 +707,12 @@ bool try_move(short i,location start,short x,short y) {
 }
 
 bool combat_move_monster(short which,location destination) {
-	if(!monst_can_be_there(destination,which))
+	if(!monst_can_be_there(destination,which)){
 		return false;
-	else if(!monst_check_special_terrain(destination,2,which))
+	}
+	else if(!monst_check_special_terrain(destination,2,which)){
 		return false;
+	}
 	else {
 		univ.town.monst[which].direction = set_direction(univ.town.monst[which].cur_loc, destination);
 		univ.town.monst[which].cur_loc = destination;
@@ -727,12 +729,26 @@ bool combat_move_monster(short which,location destination) {
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
 // TODO: NO WAIT IT DOESN'T LOOK AT ALL SPACES!!!
-// TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
-location find_clear_spot(location from_where,short mode) {
+location find_clear_spot(location from_where,short mode,short x_width,short y_width) {
 	location loc,store_loc;
 	short num_tries = 0,r1;
-	
+	auto is_clear = [from_where](location loc) -> bool {
+		return !loc_off_act_area(loc) && !is_blocked(loc)
+			&& can_see_light(from_where,loc,combat_obscurity) == 0
+			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
+			&& (!(is_town()) || (loc != univ.party.town_loc))
+			&& (!univ.town.is_summon_safe(loc.x, loc.y));
+	};
+	auto all_is_clear = [from_where, x_width, y_width, is_clear](location loc) -> bool {
+		for(int x = 0; x < x_width; ++x){
+			for(int y = 0; y < y_width; ++y){
+				if(!is_clear({loc.x + x, loc.y + y}))
+					return false;
+			}
+		}
+		return true;
+	};
 	while(num_tries < 75) {
 		num_tries++;
 		loc = from_where;
@@ -740,11 +756,7 @@ location find_clear_spot(location from_where,short mode) {
 		loc.x = loc.x + r1;
 		r1 = get_ran(1,-2,2);
 		loc.y = loc.y + r1;
-		if(!loc_off_act_area(loc) && !is_blocked(loc)
-			&& can_see_light(from_where,loc,combat_obscurity) == 0
-			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
-			&& (!(is_town()) || (loc != univ.party.town_loc))
-			&& (!univ.town.is_summon_safe(loc.x, loc.y))) {
+		if(all_is_clear(loc)) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
 			else store_loc = loc;
