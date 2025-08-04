@@ -30,6 +30,7 @@
 #include "replay.hpp"
 
 #include "porting.hpp"
+#include "fileio/mac_roman.hpp"
 #include "fileio/resmgr/res_image.hpp"
 #include "fileio/resmgr/res_sound.hpp"
 
@@ -44,6 +45,7 @@ extern std::string last_load_file;
 
 void load_spec_graphics_v1(fs::path scen_file);
 void load_spec_graphics_v2(int num_sheets);
+std::string decode_temp_str(std::string temp_str, std::string encoding);
 // Load old scenarios (town talk is handled by the town loading function)
 static bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario load_type);
 static bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out, legacy::scenario_data_type& scenario, std::string encoding);
@@ -330,11 +332,11 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 		std::vector<std::string> options;
 		if(info.find("encoding") != info.end()){
 			encoding = info["encoding"];
-			decoded = boost::locale::conv::to_utf<char>(temp_str, encoding);
+			decoded = decode_temp_str(temp_str, encoding);
 		}else{
 			bool different = false;
 			for(std::string encoding : encodings_to_try){
-				std::string enc = boost::locale::conv::to_utf<char>(temp_str, encoding);
+				std::string enc = decode_temp_str(temp_str, encoding);
 				if(!options.empty() && enc != options.back()) different = true;
 				options.push_back(enc);
 			}
@@ -2597,7 +2599,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		temp_str[len] = 0;
 		std::string temp_str_trimmed = temp_str;
 		if(!encoding.empty()){
-			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+			temp_str_trimmed = decode_temp_str(temp_str, encoding);
 		}
 		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
 		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
@@ -2627,7 +2629,7 @@ bool load_town_v1(fs::path scen_file, short which_town, cTown& the_town, legacy:
 		temp_str[len] = 0;
 		std::string temp_str_trimmed = temp_str;
 		if(!encoding.empty()){
-			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+			temp_str_trimmed = decode_temp_str(temp_str, encoding);
 		}
 		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
 		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
@@ -2719,7 +2721,7 @@ bool load_outdoors_v1(fs::path scen_file, location which_out,cOutdoors& the_out,
 		temp_str[len] = 0;
 		std::string temp_str_trimmed = temp_str;
 		if(!encoding.empty()){
-			temp_str_trimmed = boost::locale::conv::to_utf<char>(temp_str, encoding);
+			temp_str_trimmed = decode_temp_str(temp_str, encoding);
 		}
 		// Trim whitespace off of strings, which are fixed-width in legacy scenarios
 		boost::algorithm::trim_right(temp_str_trimmed); // Whitespace in front of a string would be weird, but possibly intentional
@@ -2799,4 +2801,16 @@ void load_spec_graphics_v2(int num_sheets) {
 		ResMgr::graphics.free(name);
 		spec_scen_g.sheets[num_sheets] = &ResMgr::graphics.get(name);
 	}
+}
+
+std::string decode_temp_str(std::string temp_str, std::string encoding) {
+	if(encoding == "MacRoman"){
+		std::basic_string<uint16_t> utf16;
+		std::basic_string<char> utf8;
+		for(char byte : temp_str){
+			utf16.push_back(gMORToUnicode[(unsigned char) byte]);
+		}
+		return boost::locale::conv::utf_to_utf<char>(utf16);
+	}
+	return boost::locale::conv::to_utf<char>(temp_str, encoding);
 }
