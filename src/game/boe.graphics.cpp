@@ -1635,6 +1635,36 @@ void draw_targeting_line() {
 	extern bool targeting_line_visible;
 	if(targeting_line_visible && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0)))) {
+
+		// Highlight targetable squares including ally/enemy attitude
+		for(short q = 0; q < 9; q++) {
+			for(short r = 0; r < 9; r++) {
+				which_space = center;
+				which_space.x += q - 4;
+				which_space.y += r - 4;
+
+				sf::Color frame_color(0, 0, 0, 0);
+				if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
+					&& (dist(from_loc,which_space) <= current_spell_range)){
+					frame_color = sf::Color(255, 255, 255, 127);
+
+					iLiving* targ = univ.target_there(which_space, TARG_PC);
+					if(targ != nullptr){
+						frame_color = sf::Color(0, 255, 0, 127);
+					}
+					targ = univ.target_there(which_space, TARG_MONST);
+					if(targ != nullptr){
+						frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
+					}
+
+					target_rect.left = 13 + 28 * q + 19;
+					target_rect.right = target_rect.left + 28;
+					target_rect.top = 13 + 36 * r + 7;
+					target_rect.bottom = target_rect.top + 36;
+					frame_rect(mainPtr(), target_rect, frame_color);
+				}
+			}
+		}
 		
 		if(mouse_to_terrain_coords(which_space, false)) {
 			int xBound = (short) (from_loc.x - center.x + 4);
@@ -1662,7 +1692,8 @@ void draw_targeting_line() {
 							target_rect.right = target_rect.left + 28;
 							target_rect.top = 13 + 36 * j + 7;
 							target_rect.bottom = target_rect.top + 36;
-							frame_rect(mainPtr(), target_rect, sf::Color::White);
+							static sf::Color target_color(255, 0, 0, 255);
+							frame_rect(mainPtr(), target_rect, target_color);
 							target_rect.inset(-5,-5);
 							
 							// Now place number of shots left, if drawing center of target
