@@ -664,15 +664,16 @@ std::vector<std::string> preset_words = {
 	"Ask About...",
 };
 
+std::vector<location> preset_word_locs = {
+	{4, 366}, {70, 366}, {136, 366},
+	{4, 389}, {70, 389}, {121, 389},
+	{210, 389}, {190, 366},
+	{4, 343}
+};
+
 static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
-	static const std::vector<location> preset_word_locs = {
-		{4, 366}, {70, 366}, {136, 366},
-		{4, 389}, {70, 389}, {121, 389},
-		{210, 389}, {190, 366},
-		{4, 343}
-	};
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = TALK_WORD_SIZE;
