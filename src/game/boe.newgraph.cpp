@@ -1022,6 +1022,16 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 		}
 	}
 	
+	// If the text will overflow onto the preset talk words, shrink it
+	extern std::vector<location> preset_word_locs;
+	auto break_info = calculate_line_wrapping(word_place_rect, str, style);
+	short lines = break_info.size();
+	short height = lines * (style.lineHeight+1);
+	if(height >= word_place_rect.height()){
+		short overflow = height - preset_word_locs.back().y;
+		style.lineHeight -= ceil(overflow / (float) lines);
+	}
+
 	std::vector<rectangle> word_rects = draw_string_hilite(talk_gworld(), word_place_rect, str, style, hilites, color ? CUSTOM_WORD_ON : CUSTOM_WORD_OFF);
 	
 	if(!talk_end_forced) {
