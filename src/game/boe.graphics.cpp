@@ -1653,7 +1653,7 @@ void draw_targeting_line() {
 						frame_color = sf::Color(0, 255, 0, 127);
 					}
 					targ = univ.target_there(which_space, TARG_MONST);
-					if(targ != nullptr){
+					if(targ != nullptr && !(dynamic_cast<cMonster*>(targ))->invisible){
 						frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
 					}
 
