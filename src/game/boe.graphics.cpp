@@ -1250,6 +1250,13 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	}
 	sf::Color test_color = {0,0,0}, store_color;
 	
+	location targ;
+	targ.x = q;
+	targ.y = r;
+	if(supressing_some_spaces && (targ != ok_space[0]) && (targ != ok_space[1]) &&
+		(targ != ok_space[2]) && (targ != ok_space[3]))
+		return;
+
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		int which_sheet = pic / 50;
