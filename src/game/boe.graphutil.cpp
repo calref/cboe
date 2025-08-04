@@ -200,7 +200,8 @@ void draw_monsters() {
 							Draw_Some_Item(monst_gworld, source_rect, terrain_screen_gworld(), store_loc, 1, 0);
 						}
 
-						if(is_combat()){
+						extern bool targeting_line_visible;
+						if(is_combat() && !targeting_line_visible){
 							// Frame the monster
 							rectangle target_rect;
 							target_rect.left = 13 + 28 * where_draw.x;
