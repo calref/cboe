@@ -199,6 +199,16 @@ void draw_monsters() {
 							sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
 							Draw_Some_Item(monst_gworld, source_rect, terrain_screen_gworld(), store_loc, 1, 0);
 						}
+
+						if(is_combat()){
+							// Frame the monster
+							rectangle target_rect;
+							target_rect.left = 13 + 28 * where_draw.x;
+							target_rect.right = target_rect.left + 28;
+							target_rect.top = 13 + 36 * where_draw.y;
+							target_rect.bottom = target_rect.top + 36;
+							frame_rect(terrain_screen_gworld(), target_rect, monst.is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127));
+						}
 					}
 				}
 			}
