@@ -1192,7 +1192,7 @@ void activate_monsters(short code,short /*attitude*/) {
 	if(code == 0)
 		return;
 	for(short i = 0; i < univ.town->creatures.size(); i++)
-		if(univ.town->creatures[i].spec_enc_code == code) {
+		if(univ.town->creatures[i].number > 0 && univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;
