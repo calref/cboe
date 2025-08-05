@@ -492,25 +492,6 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 		monst.targ_loc.y = 0;
 	}
 	
-	// check boats
-	for(short i = 0; i < univ.party.boats.size(); i++) {
-		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
-			if(!univ.party.boats[i].exists) {
-				univ.party.boats[i] = univ.scenario.boats[i];
-				univ.party.boats[i].exists = true;
-			}
-		}
-	}
-	// check horses
-	for(short i = 0; i < univ.party.horses.size(); i++) {
-		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
-			if(!univ.party.horses[i].exists) {
-				univ.party.horses[i] = univ.scenario.horses[i];
-				univ.party.horses[i].exists = true;
-			}
-		}
-	}
-	
 	clear_map();
 	reset_item_max();
 	town_force = 200;
