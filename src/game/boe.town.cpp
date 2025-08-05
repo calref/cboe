@@ -492,7 +492,7 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 		monst.targ_loc.y = 0;
 	}
 	
-	// check horses
+	// check boats
 	for(short i = 0; i < univ.party.boats.size(); i++) {
 		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
 			if(!univ.party.boats[i].exists) {
@@ -501,6 +501,7 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 			}
 		}
 	}
+	// check horses
 	for(short i = 0; i < univ.party.horses.size(); i++) {
 		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
 			if(!univ.party.horses[i].exists) {
