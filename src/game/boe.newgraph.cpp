@@ -128,10 +128,7 @@ terrain_screen_rects_t terrain_screen_rects() {
 	to.offset(current_terrain_ul);
 
 	rectangle in_frame = to;
-	in_frame.top += 11;
-	in_frame.left += 11;
-	in_frame.bottom -= 11;
-	in_frame.right -= 11;
+	in_frame.inset(14, 14);
 
 	return {from, to, in_frame};
 }
@@ -361,10 +358,20 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		return;
 	}
 	
-	// Eliminate missiles traveling 0 distance
+	bool can_see_origin = party_can_see(missile_origin) < 6;
+	bool missile_flying = false;
 	for(short i = 0; i < 30; i++) {
-		if((store_missiles[i].missile_type >= 0) && (missile_origin == store_missiles[i].dest))
-			store_missiles[i].missile_type = -1;
+		if((store_missiles[i].missile_type >= 0)){
+			// Eliminate missiles traveling 0 distance
+			if(missile_origin == store_missiles[i].dest){
+				store_missiles[i].missile_type = -1;
+			}
+			// Eliminate missiles whose whole arc is out of view
+			if(!can_see_origin && party_can_see(store_missiles[i].dest) == 6){
+				store_missiles[i].missile_type = -1;
+				missile_flying = true;
+			}
+		}
 	}
 
 	std::vector<location> missile_targets;
@@ -377,7 +384,11 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 			missile_targets.push_back(store_missiles[i].dest);
 		}
 
-	if(missile_targets.empty()) return;
+	if(missile_targets.empty()){
+		if(missile_flying)
+			play_sound(-1 * sound_num);
+		return;
+	}
 
 	if(missile_targets.size() == 1){
 		tracking_missile = missile_indices[0];
@@ -388,9 +399,14 @@ void do_missile_anim(short num_steps,location missile_origin,short sound_num) {
 		tracking_missile = missile_indices[closest_point_idx(missile_targets, camera_dest)];
 	}
 
-	// Start the camera as close as possible to containing the origin and the camera destination
-	// on the same screen
-	center = between_anchor_points(missile_origin, camera_dest);
+	if(can_see_origin){
+		// Start the camera as close as possible to containing the origin and the camera destination
+		// on the same screen
+		center = between_anchor_points(missile_origin, camera_dest);
+	}else{
+		// Can't see the origin, so showing the whole flight path when we don't have to is kind of a spoiler.
+		center = camera_dest;
+	}
 
 	// make terrain_template contain current terrain all nicely
 	draw_terrain(1);
@@ -577,7 +593,7 @@ void do_explosion_anim(short /*sound_num*/,short special_draw, short snd) {
 	draw_terrain(1);
 	if(special_draw != 2) {
 		auto ter_rects = terrain_screen_rects();
-		rect_draw_some_item(terrain_screen_gworld().getTexture(),ter_rects.from,mainPtr(),ter_rects.to);
+		rect_draw_some_item(terrain_screen_gworld().getTexture(),ter_rects.from,mainPtr(),ter_rects.to, ter_rects.in_frame);
 	}
 	
 	TextStyle style;
