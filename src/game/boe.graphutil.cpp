@@ -205,9 +205,9 @@ void draw_monsters() {
 							// Frame the monster
 							rectangle target_rect;
 							target_rect.left = 13 + 28 * where_draw.x;
-							target_rect.right = target_rect.left + 28;
+							target_rect.right = target_rect.left + 28 * monst.x_width;
 							target_rect.top = 13 + 36 * where_draw.y;
-							target_rect.bottom = target_rect.top + 36;
+							target_rect.bottom = target_rect.top + 36 * monst.y_width;
 							frame_rect(terrain_screen_gworld(), target_rect, monst.is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127));
 						}
 					}

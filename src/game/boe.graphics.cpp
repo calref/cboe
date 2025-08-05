@@ -4,6 +4,7 @@
 #include <list>
 #include <unordered_map>
 #include <memory>
+#include <set>
 
 #include "boe.global.hpp"
 
@@ -1637,13 +1638,17 @@ void draw_targeting_line() {
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0)))) {
 
 		// Highlight targetable squares including ally/enemy attitude
+		std::set<location, loc_compare> big_monst_there;
 		for(short q = 0; q < 9; q++) {
 			for(short r = 0; r < 9; r++) {
 				which_space = center;
 				which_space.x += q - 4;
 				which_space.y += r - 4;
 
+				if(big_monst_there.count(which_space)) continue;
 				sf::Color frame_color(0, 0, 0, 0);
+				int x_width = 1;
+				int y_width = 1;
 				if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 					&& (dist(from_loc,which_space) <= current_spell_range)){
 					frame_color = sf::Color(255, 255, 255, 127);
@@ -1653,14 +1658,24 @@ void draw_targeting_line() {
 						frame_color = sf::Color(0, 255, 0, 127);
 					}
 					targ = univ.target_there(which_space, TARG_MONST);
-					if(targ != nullptr && !(dynamic_cast<cMonster*>(targ))->invisible){
-						frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
+					if(targ != nullptr){
+						cMonster* monst = dynamic_cast<cMonster*>(targ);
+						if(!monst->invisible){
+							frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
+							x_width = monst->x_width;
+							y_width = monst->y_width;
+							for(int i = 0; i < x_width; ++i){
+								for(int j = 0; j < y_width; ++j){
+									big_monst_there.insert(loc(which_space.x + i, which_space.y + j));
+								}
+							}
+						}
 					}
 
 					target_rect.left = 13 + 28 * q + 19;
-					target_rect.right = target_rect.left + 28;
+					target_rect.right = target_rect.left + 28 * x_width;
 					target_rect.top = 13 + 36 * r + 7;
-					target_rect.bottom = target_rect.top + 36;
+					target_rect.bottom = target_rect.top + 36 * y_width;
 					frame_rect(mainPtr(), target_rect, frame_color);
 				}
 			}
