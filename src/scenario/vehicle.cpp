@@ -25,7 +25,7 @@ cVehicle::cVehicle() :
 
 void cVehicle::import_legacy(legacy::horse_record_type& old){
 	which_town = old.which_town;
-	exists = old.exists;
+	exists = which_town >= 0 && which_town <= 200;
 	property = old.property;
 	if(which_town < 200) {
 		loc.x = old.horse_loc.x;
@@ -40,7 +40,7 @@ void cVehicle::import_legacy(legacy::horse_record_type& old){
 
 void cVehicle::import_legacy(legacy::boat_record_type& old){
 	which_town = old.which_town;
-	exists = old.exists;
+	exists = which_town >= 0 && which_town <= 200;
 	property = old.property;
 	if(which_town < 200) {
 		loc.x = old.boat_loc.x;
