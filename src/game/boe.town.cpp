@@ -1542,13 +1542,13 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 		// Draw signs
 		const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
 		for(sign_loc_t sign : sign_locs){
-			mark_loc(sign, Colours::TRANSPARENT, Colours::YELLOW);
+			mark_loc(sign, Colours::EMPTY, Colours::YELLOW);
 		}
 		// Draw town entrances
 		if(is_out()){
 			const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
 			for(spec_loc_t city : city_locs){
-				mark_loc(city, Colours::TRANSPARENT, Colours::GREEN);
+				mark_loc(city, Colours::EMPTY, Colours::GREEN);
 			}
 		}
 		// Draw vehicles

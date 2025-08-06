@@ -58,7 +58,8 @@ namespace Colours {
 	const sf::Color YELLOW { 0xff, 0xff, 0x31};
 	const sf::Color ORANGE { 0xff, 0x80, 0x00};
 	const sf::Color LIGHT_BLUE { 0xad, 0xd8, 0xe6 }; // Spell points on dark background
-	const sf::Color TRANSPARENT { 0x00, 0x00, 0x00, 0x00 };
+	// On Windows, TRANSPARENT is macro-defined as something...?
+	const sf::Color EMPTY { 0x00, 0x00, 0x00, 0x00 };
 	// Text colours for shopping / talking
 	// TODO: The Windows version appears to use completely different colours?
 	const sf::Color SHADOW      { 0x00, 0x00, 0x68}; // formerly c[3] QD colour = {0,0,26623} (shop/character name shadow, shop subtitle)
