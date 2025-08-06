@@ -62,7 +62,7 @@ location town_force_loc;
 bool shop_button_active[12];
 rectangle map_title_rect = {3,50,15,300};
 rectangle map_bar_rect = {15,50,27,300};
-rectangle map_tooltip_rect = {270,50,307,350};
+rectangle map_tooltip_rect = {270,50,307,300};
 
 void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
@@ -1510,36 +1510,55 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 	if(canMap) {
 		rect_draw_some_item(map_gworld().getTexture(),the_rect,mini_map(),area_to_draw_on);
 		
+		auto mark_loc = [view_rect, &draw_rect, area_to_draw_on](location where, sf::Color inner, sf::Color outer) -> void {
+			if((is_explored(where.x,where.y)) &&
+				((where.x >= view_rect.left) && (where.x < view_rect.right)
+					&& where.y >= view_rect.top && where.y < view_rect.bottom)){
+				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
+				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
+				draw_rect.right = draw_rect.left + 6;
+				draw_rect.bottom = draw_rect.top + 6;
+
+				fill_rect(mini_map(), draw_rect, inner);
+				frame_circle(mini_map(), draw_rect, outer);
+			}
+		};
+
 		// Now place PCs and monsters
 		if(draw_pcs) {
 			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
 				for(short i = 0; i < univ.town.monst.size(); i++)
 					if(univ.town.monst[i].is_alive()) {
 						where = univ.town.monst[i].cur_loc;
-						if((is_explored(where.x,where.y)) &&
-							((where.x >= view_rect.left) && (where.x < view_rect.right)
-							 && where.y >= view_rect.top && where.y < view_rect.bottom)){
-								
-								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-								draw_rect.right = draw_rect.left + 6;
-								draw_rect.bottom = draw_rect.top + 6;
-								
-								fill_rect(mini_map(), draw_rect, Colours::GREEN);
-								frame_circle(mini_map(), draw_rect, Colours::BLUE);
-							}
+						mark_loc(where, Colours::GREEN, Colours::BLUE);
 					}
 			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
 				where = (is_town()) ? univ.party.town_loc : global_to_local(univ.party.out_loc);
 				
-				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-				draw_rect.right = draw_rect.left + 6;
-				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map(), draw_rect, Colours::RED);
-				frame_circle(mini_map(), draw_rect, sf::Color::Black);
-				
+				mark_loc(where, Colours::RED, Colours::BLACK);
 			}
+		}
+
+		// Draw signs
+		const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
+		for(sign_loc_t sign : sign_locs){
+			mark_loc(sign, Colours::TRANSPARENT, Colours::YELLOW);
+		}
+		// Draw town entrances
+		if(is_out()){
+			const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
+			for(spec_loc_t city : city_locs){
+				mark_loc(city, Colours::TRANSPARENT, Colours::GREEN);
+			}
+		}
+		// Draw vehicles
+		for(auto& boat : univ.party.boats) {
+			if(!vehicle_is_here(boat)) continue;
+			mark_loc(boat.loc, Colours::MAROON, Colours::BLACK);
+		}
+		for(auto& horse : univ.party.horses) {
+			if(!vehicle_is_here(horse)) continue;
+			mark_loc(horse.loc, Colours::MAROON, Colours::BLACK);
 		}
 	}
 	

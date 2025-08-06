@@ -600,3 +600,15 @@ void alter_space(short i,short j,ter_num_t ter) {
 			univ.town->set_up_lights();
 	}
 }
+
+bool vehicle_is_here(const cVehicle& vehicle) {
+	if(!vehicle.exists) return false;
+	if(is_out()){
+		location party_sector = univ.party.outdoor_corner;
+		party_sector.x += univ.party.i_w_c.x;
+		party_sector.y += univ.party.i_w_c.y;
+		return vehicle.which_town == 200 && vehicle.sector == party_sector;
+	}else{
+		return vehicle.which_town == univ.party.town_num;
+	}
+}

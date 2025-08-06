@@ -1456,10 +1456,41 @@ void handle_one_minimap_event(const sf::Event& event) {
 
 		std::string tooltip_text = "";
 		if(is_explored(tile.x, tile.y)){
+			// Area rectangle hovered
 			const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
 			for(info_rect_t area : area_desc){
 				if(area.contains(tile)){
 					tooltip_text += area.descr + " |";
+				}
+			}
+
+			// Sign hovered
+			const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
+			for(sign_loc_t sign : sign_locs){
+				if(sign == tile){
+					tooltip_text += "Sign: " + sign.text + " |";
+				}
+			}
+			// Town entrance hovered
+			if(is_out()){
+				const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
+				for(spec_loc_t city : city_locs){
+					if(city == tile){
+						tooltip_text += univ.scenario.towns[city.spec]->name + " |";
+					}
+				}
+			}
+			// Vehicle hovered
+			for(auto& boat : univ.party.boats) {
+				if(!vehicle_is_here(boat)) continue;
+				if(boat.loc == tile){
+					tooltip_text += (boat.property ? "Boat (Not Yours)" : "Your Boat");
+				}
+			}
+			for(auto& horse : univ.party.horses) {
+				if(!vehicle_is_here(horse)) continue;
+				if(horse.loc == tile){
+					tooltip_text += (horse.property ? "Horses (Not Yours)" : "Your Horses");
 				}
 			}
 		}

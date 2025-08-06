@@ -1,6 +1,7 @@
 
 #include <functional>
 #include "location.hpp"
+#include "vehicle.hpp"
 
 bool is_explored(short i,short j);
 void make_explored(short i,short j);
@@ -43,3 +44,5 @@ location push_loc(location from_where,location to_where);
 bool spot_impassable(short i,short  j);
 void swap_ter(short i,short j,ter_num_t ter1,ter_num_t ter2);
 void alter_space(short i,short j,ter_num_t ter);
+// Whether a vehicle is in the current town/outdoor section shown on the map
+bool vehicle_is_here(const cVehicle& vehicle);
