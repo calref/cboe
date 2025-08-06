@@ -707,10 +707,10 @@ void cStringRecorder::operator()(cDialog& me) {
 	play_sound(0);
 	std::string str1, str2;
 	univ.get_strs(str1, str2, spec_type, label1, label2);
-	std::string combined = str1;
+	// Combine str1 and str2 in one journal entry:
 	if(!str2.empty())
-		combined += " ||" + str2;
-	if(univ.party.record(note_type, combined, location)){
+		str1 += " ||" + str2;
+	if(univ.party.record(note_type, str1, location)){
 		give_help(58,0,me);
 		ASB("Added to encounter notes.");
 	}
