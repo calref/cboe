@@ -29,7 +29,7 @@ void erase_out_specials();
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
 rectangle minimap_view_rect();
-void draw_map(bool need_refresh);
+void draw_map(bool need_refresh, std::string tooltip_text = "");
 bool is_door(location destination);
 void display_map();
 void check_done();

@@ -92,6 +92,8 @@ boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
 std::string help_text_rsrc = "help";
 
+std::string last_tooltip_text = "";
+
 /*
 // Example feature flags:
 {
@@ -1444,6 +1446,26 @@ void handle_one_minimap_event(const sf::Event& event) {
 		map_window_lost_focus = true;
 	}else if(event.type == sf::Event::MouseMoved){
 		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
+
+		// Check if something interesting is hovered
+		location tile = minimap_view_rect().topLeft();
+		int x = event.mouseMove.x;
+		int y = event.mouseMove.y;
+		tile.x += (x - (47 * get_ui_scale_map())) / get_ui_scale_map() / 6;
+		tile.y += (y - (29 * get_ui_scale_map())) / get_ui_scale_map() / 6;
+
+		std::string tooltip_text = "";
+		if(is_explored(tile.x, tile.y)){
+			const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
+			for(info_rect_t area : area_desc){
+				if(area.contains(tile)){
+					tooltip_text += area.descr + " |";
+				}
+			}
+		}
+		if(tooltip_text != last_tooltip_text)
+			draw_map(false, tooltip_text);
+		last_tooltip_text = tooltip_text;
 	}else if(event.type == sf::Event::KeyPressed){
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
@@ -1491,7 +1513,7 @@ void update_everything() {
 
 void redraw_everything() {
 	redraw_screen(REFRESH_ALL);
-	if(map_visible) draw_map(false);
+	if(map_visible) draw_map(false, last_tooltip_text);
 }
 
 void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {
