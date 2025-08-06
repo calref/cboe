@@ -459,7 +459,7 @@ void draw_party_symbol(location center) {
 		return;
 	if(!univ.party.is_alive())
 		return;
-	if((is_town()) && (univ.party.town_loc.x > 70))
+	if((is_town()) && (univ.party.town_loc.x > (univ.scenario.is_legacy ? 70 : LOC_UNUSED)))
 		return;
 
 	if(is_town() && center != univ.party.town_loc) {
