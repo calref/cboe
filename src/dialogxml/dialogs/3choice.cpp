@@ -155,6 +155,13 @@ void cThreeChoice::init_buttons(cBasicButtonType btn1, cBasicButtonType btn2, cB
 		me->add(btn, cur_btn_rect, sout.str());
 		cur_btn_rect.right = cur_btn_rect.left - 4;
 	}
+	// Add a record button and hide it
+	cButton* record = new cButton(*me);
+	record->setText("Record");
+	record->attachClickHandler(std::bind(&cThreeChoice::onRecord, this, _2));
+	cur_btn_rect = {buttons_top,10,buttons_top + 23,buttons_right};
+	me->add(record, cur_btn_rect, "record");
+	record->hide();
 }
 
 void cThreeChoice::init_pict(pic_num_t pic){
@@ -174,7 +181,7 @@ std::string cThreeChoice::show(){
 	return "**ERROR**"; // shouldn't be reached
 }
 
-short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps, cDialog* parent) {
+short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicType pic_type,std::array<short, 3>& buttons,bool anim_pict,short anim_loops, int anim_fps, cUniverse* univ, cDialog* parent) {
 	set_cursor(sword_curs);
 
 	std::vector<std::string> vec(strs.begin(), strs.end());
@@ -185,6 +192,28 @@ short custom_choice_dialog(std::array<std::string, 6>& strs,short pic_num,ePicTy
 	if(anim_pict)
 		setup_dialog_pict_anim(*(customDialog.operator->()), "pict", anim_loops, anim_fps);
 
+	if(univ != nullptr){
+		customDialog.setRecordHandler([vec, univ](cDialog& dlg) -> void {
+			std::string combined;
+			for(std::string msg : vec){
+				if(!msg.empty()){
+					if(!combined.empty()){
+						combined += " ||";
+					}
+					combined += msg;
+				}
+			}
+			// It's not necessarily a NOTE_SCEN and location shouldn't be empty,
+			// but these things aren't actually shown to the party in the encounter notes dialog.
+			if(univ->party.record(NOTE_SCEN, combined, "")){
+				give_help(58,0,dlg);
+				// TODO ASB is only in game source, but this function is in common source so the scenario editor can preview dialogs :(
+				/*
+				add_string_to_buf("Added to encounter notes.");
+				*/
+			}
+		});
+	}
 	std::string item_hit = customDialog.show();
 
 	for(int i = 0; i < 3; i++) {
@@ -220,5 +249,23 @@ short once_dialog(cUniverse& univ, cSpecial& spec, eSpecCtxType cur_type, cDialo
 		showError("Dialog box ended up with no buttons.");
 		return -1;
 	}
-	return custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, parent);
+	return custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ, parent);
+}
+
+cThreeChoice& cThreeChoice::setRecordHandler(record_callback_t rec){
+	if(rec == nullptr){
+		hasRecord = false;
+		dlg["record"].hide();
+	}else{
+		hasRecord = true;
+		rec_f = rec;
+		dlg["record"].show();
+	}
+	return *this;
+}
+
+bool cThreeChoice::onRecord(std::string id){
+	if(hasRecord) rec_f(dlg);
+	else dlg[id].hide();
+	return hasRecord;
 }

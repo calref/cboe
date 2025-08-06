@@ -4,16 +4,22 @@
 <dialog defbtn='done' escbtn='done'>
 	<button name='done' type='done' top='341' left='319'/>
 	<pict type='dlog' num='8' top='9' left='9'/>
-	<text name='str1' framed='true' top='37' left='53' width='257' height='92'/>
-	<text name='str2' framed='true' top='136' left='53' width='257' height='92'/>
-	<text name='str3' framed='true' top='235' left='53' width='257' height='92'/>
+	<pane name='pane1' framed='true' top='37' left='53' width='257' height='92'>
+		<text name='str1' framed='true' top='37' left='53' width='257'/>
+	</pane>
+	<pane name='pane2' framed='true' top='136' left='53' width='257' height='92'>
+		<text name='str2' framed='true' top='136' left='53' width='257'/>
+	</pane>
+	<pane name='pane3' framed='true' top='235' left='53' width='257' height='92'>
+		<text name='str3' framed='true' top='235' left='53' width='257'/>
+	</pane>
 	<text size='large' top='9' left='53' width='257' height='19'>Encounter Notes:</text>
 	<button name='left' type='left' def-key='left' top='340' left='48'/>
 	<button name='right' type='right' def-key='right' top='340' left='111'/>
 	<!--
 	 TODO: I like the idea of assigning the delete key to this...
 	 -->
-	<button name='del1' type='regular' top='109' left='319'>Delete</button>
-	<button name='del2' type='regular' top='208' left='319'>Delete</button>
-	<button name='del3' type='regular' top='307' left='319'>Delete</button>
+	<button name='del1' type='regular' top='109' left='329'>Delete</button>
+	<button name='del2' type='regular' top='208' left='329'>Delete</button>
+	<button name='del3' type='regular' top='307' left='329'>Delete</button>
 </dialog>

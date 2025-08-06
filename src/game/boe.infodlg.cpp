@@ -512,10 +512,14 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > store_page_on * 3+i) {
 			me["str" + n].setText(univ.party.special_notes[store_page_on * 3+i].the_str);
+			me["str" + n].recalcRect();
+			me["pane" + n].recalcRect();
 			me["del" + n].show();
 		}
 		else {
 			me["str" + n].setText("");
+			me["str" + n].recalcRect();
+			me["pane" + n].recalcRect();
 			me["del" + n].hide();
 		}
 	}
@@ -544,6 +548,8 @@ void adventure_notes() {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			encNotes["str" + n].setText(univ.party.special_notes[i].the_str);
+			encNotes["str" + n].recalcRect();
+			encNotes["pane" + n].recalcRect();
 			encNotes["del" + n].show();
 		}
 		else encNotes["del" + n].hide();

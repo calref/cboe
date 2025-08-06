@@ -2637,7 +2637,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			univ.get_strs(strs, ctx.cur_spec_type, spec.m1);
 			// Leave / Take
 			buttons[0] = 9; buttons[1] = 19;
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
+			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
 				store_i = univ.scenario.get_stored_item(spec.ex1a);
@@ -2677,7 +2677,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				univ.get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
-				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c);
+				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c, &univ);
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else dlg_res = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
@@ -4006,7 +4006,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 9; buttons[1] = 35;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1)
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ) == 1)
 					ctx.next_spec = -1;
 				else {
 					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
@@ -4037,7 +4037,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs, ctx.cur_spec_type,spec.m1);
 				buttons[0] = 9; buttons[1] = 8;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1) {
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ) == 1) {
 					ctx.next_spec = -1;
 					if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 						*ctx.ret_a = 1;
@@ -4069,7 +4069,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 20; buttons[1] = 24;
-				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, false, -1, -1, &univ);
 				*ctx.ret_a = 1;
 				if(i == 1) {
 					ctx.next_spec = -1;
