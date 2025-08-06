@@ -28,6 +28,7 @@ void erase_completed_specials(cArea& sector, std::function<void(location)> clear
 void erase_out_specials();
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
+rectangle minimap_view_rect();
 void draw_map(bool need_refresh);
 bool is_door(location destination);
 void display_map();

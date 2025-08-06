@@ -1283,75 +1283,57 @@ void clear_map() {
 	draw_map(true);
 }
 
+const short view_max_dim = 40;
+rectangle minimap_view_rect() {
+	rectangle view_rect;
+	short total_size, party_loc_x, party_loc_y;
+
+	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
+		total_size = 48;
+		party_loc_x = univ.party.loc_in_sec.x;
+		party_loc_y = univ.party.loc_in_sec.y;
+	}
+	else {
+		total_size = univ.town->max_dim;
+		party_loc_x = univ.party.town_loc.x;
+		party_loc_y = univ.party.town_loc.y;
+	}
+	if(total_size <= view_max_dim){
+		view_rect = {0, 0, total_size, total_size};
+	}else{
+		short scroll_max = total_size - view_max_dim;
+		view_rect.left = minmax(0, scroll_max, party_loc_x - view_max_dim / 2);
+		view_rect.top = minmax(0, scroll_max, party_loc_y - view_max_dim / 2);
+		view_rect.right = view_rect.left + view_max_dim;
+		view_rect.bottom = view_rect.top + view_max_dim;
+	}
+	return view_rect;
+}
+
 void draw_map(bool need_refresh) {
 	if(!map_visible) return;
 	pic_num_t pic;
-	rectangle the_rect,map_world_rect = {0,0,384,384};
+	rectangle the_rect;
+
+	rectangle map_world_rect(map_gworld());
 	location where;
 	location kludge;
 	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from,base_source_rect = {0,0,12,12};
 	rectangle	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
-	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
 	
-	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
+	rectangle area_to_draw_on = {29,47,269,287};
 	ter_num_t what_ter;
 	bool expl;
-	short total_size = 48; // if full redraw, use this to figure out everything
 	rectangle custom_from;
 	
 	town_map_adj.x = 0;
 	town_map_adj.y = 0;
 	
-	// view rect is rect that is visible, redraw rect is area to redraw now
-	// area_to_draw_from is final draw from rect
-	// area_to_draw_on is final draw to rect
-	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
-		view_rect.left = minmax(0,8,univ.party.loc_in_sec.x - 20);
-		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
-		view_rect.bottom = view_rect.top + 40;
-		redraw_rect = view_rect;
-	}
-	else {
-		total_size = univ.town->max_dim;
-		switch(total_size) {
-			case 64:
-				view_rect.left = minmax(0,24,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,24,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = big_rect;
-				break;
-			case 48:
-				view_rect.left = minmax(0,8,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,8,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = view_rect;
-				break;
-			case 32:
-				view_rect = tiny_rect;
-				redraw_rect = view_rect;
-				break;
-		}
-	}
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)) ||
-		is_town() || is_combat()) {
-		area_to_draw_from = view_rect;
-		area_to_draw_from.width() = 40;
-		area_to_draw_from.height() = 40;
-		area_to_draw_from.left *= 6;
-		area_to_draw_from.right *= 6;
-		area_to_draw_from.top *= 6;
-		area_to_draw_from.bottom *= 6;
-	}
+	// We use view_rect as a camera to show only as much of the map as can fit in the window
+	rectangle view_rect = minimap_view_rect();
 	
 	if(is_combat())
 		draw_pcs = false;
@@ -1376,7 +1358,7 @@ void draw_map(bool need_refresh) {
 		
 		// Now, if shopping or talking, just don't touch anything.
 		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
-			redraw_rect.right = -1;
+			view_rect.right = -1;
 		// Otherwise, clear to black first:
 		else
 			fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
@@ -1388,12 +1370,11 @@ void draw_map(bool need_refresh) {
 			out_mode = true;
 		else out_mode = false;
 		
-		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
 		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
-		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
-			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
+		for(where.x = view_rect.left; where.x < view_rect.right; where.x++)
+			for(where.y = view_rect.top; where.y < view_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
-				draw_rect.offset(6 * where.x, 6 * where.y);
+				draw_rect.offset(6 * (where.x - view_rect.left), 6 * (where.y - view_rect.top));
 				
 				if(out_mode)
 					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
@@ -1405,6 +1386,7 @@ void draw_map(bool need_refresh) {
 					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 				else expl = is_explored(where.x,where.y);
 				
+				// Draw tile
 				if(expl != 0) {
 					pic = univ.scenario.ter_types[what_ter].map_pic;
 					bool drawLargeIcon = false;
@@ -1453,6 +1435,48 @@ void draw_map(bool need_refresh) {
 						draw_rect.inset(1,1);
 						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
 					}
+
+					// Draw discovered edges of rooms/areas
+					const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
+					location a;
+					location b;
+					for(info_rect_t area : area_desc){
+						location adjusted_where = where;
+						adjusted_where.x -= view_rect.left;
+						adjusted_where.y -= view_rect.top;
+						if(where.y == area.top && where.x >= area.left && where.x <= area.right){
+							a = orig_draw_rect.topLeft();
+							a.x += 6 * adjusted_where.x;
+							a.y += 6 * adjusted_where.y;
+							b = a;
+							b.x += 6;
+							draw_line(map_gworld(), a, b, 1, Colours::RED);
+						}
+						if(where.x == area.left && where.y >= area.top && where.y <= area.bottom){
+							a = orig_draw_rect.topLeft();
+							a.x += 6 * adjusted_where.x;
+							a.y += 6 * adjusted_where.y;
+							b = a;
+							b.y += 6;
+							draw_line(map_gworld(), a, b, 1, Colours::RED);
+						}
+						if(where.y == area.bottom && where.x >= area.left && where.x <= area.right){
+							a = orig_draw_rect.topLeft();
+							a.x += 6 * adjusted_where.x;
+							a.y += 6 * (adjusted_where.y + 1) - 1;
+							b = a;
+							b.x += 6;
+							draw_line(map_gworld(), a, b, 1, Colours::RED);
+						}
+						if(where.x == area.right && where.y >= area.top && where.y <= area.bottom){
+							a = orig_draw_rect.topLeft();
+							a.x += 6 * (adjusted_where.x + 1) - 1;
+							a.y += 6 * adjusted_where.y;
+							b = a;
+							b.y += 6;
+							draw_line(map_gworld(), a, b, 1, Colours::RED);
+						}
+					}
 				}
 			}
 		
@@ -1483,7 +1507,7 @@ void draw_map(bool need_refresh) {
 	win_draw_string(mini_map(), map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
 	if(canMap) {
-		rect_draw_some_item(map_gworld().getTexture(),area_to_draw_from,mini_map(),area_to_draw_on);
+		rect_draw_some_item(map_gworld().getTexture(),the_rect,mini_map(),area_to_draw_on);
 		
 		// Now place PCs and monsters
 		if(draw_pcs) {

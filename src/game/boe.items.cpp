@@ -683,6 +683,8 @@ short get_num_of_items(short max_num) {
 	return minmax(0,max_num,numPanel.getResult<int>());
 }
 
+// extern declaration doesn't work here??
+const short view_max_dim = 40;
 void init_mini_map() {
 	double map_scale = get_ui_scale_map();
 	if (map_scale < 0.1) map_scale = 1.0;
@@ -702,7 +704,7 @@ void init_mini_map() {
 	makeFrontWindow(mainPtr(), mini_map());
 	
 	// Create and initialize map gworld
-	if(!map_gworld().create(384, 384)) {
+	if(!map_gworld().create(view_max_dim * 6, view_max_dim * 6)) {
 		play_sound(2);
 		throw std::string("Failed to initialized automap!");
 	} else {
