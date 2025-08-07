@@ -1,7 +1,7 @@
 
 #include <functional>
 #include "location.hpp"
-#include "vehicle.hpp"
+#include "scenario/vehicle.hpp"
 
 bool is_explored(short i,short j);
 void make_explored(short i,short j);
