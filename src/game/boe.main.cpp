@@ -1485,13 +1485,19 @@ void handle_one_minimap_event(const sf::Event& event) {
 				if(!vehicle_is_here(boat)) continue;
 				if(boat.loc == tile){
 					tooltip_text += (boat.property ? "Boat (Not Yours)" : "Your Boat");
+					tooltip_text += " |";
 				}
 			}
 			for(auto& horse : univ.party.horses) {
 				if(!vehicle_is_here(horse)) continue;
 				if(horse.loc == tile){
 					tooltip_text += (horse.property ? "Horses (Not Yours)" : "Your Horses");
+					tooltip_text += " |";
 				}
+			}
+			// Party hovered
+			if(tile == (is_out() ? univ.party.loc_in_sec : univ.party.town_loc)){
+				tooltip_text += "Your Party";
 			}
 		}
 		if(tooltip_text != last_tooltip_text)
