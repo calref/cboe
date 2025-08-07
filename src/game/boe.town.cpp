@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <queue>
+#include <limits>
 
 #include "boe.global.hpp"
 
@@ -1371,6 +1372,10 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 			out_mode = true;
 		else out_mode = false;
 		
+		// While iterating the map, calculate the discovered extent of rooms/areas
+		const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
+		std::vector<rectangle> known_area_rects(area_desc.size(), {std::numeric_limits<int>::max(),std::numeric_limits<int>::max(),std::numeric_limits<int>::min(),std::numeric_limits<int>::min()});
+
 		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
 		for(where.x = view_rect.left; where.x < view_rect.right; where.x++)
 			for(where.y = view_rect.top; where.y < view_rect.bottom; where.y++) {
@@ -1437,50 +1442,31 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
 					}
 
-					// Draw discovered edges of rooms/areas
-					const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
-					location a;
-					location b;
-					for(info_rect_t area : area_desc){
-						location adjusted_where = where;
-						adjusted_where.x -= view_rect.left;
-						adjusted_where.y -= view_rect.top;
-						if(where.y == area.top && where.x >= area.left && where.x <= area.right){
-							a = orig_draw_rect.topLeft();
-							a.x += 6 * adjusted_where.x;
-							a.y += 6 * adjusted_where.y;
-							b = a;
-							b.x += 6;
-							draw_line(map_gworld(), a, b, 1, Colours::RED);
-						}
-						if(where.x == area.left && where.y >= area.top && where.y <= area.bottom){
-							a = orig_draw_rect.topLeft();
-							a.x += 6 * adjusted_where.x;
-							a.y += 6 * adjusted_where.y;
-							b = a;
-							b.y += 6;
-							draw_line(map_gworld(), a, b, 1, Colours::RED);
-						}
-						if(where.y == area.bottom && where.x >= area.left && where.x <= area.right){
-							a = orig_draw_rect.topLeft();
-							a.x += 6 * adjusted_where.x;
-							a.y += 6 * (adjusted_where.y + 1) - 1;
-							b = a;
-							b.x += 6;
-							draw_line(map_gworld(), a, b, 1, Colours::RED);
-						}
-						if(where.x == area.right && where.y >= area.top && where.y <= area.bottom){
-							a = orig_draw_rect.topLeft();
-							a.x += 6 * (adjusted_where.x + 1) - 1;
-							a.y += 6 * adjusted_where.y;
-							b = a;
-							b.y += 6;
-							draw_line(map_gworld(), a, b, 1, Colours::RED);
+					for(int i = 0; i < area_desc.size(); ++i){
+						info_rect_t area = area_desc[i];
+						rectangle& known_bounds = known_area_rects[i];
+						// tile is in an area rectangle. see if it extends the party's known bounds of the area
+						if(area.contains(where)){
+							if(where.x < known_bounds.left) known_bounds.left = where.x;
+							if(where.y < known_bounds.top) known_bounds.top = where.y;
+							if(where.x + 1 > known_bounds.right) known_bounds.right = where.x + 1;
+							if(where.y + 1 > known_bounds.bottom) known_bounds.bottom = where.y + 1;
 						}
 					}
 				}
 			}
 		
+		// Draw known extent of area rectangles
+		for(const rectangle& known_bounds : known_area_rects){
+			if(!known_bounds.empty()){
+				draw_rect.top = 6 * (known_bounds.top - view_rect.top);
+				draw_rect.left = 6 * (known_bounds.left - view_rect.left);
+				draw_rect.bottom = 6 * (known_bounds.bottom - view_rect.top);
+				draw_rect.right = 6 * (known_bounds.right - view_rect.left);
+				frame_rect(map_gworld(), draw_rect, Colours::RED);
+			}
+		}
+
 		map_gworld().display();
 		// this stops flickering if the display time is too long
 		glFlush();
