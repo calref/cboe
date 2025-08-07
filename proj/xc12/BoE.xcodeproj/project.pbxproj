@@ -66,6 +66,8 @@
 		413AAF672D38A4A5002E9BF1 /* living.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 914698FB1A7362D900F20F5E /* living.cpp */; };
 		413FE08F2CECFAFF000D97DC /* winutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413FE08E2CECFAFF000D97DC /* winutil.cpp */; };
 		415EEEB02D5534A500B47408 /* prefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 415EEEAF2D5534A500B47408 /* prefs.cpp */; };
+		419889802E4541D10080B0FE /* btnpanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4198897F2E4541D10080B0FE /* btnpanel.cpp */; };
+		419889812E4541D10080B0FE /* btnpanel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4198897E2E4541D10080B0FE /* btnpanel.hpp */; };
 		41E550542DEB8C2A00A7DF52 /* scen.undo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41E550532DEB8C2A00A7DF52 /* scen.undo.cpp */; };
 		91034D211B225E4A008F01C1 /* scen.appleevents.mm in Sources */ = {isa = PBXBuildFile; fileRef = 91034D201B225E49008F01C1 /* scen.appleevents.mm */; };
 		911A14031B8FAFC600900FD9 /* town_read.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 91C2A6EC1B8FA91400346948 /* town_read.cpp */; };
@@ -638,6 +640,8 @@
 		41342CE92DFB872400E66BEB /* quest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quest.cpp; sourceTree = "<group>"; };
 		413FE08E2CECFAFF000D97DC /* winutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = winutil.cpp; sourceTree = "<group>"; };
 		415EEEAF2D5534A500B47408 /* prefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prefs.cpp; sourceTree = "<group>"; };
+		4198897E2E4541D10080B0FE /* btnpanel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = btnpanel.hpp; sourceTree = "<group>"; };
+		4198897F2E4541D10080B0FE /* btnpanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = btnpanel.cpp; sourceTree = "<group>"; };
 		41E550522DEB8C1400A7DF52 /* scen.undo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scen.undo.hpp; sourceTree = "<group>"; };
 		41E550532DEB8C2A00A7DF52 /* scen.undo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scen.undo.cpp; sourceTree = "<group>"; };
 		91034D201B225E49008F01C1 /* scen.appleevents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = scen.appleevents.mm; sourceTree = "<group>"; };
@@ -1155,6 +1159,8 @@
 				91E128F41BC2077700C8BE1D /* pictchoice.hpp */,
 				91E128F51BC2077700C8BE1D /* strchoice.hpp */,
 				91E128F61BC2077700C8BE1D /* strdlog.hpp */,
+				4198897E2E4541D10080B0FE /* btnpanel.hpp */,
+				4198897F2E4541D10080B0FE /* btnpanel.cpp */,
 			);
 			path = dialogs;
 			sourceTree = "<group>";
@@ -1751,6 +1757,7 @@
 				9149924C25913E3F00B5BE97 /* container.hpp in Headers */,
 				9149924E25913E3F00B5BE97 /* led.hpp in Headers */,
 				9170C5102D717F24009B6E7C /* scen.locpicker.hpp in Headers */,
+				419889812E4541D10080B0FE /* btnpanel.hpp in Headers */,
 				9143044B2970EDC1003A3967 /* keymods.hpp in Headers */,
 				9149925025913E3F00B5BE97 /* ledgroup.hpp in Headers */,
 				915473CE2C800AB000EB1C94 /* enchant.hpp in Headers */,
@@ -2202,6 +2209,7 @@
 				91E128F11BC2076B00C8BE1D /* strdlog.cpp in Sources */,
 				91CE248A1EA12866005BDCE4 /* utility.cpp in Sources */,
 				91CE248C1EA12A96005BDCE4 /* render_text.cpp in Sources */,
+				419889802E4541D10080B0FE /* btnpanel.cpp in Sources */,
 				91CE248E1EA12AA3005BDCE4 /* render_shapes.cpp in Sources */,
 				91A2480E2969CFD200B8D90F /* res_dialog.cpp in Sources */,
 				91CE24921EA12ABD005BDCE4 /* gfxsheets.cpp in Sources */,
