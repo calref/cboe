@@ -208,6 +208,11 @@ void draw_monsters() {
 							target_rect.right = target_rect.left + 28 * monst.x_width;
 							target_rect.top = 13 + 36 * where_draw.y;
 							target_rect.bottom = target_rect.top + 36 * monst.y_width;
+							// clip the frame at the window boundaries
+							target_rect.top = max(13, target_rect.top);
+							target_rect.left = max(13, target_rect.left);
+							target_rect.bottom = min(target_rect.bottom, terrain_screen_gworld().getSize().y - 13);
+							target_rect.right = min(target_rect.right, terrain_screen_gworld().getSize().x - 13);
 							frame_rect(terrain_screen_gworld(), target_rect, monst.is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127));
 						}
 					}
