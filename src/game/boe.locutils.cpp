@@ -260,14 +260,14 @@ void update_explored(const location dest) {
 
 
 // All purpose function to check is spot is free for travel into.
-bool is_blocked(location to_check) {
+bool is_blocked(location to_check, bool count_party) {
 	if(is_out()) {
 		if(!univ.out.is_on_map(to_check.x, to_check.y))
 			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
-		if(to_check == univ.party.out_loc)
+		if(count_party && to_check == univ.party.out_loc)
 			return true;
 		for(short i = 0; i < univ.party.out_c.size(); i++)
 			if((univ.party.out_c[i].exists))
@@ -294,12 +294,14 @@ bool is_blocked(location to_check) {
 		// Note: The purpose of the above check is to avoid portals.
 		
 		// Party there?
-		if(is_town() && to_check == univ.party.town_loc)
-			return true;
-		if(is_combat()) {
-			for(short i = 0; i < 6; i++) {
-				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos) {
-					return true;
+		if(count_party){
+			if(is_town() && to_check == univ.party.town_loc)
+				return true;
+			if(is_combat()) {
+				for(short i = 0; i < 6; i++) {
+					if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos) {
+						return true;
+					}
 				}
 			}
 		}

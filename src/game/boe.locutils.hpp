@@ -24,7 +24,7 @@ short combat_obscurity(short x,short y);
 ter_num_t coord_to_ter(short x,short y);
 bool is_container(location loc);
 void update_explored(location dest);
-bool is_blocked(location to_check);
+bool is_blocked(location to_check, bool count_party = true);
 bool monst_can_be_there(location loc,short m_num);
 bool monst_adjacent(location loc,short m_num);
 bool monst_can_see(short m_num,location l);

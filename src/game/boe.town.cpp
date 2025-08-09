@@ -1443,10 +1443,12 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 					}
 
 					for(int i = 0; i < area_desc.size(); ++i){
+						location real_where = where;
+						if(is_out()) real_where = local_to_global(where);
 						info_rect_t area = area_desc[i];
 						rectangle& known_bounds = known_area_rects[i];
 						// tile is in an area rectangle. see if it extends the party's known bounds of the area
-						if(area.contains(where)){
+						if(area.contains(where) && !is_blocked(real_where, false)){
 							if(where.x < known_bounds.left) known_bounds.left = where.x;
 							if(where.y < known_bounds.top) known_bounds.top = where.y;
 							if(where.x + 1 > known_bounds.right) known_bounds.right = where.x + 1;
