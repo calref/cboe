@@ -1496,12 +1496,18 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 	if(canMap) {
 		rect_draw_some_item(map_gworld().getTexture(),the_rect,mini_map(),area_to_draw_on);
 		
-		auto mark_loc = [view_rect, &draw_rect, area_to_draw_on](location where, sf::Color inner, sf::Color outer) -> void {
+		auto mark_loc = [view_rect, &draw_rect, area_to_draw_on](location where, sf::Color inner, sf::Color outer, eTerSpec if_spec = eTerSpec::NONE) -> void {
 			location real_where = where;
 			if(is_out()) real_where = local_to_global(where);
 			if((is_explored(real_where.x,real_where.y)) &&
 				((where.x >= view_rect.left) && (where.x < view_rect.right)
 					&& where.y >= view_rect.top && where.y < view_rect.bottom)){
+				// if if_spec is specified, make sure the terrain on the spot has the given special
+				if(if_spec != eTerSpec::NONE){
+					ter_num_t ter = is_out() ? univ.out[real_where] : univ.town->terrain(real_where.x, real_where.y);
+					if(univ.scenario.ter_types[ter].special != if_spec) return;
+				}
+
 				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
 				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
 				draw_rect.right = draw_rect.left + 6;
@@ -1530,13 +1536,14 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 		// Draw signs
 		const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
 		for(sign_loc_t sign : sign_locs){
-			mark_loc(sign, Colours::EMPTY, Colours::YELLOW);
+			mark_loc(sign, Colours::EMPTY, Colours::YELLOW, eTerSpec::IS_A_SIGN);
 		}
 		// Draw town entrances
 		if(is_out()){
 			const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
+			// TODO don't draw hidden ones
 			for(spec_loc_t city : city_locs){
-				mark_loc(city, Colours::EMPTY, Colours::GREEN);
+				mark_loc(city, Colours::EMPTY, Colours::GREEN, eTerSpec::TOWN_ENTRANCE);
 			}
 		}
 		// Draw vehicles

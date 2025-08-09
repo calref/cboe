@@ -1473,7 +1473,10 @@ void handle_one_minimap_event(const sf::Event& event) {
 			const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
 			for(sign_loc_t sign : sign_locs){
 				if(sign == tile){
-					tooltip_text += "Sign: " + sign.text + " |";
+					// make sure the terrain is a sign
+					ter_num_t ter = is_out() ? univ.out[real_tile] : univ.town->terrain(real_tile.x, real_tile.y);
+					if(is_sign(ter))
+						tooltip_text += "Sign: " + sign.text + " |";
 				}
 			}
 			// Town entrance hovered
@@ -1481,7 +1484,10 @@ void handle_one_minimap_event(const sf::Event& event) {
 				const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
 				for(spec_loc_t city : city_locs){
 					if(city == tile){
-						tooltip_text += univ.scenario.towns[city.spec]->name + " |";
+						// don't tooltip hidden towns
+						ter_num_t ter = is_out() ? univ.out[real_tile] : univ.town->terrain(real_tile.x, real_tile.y);
+						if(univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE)
+							tooltip_text += univ.scenario.towns[city.spec]->name + " |";
 					}
 				}
 			}
