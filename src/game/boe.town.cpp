@@ -1497,7 +1497,9 @@ void draw_map(bool need_refresh, std::string tooltip_text) {
 		rect_draw_some_item(map_gworld().getTexture(),the_rect,mini_map(),area_to_draw_on);
 		
 		auto mark_loc = [view_rect, &draw_rect, area_to_draw_on](location where, sf::Color inner, sf::Color outer) -> void {
-			if((is_explored(where.x,where.y)) &&
+			location real_where = where;
+			if(is_out()) real_where = local_to_global(where);
+			if((is_explored(real_where.x,real_where.y)) &&
 				((where.x >= view_rect.left) && (where.x < view_rect.right)
 					&& where.y >= view_rect.top && where.y < view_rect.bottom)){
 				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
