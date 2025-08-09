@@ -1452,7 +1452,7 @@ void draw_map(bool need_refresh) {
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
+						rect_draw_some_item(*ResMgr::graphics.get("fields"),{80,28,84,32},map_gworld(),draw_rect);
 					}
 				}
 			}
