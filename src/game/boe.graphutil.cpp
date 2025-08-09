@@ -134,7 +134,7 @@ void draw_monsters() {
 							for(short k = 0; k < width * height; k++) {
 								std::shared_ptr<const sf::Texture> src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
+																							 ((enc.direction >= 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld(),to_rect, sf::BlendAlpha);
