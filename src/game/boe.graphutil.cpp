@@ -142,7 +142,7 @@ void draw_monsters() {
 						}
 						if(picture_wanted < 1000) {
 							for(short k = 0; k < width * height; k++) {
-								source_rect = get_monster_template_rect(picture_wanted,(enc.direction < 4) ? 0 : 1,k);
+								source_rect = get_monster_template_rect(picture_wanted,(enc.direction >= 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								int which_sheet = m_pic_index[picture_wanted].i / 20;
