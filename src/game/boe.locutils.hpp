@@ -36,6 +36,7 @@ bool outd_is_special(location to_check);
 bool impassable(ter_num_t terrain_to_check);
 short get_blockage(ter_num_t terrain_type);
 short light_radius();
+bool is_sign(ter_num_t ter);
 bool pt_in_light(location from_where,location to_where) ;// Assumes, of course, in town or combat
 bool combat_pt_in_light(location to_where);
 bool party_sees_a_monst(); // Returns true is a hostile monster is in sight.

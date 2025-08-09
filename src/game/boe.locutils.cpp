@@ -613,3 +613,7 @@ bool vehicle_is_here(const cVehicle& vehicle) {
 		return vehicle.which_town == univ.party.town_num;
 	}
 }
+
+bool is_sign(ter_num_t ter) {
+	return univ.scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN;
+}

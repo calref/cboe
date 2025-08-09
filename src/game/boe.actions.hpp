@@ -54,7 +54,6 @@ short nearest_monster();
 void setup_outdoors(location where);
 short get_outdoor_num();
 short count_walls(location loc);
-bool is_sign(ter_num_t ter);
 bool check_for_interrupt(std::string confirm_dialog = "confirm-interrupt-special");
 
 void handle_startup_button_click(eStartButton btn, eKeyMod mods);
