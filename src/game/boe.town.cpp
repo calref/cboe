@@ -1144,7 +1144,7 @@ void pick_lock(location where,short pc_num) {
 	if(r1 < 75)
 		will_break = true;
 	
-	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town->difficulty * 7
+	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.door_diff_adjust() * 7
 		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - which_item->abil_strength * 7;
 	
 	// Nimble?
@@ -1177,7 +1177,7 @@ void bash_door(location where,short pc_num) {
 	short r1,unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town->difficulty * 4;
+	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.door_diff_adjust() * 4;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
