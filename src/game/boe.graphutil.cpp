@@ -134,7 +134,7 @@ void draw_monsters() {
 							for(short k = 0; k < width * height; k++) {
 								std::shared_ptr<const sf::Texture> src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
+																							 ((enc.direction >= 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld(),to_rect, sf::BlendAlpha);
@@ -142,7 +142,7 @@ void draw_monsters() {
 						}
 						if(picture_wanted < 1000) {
 							for(short k = 0; k < width * height; k++) {
-								source_rect = get_monster_template_rect(picture_wanted,(enc.direction < 4) ? 0 : 1,k);
+								source_rect = get_monster_template_rect(picture_wanted,(enc.direction >= 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								int which_sheet = m_pic_index[picture_wanted].i / 20;
@@ -192,7 +192,7 @@ void draw_monsters() {
 							Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld(), store_loc, 1, 0);
 						} else {
 							pic_num_t this_monst = monst.picture_num;
-							int pic_mode = (monst.direction) < 4 ? 0 : 1;
+							int pic_mode = (monst.direction) >= 4 ? 0 : 1;
 							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
 							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
 							int which_sheet = (m_pic_index[this_monst].i+k) / 20;
