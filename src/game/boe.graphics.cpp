@@ -1649,6 +1649,8 @@ void draw_targeting_line() {
 				sf::Color frame_color(0, 0, 0, 0);
 				int x_width = 1;
 				int y_width = 1;
+				short frame_q = q;
+				short frame_r = r;
 				if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
 					&& (dist(from_loc,which_space) <= current_spell_range)){
 					frame_color = sf::Color(255, 255, 255, 127);
@@ -1659,23 +1661,36 @@ void draw_targeting_line() {
 					}
 					targ = univ.target_there(which_space, TARG_MONST);
 					if(targ != nullptr){
-						cMonster* monst = dynamic_cast<cMonster*>(targ);
+						cCreature* monst = dynamic_cast<cCreature*>(targ);
 						if(!monst->invisible){
 							frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
+							// Frame needs to be positioned at the monster's top left corner
+							frame_q -= (which_space.x - monst->cur_loc.x);
+							frame_r -= (which_space.y - monst->cur_loc.y);
 							x_width = monst->x_width;
 							y_width = monst->y_width;
 							for(int i = 0; i < x_width; ++i){
 								for(int j = 0; j < y_width; ++j){
-									big_monst_there.insert(loc(which_space.x + i, which_space.y + j));
+									big_monst_there.insert(loc(monst->cur_loc.x + i, monst->cur_loc.y + j));
 								}
 							}
 						}
 					}
 
-					target_rect.left = 13 + 28 * q + 19;
+					const int ter_screen_left = 19 + 13; // 13 is the white frame
+					const int ter_screen_top = 7 + 13; // 13 is the white frame
+
+					target_rect.left = ter_screen_left + 28 * frame_q;
 					target_rect.right = target_rect.left + 28 * x_width;
-					target_rect.top = 13 + 36 * r + 7;
+					target_rect.top = ter_screen_top + 36 * frame_r;
 					target_rect.bottom = target_rect.top + 36 * y_width;
+
+					// Clip the target rect to the window bounds
+					target_rect.left = max(ter_screen_left, target_rect.left);
+					target_rect.top = max(ter_screen_top, target_rect.top);
+					target_rect.right = min(ter_screen_left + 28 * 9, target_rect.right);
+					target_rect.bottom = min(ter_screen_top + 36 * 9, target_rect.bottom);
+
 					frame_rect(mainPtr(), target_rect, frame_color);
 				}
 			}
