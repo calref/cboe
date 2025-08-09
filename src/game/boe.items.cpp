@@ -398,7 +398,7 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 	me["gold"].hide();
 	me["gold-label"].hide();
 	for(cItem* item : item_array){
-		if(item->variety == eItemType::GOLD){
+		if(item->variety == eItemType::GOLD && !item->property){
 			me["gold"].show();
 			me["gold-label"].show();
 			break;
@@ -474,7 +474,7 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 		// Get all gold
 		for(int i = item_array.size() - 1; i >= 0; --i){
 			item = *item_array[i];
-			if(item.variety != eItemType::GOLD) continue;
+			if(item.variety != eItemType::GOLD || item.property) continue;
 			if(item.item_level > 3000)
 				item.item_level = 3000;
 			set_item_flag(&item);
