@@ -1458,7 +1458,9 @@ void handle_one_minimap_event(const sf::Event& event) {
 		bool is_on_map;
 		if(is_out()) is_on_map = tile.x >= 0 && tile.y >= 0 && tile.x < 48 && tile.y < 48;
 		else is_on_map = univ.town->is_on_map(tile);
-		if(is_on_map && is_explored(tile.x, tile.y)){
+		location real_tile = tile;
+		if(is_out()) real_tile = local_to_global(tile);
+		if(is_on_map && is_explored(real_tile.x, real_tile.y)){
 			// Area rectangle hovered
 			const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
 			for(info_rect_t area : area_desc){
