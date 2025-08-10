@@ -7,6 +7,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
+#include <fmt/format.h>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -134,7 +135,7 @@ struct cParseEntrance {
 	boost::optional<short>& opt;
 	cParseEntrance(boost::optional<short>& opt) : opt(opt) {}
 	ParserResult operator()(std::string v) const {
-		ParserResult error = ParserResult::logicError( "Invalid entrance: '" + v + "'. Try N, S, E, or W.");
+		ParserResult error = ParserResult::logicError(fmt::format("Invalid entrance: '{}'. Try N, S, E, or W.", v));
 		if(v.size() == 1){
 			switch(v.at(0)){
 				case 'N': case 'n': case '0':
@@ -166,7 +167,7 @@ struct cParseLocation {
 			opt = boost::lexical_cast<location>(v);
 			return ParserResult::ok( ParseResultType::Matched );
 		}catch(boost::bad_lexical_cast){
-			return ParserResult::logicError( "Invalid location: '" + v + "'. Try 'x,y' format.");
+			return ParserResult::logicError(fmt::format("Invalid location: '{}'. Try 'x,y' format.", v));
 		}
 	}
 };
@@ -1052,8 +1053,8 @@ static void replay_feature_flags() {
 				std::string version = next_version->GetText();
 				// The game build needs to support the feature version that the replay had
 				if(!has_feature_flag(flag, version)){
-					std::string error = "This replay requires a feature that is not supported in your version of Blades of Exile: " + flag + " should support '" + version + "'";
-					throw error;
+					static const std::string error = "This replay requires a feature that is not supported in your version of Blades of Exile: {} should support '{}'";
+					throw fmt::format(error, flag, version);
 				}
 				supported_versions.push_back(version);
 				next_version = next_version->NextSiblingElement(false);
