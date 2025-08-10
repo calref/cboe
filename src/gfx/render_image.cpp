@@ -119,8 +119,8 @@ void rect_draw_some_item(const sf::Texture& src_gworld,rectangle src_rect,const 
 	rect_draw_some_item(src_gworld, src_rect, src, dest_rect);
 	src.display();
 	
-	maskShader.setParameter("texture", sf::Shader::CurrentTexture);
-	maskShader.setParameter("mask", mask_gworld);
+	maskShader.setUniform("texture", sf::Shader::CurrentTexture);
+	maskShader.setUniform("mask", mask_gworld);
 	rect_draw_some_item(src.getTexture(), dest_rect, targ_gworld, targ_rect, &maskShader, colour);
 }
 

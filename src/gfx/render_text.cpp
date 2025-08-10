@@ -51,7 +51,7 @@ void TextStyle::applyTo(sf::Text& text, double scale) const {
 	if(italic) style |= sf::Text::Italic;
 	if(underline) style |= sf::Text::Underlined;
 	text.setStyle(style);
-	text.setColor(colour);
+	text.setFillColor(colour);
 }
 
 struct text_params_t {
@@ -347,10 +347,10 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 			bounds.offset(-adjust_x, -adjust_y);
 			if(options.returnType == text_params_t::RECTS)
 				options.returnRects.push_back(bounds);
-			str_to_draw.setColor(options.hilite_fg);
+			str_to_draw.setFillColor(options.hilite_fg);
 			bounds.inset(0,-4);
 			fill_rect(dest_window, bounds, options.hilite_bg);
-		} else str_to_draw.setColor(options.style.colour);
+		} else str_to_draw.setFillColor(options.style.colour);
 		draw_scale_aware_text(dest_window, str_to_draw);
 	}
 }
