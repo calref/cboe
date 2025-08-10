@@ -35,6 +35,7 @@
 #include "boe.menus.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
 #include "winutil.hpp"
 
 extern eGameMode overall_mode;
@@ -639,7 +640,7 @@ void use_item(short pc,short item) {
 		if(!the_item.ident)
 			name = the_item.name.c_str();
 		else name = the_item.full_name.c_str();
-		add_string_to_buf("Use: " + name);
+		add_string_to_buf(fmt::format("Use: {}", name));
 		
 		if(the_item.variety == eItemType::POTION)
 			play_sound(56);
@@ -1116,7 +1117,7 @@ void use_item(short pc,short item) {
 					case eSpell::WALL_ICE_BALL: add_string_to_buf("  It shoots a blue sphere."); break;
 					case eSpell::CHARM_FOE: add_string_to_buf("  It fires a lovely, sparkling beam."); break;
 					case eSpell::ANTIMAGIC: add_string_to_buf("  Your hair stands on end."); break;
-					default: add_string_to_buf("  It casts a spell: " + (*spell).name()); break;
+				default: add_string_to_buf(fmt::format("  It casts a spell: {}", (*spell).name())); break;
 				}
 				switch((*spell).need_select) {
 					case SELECT_NO: break;
@@ -1172,7 +1173,7 @@ void use_item(short pc,short item) {
 					str1 = str1.substr(0, r1);
 				}
 				r1 = the_item.graphic_num;
-				cStrDlog(str1, str2, "Reading " + the_item.name, r1, PIC_ITEM).show();
+				cStrDlog(str1, str2, fmt::format("Reading {}", the_item.name), r1, PIC_ITEM).show();
 				break;
 				// Now for all the non-usable abilities. These are enumerated here so that the compiler can catch if we've missed one.
 			case eItemAbil::ACCURACY: case eItemAbil::ANTIMAGIC_WEAPON: case eItemAbil::ASPTONGUE: case eItemAbil::BOOST_MAGIC:
@@ -2126,7 +2127,7 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 						case eSpecCtxType::OUTDOOR: type = "outdoors" ; break;
 						case eSpecCtxType::TOWN: type = "town"; break;
 					}
-					add_string_to_buf("Warning: Null " + type + " special called (ID " + std::to_string(cur_spec) + ") - was this intended?", 4);
+					add_string_to_buf(fmt::format("Warning: Null {} special called (ID {}) - was this intended?", type, cur_spec), 4);
 				}
 				general_spec(ctx);
 				break;
@@ -2180,7 +2181,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 	switch(cur_spec_type) {
 		case eSpecCtxType::SCEN:
 			if(cur_spec != minmax(0,univ.scenario.scen_specials.size() - 1,cur_spec)) {
-				showError("The scenario called a scenario special node out of range: " + std::to_string(cur_spec));
+				showError(fmt::format("The scenario called a scenario special node out of range: {}", cur_spec));
 				return dummy_node;
 			}
 			return univ.scenario.scen_specials[cur_spec];
@@ -2190,7 +2191,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.out->specials.size() - 1,cur_spec)) {
-				showError("The scenario called an outdoor special node out of range: " + std::to_string(cur_spec));
+				showError(fmt::format("The scenario called an outdoor special node out of range: {}", cur_spec));
 				return dummy_node;
 			}
 			return univ.out->specials[cur_spec];
@@ -2200,7 +2201,7 @@ cSpecial get_node(spec_num_t cur_spec, eSpecCtxType cur_spec_type) {
 				return dummy_node;
 			}
 			if(cur_spec != minmax(0,univ.town->specials.size() - 1,cur_spec)) {
-				showError("The scenario called a town special node out of range: " + std::to_string(cur_spec));
+				showError(fmt::format("The scenario called a town special node out of range: {}", cur_spec));
 				return dummy_node;
 			}
 			return univ.town->specials[cur_spec];
@@ -2551,7 +2552,7 @@ void general_spec(const runtime_state& ctx) {
 					add_string_to_buf("You have completed a quest!");
 					if(quest.gold > 0) {
 						int gold = quest.gold;
-						add_string_to_buf("  Received " + std::to_string(gold) + " as a reward.");
+						add_string_to_buf(fmt::format("  Received {} as a reward.", gold));
 						give_gold(gold, true);
 					}
 					if(quest.xp > 0)
@@ -2561,7 +2562,7 @@ void general_spec(const runtime_state& ctx) {
 			break;
 		}
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	if(check_mess) handle_message(ctx);
@@ -2705,7 +2706,7 @@ void oneshot_spec(const runtime_state& ctx) {
 		case eSpecType::ONCE_DISPLAY_MSG:
 			break; // Nothing to do here, but need to include it to prevent the below error from showing.
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	if(check_mess) {
@@ -3319,7 +3320,7 @@ void affect_spec(const runtime_state& ctx) {
 			}
 			break;
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	if(check_mess) {
@@ -3796,7 +3797,7 @@ void ifthen_spec(const runtime_state& ctx) {
 				ctx.next_spec = spec.ex1c;
 			break;
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	if(check_mess) {
@@ -4181,7 +4182,7 @@ void townmode_spec(const runtime_state& ctx) {
 		case eSpecType::TOWN_SET_ATTITUDE:{
 			int num_monst = univ.town.monst.size();
 			if((spec.ex1a < 0) || (spec.ex1a >= num_monst)){
-				showError("Tried to change the attitude of nonexistent monster " + std::to_string(spec.ex1a) + " of 0..." + std::to_string(num_monst));
+				showError(fmt::format("Tried to change the attitude of nonexistent monster {} of 0...{}", spec.ex1a, num_monst));
 				break;
 			}
 			if(spec.ex1b < 0 || spec.ex1b > 3){
@@ -4397,7 +4398,7 @@ void townmode_spec(const runtime_state& ctx) {
 				sf::sleep(sf::seconds(spec.ex2b));
 			break;
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	if(check_mess) {
@@ -4533,7 +4534,7 @@ void rect_spec(const runtime_state& ctx){
 					else take_explored(l.x, l.y);
 					break;
 				default:
-					showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+					showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 					break;
 			}
 		}
@@ -4580,7 +4581,7 @@ void outdoor_spec(const runtime_state& ctx){
 		case eSpecType::OUT_FORCE_TOWN: {
 			short town = spec.ex1a;
 			if(town < 0 || town >= univ.scenario.towns.size()){
-				showError("The scenario attempted to put the party in a nonexistent town: " + std::to_string(town));
+				showError(fmt::format("The scenario attempted to put the party in a nonexistent town: {}", town));
 				break;
 			}
 			size_t town_dim = univ.scenario.towns[town]->max_dim;
@@ -4598,7 +4599,7 @@ void outdoor_spec(const runtime_state& ctx){
 		}
 			break;
 		default:
-			showError("Special node type \"" + (*cur_node.type).name() + "\" is either miscategorized or unimplemented!");
+			showError(fmt::format("Special node type \"{}\" is either miscategorized or unimplemented!", (*cur_node.type).name()));
 			break;
 	}
 	
