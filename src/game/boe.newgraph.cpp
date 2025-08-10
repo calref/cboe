@@ -34,6 +34,7 @@
 #include "tools/enum_map.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
 
 short monsters_faces[190] = {
 	0,1,2,3,4,5,6,7,8,9,
@@ -824,11 +825,11 @@ void draw_shop_graphics(bool item_pressed, bool item_help_pressed, rectangle cli
 			} break;
 			case eShopItemType::MAGE_SPELL:
 				spell = cSpell::fromNum(eSkill::MAGE_SPELLS, base_item.item_level);
-				cur_info_str = "Level: " + std::to_string((*spell).level) + "    SP: " + std::to_string((*spell).cost);
+				cur_info_str = fmt::format("Level: {}    SP: {}", (*spell).level, (*spell).cost);
 				break;
 			case eShopItemType::PRIEST_SPELL:
 				spell = cSpell::fromNum(eSkill::PRIEST_SPELLS, base_item.item_level);
-				cur_info_str = "Level: " + std::to_string((*spell).level) + "    SP: " + std::to_string((*spell).cost);
+				cur_info_str = fmt::format("Level: {}    SP: {}", (*spell).level, (*spell).cost);
 				break;
 			case eShopItemType::SKILL:
 				cur_info_str = "Increase skill by 1";
