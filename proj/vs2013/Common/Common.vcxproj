@@ -283,8 +283,8 @@
     <ClCompile Include="..\..\..\src\universe\universe.cpp" />
     <ClCompile Include="..\..\..\src\utility.cpp" />
     <ClCompile Include="..\..\..\src\view_dialogs.cpp" />
-    <ClCompile Include="..\..\..\src\deps\fmtlib\src\format.cc" />
-    <ClCompile Include="..\..\..\src\deps\fmtlib\src\os.cc" />
+    <ClCompile Include="..\..\..\deps\fmtlib\src\format.cc" />
+    <ClCompile Include="..\..\..\deps\fmtlib\src\os.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\alchemy.hpp" />
