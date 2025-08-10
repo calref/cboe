@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <fmt/format.h>
 
 #include "boe.global.hpp"
 
@@ -1107,7 +1108,7 @@ void record_monst(cCreature* which_m, bool forced) {
 			univ.party.imprisoned_monst[r1] = which_m->number;
 		}
 		ASB("Capture Soul: Success!");
-		add_string_to_buf("  Caught in slot " + std::to_string(r1 + 1) + ".");
+		add_string_to_buf(fmt::format("  Caught in slot {}.", r1 + 1));
 		play_sound(53);
 	}
 }
