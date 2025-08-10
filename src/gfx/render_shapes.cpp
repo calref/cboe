@@ -15,7 +15,7 @@
 #include "render_image.hpp"
 
 using boost::math::constants::pi;
-using pt_idx_t = decltype(((sf::Shape*)nullptr)->getPointCount());
+using pt_idx_t = decltype(std::declval<sf::Shape>().getPointCount());
 
 std::map<std::string,sf::Color> colour_map = {
 	{"white", Colours::WHITE},

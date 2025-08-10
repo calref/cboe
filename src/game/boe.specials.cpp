@@ -4725,4 +4725,5 @@ iLiving& current_pc_picked_in_spec_enc(const runtime_state& ctx) {
 				return *targ;
 			else return univ.party;
 	}
+	BOOST_UNREACHABLE_RETURN(*ctx.cur_target);
 }
