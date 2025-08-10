@@ -5,6 +5,7 @@
 
 #include <array>
 #include <map>
+#include <fmt/format.h>
 
 #include "universe/universe.hpp"
 
@@ -178,7 +179,7 @@ void put_party_in_scen(std::string scen_name, bool force, bool allow_unpacked) {
 	// Make sure the game build supports all the scenario's features
 	for(auto pair : univ.scenario.feature_flags){
 		if(!has_feature_flag(pair.first, pair.second)){
-			showError("This scenario requires a feature that is not supported in your version of Blades of Exile: " + pair.first + " should support '" + pair.second + "'");
+			showError(fmt::format("This scenario requires a feature that is not supported in your version of Blades of Exile: {} should support '{}'", pair.first, pair.second));
 			return;
 		}
 	}
@@ -349,7 +350,7 @@ void award_xp(short pc_num,short amt,bool force) {
 		play_sound(7);
 		univ.party[pc_num].level++;
 		std::string level = std::to_string(univ.party[pc_num].level);
-		add_string_to_buf("  " + univ.party[pc_num].name + " is level " + level + "!");
+		add_string_to_buf(fmt::format("  {} is level {}!", univ.party[pc_num].name,level));
 		univ.party[pc_num].skill_pts += (univ.party[pc_num].level < 20) ? 5 : 4;
 		add_hp = (univ.party[pc_num].level < 26) ? get_ran(1,2,6) + skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]]
 			: max (skill_bonus[univ.party[pc_num].skills[eSkill::STRENGTH]],0);
@@ -369,7 +370,7 @@ void award_xp(short pc_num,short amt,bool force) {
 void drain_pc(cPlayer& which_pc,short how_much) {
 	if(which_pc.main_status == eMainStatus::ALIVE) {
 		which_pc.experience = max(which_pc.experience - how_much,0);
-		add_string_to_buf("  " + which_pc.name + " drained.");
+		which_pc.spell_note(eSpellNote::DRAINED_XP);
 	}
 }
 
@@ -840,11 +841,11 @@ void do_mage_spell(short pc_num,eSpell spell_num,bool freebie) {
 			}
 			if(spell_num == eSpell::RESIST_MAGIC && target < 6) {
 				univ.party[target].status[eStatus::MAGIC_RESISTANCE] += 2 + adj + get_ran(2,1,2);
-				add_string_to_buf("  " + univ.party[target].name + " protected.");
+				univ.party[target].spell_note(eSpellNote::PROTECTED);
 			}
 			break;
 		default:
-			add_string_to_buf("  Error: Mage spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+			add_string_to_buf(fmt::format("  Error: Mage spell {} not implemented for town mode.", (*spell_num).name()), 4);
 			break;
 	}
 }
@@ -901,7 +902,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			r1 = max(0,store);
 			if(spell_num == eSpell::MANNA_MINOR)
 				r1 = r1 / 3;
-			add_string_to_buf("  You gain " + std::to_string(r1) + " food.   ");
+			add_string_to_buf(fmt::format("  You gain {} food.", r1));
 			give_food(r1,true);
 			break;
 			
@@ -1080,7 +1081,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 						univ.party[target].status[eStatus::WEBS] = 0;
 						break;
 					default:
-						add_string_to_buf("  Error: Healing spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+						add_string_to_buf(fmt::format("  Error: Healing spell {} not implemented for town mode.", (*spell_num).name()), 4);
 						break;
 				}
 				add_string_to_buf(sout.str());
@@ -1207,7 +1208,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				univ.party[pc_num].cur_sp -= (*spell_num).cost;
 			if(spell_num != eSpell::REVIVE_ALL) {
 				r1 = get_ran((spell_num == eSpell::HEAL_ALL ? 6 : 3) + adj, 1, 4);
-				add_string_to_buf("  Party healed " + std::to_string(r1) + ".");
+				add_string_to_buf(fmt::format("  Party healed {}.", r1));
 				univ.party.heal(r1);
 				play_sound(52);
 			} else {
@@ -1236,7 +1237,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 				case eSpell::CLEANSE_MAJOR: add_string_to_buf("  Party cleansed.");break;
 				case eSpell::HYPERACTIVITY: add_string_to_buf("  Party is now really, REALLY awake.");break;
 				default:
-					add_string_to_buf("  Error: Priest group spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+					add_string_to_buf(fmt::format("  Error: Priest group spell {} not implemented for town mode.", (*spell_num).name()), 4);
 					break;
 			}
 			
@@ -1263,7 +1264,7 @@ void do_priest_spell(short pc_num,eSpell spell_num,bool freebie) {
 			break;
 			
 		default:
-			add_string_to_buf("  Error: Priest spell " + (*spell_num).name() + " not implemented for town mode.", 4);
+			add_string_to_buf(fmt::format("  Error: Priest spell {} not implemented for town mode.", (*spell_num).name()), 4);
 			break;
 	}
 }
@@ -1432,7 +1433,7 @@ void cast_town_spell(location where) {
 			
 			break;
 		default:
-			add_string_to_buf("  Error: Spell " + (*town_spell).name() + " not implemented for town mode.", 4);
+			add_string_to_buf(fmt::format("  Error: Spell {} not implemented for town mode.", (*town_spell).name()), 4);
 			break;
 			
 	}
@@ -2071,10 +2072,8 @@ static bool finish_pick_spell(cDialog& me, bool spell_toast, const short store_s
 }
 
 void print_cast_status(eCastStatus status, eSkill type, std::string pc_name) {
-	std::string prefix = "Cast";
+	std::string prefix = pc_name.empty() ? "Cast" : fmt::format("Cast ({}): ", pc_name);
 	// When multiple PCs are checked, explain why each one can't cast.
-	if(!pc_name.empty()) prefix += " (" + pc_name + ")";
-	prefix += ": ";
 	switch(status){
 		case CAST_OK: break;
 		case NO_CAST_ANAMA:
@@ -2637,7 +2636,7 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 			which_pc.status[eStatus::ASLEEP]--;
 		
 		if(do_print)
-			add_string_to_buf("  " + which_pc.name + " takes " + std::to_string(how_much) + '.');
+			add_string_to_buf(fmt::format("  {} takes {}.", which_pc.name, how_much));
 		if(damage_type != eDamageType::MARKED && boom) {
 			if(is_combat())
 				boom_space(which_pc.combat_pos,overall_mode,boom_type,how_much,sound_type);
@@ -2658,11 +2657,11 @@ short damage_pc(cPlayer& which_pc,short how_much,eDamageType damage_type,eRace t
 		which_pc.cur_health = 0;
 	else // Check if PC can die
 		if(how_much > 25) {
-			add_string_to_buf("  " + which_pc.name + " is obliterated.");
+			which_pc.spell_note(eSpellNote::OBLITERATED);
 			kill_pc(which_pc, eMainStatus::DUST);
 		}
 		else {
-			add_string_to_buf("  " + which_pc.name + " is killed.");
+			which_pc.spell_note(eSpellNote::KILLED);
 			kill_pc(which_pc,eMainStatus::DEAD);
 		}
 	if(which_pc.cur_health == 0 && which_pc.main_status == eMainStatus::ALIVE)

@@ -259,6 +259,15 @@ void iLiving::spell_note(eSpellNote which_mess) const {
 		case eSpellNote::HEAT_RAY:
 			msg = "  Hits {} with heat ray!";
 			break;
+		case eSpellNote::DRAINED_XP:
+			msg = "  {} drained.";
+			break;
+		case eSpellNote::PROTECTED:
+			msg = "  {} protected.";
+			break;
+		case eSpellNote::KILLED:
+			msg = "  {} is killed.";
+			break;
 		default:
 			msg += "{}: Unknown action " + std::to_string(int(which_mess));
 	}
