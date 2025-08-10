@@ -330,7 +330,7 @@ bool load_scenario_v1(fs::path file_to_load, cScenario& scenario, eLoadScenario 
 		
 		std::string decoded;
 		std::vector<std::string> options;
-		if(info.find("encoding") != info.end()){
+		if(info.find("encoding") != info.end() && !info["encoding"].empty()){
 			encoding = info["encoding"];
 			decoded = decode_temp_str(temp_str, encoding);
 		}else{
