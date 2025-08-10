@@ -1464,6 +1464,7 @@ void handle_one_minimap_event(const sf::Event& event) {
 			// Area rectangle hovered
 			const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
 			for(info_rect_t area : area_desc){
+				if(area.empty()) continue;
 				if(area.contains(tile)){
 					tooltip_text += area.descr + " |";
 				}

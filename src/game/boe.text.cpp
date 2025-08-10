@@ -1261,19 +1261,13 @@ std::string get_location(cUniverse* specific_univ) {
 	std::string loc_str = "";
 
 	location loc = outdoors ? global_to_local(specific_univ->party.out_loc) : specific_univ->party.town_loc;
-	if(outdoors) {
-		loc_str = specific_univ->out->name;
-		for(short i = 0; i < specific_univ->out->area_desc.size(); i++)
-			if(loc.in(specific_univ->out->area_desc[i])) {
-				loc_str = specific_univ->out->area_desc[i].descr;
-			}
-	}
-	if(town){
-		loc_str = specific_univ->town->name;
-		for(short i = 0; i < specific_univ->town->area_desc.size(); i++)
-			if(loc.in(specific_univ->town->area_desc[i])) {
-				loc_str = specific_univ->town->area_desc[i].descr;
-			}
+	const std::vector<info_rect_t>& area_desc = (outdoors ? specific_univ->out->area_desc : specific_univ->town->area_desc);
+
+	loc_str = outdoors ? specific_univ->out->name : specific_univ->town->name;
+	for(const info_rect_t& area : area_desc){
+		if(!area.empty() && loc.in(area)) {
+			loc_str = area.descr;
+		}
 	}
 	return loc_str;
 }
