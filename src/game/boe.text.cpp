@@ -29,6 +29,7 @@ const int LINES_IN_ITEM_WIN = 8;
 #include "tools/winutil.hpp"
 #include "replay.hpp"
 #include <boost/lexical_cast.hpp>
+#include <fmt/format.h>
 
 typedef struct {
 	std::string message;
@@ -680,13 +681,13 @@ void print_party_stats() {
 	}
 	if(overall_mode == MODE_STARTUP) return;
 	add_string_to_buf("PARTY STATS:");
-	add_string_to_buf("  Number of kills: " + std::to_string(univ.party.total_m_killed));
+	add_string_to_buf(fmt::format("  Number of kills: {}", univ.party.total_m_killed));
 	if((is_town()) || ((is_combat()) && (which_combat_type == 1))) {
-		add_string_to_buf("  Kills in this town: " + std::to_string(univ.town->m_killed));
+		add_string_to_buf(fmt::format("  Kills in this town: {}", univ.town->m_killed));
 	}
-	add_string_to_buf("  Total experience: " + std::to_string(univ.party.total_xp_gained));
-	add_string_to_buf("  Total damage done: " + std::to_string(univ.party.total_dam_done));
-	add_string_to_buf("  Total damage taken: " + std::to_string(univ.party.total_dam_taken));
+	add_string_to_buf(fmt::format("  Total experience: {}", univ.party.total_xp_gained));
+	add_string_to_buf(fmt::format("  Total damage done: {}", univ.party.total_dam_done));
+	add_string_to_buf(fmt::format("  Total damage taken: {}", univ.party.total_dam_taken));
 	print_buf();
 }
 
@@ -1033,7 +1034,7 @@ void add_string_to_buf(std::string str, unsigned short indent) {
 
 	if(wrapped_str == text_buffer[prev_pointer].message){
 		text_buffer[prev_pointer].duplicate_count++;
-		std::string test_fit = wrapped_str + " (x" + std::to_string(text_buffer[prev_pointer].duplicate_count) + ")";
+		std::string test_fit = fmt::format("{} (x{})", wrapped_str, text_buffer[prev_pointer].duplicate_count);
 		if(string_length(test_fit, buf_style) >= width){
 			text_buffer[prev_pointer].line_count = line_count + 1;
 			// The duplicate count in parenthesis is on its own line
@@ -1121,7 +1122,7 @@ void print_buf () {
 				}else{
 					message += " ";
 				}
-				message += "(x" + std::to_string(text_buffer[message_idx].duplicate_count) + ")";
+				message += fmt::format("(x{})", text_buffer[message_idx].duplicate_count);
 			}
 
 			moveTo = location(4, 1 + 12 * (LINES_IN_TEXT_WIN + line_offset - num_lines_total - text_buffer[message_idx].line_count));
