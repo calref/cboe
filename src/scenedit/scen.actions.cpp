@@ -2335,7 +2335,10 @@ void handle_editor_screen_shift(int dx, int dy) {
 		if(town_entrances.size() == 1){
 			town_entrance_t only_entrance = town_entrances[0];
 			cChoiceDlog shift_prompt("shift-town-entrance", {"yes", "no"});
-			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
+			cControl& text = shift_prompt->getControl("prompt");
+			text.replaceText("{sec}", boost::lexical_cast<std::string>(only_entrance.out_sec));
+			text.replaceText("{loc}", boost::lexical_cast<std::string>(only_entrance.loc));
+			text.replaceText("{loc_str}", scenario.outdoors[only_entrance.out_sec.x][only_entrance.out_sec.y]->loc_str(only_entrance.loc));
 
 			if(shift_prompt.show() == "yes"){
 				set_current_out(only_entrance.out_sec, true);
@@ -2350,9 +2353,9 @@ void handle_editor_screen_shift(int dx, int dy) {
 			std::vector<std::string> entrance_strings;
 			for(town_entrance_t entrance : town_entrances){
 				std::ostringstream sstr;
-				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc;
+				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc
+						<< " (" <<scenario.outdoors[entrance.out_sec.x][entrance.out_sec.y]->loc_str(entrance.loc) << ")";
 				entrance_strings.push_back(sstr.str());
-
 			}
 			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
 			size_t choice = dlog.show(-1);
