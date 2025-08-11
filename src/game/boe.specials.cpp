@@ -1986,8 +1986,8 @@ void special_increase_age(long length, bool queue) {
 		draw_terrain(0);
 }
 
-void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
-	if(spec < 0) return;
+bool queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
+	if(spec < 0) return false;
 	pending_special_type queued_special;
 	queued_special.spec = spec;
 	queued_special.where = spec_loc;
@@ -1999,6 +1999,7 @@ void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, loca
 		run_special(queued_special, nullptr, nullptr, nullptr);
 	else
 		special_queue.push(queued_special);
+	return true;
 }
 
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
