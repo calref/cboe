@@ -188,6 +188,9 @@
 		# },
 		linux: {
 			runs-on: ubuntu-24.04,
+			env: {
+				LD: "lld"
+			},
 			steps: [
 				{
 					name: checkout,
