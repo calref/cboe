@@ -822,7 +822,7 @@ void monst_inflict_fields(short which_monst) {
 	which_m = &univ.town.monst[which_monst];
 	bool have_radiate = which_m->abil[eMonstAbil::RADIATE].active;
 	eFieldType which_radiate = which_m->abil[eMonstAbil::RADIATE].radiate.type;
-	// Judgment call: big monsters shouldn't only get damaged once per damage type if they're on
+	// Judgment call: big monsters should only get damaged once per damage type if they're on
 	// multiple of the same field. (Except webs.)
 	bool quickfire = false;
 	bool blade_wall = false;
