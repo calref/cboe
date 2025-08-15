@@ -18,11 +18,11 @@
 		<!-- The height of this text needs to be 10 times the number of lines. -->
 		<text top='52' left='50' width='400' height='240'>
 			ORIGINAL GAME: <br/><br/><br/><br/><br/><br/>
-			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			OPEN SOURCE CREDITS: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			SCENARIO FIXES AND UPDATES: <br/><br/>
 		</text>
 		<!-- This text is right-aligned and fills out the above text with sub-headings -->
-		<text top='52' left='40' width='190' height='850' align='right'>
+		<text top='52' left='40' width='190' height='860' align='right'>
 			<br/>
 			Concept, Design, Programming: <br/>
 			Graphics: <br/>
@@ -34,11 +34,11 @@
 			Graphics: <br/><br/><br/><br/><br/><br/><br/>
 			Consulting: <br/><br/><br/><br/>
 			Testing and Troubleshooting: <br/><br/>
-			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Funding: <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 			<br/><br/>
 			Bandit Busywork: <br/>
 		</text>
-		<text top='52' left='250' width='230' height='850'>
+		<text top='52' left='250' width='230' height='860'>
 			<!-- ORIGINAL GAME --><br/>
 			<!-- Concept, Design, Programming -->Jeff Vogel <br/>
 			<!-- Graphics -->Andrew Hunter <br/>
@@ -84,6 +84,7 @@
 							Bret Rodabaugh <br/>
 							Dylan Nugent <br/>
 							Evan Mulrooney <br/>
+							Glen Chudley <br/>
 							Jake Harrelson <br/>
 							Jared Forcinito <br/>
 							Jeff Potter <br/>
