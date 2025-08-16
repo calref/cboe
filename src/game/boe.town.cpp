@@ -1144,23 +1144,30 @@ void pick_lock(location where,short pc_num) {
 		return;
 	}
 	
+	// Roll to determine if the pick breaks
 	r1 = get_ran(1,1,100) + which_item->abil_strength * 7;
-	
 	if(r1 < 75)
 		will_break = true;
 	
-	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.door_diff_adjust() * 7
+	// Roll to determine success or fail
+	short total_modifier = -5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.door_diff_adjust() * 7
 		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - which_item->abil_strength * 7;
-	
 	// Nimble?
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])
-		r1 -= 8;
-	
+		total_modifier -= 8;
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
-		r1 = r1 - 12;
+		total_modifier -= 12;
+
+	r1 = get_ran(1,1,100) + total_modifier;
+
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
-		add_string_to_buf("  Didn't work.");
+	short success_chance = 0;
+	short max_success_roll = (unlock_adjust * 15 + 30);
+	if(unlock_adjust < 5){
+		success_chance = minmax(max_success_roll - total_modifier, 0, 100);
+	}
+	if((unlock_adjust >= 5) || (r1 > max_success_roll)) {
+		add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 		if(will_break) {
 			add_string_to_buf("  Pick breaks.");
 			univ.party[pc_num].remove_charge(which_item.slot);
@@ -1182,16 +1189,23 @@ void bash_door(location where,short pc_num) {
 	short r1,unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.door_diff_adjust() * 4;
-	
+
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	
+	short total_modifier = -15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.door_diff_adjust() * 4;
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
-		add_string_to_buf("  Didn't work.");
+	short max_success_roll = (unlock_adjust * 15 + 40);
+
+	r1 = get_ran(1,1,100) + total_modifier;
+	bool success_chance = 0;
+	if(unlock_adjust < 5 && univ.scenario.ter_types[terrain].flag3 == 1){
+		success_chance = minmax(max_success_roll - total_modifier, 0, 100);
+	}
+	if(unlock_adjust >= 5 || r1 > max_success_roll || univ.scenario.ter_types[terrain].flag3 != 1)  {
+		add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::SPECIAL,eRace::UNKNOWN);
 	}
 	else {

@@ -1384,13 +1384,17 @@ void cast_town_spell(location where) {
 		case eSpell::UNLOCK:
 			// TODO: Is the unlock spell supposed to have a max range?
 			if(univ.scenario.ter_types[ter].special == eTerSpec::UNLOCKABLE){
+				short success_chance = 0;
+				short total_modifier = 0;
+				short min_fail_roll = (135 - combat_percent[min(19,level)]);
 				if(univ.scenario.ter_types[ter].flag2 == 10){
 					r1 = 10000;
 				}else{
-					r1 = get_ran(1,1,100) - 5 * adj + 5 * univ.town.door_diff_adjust();
-					r1 += univ.scenario.ter_types[ter].flag2 * 7;
+					total_modifier = -5 * adj + 5 * univ.town.door_diff_adjust() + univ.scenario.ter_types[ter].flag2 * 7;
+					r1 = get_ran(1,1,100) + total_modifier;
+					success_chance = minmax(min_fail_roll - 1 - total_modifier, 0, 100);
 				}
-				if(r1 < (135 - combat_percent[min(19,level)])) {
+				if(r1 < min_fail_roll) {
 					add_string_to_buf("  Door unlocked.");
 					play_sound(9);
 					univ.town->terrain(where.x,where.y) = univ.scenario.ter_types[ter].flag1;
@@ -1398,7 +1402,7 @@ void cast_town_spell(location where) {
 				}
 				else {
 					play_sound(41);
-					add_string_to_buf("  Didn't work.");
+					add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 				}
 			}else
 				add_string_to_buf("  Wrong terrain type.");
@@ -1406,10 +1410,13 @@ void cast_town_spell(location where) {
 			
 		case eSpell::DISPEL_BARRIER:
 			if((univ.town.is_fire_barr(where.x,where.y)) || (univ.town.is_force_barr(where.x,where.y))) {
-				r1 = get_ran(1,1,100) - 5 * adj + 5 * (univ.town->difficulty / 10) + 25 * univ.town->strong_barriers;
+				short total_modifier = -5 * adj + 5 * (univ.town->difficulty / 10) + 25 * univ.town->strong_barriers;
 				if(univ.town.is_fire_barr(where.x,where.y))
-					r1 -= 8;
-				if(r1 < (120 - combat_percent[min(19,level)])) {
+					total_modifier -= 8;
+				short min_fail_roll = (120 - combat_percent[min(19,level)]);
+				short success_chance = minmax(min_fail_roll - 1 - total_modifier, 0, 100);
+				r1 = get_ran(1,1,100) + total_modifier;
+				if(r1 < min_fail_roll) {
 					add_string_to_buf("  Barrier broken.");
 					univ.town.set_fire_barr(where.x,where.y,false);
 					univ.town.set_force_barr(where.x,where.y,false);
@@ -1420,8 +1427,9 @@ void cast_town_spell(location where) {
 				else {
 					store = get_ran(1,0,1);
 					(void) store; // TODO: Why does it even do this?
+
 					play_sound(41);
-					add_string_to_buf("  Didn't work.");
+					add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 				}
 			} else if(univ.town.is_force_cage(where.x,where.y)) {
 				add_string_to_buf("  Cage broken.");
