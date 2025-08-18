@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <queue>
+#include <fmt/format.h>
 
 #include "boe.global.hpp"
 
@@ -84,7 +85,7 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	
 	if(town_number < 0 || town_number >= univ.scenario.towns.size()) {
 		showError("The scenario tried to put you into a town that doesn't exist.",
-			"Requested town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.towns.size()));
+			fmt:format("Requested town: {}|Max town: {}", town_number, univ.scenario.towns.size()));
 		return;
 	}
 	
@@ -106,7 +107,7 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	
 	if(town_number < 0 || town_number >= univ.scenario.towns.size()) {
 		showError("The scenario tried to put you into a town that doesn't exist.",
-			"Requested town: " + std::to_string(former_town) + "|Adjusted town: " + std::to_string(town_number) + "|Max town: " + std::to_string(univ.scenario.towns.size()));
+				  fmt::format("Requested town: {}|Adjusted town: {}|Max town: {}", former_town, town_number, univ.scenario.towns.size()));
 		return;
 	}
 	
