@@ -1012,12 +1012,6 @@ void place_talk_str(std::string str_to_place,std::string str_to_place2,short col
 	// The added spaces ensure that end-of-word boundaries are found
 	std::string str = str_to_place + " |" + str_to_place2 + " ";
 
-	// TODO use a font where we don't need this
-	extern std::map<std::string,std::string> substitutions;
-	for(auto it : substitutions){
-		boost::replace_all(str, it.first, it.second);
-	}
-
 	std::vector<hilite_t> hilites;
 	std::vector<int> nodes;
 	int wordStart = 0, wordEnd = 0;

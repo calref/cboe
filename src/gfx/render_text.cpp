@@ -108,21 +108,9 @@ static void push_snippets(size_t start, size_t end, text_params_t& options, size
 	} while(start < upper_bound);
 }
 
-std::map<std::string, std::string> substitutions = {
-	{"–", "--"},
-	{"´", "'"},
-	{"©", "(C)"},
-	{"…", "..."},
-	{"™", "TM"}
-};
-
 break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextStyle style) {
 	break_info_t break_info;
 	if(str.empty()) return break_info; // Nothing to do!
-
-	for(auto it : substitutions){
-		boost::replace_all(str, it.first, it.second);
-	}
 
 	sf::Text str_to_draw;
 	style.applyTo(str_to_draw);
@@ -264,9 +252,6 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	// TODO: Why the heck are we drawing a whole line higher than requested!?
 	adjust_y -= str_to_draw.getLocalBounds().height;
 	
-	for(auto it : substitutions){
-		boost::replace_all(str, it.first, it.second);
-	}
 	str_to_draw.setString(sf::String::fromUtf8(str.begin(), str.end()));
 	short total_width = str_to_draw.getLocalBounds().width;
 
