@@ -16,6 +16,8 @@ scened_sources = Split("""
 	../view_dialogs.cpp
 	../fileio/fileio_party.cpp
 	../damage.cpp
+	../deps/fmtlib/src/format.cc
+	../deps/fmtlib/src/os.cc
 """)
 
 if str(platform) == "darwin":

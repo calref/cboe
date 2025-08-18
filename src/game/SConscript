@@ -24,6 +24,8 @@ game_sources = Split("""
 	../pcedit/pc.editors.cpp
 	../fileio/fileio_party.cpp
 	../view_dialogs.cpp
+	../deps/fmtlib/src/format.cc
+	../deps/fmtlib/src/os.cc
 """)
 
 if str(platform) == "darwin":

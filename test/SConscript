@@ -9,6 +9,8 @@ env.Append(CPPPATH=['../deps/Catch2/single_include/catch2'])
 
 test_sources = Glob("""*.cpp""") + Split("""
 	#build/obj/scenedit/scen.fileio.cpp
+	../deps/fmtlib/src/format.cc
+	../deps/fmtlib/src/os.cc
 """)
 
 debug_symbols = None
