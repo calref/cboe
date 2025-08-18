@@ -85,7 +85,7 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	
 	if(town_number < 0 || town_number >= univ.scenario.towns.size()) {
 		showError("The scenario tried to put you into a town that doesn't exist.",
-			fmt:format("Requested town: {}|Max town: {}", town_number, univ.scenario.towns.size()));
+			fmt::format("Requested town: {}|Max town: {}", town_number, univ.scenario.towns.size()));
 		return;
 	}
 	
