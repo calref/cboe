@@ -92,6 +92,8 @@ boost::optional<location> scen_arg_out_sec, scen_arg_loc;
 extern std::string last_load_file;
 std::string help_text_rsrc = "help";
 
+std::string last_tooltip_text = "";
+
 /*
 // Example feature flags:
 {
@@ -1444,6 +1446,75 @@ void handle_one_minimap_event(const sf::Event& event) {
 		map_window_lost_focus = true;
 	}else if(event.type == sf::Event::MouseMoved){
 		check_window_moved(mini_map(), last_map_x, last_map_y, "MapWindow");
+
+		// Check if something interesting is hovered
+		location tile = minimap_view_rect().topLeft();
+		int x = event.mouseMove.x;
+		int y = event.mouseMove.y;
+		tile.x += (x - (47 * get_ui_scale_map())) / get_ui_scale_map() / 6;
+		tile.y += (y - (29 * get_ui_scale_map())) / get_ui_scale_map() / 6;
+
+		std::string tooltip_text = "";
+		bool is_on_map;
+		if(is_out()) is_on_map = tile.x >= 0 && tile.y >= 0 && tile.x < 48 && tile.y < 48;
+		else is_on_map = univ.town->is_on_map(tile);
+		location real_tile = tile;
+		if(is_out()) real_tile = local_to_global(tile);
+		if(is_on_map && is_explored(real_tile.x, real_tile.y)){
+			// Area rectangle hovered
+			const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
+			for(info_rect_t area : area_desc){
+				if(area.empty()) continue;
+				if(area.contains(tile)){
+					tooltip_text += area.descr + " |";
+				}
+			}
+
+			// Sign hovered
+			const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
+			for(sign_loc_t sign : sign_locs){
+				if(sign == tile){
+					// make sure the terrain is a sign
+					ter_num_t ter = is_out() ? univ.out[real_tile] : univ.town->terrain(real_tile.x, real_tile.y);
+					if(is_sign(ter))
+						tooltip_text += "Sign: " + sign.text + " |";
+				}
+			}
+			// Town entrance hovered
+			if(is_out()){
+				const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
+				for(spec_loc_t city : city_locs){
+					if(city == tile){
+						// don't tooltip hidden towns
+						ter_num_t ter = is_out() ? univ.out[real_tile] : univ.town->terrain(real_tile.x, real_tile.y);
+						if(univ.scenario.ter_types[ter].special == eTerSpec::TOWN_ENTRANCE)
+							tooltip_text += univ.scenario.towns[city.spec]->name + " |";
+					}
+				}
+			}
+			// Vehicle hovered
+			for(auto& boat : univ.party.boats) {
+				if(!vehicle_is_here(boat)) continue;
+				if(boat.loc == tile){
+					tooltip_text += (boat.property ? "Boat (Not Yours)" : "Your Boat");
+					tooltip_text += " |";
+				}
+			}
+			for(auto& horse : univ.party.horses) {
+				if(!vehicle_is_here(horse)) continue;
+				if(horse.loc == tile){
+					tooltip_text += (horse.property ? "Horses (Not Yours)" : "Your Horses");
+					tooltip_text += " |";
+				}
+			}
+			// Party hovered
+			if(tile == (is_out() ? univ.party.loc_in_sec : univ.party.town_loc)){
+				tooltip_text += "Your Party";
+			}
+		}
+		if(tooltip_text != last_tooltip_text)
+			draw_map(false, tooltip_text);
+		last_tooltip_text = tooltip_text;
 	}else if(event.type == sf::Event::KeyPressed){
 		switch(event.key.code){
 			case sf::Keyboard::Escape:
@@ -1491,7 +1562,7 @@ void update_everything() {
 
 void redraw_everything() {
 	redraw_screen(REFRESH_ALL);
-	if(map_visible) draw_map(false);
+	if(map_visible) draw_map(false, last_tooltip_text);
 }
 
 void Mouse_Pressed(const sf::Event& event, cFramerateLimiter& fps_limiter) {

@@ -1,0 +1,73 @@
+name: Mac universal build
+on:
+  push:
+    branches:
+      - universal
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: macos-14
+    env:
+      CONFIGURATION: ${{ matrix.configuration }}
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      PROD_MACOS_CERTIFICATE: '${{ secrets.PROD_MACOS_CERTIFICATE }}'
+      PROD_MACOS_CERTIFICATE_PWD: '${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}'
+      PROD_MACOS_CERTIFICATE_NAME: '${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}'
+      PROD_MACOS_CI_KEYCHAIN_PWD: '${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}'
+      PROD_MACOS_NOTARIZATION_APPLE_ID: '${{ secrets.PROD_MACOS_NOTARIZATION_APPLE_ID }}'
+      PROD_MACOS_NOTARIZATION_TEAM_ID: '${{ secrets.PROD_MACOS_NOTARIZATION_TEAM_ID }}'
+      PROD_MACOS_NOTARIZATION_PWD: '${{ secrets.PROD_MACOS_NOTARIZATION_PWD }}'
+      BUILD_OS: macos
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - Release
+          - Debug
+    steps:
+      - uses: actions/checkout@v4
+
+      # Download macos-intel
+      - uses: robinraju/release-downloader@v1
+        id: download
+        with:
+          latest: true
+          fileName: 'cboe-macos-intel-${{ matrix.configuration }}.tar'
+          extract: true
+          out-file-path: 'cboe-macos-intel-${{ matrix.configuration }}'
+
+      # Download macos-silicon
+      - uses: robinraju/release-downloader@v1
+        with:
+          latest: true
+          fileName: 'cboe-macos-silicon-${{ matrix.configuration }}.tar'
+          extract: true
+          out-file-path: 'cboe-macos-silicon-${{ matrix.configuration }}'
+
+      - run: .github/workflows/scripts/mac/make-universal.sh
+
+      # Skipping this for now because of issue nqnstudios#13
+      - name: Codesign and notarize
+        run: 'SIGN="no" NOTARIZE="no" .github/workflows/scripts/mac/sign-apps.sh'
+
+      - name: 'Tar files'
+        run: 'tar -cvf cboe-macos-universal-${{matrix.configuration}}.tar "build/Blades of Exile"'
+
+      # Upload everything as artifact
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-universal-dependencies-${{matrix.configuration}}
+          path: cboe-macos-universal-${{matrix.configuration}}.tar
+
+      # upload a release
+      - name: Github release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: cboe-macos-universal-${{ matrix.configuration }}.tar
+          tag_name: ${{ steps.download.outputs.tag_name }}
+
+      - name: 'Itch.io release'
+        run: './.github/workflows/scripts/butler_push.sh'
+        shell: bash
+        if: ${{ matrix.configuration == 'Release' }}

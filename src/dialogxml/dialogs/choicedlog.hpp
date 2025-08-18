@@ -17,8 +17,8 @@
 /// This class loads a definition from a file, so there can be any amount of other stuff in the dialog,
 /// and the buttons could be arranged in any fashion you want.
 class cChoiceDlog {
-	cDialog dlg;
 protected:
+	cDialog dlg;
 	/// The click handler for the dialog's buttons.
 	/// @param me A reference to the current dialog.
 	/// @param id The unique key of the clicked control.

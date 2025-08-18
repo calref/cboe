@@ -138,7 +138,9 @@ bool loc_off_world(location p1) {
 }
 
 bool loc_off_act_area(location p1) {
-	if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
+	if(is_out() && univ.out->is_on_map(p1))
+		return false;
+	else if((p1.x > univ.town->in_town_rect.left) && (p1.x < univ.town->in_town_rect.right) &&
 		(p1.y > univ.town->in_town_rect.top) && (p1.y < univ.town->in_town_rect.bottom))
 	 	return false;
 	return true;
@@ -258,14 +260,14 @@ void update_explored(const location dest) {
 
 
 // All purpose function to check is spot is free for travel into.
-bool is_blocked(location to_check) {
+bool is_blocked(location to_check, bool count_party) {
 	if(is_out()) {
 		if(!univ.out.is_on_map(to_check.x, to_check.y))
 			return true;
 		if(impassable(univ.out[to_check.x][to_check.y])) {
 			return true;
 		}
-		if(to_check == univ.party.out_loc)
+		if(count_party && to_check == univ.party.out_loc)
 			return true;
 		for(short i = 0; i < univ.party.out_c.size(); i++)
 			if((univ.party.out_c[i].exists))
@@ -292,12 +294,14 @@ bool is_blocked(location to_check) {
 		// Note: The purpose of the above check is to avoid portals.
 		
 		// Party there?
-		if(is_town() && to_check == univ.party.town_loc)
-			return true;
-		if(is_combat()) {
-			for(short i = 0; i < 6; i++) {
-				if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos) {
-					return true;
+		if(count_party){
+			if(is_town() && to_check == univ.party.town_loc)
+				return true;
+			if(is_combat()) {
+				for(short i = 0; i < 6; i++) {
+					if(univ.party[i].main_status == eMainStatus::ALIVE && to_check == univ.party[i].combat_pos) {
+						return true;
+					}
 				}
 			}
 		}
@@ -598,4 +602,20 @@ void alter_space(short i,short j,ter_num_t ter) {
 		if(univ.scenario.ter_types[former].light_radius != univ.scenario.ter_types[ter].light_radius)
 			univ.town->set_up_lights();
 	}
+}
+
+bool vehicle_is_here(const cVehicle& vehicle) {
+	if(!vehicle.exists) return false;
+	if(is_out()){
+		location party_sector = univ.party.outdoor_corner;
+		party_sector.x += univ.party.i_w_c.x;
+		party_sector.y += univ.party.i_w_c.y;
+		return vehicle.which_town == 200 && vehicle.sector == party_sector;
+	}else{
+		return vehicle.which_town == univ.party.town_num;
+	}
+}
+
+bool is_sign(ter_num_t ter) {
+	return univ.scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN;
 }

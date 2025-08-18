@@ -692,7 +692,6 @@ void handle_look(location destination, bool right_button, eKeyMod mods, bool& ne
 				if(adj_town_look(destination))
 					need_redraw = true;
 		// TODO: This would be the place to call OUT_LOOK special
-		// TODO: Do we really need an is_sign function?
 		if(is_sign(ter_looked_at)) {
 			print_buf();
 			need_reprint = false;
@@ -4271,13 +4270,6 @@ short count_walls(location loc) { // TODO: Generalize this function
 			answer++;
 	}
 	return answer;
-}
-
-bool is_sign(ter_num_t ter) {
-	
-	if(univ.scenario.ter_types[ter].special == eTerSpec::IS_A_SIGN)
-		return true;
-	return false;
 }
 
 bool check_for_interrupt(std::string confirm_dialog){

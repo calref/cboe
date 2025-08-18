@@ -340,6 +340,8 @@ std::string name_alphabetical(std::string a) {
 	// The scenario editor will let you prepend whitespace to a scenario name :(
 	boost::algorithm::trim_left(a);
 	std::transform(a.begin(), a.end(), a.begin(), tolower);
+	// Some party makers start with the name of the corresponding scenario in quotes
+	if(a.substr(0,1) == "\"") a.erase(a.begin(), a.begin() + 1);
 	if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
 	else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
 	return a;
@@ -358,11 +360,9 @@ std::vector<scen_header_type> build_scen_headers() {
 		std::string scen_file;
 		while(std::getline(in, scen_file)){
 			scen_header_type scen_head;
-			fs::path full_path;
-			for(fs::path scenDir : all_scen_dirs()){
-				full_path = scenDir / scen_file;
-				if (fs::exists(full_path))
-					break;
+			fs::path full_path = locate_scenario(scen_file, true);
+			if(full_path.empty()){
+				LOG("Scenario missing! " + scen_file);
 			}
 			if(load_scenario_header(full_path, scen_head)){
 				scen_headers.push_back(scen_head);
@@ -378,6 +378,12 @@ std::vector<scen_header_type> build_scen_headers() {
 			}
 		}
 	}else{
+		scen_header_type scen_head;
+
+		// Include Bandit Busywork in custom section:
+		if(load_scenario_header(progDir / "Blades of Exile Scenarios/busywork.boes", scen_head))
+			scen_headers.push_back(scen_head);
+
 		for(fs::path scenDir : all_scen_dirs()){
 			std::cout << scenDir << std::endl;
 			fs::recursive_directory_iterator iter(scenDir);
@@ -392,7 +398,6 @@ std::vector<scen_header_type> build_scen_headers() {
 						continue;
 					}
 
-					scen_header_type scen_head;
 					if(load_scenario_header(iter->path(), scen_head))
 						scen_headers.push_back(scen_head);
 				}
@@ -544,4 +549,28 @@ void try_auto_save(std::string reason) {
 		ASB("Autosave: Save not completed");
 	}
 	print_buf();
+}
+
+std::vector<std::string> extra_extensions = {".sav", ".txt", ".rtf", ".htm", ".html"};
+
+std::vector<fs::path> extra_files(fs::path scen_file) {
+	std::vector<fs::path> files;
+
+	std::string scen_extension = scen_file.extension().string();
+	std::transform(scen_extension.begin(), scen_extension.end(), scen_extension.begin(), tolower);
+	if(scen_extension != ".exs") return files;
+
+	fs::path directory = scen_file.parent_path();
+
+	fs::recursive_directory_iterator file_iter(directory);
+	for(; file_iter != fs::recursive_directory_iterator(); file_iter++) {
+		fs::path file = *file_iter;
+		std::string extension = file.extension().string();
+		std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+		if(std::find(extra_extensions.begin(), extra_extensions.end(), extension) != extra_extensions.end()){
+			files.push_back(file);
+		}
+	}
+
+	return files;
 }

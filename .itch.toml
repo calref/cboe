@@ -1,0 +1,9 @@
+[[actions]]
+name = "Play"
+path = "Blades of Exile.exe"
+platform = "windows"
+
+[[actions]]
+name = "Play"
+path = "Blades of Exile.app"
+platform = "osx"

@@ -57,6 +57,7 @@ scen_env.BuildScenario('#build/rsrc/scenarios/stealth.boes', 'scenarios/stealth/
 scen_env.BuildScenario('#build/rsrc/scenarios/zakhazi.boes', 'scenarios/zakhazi/header.exs')
 
 env.Install(path.join(install_dir, "Blades of Exile Scenarios"), Glob("#build/rsrc/scenarios/*.boes"))
+env.Install(path.join(install_dir, "Blades of Exile Scenarios"), "scenarios/custom")
 env.Install(path.join(install_dir, "Blades of Exile Base"), Glob("#build/rsrc/bases/*.boes"))
 
 # Validate dialogs

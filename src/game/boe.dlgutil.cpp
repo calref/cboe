@@ -28,6 +28,7 @@
 #include "utility.hpp"
 #include "mathutil.hpp"
 #include "dialogxml/dialogs/strdlog.hpp"
+#include "dialogxml/dialogs/btnpanel.hpp"
 #include "dialogxml/dialogs/choicedlog.hpp"
 #include "gfx/render_shapes.hpp"
 #include "tools/winutil.hpp"
@@ -60,8 +61,12 @@ extern std::shared_ptr<cScrollbar> text_sbar,item_sbar,shop_sbar;
 extern std::shared_ptr<cButton> done_btn, help_btn;
 extern bool map_visible;
 extern cUniverse univ;
+extern cCustomGraphics spec_scen_g;
 extern std::map<eSkill,short> skill_max;
 extern void give_help_and_record(short help1, short help2, bool help_forced = false);
+extern void post_load();
+extern void start_new_game(bool force = false);
+extern void do_load();
 
 short sign_mode,person_graphic,store_person_graphic,store_sign_mode;
 long num_talk_entries;
@@ -659,15 +664,16 @@ std::vector<std::string> preset_words = {
 	"Ask About...",
 };
 
+std::vector<location> preset_word_locs = {
+	{4, 366}, {70, 366}, {136, 366},
+	{4, 389}, {70, 389}, {121, 389},
+	{210, 389}, {190, 366},
+	{4, 343}
+};
+
 static void reset_talk_words() {
 	// first initialise talk_words here
 	talk_words.clear();
-	static const std::vector<location> preset_word_locs = {
-		{4, 366}, {70, 366}, {136, 366},
-		{4, 389}, {70, 389}, {121, 389},
-		{210, 389}, {190, 366},
-		{4, 343}
-	};
 	TextStyle style;
 	style.font = FONT_DUNGEON;
 	style.pointSize = TALK_WORD_SIZE;
@@ -1786,8 +1792,16 @@ class cChooseScenario {
 		for(auto& hdr : scen_headers){
 			// I just checked, and the scenario editor will let you name your scenario "" or " "!
 			std::string name = name_alphabetical(hdr.name);
-			if(!name.empty())
-				me[name.substr(0, 1)].show();
+			if(!name.empty()){
+				// Starts with a letter:
+				if(me.hasControl(name.substr(0, 1))){
+					me[name.substr(0, 1)].show();
+				}
+				// Starts with a digit:
+				else if(name[0] >= '0' && name[0] <= '9'){
+					me["#"].show();
+				}
+			}
 		}
 	}
 
@@ -1804,6 +1818,7 @@ class cChooseScenario {
 	
 	bool doSelectScenario(int which) {
 		int page = dynamic_cast<cStack&>(me["list"]).getPage();
+		scen_header_type scen;
 		if(page == 0) {
 			scen_header_type prefab;
 			switch(which) {
@@ -1816,13 +1831,80 @@ class cChooseScenario {
 			prefab.prog_make_ver[0] = 2;
 			prefab.prog_make_ver[1] = 0;
 			prefab.prog_make_ver[2] = 0;
-			me.setResult<scen_header_type>(prefab);
+			scen = prefab;
 		} else {
 			int scen_hit = which + (page - 1) * 3;
 			if(scen_hit >= scen_headers.size()) return false;
-			me.setResult<scen_header_type>(scen_headers[scen_hit]);
+			scen = scen_headers[scen_hit];
 		}
-		me.toast(true);
+		std::vector<std::string> choices;
+		std::vector<std::function<void(cButtonPanel&)>> handlers;
+		// If no party is loaded, offer to load default or create new
+		if(!party_in_memory){
+			choices.push_back("Create new party");
+			handlers.push_back([](cButtonPanel& dlg) -> void {
+				start_new_game();
+				if(party_in_memory){
+					dlg->getControl("done").show();
+				}
+			});
+			choices.push_back("Load a party");
+			handlers.push_back([](cButtonPanel& dlg) -> void {
+				do_load();
+				if(party_in_memory){
+					dlg->getControl("done").show();
+				}
+			});
+		}
+
+		// Show text files, Offer to load prefab party
+		std::vector<fs::path> files = extra_files(locate_scenario(scen.file));
+		for(fs::path file : files){
+			std::string ext = file.extension().string();
+			std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
+			if(ext == ".sav"){
+				choices.push_back("Load premade party: " + file.filename().string());
+				handlers.push_back([file](cButtonPanel& dlg) -> void {
+					if(replaying){
+						// The next action encodes loading the prefab party,
+						// which is redundant here
+						pop_next_action();
+					}
+					if(!load_party(file, univ, spec_scen_g)) {
+						std::cout << "Failed to load save file: " << file << std::endl;
+					}else{
+						finish_load_party();
+						if(overall_mode != MODE_STARTUP)
+							post_load();
+						dlg->getControl("done").show();
+					}
+				});
+			}else{
+				choices.push_back("Open file: " + file.filename().string());
+				handlers.push_back([file](cButtonPanel&) -> void {
+					launchURL("file://" + file.string());
+				});
+			}
+		}
+
+		if(!choices.empty()){
+			cButtonPanel panel(choices, handlers, scen.name, "Launch", &me);
+			if(!party_in_memory){
+				panel->getControl("done").hide();
+			}
+			dynamic_cast<cPict&>(panel->getControl("pic")).setPict(scen.intro_pic,PIC_SCEN);
+			if(panel.show()){
+				// Launch pressed.
+				me.setResult<scen_header_type>(scen);
+				me.toast(true);
+			};
+		}
+		// No extra files. Just launch
+		else{
+			me.setResult<scen_header_type>(scen);
+			me.toast(true);
+		}
+
 		return true;
 	}
 
@@ -1870,6 +1952,7 @@ public:
 			stk.setPage(0);
 			return true;
 		});
+		// Letter buttons scroll to an alphabetical position:
 		for(int i = 0; i < 26; ++i){
 			std::string letter(1, (char)('a' + i));
 			me[letter].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
@@ -1883,6 +1966,12 @@ public:
 				return true;
 			});
 		}
+		// Number button scrolls to scenarios that start with symbols or digits:
+		me["#"].attachClickHandler([this](cDialog& me, std::string letter, eKeyMod) -> bool {
+			auto& stk = dynamic_cast<cStack&>(me["list"]);
+			stk.setPage(1);
+			return true;
+		});
 		
 		put_scen_info();
 		

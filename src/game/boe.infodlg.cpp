@@ -512,10 +512,14 @@ static bool adventure_notes_event_filter(cDialog& me, std::string item_hit, eKey
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > store_page_on * 3+i) {
 			me["str" + n].setText(univ.party.special_notes[store_page_on * 3+i].the_str);
+			me["str" + n].recalcRect();
+			me["pane" + n].recalcRect();
 			me["del" + n].show();
 		}
 		else {
 			me["str" + n].setText("");
+			me["str" + n].recalcRect();
+			me["pane" + n].recalcRect();
 			me["del" + n].hide();
 		}
 	}
@@ -544,6 +548,8 @@ void adventure_notes() {
 		std::string n = boost::lexical_cast<std::string>(i + 1);
 		if(univ.party.special_notes.size() > i) {
 			encNotes["str" + n].setText(univ.party.special_notes[i].the_str);
+			encNotes["str" + n].recalcRect();
+			encNotes["pane" + n].recalcRect();
 			encNotes["del" + n].show();
 		}
 		else encNotes["del" + n].hide();
@@ -707,12 +713,12 @@ void cStringRecorder::operator()(cDialog& me) {
 	play_sound(0);
 	std::string str1, str2;
 	univ.get_strs(str1, str2, spec_type, label1, label2);
+	// Combine str1 and str2 in one journal entry:
+	if(!str2.empty())
+		str1 += " ||" + str2;
 	if(univ.party.record(note_type, str1, location)){
 		give_help(58,0,me);
 		ASB("Added to encounter notes.");
 	}
-
-	if(!str2.empty())
-		univ.party.record(note_type, str2, location);
 }
 

@@ -4,6 +4,7 @@
 #include <list>
 #include <unordered_map>
 #include <memory>
+#include <set>
 
 #include "boe.global.hpp"
 
@@ -1186,17 +1187,21 @@ void place_trim(short q,short r,location where,ter_num_t ter_type) {
 }
 
 static void init_trim_mask(std::unique_ptr<sf::Texture>& mask, rectangle src_rect) {
-	sf::RenderTexture render;
+	static sf::RenderTexture render;
+	static bool init = false;
+	if(!init){
+		render.create(28, 36);
+		init = true;
+	}
 	rectangle dest_rect;
 	dest_rect.top = src_rect.top % 36;
 	dest_rect.bottom = (src_rect.bottom - 1) % 36 + 1;
 	dest_rect.left = src_rect.left % 28;
 	dest_rect.right = (src_rect.right - 1) % 28 + 1;
-	std::tie(dest_rect.top, dest_rect.bottom) = std::make_tuple(36 - dest_rect.top, 36 - dest_rect.bottom);
 	render.create(28, 36);
 	render.clear(sf::Color::White);
 	rect_draw_some_item(*ResMgr::graphics.get("trim"), src_rect, render, dest_rect);
-	render.display();
+	// render.display(); // Using it as a mask, we don't need to flip
 	mask.reset(new sf::Texture);
 	mask->create(28, 36);
 	mask->update(render.getTexture().copyToImage());
@@ -1246,6 +1251,13 @@ void draw_trim(short q,short r,short which_trim,ter_num_t ground_ter) {
 	}
 	sf::Color test_color = {0,0,0}, store_color;
 	
+	location targ;
+	targ.x = q;
+	targ.y = r;
+	if(supressing_some_spaces && (targ != ok_space[0]) && (targ != ok_space[1]) &&
+		(targ != ok_space[2]) && (targ != ok_space[3]))
+		return;
+
 	unsigned short pic = univ.scenario.ter_types[ground_ter].picture;
 	if(pic < 960){
 		int which_sheet = pic / 50;
@@ -1367,67 +1379,6 @@ void place_road(short q,short r,location where,bool here) {
 			to_rect = road_dest_rects[3];
 			to_rect.offset(13 + q * 28,13 + r * 36);
 			rect_draw_some_item (roads_gworld, road_rects[0], terrain_screen_gworld(), to_rect);
-		}
-	}else{
-		// TODO: I suspect this branch is now irrelevant.
-		ter_num_t ter = coord_to_ter(where.x, where.y);
-		ter_num_t ref = coord_to_ter(where.x,where.y);
-		bool horz = false, vert = false;
-		eTrimType trim = eTrimType::NONE, vertTrim = eTrimType::NONE;
-		if(ref < univ.scenario.ter_types.size()) {
-			trim = univ.scenario.ter_types[ref].trim_type;
-		}
-		if(ter < univ.scenario.ter_types.size()) {
-			vertTrim = univ.scenario.ter_types[ter].trim_type;
-		}
-		if(where.y > 0)
-			ter = coord_to_ter(where.x,where.y - 1);
-		if((where.y == 0) || connect_roads(ter))
-			vert = can_build_roads_on(ref);
-		else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
-			vert = can_build_roads_on(ref);
-		
-		if(((is_out()) && (where.x < 96)) || (!(is_out()) && (where.x < univ.town->max_dim - 1)))
-			ter = coord_to_ter(where.x + 1,where.y);
-		eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
-		if(((is_out()) && (where.x == 96)) || (!(is_out()) && (where.x == univ.town->max_dim - 1))
-			|| connect_roads(ter))
-			horz = can_build_roads_on(ref);
-		else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
-			horz = can_build_roads_on(ref);
-		
-		if(vert){
-			if(((is_out()) && (where.y < 96)) || (!(is_out()) && (where.y < univ.town->max_dim - 1)))
-				ter = coord_to_ter(where.x,where.y + 1);
-			eTrimType vertTrim = univ.scenario.ter_types[ter].trim_type;
-			if(((is_out()) && (where.y == 96)) || (!(is_out()) && (where.y == univ.town->max_dim - 1))
-				|| connect_roads(ter))
-				vert = can_build_roads_on(ref);
-			else if((vertTrim == eTrimType::S && trim == eTrimType::N) || (vertTrim == eTrimType::N && trim == eTrimType::S))
-				vert = can_build_roads_on(ref);
-			else vert = false;
-		}
-		
-		if(horz){
-			if(where.x > 0)
-				ter = coord_to_ter(where.x - 1,where.y);
-			eTrimType horzTrim = univ.scenario.ter_types[ter].trim_type;
-			if((where.x == 0) || connect_roads(ter))
-				horz = can_build_roads_on(ref);
-			else if((horzTrim == eTrimType::W && trim == eTrimType::E) || (horzTrim == eTrimType::E && trim == eTrimType::W))
-				horz = can_build_roads_on(ref);
-			else horz = false;
-		}
-		
-		if(horz){
-			to_rect = road_dest_rects[5];
-			to_rect.offset(13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[2], terrain_screen_gworld(), to_rect);
-		}
-		if(vert){
-			to_rect = road_dest_rects[4];
-			to_rect.offset(13 + q * 28,13 + r * 36);
-			rect_draw_some_item (roads_gworld, road_rects[3], terrain_screen_gworld(), to_rect);
 		}
 	}
 }
@@ -1685,6 +1636,65 @@ void draw_targeting_line() {
 	extern bool targeting_line_visible;
 	if(targeting_line_visible && ((overall_mode == MODE_SPELL_TARGET) || (overall_mode == MODE_FIRING) || (overall_mode == MODE_THROWING) || (overall_mode == MODE_FANCY_TARGET)
 		|| ((overall_mode == MODE_TOWN_TARGET) && (current_pat[4][4] != 0)))) {
+
+		// Highlight targetable squares including ally/enemy attitude
+		std::set<location, loc_compare> big_monst_there;
+		for(short q = 0; q < 9; q++) {
+			for(short r = 0; r < 9; r++) {
+				which_space = center;
+				which_space.x += q - 4;
+				which_space.y += r - 4;
+
+				if(big_monst_there.count(which_space)) continue;
+				sf::Color frame_color(0, 0, 0, 0);
+				int x_width = 1;
+				int y_width = 1;
+				short frame_q = q;
+				short frame_r = r;
+				if((can_see_light(from_loc,which_space,sight_obscurity) < 5)
+					&& (dist(from_loc,which_space) <= current_spell_range)){
+					frame_color = sf::Color(255, 255, 255, 127);
+
+					iLiving* targ = univ.target_there(which_space, TARG_PC);
+					if(targ != nullptr){
+						frame_color = sf::Color(0, 255, 0, 127);
+					}
+					targ = univ.target_there(which_space, TARG_MONST);
+					if(targ != nullptr){
+						cCreature* monst = dynamic_cast<cCreature*>(targ);
+						if(!monst->invisible){
+							frame_color = targ->is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127);
+							// Frame needs to be positioned at the monster's top left corner
+							frame_q -= (which_space.x - monst->cur_loc.x);
+							frame_r -= (which_space.y - monst->cur_loc.y);
+							x_width = monst->x_width;
+							y_width = monst->y_width;
+							for(int i = 0; i < x_width; ++i){
+								for(int j = 0; j < y_width; ++j){
+									big_monst_there.insert(loc(monst->cur_loc.x + i, monst->cur_loc.y + j));
+								}
+							}
+						}
+					}
+
+					const int ter_screen_left = 19 + 13; // 13 is the white frame
+					const int ter_screen_top = 7 + 13; // 13 is the white frame
+
+					target_rect.left = ter_screen_left + 28 * frame_q;
+					target_rect.right = target_rect.left + 28 * x_width;
+					target_rect.top = ter_screen_top + 36 * frame_r;
+					target_rect.bottom = target_rect.top + 36 * y_width;
+
+					// Clip the target rect to the window bounds
+					target_rect.left = max(ter_screen_left, target_rect.left);
+					target_rect.top = max(ter_screen_top, target_rect.top);
+					target_rect.right = min(ter_screen_left + 28 * 9, target_rect.right);
+					target_rect.bottom = min(ter_screen_top + 36 * 9, target_rect.bottom);
+
+					frame_rect(mainPtr(), target_rect, frame_color);
+				}
+			}
+		}
 		
 		if(mouse_to_terrain_coords(which_space, false)) {
 			int xBound = (short) (from_loc.x - center.x + 4);
@@ -1712,7 +1722,8 @@ void draw_targeting_line() {
 							target_rect.right = target_rect.left + 28;
 							target_rect.top = 13 + 36 * j + 7;
 							target_rect.bottom = target_rect.top + 36;
-							frame_rect(mainPtr(), target_rect, sf::Color::White);
+							static sf::Color target_color(255, 0, 0, 255);
+							frame_rect(mainPtr(), target_rect, target_color);
 							target_rect.inset(-5,-5);
 							
 							// Now place number of shots left, if drawing center of target

@@ -1986,8 +1986,8 @@ void special_increase_age(long length, bool queue) {
 		draw_terrain(0);
 }
 
-void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
-	if(spec < 0) return;
+bool queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
+	if(spec < 0) return false;
 	pending_special_type queued_special;
 	queued_special.spec = spec;
 	queued_special.where = spec_loc;
@@ -1999,6 +1999,7 @@ void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, loca
 		run_special(queued_special, nullptr, nullptr, nullptr);
 	else
 		special_queue.push(queued_special);
+	return true;
 }
 
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
@@ -2007,6 +2008,8 @@ void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
 	run_special(spec.mode, spec.type, spec.spec, spec.where, a, b, redraw);
 	univ.party.age = std::max(univ.party.age, store_time);
 }
+
+extern bool need_enter_town_autosave;
 
 // This is the big painful one, the main special engine entry point
 // which_mode - says when it was called
@@ -2165,6 +2168,10 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 		erase_out_specials();
 	else erase_town_specials();
 	special_in_progress = false;
+	if(which_mode == eSpecCtx::ENTER_TOWN && need_enter_town_autosave){
+		try_auto_save("EnterTown");
+		need_enter_town_autosave = false;
+	}
 	
 	// TODO: Should find a way to do this that doesn't risk stack overflow
 	if(ctx.next_spec == -1 && !special_queue.empty()) {
@@ -2637,7 +2644,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			univ.get_strs(strs, ctx.cur_spec_type, spec.m1);
 			// Leave / Take
 			buttons[0] = 9; buttons[1] = 19;
-			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c);
+			dlg_res = custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ);
 			if(dlg_res == 1) {set_sd = false; ctx.next_spec = -1;}
 			else {
 				store_i = univ.scenario.get_stored_item(spec.ex1a);
@@ -2677,7 +2684,7 @@ void oneshot_spec(const runtime_state& ctx) {
 			if((spec.m1 >= 0) || (spec.m2 >= 0)) {
 				univ.get_strs(strs[0],strs[1], ctx.cur_spec_type, spec.m1, spec.m2);
 				buttons[0] = 3; buttons[1] = 2;
-				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c);
+				dlg_res = custom_choice_dialog(strs,spec.pic,ePicType(spec.pictype),buttons, true, spec.ex1c, spec.ex2c, &univ);
 				// TODO: Make custom_choice_dialog return string?
 			}
 			else dlg_res = cChoiceDlog("basic-trap",{"yes","no"}).show() == "no";
@@ -4006,7 +4013,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 9; buttons[1] = 35;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1)
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ) == 1)
 					ctx.next_spec = -1;
 				else {
 					int x = univ.party.get_ptr(10), y = univ.party.get_ptr(11);
@@ -4037,7 +4044,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs, ctx.cur_spec_type,spec.m1);
 				buttons[0] = 9; buttons[1] = 8;
-				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c) == 1) {
+				if(custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, true, spec.ex1c, spec.ex2c, &univ) == 1) {
 					ctx.next_spec = -1;
 					if(ctx.which_mode == eSpecCtx::OUT_MOVE || ctx.which_mode == eSpecCtx::TOWN_MOVE || ctx.which_mode == eSpecCtx::COMBAT_MOVE)
 						*ctx.ret_a = 1;
@@ -4069,7 +4076,7 @@ void townmode_spec(const runtime_state& ctx) {
 			else {
 				univ.get_strs(strs,ctx.cur_spec_type, spec.m1);
 				buttons[0] = 20; buttons[1] = 24;
-				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons);
+				int i = spec.ex2b == 1 ? 2 : custom_choice_dialog(strs, spec.pic, ePicType(spec.pictype), buttons, false, -1, -1, &univ);
 				*ctx.ret_a = 1;
 				if(i == 1) {
 					ctx.next_spec = -1;

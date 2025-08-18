@@ -21,6 +21,7 @@
 #include "skills_traits.hpp"
 #include "damage.hpp"
 #include "fields.hpp"
+#include "scenario.hpp"
 
 bool cTimer::is_valid() const {
 	if(time < 0) return false;
@@ -527,6 +528,21 @@ void cSpecial::import_legacy(legacy::special_node_type& old){
 			else std::cout << "Unrecognized node type found: " << old.type
 				<< "\n\tNote: This could indicate corruption in the scenario, but more likely is just a result of garbage data in unused nodes or in the memory structures they were read into. The unrecognized node type has been replaced with invalid type -1.";
 	}
+}
+
+// In the editor node list, be as helpful as possible about what the specific node instance does
+std::string cSpecial::editor_hint(const cScenario& scenario) const {
+	std::string hint = (*type).name();
+
+	switch(type){
+		case eSpecType::TOWN_STAIR:
+		case eSpecType::TOWN_GENERIC_STAIR:
+			hint += " to ";
+			if(ex2a < scenario.towns.size()) hint += scenario.towns[ex2a]->loc_str(loc(ex1a, ex1b));
+			else hint += "INVALID TOWN";
+		default: break;
+	}
+	return hint;
 }
 
 static eSpecCat getNodeCategory(eSpecType node) {

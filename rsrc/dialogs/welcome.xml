@@ -9,10 +9,17 @@
 		Spiderweb Software, created in 1997 and later released as
 		Free Open-Source Software.
 	</text>
-	<text name='spidweb' relative='pos-in pos' rel-anchor='prev' top='3' left='16' colour='link' underline='true'>
-		http://www.spidweb.com/blades/opensource.html	
+	<text relative='pos-in pos' rel-anchor='prev' top='2' left='0' width='413'>
+		You're playing an Itch Edition release of OpenBoE. The Itch Edition
+		was funded by many generous supporters through IndieGoGo, and is
+		currently funded by donations on Patreon. Click below to follow the project
+		and see the rewards for becoming a supporter!
 	</text>
-	<text relative='neg pos' rel-anchor='prev' top='3' left='16' width='413'>
+	<text name='patreon' relative='pos-in pos' rel-anchor='prev' top='0' left='16' width='230' colour='link' underline='true'>
+		http://patreon.com/blades_itch_edition
+	</text>
+	<pict type='item' num='17' relative='pos neg' rel-anchor='prev' top='15' left='2'/>
+	<text relative='neg pos' anchor='patreon' top='3' left='16' width='413'>
 		Three exciting original scenarios await you, filled 
 		with many hours of puzzles, fighting and adventure!
 		In addition to these, hundreds more written by 

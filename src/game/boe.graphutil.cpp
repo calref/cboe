@@ -134,7 +134,7 @@ void draw_monsters() {
 							for(short k = 0; k < width * height; k++) {
 								std::shared_ptr<const sf::Texture> src_gw;
 								graf_pos_ref(src_gw, source_rect) = spec_scen_g.find_graphic(picture_wanted % 1000 +
-																							 ((enc.direction < 4) ? 0 : (width * height)) + k);
+																							 ((enc.direction >= 4) ? 0 : (width * height)) + k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								rect_draw_some_item(*src_gw, source_rect, terrain_screen_gworld(),to_rect, sf::BlendAlpha);
@@ -142,7 +142,7 @@ void draw_monsters() {
 						}
 						if(picture_wanted < 1000) {
 							for(short k = 0; k < width * height; k++) {
-								source_rect = get_monster_template_rect(picture_wanted,(enc.direction < 4) ? 0 : 1,k);
+								source_rect = get_monster_template_rect(picture_wanted,(enc.direction >= 4) ? 0 : 1,k);
 								to_rect = monst_rects[(width - 1) * 2 + height - 1][k];
 								to_rect.offset(13 + 28 * where_draw.x,13 + 36 * where_draw.y);
 								int which_sheet = m_pic_index[picture_wanted].i / 20;
@@ -192,12 +192,28 @@ void draw_monsters() {
 							Draw_Some_Item(*src_gw, source_rect, terrain_screen_gworld(), store_loc, 1, 0);
 						} else {
 							pic_num_t this_monst = monst.picture_num;
-							int pic_mode = (monst.direction) < 4 ? 0 : 1;
+							int pic_mode = (monst.direction) >= 4 ? 0 : 1;
 							pic_mode += (combat_posing_monster == i + 100) ? 10 : 0;
 							source_rect = get_monster_template_rect(this_monst, pic_mode, k);
 							int which_sheet = (m_pic_index[this_monst].i+k) / 20;
 							sf::Texture& monst_gworld = *ResMgr::graphics.get("monst" + std::to_string(1 + which_sheet));
 							Draw_Some_Item(monst_gworld, source_rect, terrain_screen_gworld(), store_loc, 1, 0);
+						}
+
+						extern bool targeting_line_visible;
+						if(is_combat() && !targeting_line_visible){
+							// Frame the monster
+							rectangle target_rect;
+							target_rect.left = 13 + 28 * where_draw.x;
+							target_rect.right = target_rect.left + 28 * monst.x_width;
+							target_rect.top = 13 + 36 * where_draw.y;
+							target_rect.bottom = target_rect.top + 36 * monst.y_width;
+							// clip the frame at the window boundaries
+							target_rect.top = max(13, target_rect.top);
+							target_rect.left = max(13, target_rect.left);
+							target_rect.bottom = min(target_rect.bottom, terrain_screen_gworld().getSize().y - 13);
+							target_rect.right = min(target_rect.right, terrain_screen_gworld().getSize().x - 13);
+							frame_rect(terrain_screen_gworld(), target_rect, monst.is_friendly() ? sf::Color(0, 0, 255, 127) : sf::Color(255, 0, 0, 127));
 						}
 					}
 				}
@@ -448,7 +464,7 @@ void draw_party_symbol(location center) {
 		return;
 	if(!univ.party.is_alive())
 		return;
-	if((is_town()) && (univ.party.town_loc.x > 70))
+	if((is_town()) && (univ.party.town_loc.x > (univ.scenario.is_legacy ? 70 : LOC_UNUSED)))
 		return;
 
 	if(is_town() && center != univ.party.town_loc) {

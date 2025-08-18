@@ -41,7 +41,7 @@ extern short d_rect_index[80];
 extern bool map_visible;
 extern cUniverse univ;
 
-extern void draw_map(bool need_refresh);
+extern void draw_map(bool need_refresh, std::string tooltip_text = "");
 
 short selected;
 
@@ -395,6 +395,16 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		me["down"].hide();
 	else me["down"].show();
 	
+	me["gold"].hide();
+	me["gold-label"].hide();
+	for(cItem* item : item_array){
+		if(item->variety == eItemType::GOLD && !item->property){
+			me["gold"].show();
+			me["gold-label"].show();
+			break;
+		}
+	}
+
 	for(short i = 0; i < ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i + 1;
@@ -460,7 +470,22 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			first_item_shown += ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
-	} else if(id.substr(0,2) == "pc") {
+	} else if(id == "gold"){
+		// Get all gold
+		for(int i = item_array.size() - 1; i >= 0; --i){
+			item = *item_array[i];
+			if(item.variety != eItemType::GOLD || item.property) continue;
+			if(item.item_level > 3000)
+				item.item_level = 3000;
+			set_item_flag(&item);
+			give_gold(item.item_level,false);
+			*item_array[i] = cItem();
+			item_array.erase(item_array.begin() + i);
+		}
+		play_sound(39); // formerly force_play_sound
+		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
+	}
+	else if(id.substr(0,2) == "pc") {
 		current_getting_pc = id[2] - '1';
 		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 	} else {
@@ -561,7 +586,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 	cDialog itemDialog(*ResMgr::dialogs.get("get-items"));
 	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);
-	itemDialog.attachClickHandlers(handler, {"done", "up", "down"});
+	itemDialog.attachClickHandlers(handler, {"done", "up", "down", "gold"});
 	itemDialog.attachClickHandlers(handler, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
 	itemDialog.setResult(false);
 	cTextMsg& title = dynamic_cast<cTextMsg&>(itemDialog["title"]);
@@ -658,17 +683,21 @@ short get_num_of_items(short max_num) {
 	return minmax(0,max_num,numPanel.getResult<int>());
 }
 
+// extern declaration doesn't work here??
+const short view_max_dim = 40;
+const short map_window_width = 296;
+const short map_window_height = 307;
 void init_mini_map() {
 	double map_scale = get_ui_scale_map();
 	if (map_scale < 0.1) map_scale = 1.0;
 	if (mini_map().isOpen()) mini_map().close();
-	mini_map().create(sf::VideoMode(map_scale*296,map_scale*277), "Map", sf::Style::Titlebar | sf::Style::Close);
+	mini_map().create(sf::VideoMode(map_scale*map_window_width,map_scale*map_window_height), "Map", sf::Style::Titlebar | sf::Style::Close);
 	// TODO why is 52,62 the default position, anyway?
 	int map_x = get_int_pref("MapWindowX", 52);
 	int map_y = get_int_pref("MapWindowY", 62);
 	mini_map().setPosition(sf::Vector2i(map_x,map_y));
 	sf::View view;
-	view.reset(sf::FloatRect(0, 0, map_scale*296,map_scale*277));
+	view.reset(sf::FloatRect(0, 0, map_scale*map_window_width,map_scale*map_window_height));
 	view.setViewport(sf::FloatRect(0, 0, map_scale, map_scale));
 	mini_map().setView(view);
 	mini_map().setVisible(false);
@@ -677,7 +706,7 @@ void init_mini_map() {
 	makeFrontWindow(mainPtr(), mini_map());
 	
 	// Create and initialize map gworld
-	if(!map_gworld().create(384, 384)) {
+	if(!map_gworld().create(view_max_dim * 6, view_max_dim * 6)) {
 		play_sound(2);
 		throw std::string("Failed to initialized automap!");
 	} else {

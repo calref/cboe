@@ -16,6 +16,7 @@
 #include "dialogxml/widgets/pictypes.hpp"
 
 namespace legacy { struct special_node_type; };
+class cScenario;
 
 static const short SDF_COMPLETE = 250;
 
@@ -108,6 +109,7 @@ public:
 		return true;
 	}
 	bool operator!=(const cSpecial& other) const { return !(*this == other); }
+	std::string editor_hint(const cScenario& scenario) const;
 };
 
 enum class eSpecCtxType {

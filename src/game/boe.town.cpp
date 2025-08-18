@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <queue>
+#include <limits>
 
 #include "boe.global.hpp"
 
@@ -62,11 +63,14 @@ location town_force_loc;
 bool shop_button_active[12];
 rectangle map_title_rect = {3,50,15,300};
 rectangle map_bar_rect = {15,50,27,300};
+rectangle map_tooltip_rect = {270,50,307,300};
 
 void force_town_enter(short which_town,location where_start) {
 	town_force = which_town;
 	town_force_loc = where_start;
 }
+
+bool need_enter_town_autosave = false;
 
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
@@ -333,8 +337,9 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 			if(no_thrash.count(&monst) == 0)
 				monst.active = eCreatureStatus::DEAD;
 	}
+	bool specials_queued = false;
 	if(!debug_enter)
-		handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
+		specials_queued = handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Flush excess doomguards and viscous goos
 	for(short i = 0; i < univ.town.monst.size(); i++)
@@ -491,24 +496,6 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 		monst.targ_loc.y = 0;
 	}
 	
-	// check horses
-	for(short i = 0; i < univ.party.boats.size(); i++) {
-		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
-			if(!univ.party.boats[i].exists) {
-				univ.party.boats[i] = univ.scenario.boats[i];
-				univ.party.boats[i].exists = true;
-			}
-		}
-	}
-	for(short i = 0; i < univ.party.horses.size(); i++) {
-		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
-			if(!univ.party.horses[i].exists) {
-				univ.party.horses[i] = univ.scenario.horses[i];
-				univ.party.horses[i].exists = true;
-			}
-		}
-	}
-	
 	clear_map();
 	reset_item_max();
 	town_force = 200;
@@ -516,7 +503,9 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
 
-	try_auto_save("EnterTown");
+	// If special nodes still need to be called, we can't do the autosave yet.
+	if(specials_queued) need_enter_town_autosave = true;
+	else try_auto_save("EnterTown");
 }
 
 
@@ -643,8 +632,8 @@ location end_town_mode(bool switching_level,location destination, bool debug_lea
 	return to_return;
 }
 
-void handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
-	queue_special(eSpecCtx::ENTER_TOWN, eSpecCtxType::TOWN, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
+bool handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
+	return queue_special(eSpecCtx::ENTER_TOWN, eSpecCtxType::TOWN, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
 }
 
 void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
@@ -1155,23 +1144,30 @@ void pick_lock(location where,short pc_num) {
 		return;
 	}
 	
+	// Roll to determine if the pick breaks
 	r1 = get_ran(1,1,100) + which_item->abil_strength * 7;
-	
 	if(r1 < 75)
 		will_break = true;
 	
-	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town->difficulty * 7
+	// Roll to determine success or fail
+	short total_modifier = -5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.door_diff_adjust() * 7
 		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - which_item->abil_strength * 7;
-	
 	// Nimble?
 	if(univ.party[pc_num].traits[eTrait::NIMBLE])
-		r1 -= 8;
-	
+		total_modifier -= 8;
 	if(univ.party[pc_num].has_abil_equip(eItemAbil::THIEVING))
-		r1 = r1 - 12;
+		total_modifier -= 12;
+
+	r1 = get_ran(1,1,100) + total_modifier;
+
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if((unlock_adjust >= 5) || (r1 > (unlock_adjust * 15 + 30))) {
-		add_string_to_buf("  Didn't work.");
+	short success_chance = 0;
+	short max_success_roll = (unlock_adjust * 15 + 30);
+	if(unlock_adjust < 5){
+		success_chance = minmax(max_success_roll - total_modifier, 0, 100);
+	}
+	if((unlock_adjust >= 5) || (r1 > max_success_roll)) {
+		add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 		if(will_break) {
 			add_string_to_buf("  Pick breaks.");
 			univ.party[pc_num].remove_charge(which_item.slot);
@@ -1193,16 +1189,23 @@ void bash_door(location where,short pc_num) {
 	short r1,unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town->difficulty * 4;
-	
+
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
 		return;
 	}
 	
+	short total_modifier = -15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.door_diff_adjust() * 4;
 	unlock_adjust = univ.scenario.ter_types[terrain].flag2;
-	if(unlock_adjust >= 5 || r1 > (unlock_adjust * 15 + 40) || univ.scenario.ter_types[terrain].flag3 != 1)  {
-		add_string_to_buf("  Didn't work.");
+	short max_success_roll = (unlock_adjust * 15 + 40);
+
+	r1 = get_ran(1,1,100) + total_modifier;
+	bool success_chance = 0;
+	if(unlock_adjust < 5 && univ.scenario.ter_types[terrain].flag3 == 1){
+		success_chance = minmax(max_success_roll - total_modifier, 0, 100);
+	}
+	if(unlock_adjust >= 5 || r1 > max_success_roll || univ.scenario.ter_types[terrain].flag3 != 1)  {
+		add_string_to_buf("  Didn't work. (" + std::to_string(success_chance) + "\% chance)");
 		damage_pc(univ.party[pc_num],get_ran(1,1,4),eDamageType::SPECIAL,eRace::UNKNOWN);
 	}
 	else {
@@ -1301,75 +1304,57 @@ void clear_map() {
 	draw_map(true);
 }
 
-void draw_map(bool need_refresh) {
+const short view_max_dim = 40;
+rectangle minimap_view_rect() {
+	rectangle view_rect;
+	short total_size, party_loc_x, party_loc_y;
+
+	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
+		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
+		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
+		total_size = 48;
+		party_loc_x = univ.party.loc_in_sec.x;
+		party_loc_y = univ.party.loc_in_sec.y;
+	}
+	else {
+		total_size = univ.town->max_dim;
+		party_loc_x = univ.party.town_loc.x;
+		party_loc_y = univ.party.town_loc.y;
+	}
+	if(total_size <= view_max_dim){
+		view_rect = {0, 0, total_size, total_size};
+	}else{
+		short scroll_max = total_size - view_max_dim;
+		view_rect.left = minmax(0, scroll_max, party_loc_x - view_max_dim / 2);
+		view_rect.top = minmax(0, scroll_max, party_loc_y - view_max_dim / 2);
+		view_rect.right = view_rect.left + view_max_dim;
+		view_rect.bottom = view_rect.top + view_max_dim;
+	}
+	return view_rect;
+}
+
+void draw_map(bool need_refresh, std::string tooltip_text) {
 	if(!map_visible) return;
 	pic_num_t pic;
-	rectangle the_rect,map_world_rect = {0,0,384,384};
+	rectangle the_rect;
+
+	rectangle map_world_rect(map_gworld());
 	location where;
 	location kludge;
 	rectangle draw_rect,orig_draw_rect = {0,0,6,6},ter_temp_from,base_source_rect = {0,0,12,12};
 	rectangle	dlogpicrect = {6,6,42,42};
 	bool draw_pcs = true,out_mode;
-	rectangle view_rect= {0,0,48,48},tiny_rect = {0,0,32,32},
-	redraw_rect = {0,0,48,48},big_rect = {0,0,64,64}; // Rectangle visible in view screen
 	
-	rectangle area_to_draw_from,area_to_draw_on = {29,47,269,287};
+	rectangle area_to_draw_on = {29,47,269,287};
 	ter_num_t what_ter;
 	bool expl;
-	short total_size = 48; // if full redraw, use this to figure out everything
 	rectangle custom_from;
 	
 	town_map_adj.x = 0;
 	town_map_adj.y = 0;
 	
-	// view rect is rect that is visible, redraw rect is area to redraw now
-	// area_to_draw_from is final draw from rect
-	// area_to_draw_on is final draw to rect
-	// extern short store_pre_shop_mode,store_pre_talk_mode;
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS))) {
-		view_rect.left = minmax(0,8,univ.party.loc_in_sec.x - 20);
-		view_rect.right = view_rect.left + 40;
-		view_rect.top = minmax(0,8,univ.party.loc_in_sec.y - 20);
-		view_rect.bottom = view_rect.top + 40;
-		redraw_rect = view_rect;
-	}
-	else {
-		total_size = univ.town->max_dim;
-		switch(total_size) {
-			case 64:
-				view_rect.left = minmax(0,24,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,24,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = big_rect;
-				break;
-			case 48:
-				view_rect.left = minmax(0,8,univ.party.town_loc.x - 20);
-				view_rect.right = view_rect.left + 40;
-				view_rect.top = minmax(0,8,univ.party.town_loc.y - 20);
-				view_rect.bottom = view_rect.top + 40;
-				redraw_rect = view_rect;
-				break;
-			case 32:
-				view_rect = tiny_rect;
-				redraw_rect = view_rect;
-				break;
-		}
-	}
-	if((is_out()) || ((is_combat()) && (which_combat_type == 0)) ||
-		((overall_mode == MODE_TALKING) && (store_pre_talk_mode == MODE_OUTDOORS)) ||
-		((overall_mode == MODE_SHOPPING) && (store_pre_shop_mode == MODE_OUTDOORS)) ||
-		is_town() || is_combat()) {
-		area_to_draw_from = view_rect;
-		area_to_draw_from.width() = 40;
-		area_to_draw_from.height() = 40;
-		area_to_draw_from.left *= 6;
-		area_to_draw_from.right *= 6;
-		area_to_draw_from.top *= 6;
-		area_to_draw_from.bottom *= 6;
-	}
+	// We use view_rect as a camera to show only as much of the map as can fit in the window
+	rectangle view_rect = minimap_view_rect();
 	
 	if(is_combat())
 		draw_pcs = false;
@@ -1394,7 +1379,7 @@ void draw_map(bool need_refresh) {
 		
 		// Now, if shopping or talking, just don't touch anything.
 		if((overall_mode == MODE_SHOPPING) || (overall_mode == MODE_TALKING))
-			redraw_rect.right = -1;
+			view_rect.right = -1;
 		// Otherwise, clear to black first:
 		else
 			fill_rect(map_gworld(), map_world_rect, sf::Color::Black);
@@ -1406,12 +1391,15 @@ void draw_map(bool need_refresh) {
 			out_mode = true;
 		else out_mode = false;
 		
-		// TODO: It could be possible to draw the entire map here and then only refresh if a spot actually changes terrain type
+		// While iterating the map, calculate the discovered extent of rooms/areas
+		const std::vector<info_rect_t>& area_desc = is_out() ? univ.out->area_desc : univ.town->area_desc;
+		std::vector<rectangle> known_area_rects(area_desc.size(), {std::numeric_limits<int>::max(),std::numeric_limits<int>::max(),std::numeric_limits<int>::min(),std::numeric_limits<int>::min()});
+
 		sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
-		for(where.x = redraw_rect.left; where.x < redraw_rect.right; where.x++)
-			for(where.y = redraw_rect.top; where.y < redraw_rect.bottom; where.y++) {
+		for(where.x = view_rect.left; where.x < view_rect.right; where.x++)
+			for(where.y = view_rect.top; where.y < view_rect.bottom; where.y++) {
 				draw_rect = orig_draw_rect;
-				draw_rect.offset(6 * where.x, 6 * where.y);
+				draw_rect.offset(6 * (where.x - view_rect.left), 6 * (where.y - view_rect.top));
 				
 				if(out_mode)
 					what_ter = univ.out[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
@@ -1423,6 +1411,7 @@ void draw_map(bool need_refresh) {
 					expl = univ.out.out_e[where.x + 48 * univ.party.i_w_c.x][where.y + 48 * univ.party.i_w_c.y];
 				else expl = is_explored(where.x,where.y);
 				
+				// Draw tile
 				if(expl != 0) {
 					pic = univ.scenario.ter_types[what_ter].map_pic;
 					bool drawLargeIcon = false;
@@ -1469,11 +1458,36 @@ void draw_map(bool need_refresh) {
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
+						rect_draw_some_item(*ResMgr::graphics.get("fields"),{80,28,84,32},map_gworld(),draw_rect);
+					}
+
+					for(int i = 0; i < area_desc.size(); ++i){
+						location real_where = where;
+						if(is_out()) real_where = local_to_global(where);
+						info_rect_t area = area_desc[i];
+						rectangle& known_bounds = known_area_rects[i];
+						// tile is in an area rectangle. see if it extends the party's known bounds of the area
+						if(!area.empty() && area.contains(where) && !is_blocked(real_where, false)){
+							if(where.x < known_bounds.left) known_bounds.left = where.x;
+							if(where.y < known_bounds.top) known_bounds.top = where.y;
+							if(where.x + 1 > known_bounds.right) known_bounds.right = where.x + 1;
+							if(where.y + 1 > known_bounds.bottom) known_bounds.bottom = where.y + 1;
+						}
 					}
 				}
 			}
 		
+		// Draw known extent of area rectangles
+		for(const rectangle& known_bounds : known_area_rects){
+			if(!known_bounds.empty()){
+				draw_rect.top = 6 * (known_bounds.top - view_rect.top);
+				draw_rect.left = 6 * (known_bounds.left - view_rect.left);
+				draw_rect.bottom = 6 * (known_bounds.bottom - view_rect.top);
+				draw_rect.right = 6 * (known_bounds.right - view_rect.left);
+				frame_rect(map_gworld(), draw_rect, Colours::RED);
+			}
+		}
+
 		map_gworld().display();
 		// this stops flickering if the display time is too long
 		glFlush();
@@ -1501,41 +1515,71 @@ void draw_map(bool need_refresh) {
 	win_draw_string(mini_map(), map_bar_rect,"(Hit Escape to close.)",eTextMode::WRAP,style);
 	
 	if(canMap) {
-		rect_draw_some_item(map_gworld().getTexture(),area_to_draw_from,mini_map(),area_to_draw_on);
+		rect_draw_some_item(map_gworld().getTexture(),the_rect,mini_map(),area_to_draw_on);
 		
+		auto mark_loc = [view_rect, &draw_rect, area_to_draw_on](location where, sf::Color inner, sf::Color outer, eTerSpec if_spec = eTerSpec::NONE) -> void {
+			location real_where = where;
+			if(is_out()) real_where = local_to_global(where);
+			if((is_explored(real_where.x,real_where.y)) &&
+				((where.x >= view_rect.left) && (where.x < view_rect.right)
+					&& where.y >= view_rect.top && where.y < view_rect.bottom)){
+				// if if_spec is specified, make sure the terrain on the spot has the given special
+				if(if_spec != eTerSpec::NONE){
+					ter_num_t ter = is_out() ? univ.out[real_where] : univ.town->terrain(real_where.x, real_where.y);
+					if(univ.scenario.ter_types[ter].special != if_spec) return;
+				}
+
+				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
+				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
+				draw_rect.right = draw_rect.left + 6;
+				draw_rect.bottom = draw_rect.top + 6;
+
+				fill_rect(mini_map(), draw_rect, inner);
+				frame_circle(mini_map(), draw_rect, outer);
+			}
+		};
+
 		// Now place PCs and monsters
 		if(draw_pcs) {
 			if((is_town()) && (univ.party.status[ePartyStatus::DETECT_LIFE] > 0))
 				for(short i = 0; i < univ.town.monst.size(); i++)
 					if(univ.town.monst[i].is_alive()) {
 						where = univ.town.monst[i].cur_loc;
-						if((is_explored(where.x,where.y)) &&
-							((where.x >= view_rect.left) && (where.x < view_rect.right)
-							 && where.y >= view_rect.top && where.y < view_rect.bottom)){
-								
-								draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-								draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-								draw_rect.right = draw_rect.left + 6;
-								draw_rect.bottom = draw_rect.top + 6;
-								
-								fill_rect(mini_map(), draw_rect, Colours::GREEN);
-								frame_circle(mini_map(), draw_rect, Colours::BLUE);
-							}
+						mark_loc(where, Colours::GREEN, Colours::BLUE);
 					}
 			if((overall_mode != MODE_SHOPPING) && (overall_mode != MODE_TALKING)) {
 				where = (is_town()) ? univ.party.town_loc : global_to_local(univ.party.out_loc);
 				
-				draw_rect.left = area_to_draw_on.left + 6 * (where.x - view_rect.left);
-				draw_rect.top = area_to_draw_on.top + 6 * (where.y - view_rect.top);
-				draw_rect.right = draw_rect.left + 6;
-				draw_rect.bottom = draw_rect.top + 6;
-				fill_rect(mini_map(), draw_rect, Colours::RED);
-				frame_circle(mini_map(), draw_rect, sf::Color::Black);
-				
+				mark_loc(where, Colours::RED, Colours::BLACK);
 			}
+		}
+
+		// Draw signs
+		const std::vector<sign_loc_t>& sign_locs = is_out() ? univ.out->sign_locs : univ.town->sign_locs;
+		for(sign_loc_t sign : sign_locs){
+			mark_loc(sign, Colours::EMPTY, Colours::YELLOW, eTerSpec::IS_A_SIGN);
+		}
+		// Draw town entrances
+		if(is_out()){
+			const std::vector<spec_loc_t>& city_locs = univ.out->city_locs;
+			// TODO don't draw hidden ones
+			for(spec_loc_t city : city_locs){
+				mark_loc(city, Colours::EMPTY, Colours::GREEN, eTerSpec::TOWN_ENTRANCE);
+			}
+		}
+		// Draw vehicles
+		for(auto& boat : univ.party.boats) {
+			if(!vehicle_is_here(boat)) continue;
+			mark_loc(boat.loc, Colours::MAROON, Colours::BLACK);
+		}
+		for(auto& horse : univ.party.horses) {
+			if(!vehicle_is_here(horse)) continue;
+			mark_loc(horse.loc, Colours::MAROON, Colours::BLACK);
 		}
 	}
 	
+	win_draw_string(mini_map(), map_tooltip_rect,tooltip_text,eTextMode::WRAP,style);
+
 	mini_map().setActive(false);
 	mini_map().display();
 	

@@ -24,7 +24,7 @@ bool seek_party(short i,location l1,location l2);
 bool flee_party(short i,location l1,location l2);
 bool try_move(short i,location start,short x,short y);
 bool combat_move_monster(short which,location destination);
-location find_clear_spot(location from_where,short mode);
+location find_clear_spot(location from_where,short mode,short x_width = 1, short y_width = 1);
 location random_shift(location start);
 bool outdoor_move_monster(short num,location dest);
 bool town_move_monster(short num,location dest);

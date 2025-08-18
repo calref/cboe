@@ -535,15 +535,15 @@ static void apply_mode_buttons() {
 				std::ostringstream strb;
 				switch(mode) {
 					case 0:
-						strb << i << " - " << (*scenario.scen_specials[i].type).name();
+						strb << i << " - " << scenario.scen_specials[i].editor_hint(scenario);
 						set_rb(i,RB_SCEN_SPEC, i, strb.str());
 						break;
 					case 1:
-						strb << i << " - " << (*current_terrain->specials[i].type).name();
+						strb << i << " - " << current_terrain->specials[i].editor_hint(scenario);
 						set_rb(i,RB_OUT_SPEC, i, strb.str());
 						break;
 					case 2:
-						strb << i << " - " << (*town->specials[i].type).name();
+						strb << i << " - " << town->specials[i].editor_hint(scenario);
 						set_rb(i,RB_TOWN_SPEC, i, strb.str());
 						break;
 				}

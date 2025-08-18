@@ -6,7 +6,7 @@ void force_town_enter(short which_town,location where_start);
 void start_town_mode(short which_town, short entry_dir, bool debug_enter = false);
 location end_town_mode(bool switching_level,location destination,bool debug_leave=false);  // returns new party location
 void handle_leave_town_specials(short town_number, short which_spec,location start_loc) ;
-void handle_town_specials(short town_number, bool town_dead,location start_loc) ;
+bool handle_town_specials(short town_number, bool town_dead,location start_loc) ;
 bool abil_exists(eItemAbil abil);
 
 void start_town_combat(eDirection direction);
@@ -28,7 +28,8 @@ void erase_completed_specials(cArea& sector, std::function<void(location)> clear
 void erase_out_specials();
 bool does_location_have_special(cOutdoors& sector, location loc, eTerSpec type);
 void clear_map();
-void draw_map(bool need_refresh);
+rectangle minimap_view_rect();
+void draw_map(bool need_refresh, std::string tooltip_text = "");
 bool is_door(location destination);
 void display_map();
 void check_done();
