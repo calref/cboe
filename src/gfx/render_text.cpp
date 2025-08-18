@@ -129,7 +129,7 @@ break_info_t calculate_line_wrapping(rectangle dest_rect, std::string str, TextS
 	short str_len = str.length();
 	unsigned short last_line_break = 0,last_word_break = 0;
 
-	str_to_draw.setString(str);
+	str_to_draw.setString(sf::String::fromUtf8(str.begin(), str.end()));
 
 	// Even if the text is only one line, break_info is required for calculating word boundaries.
 	// So we can't skip the rest of this.
@@ -267,7 +267,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	for(auto it : substitutions){
 		boost::replace_all(str, it.first, it.second);
 	}
-	str_to_draw.setString(str);
+	str_to_draw.setString(sf::String::fromUtf8(str.begin(), str.end()));
 	short total_width = str_to_draw.getLocalBounds().width;
 
 	options.style.applyTo(str_to_draw, get_ui_scale());
@@ -341,7 +341,7 @@ static void win_draw_string(sf::RenderTarget& dest_window,rectangle dest_rect,st
 	}
 	
 	for(auto& snippet : options.snippets) {
-		str_to_draw.setString(snippet.text);
+		str_to_draw.setString(sf::String::fromUtf8(snippet.text.begin(), snippet.text.end()));
 		str_to_draw.setPosition(snippet.at);
 		if(snippet.hilited) {
 			rectangle bounds = str_to_draw.getGlobalBounds();
@@ -413,7 +413,7 @@ size_t string_length(std::string str, const TextStyle& style, short* height){
 	
 	sf::Text text;
 	style.applyTo(text);
-	text.setString(str);
+	text.setString(sf::String::fromUtf8(str.begin(), str.end()));
 	total_width = text.getLocalBounds().width;
 	if(strings_to_cache.count(str)){
 		location measurement;

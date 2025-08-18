@@ -1129,7 +1129,7 @@ void print_buf () {
 			line_style.applyTo(text, get_ui_scale());
 			// A spacing factor of 1.0 within multiline messages doesn't actually line up with other single buffer lines
 			text.setLineSpacing(0.85);
-			text.setString(message);
+			text.setString(sf::String::fromUtf8(message.begin(), message.end()));
 			text.setPosition(moveTo);
 			draw_scale_aware_text(text_area_gworld(), text);
 		}
