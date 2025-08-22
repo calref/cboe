@@ -6,9 +6,10 @@
     <version>1.0.2</version>
     <language>en-US</language>
     <author>
-        <name>Name not given</name>
+        <name>Author</name>
         <email>Spiderweb Software, Inc. PO Box 85659, Seattle, WA 98145, (206) 789-4438.</email>
     </author>
+    <feature-flags />
     <text>
         <teaser>Everyone in the valley is dying. Can you find out why?</teaser>
         <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
@@ -49,6 +50,7 @@
         <town-start x="7" y="8" />
         <outdoor-start x="2" y="2" />
         <sector-start x="23" y="39" />
+        <store-items top="0" left="0" bottom="0" right="0" town="-1" />
         <store-items top="0" left="0" bottom="47" right="47" town="0" />
         <special-item start-with="false" useable="false" special="-1">
             <name>Runed Stone</name>

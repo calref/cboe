@@ -6,9 +6,10 @@
     <version>1.0.1</version>
     <language>en-US</language>
     <author>
-        <name>Name not given</name>
+        <name>Author</name>
         <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
     </author>
+    <feature-flags />
     <text>
         <teaser>You&apos;re hired to put down a rebellion, but should you?</teaser>
         <teaser>By Jeff Vogel, C. 1997, All Rights Reserved</teaser>
@@ -52,6 +53,7 @@
         <town-start x="14" y="56" />
         <outdoor-start x="1" y="2" />
         <sector-start x="21" y="12" />
+        <store-items top="0" left="0" bottom="0" right="0" town="-1" />
         <town-flag town="17" add-x="15" add-y="1" />
         <special-item start-with="true" useable="false" special="-1">
             <name>Letter of Introduction</name>

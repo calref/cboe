@@ -16,7 +16,7 @@
 	sdf -1, -1
 	msg -1, -1, -1
 	pic 0, 4
-	ex1 100, 0, -1
+	ex1 100, 0, 0
 	ex2 -1, -1, -1
 	goto 3
 @start-timer-town = 3

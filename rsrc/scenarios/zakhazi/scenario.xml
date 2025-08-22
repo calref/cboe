@@ -6,7 +6,7 @@
     <version>1.0.1</version>
     <language>en-US</language>
     <author>
-        <name>Name not given</name>
+        <name>Author</name>
         <email>Spiderweb Software, (206)789-4438, spidweb@spidweb.com</email>
     </author>
     <feature-flags>
@@ -55,6 +55,7 @@
         <town-start x="13" y="27" />
         <outdoor-start x="0" y="14" />
         <sector-start x="18" y="39" />
+        <store-items top="0" left="0" bottom="0" right="0" town="-1" />
         <town-flag town="21" add-x="100" add-y="0" />
         <special-item start-with="false" useable="true" special="0">
             <name>Bundle of Wands</name>

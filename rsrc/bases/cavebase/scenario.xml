@@ -6,9 +6,10 @@
     <version>1.0.0</version>
     <language>en-US</language>
     <author>
-        <name>Name not given</name>
+        <name>Author</name>
         <email>Contact info</email>
     </author>
+    <feature-flags />
     <text>
         <teaser>Who wrote 1</teaser>
         <teaser>Who wrote 2</teaser>
@@ -34,6 +35,7 @@
         <town-start x="24" y="24" />
         <outdoor-start x="0" y="0" />
         <sector-start x="24" y="24" />
+        <store-items top="0" left="0" bottom="0" right="0" town="-1" />
         <special-item start-with="false" useable="false" special="-1">
             <name>Unused Special Item</name>
             <description>
