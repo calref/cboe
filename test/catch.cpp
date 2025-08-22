@@ -19,6 +19,7 @@ std::vector<fs::path> extra_scen_dirs;
 std::string help_text_rsrc;
 
 bool check_for_interrupt(std::string) { return false; }
+void save_prefs() {}
 
 // And these are referenced from the scenario code, though not used in test cases
 #include "scenario/scenario.hpp"
