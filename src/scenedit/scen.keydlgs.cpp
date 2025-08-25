@@ -967,7 +967,7 @@ static bool discard_spec_enc(cDialog& me, node_stack_t& edit_stack) {
 	}
 	auto cur = edit_stack.back();
 	auto& list = cur.mode == 0 ? scenario.scen_specials : (cur.mode == 1 ? current_terrain->specials : town->specials);
-	if(cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
+	if(cur.is_new && cur.which == list.size() - 1 && list[cur.which].type == eSpecType::NONE && list[cur.which].jumpto == -1)
 		list.pop_back();
 	edit_stack.pop_back();
 	if(action == "cancel") {
