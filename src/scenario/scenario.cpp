@@ -643,15 +643,15 @@ std::string cScenario::get_feature_flag(std::string flag) {
 	return iter->second;
 }
 
-std::string cScenario::get_sdf_name(int row, int col) {
+std::string cScenario::get_sdf_name(int row, int col) const {
 	if(row < 0 || row >= SDF_ROWS || col < 0 || col >= SDF_COLUMNS){
 		throw "Tried to access SDF name for out-of-bounds flag (" + std::to_string(row) + ", " + std::to_string(col) + ")";
 	}
 	if(sdf_names.find(row) == sdf_names.end())
 		return "";
-	if(sdf_names[row].find(col) == sdf_names[row].end())
+	if(sdf_names.at(row).find(col) == sdf_names.at(row).end())
 		return "";
-	return sdf_names[row][col];
+	return sdf_names.at(row).at(col);
 }
 
 bool cScenario::cItemStorage::operator==(const cScenario::cItemStorage& other) const {

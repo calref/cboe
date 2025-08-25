@@ -139,7 +139,7 @@ public:
 	std::vector<std::string> ic_names;
 	std::vector<std::string> itf_names;
 	std::map<int, std::map<int, std::string>> sdf_names;
-	std::string get_sdf_name(int row, int col);
+	std::string get_sdf_name(int row, int col) const;
 
 	bool adjust_diff;
 	bool is_legacy;
