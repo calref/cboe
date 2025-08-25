@@ -69,6 +69,8 @@ void force_town_enter(short which_town,location where_start) {
 	town_force_loc = where_start;
 }
 
+bool need_enter_town_autosave = false;
+
 //short entry_dir; // if 9, go to forced
 void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	short town_number;
@@ -334,8 +336,9 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 			if(no_thrash.count(&monst) == 0)
 				monst.active = eCreatureStatus::DEAD;
 	}
+	bool specials_queued = false;
 	if(!debug_enter)
-		handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
+		specials_queued = handle_town_specials(town_number, (short) town_toast,(entry_dir < 9) ? univ.town->start_locs[entry_dir] : town_force_loc);
 	
 	// Flush excess doomguards and viscous goos
 	for(short i = 0; i < univ.town.monst.size(); i++)
@@ -492,24 +495,6 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 		monst.targ_loc.y = 0;
 	}
 	
-	// check horses
-	for(short i = 0; i < univ.party.boats.size(); i++) {
-		if(univ.scenario.boats[i].which_town >= 0 && univ.scenario.boats[i].loc.x >= 0) {
-			if(!univ.party.boats[i].exists) {
-				univ.party.boats[i] = univ.scenario.boats[i];
-				univ.party.boats[i].exists = true;
-			}
-		}
-	}
-	for(short i = 0; i < univ.party.horses.size(); i++) {
-		if(univ.scenario.horses[i].which_town >= 0 && univ.scenario.horses[i].loc.x >= 0) {
-			if(!univ.party.horses[i].exists) {
-				univ.party.horses[i] = univ.scenario.horses[i];
-				univ.party.horses[i].exists = true;
-			}
-		}
-	}
-	
 	clear_map();
 	reset_item_max();
 	town_force = 200;
@@ -517,7 +502,9 @@ void start_town_mode(short which_town, short entry_dir, bool debug_enter) {
 	// ... except it actually doesn't, because the town enter special is only queued, not run immediately.
 	draw_terrain(1);
 
-	try_auto_save("EnterTown");
+	// If special nodes still need to be called, we can't do the autosave yet.
+	if(specials_queued) need_enter_town_autosave = true;
+	else try_auto_save("EnterTown");
 }
 
 
@@ -644,8 +631,8 @@ location end_town_mode(bool switching_level,location destination, bool debug_lea
 	return to_return;
 }
 
-void handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
-	queue_special(eSpecCtx::ENTER_TOWN, eSpecCtxType::TOWN, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
+bool handle_town_specials(short /*town_number*/, bool town_dead,location /*start_loc*/) {
+	return queue_special(eSpecCtx::ENTER_TOWN, eSpecCtxType::TOWN, town_dead ? univ.town->spec_on_entry_if_dead : univ.town->spec_on_entry, univ.party.town_loc);
 }
 
 void handle_leave_town_specials(short /*town_number*/, short which_spec,location /*start_loc*/) {
@@ -1161,7 +1148,7 @@ void pick_lock(location where,short pc_num) {
 	if(r1 < 75)
 		will_break = true;
 	
-	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town->difficulty * 7
+	r1 = get_ran(1,1,100) - 5 * univ.party[pc_num].stat_adj(eSkill::DEXTERITY) + univ.town.door_diff_adjust() * 7
 		- 5 * univ.party[pc_num].skill(eSkill::LOCKPICKING) - which_item->abil_strength * 7;
 	
 	// Nimble?
@@ -1194,7 +1181,7 @@ void bash_door(location where,short pc_num) {
 	short r1,unlock_adjust;
 	
 	terrain = univ.town->terrain(where.x,where.y);
-	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town->difficulty * 4;
+	r1 = get_ran(1,1,100) - 15 * univ.party[pc_num].stat_adj(eSkill::STRENGTH) + univ.town.door_diff_adjust() * 4;
 	
 	if(univ.scenario.ter_types[terrain].special != eTerSpec::UNLOCKABLE) {
 		add_string_to_buf("  Wrong terrain type.");
@@ -1470,7 +1457,7 @@ void draw_map(bool need_refresh) {
 					
 					if(is_out() ? univ.out->roads[where.x][where.y] : univ.town.is_road(where.x,where.y)) {
 						draw_rect.inset(1,1);
-						rect_draw_some_item(*ResMgr::graphics.get("trim"),{8,112,12,116},map_gworld(),draw_rect);
+						rect_draw_some_item(*ResMgr::graphics.get("fields"),{80,28,84,32},map_gworld(),draw_rect);
 					}
 				}
 			}

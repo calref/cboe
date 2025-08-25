@@ -10,6 +10,7 @@ Confirmed:
 - Bret Rodabaugh
 - Dylan Nugent
 - Evan Mulrooney
+- Glen Chudley
 - Jake Harrelson
 - Jared Forcinito
 - Jeff Potter
@@ -25,6 +26,7 @@ Confirmed:
 - K L
 - Laura Nelson
 - Mariann Krizsan
+- Maryanne Wachter
 - Mike Lapinsky
 - Nathan Rickey
 - Nick Chaimov

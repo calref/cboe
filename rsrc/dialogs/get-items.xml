@@ -4,6 +4,8 @@
 <dialog defbtn='done' escbtn='done'>
 	<button name='done' type='done' top='408' left='337'/>
 	<pict type='dlog' num='2' top='10' left='10'/>
+	<button name='gold' type='small' def-key='shift 4' relative='pos-in pos' rel-anchor='prev' top='4' left='0'><key/></button>
+	<text name='gold-label' relative='pos pos-in' rel-anchor='prev' top='0' left='2' width='38'>Get all gold</text>
 	<button name='pc1' type='small' def-key='1' top='354' left='89'><key/></button>
 	<button name='pc2' type='small' def-key='2' top='354' left='174'><key/></button>
 	<button name='pc3' type='small' def-key='3' top='354' left='259'><key/></button>
