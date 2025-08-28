@@ -1484,7 +1484,6 @@ void draw_one_tiny_terrain_spot (short i,short j,ter_num_t terrain_to_draw,short
 		} else {
 			sf::Texture& small_ter_gworld = *ResMgr::graphics.get("termap");
 			if(picture_wanted >= 960) {
-				picture_wanted -= 960;
 				from_rect.offset(12 * 20, (picture_wanted - 960) * 12);
 				rect_draw_some_item(small_ter_gworld, from_rect, mainPtr(), dest_rect);
 			} else {
