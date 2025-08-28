@@ -1771,7 +1771,7 @@ class cChooseScenario {
 						fmt::arg("version_major", header.ver[0]),
 						fmt::arg("version_minor", header.ver[1]),
 						fmt::arg("version_patch", header.ver[2]),
-						fmt::arg("difficuly", difficulty[header.difficulty]),
+						fmt::arg("difficulty", difficulty[header.difficulty]),
 						fmt::arg("rating", header.rating),
 						fmt::arg("teaser1", header.teaser1),
 						fmt::arg("teaser2", header.teaser2)
