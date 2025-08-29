@@ -1409,6 +1409,11 @@ void handle_victory(bool force, bool record) {
 	univ.exportGraphics();
 	univ.exportSummons();
 	univ.clear_stored_pcs();
+	// Saved monsters are not valid now
+	for(auto& pop : univ.party.creature_save){
+		pop.which_town = 200;
+		pop.clear();
+	}
 	reload_startup();
 	overall_mode = MODE_STARTUP;
 	draw_startup(0);

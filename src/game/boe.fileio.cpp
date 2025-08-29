@@ -341,6 +341,8 @@ std::string name_alphabetical(std::string a) {
 	// The scenario editor will let you prepend whitespace to a scenario name :(
 	boost::algorithm::trim_left(a);
 	std::transform(a.begin(), a.end(), a.begin(), tolower);
+	// Some party makers start with the name of the corresponding scenario in quotes
+	if(a.substr(0,1) == "\"") a.erase(a.begin(), a.begin() + 1);
 	if(a.substr(0,2) == "a ") a.erase(a.begin(), a.begin() + 2);
 	else if(a.substr(0,4) == "the ") a.erase(a.begin(), a.begin() + 4);
 	return a;
@@ -359,11 +361,9 @@ std::vector<scen_header_type> build_scen_headers() {
 		std::string scen_file;
 		while(std::getline(in, scen_file)){
 			scen_header_type scen_head;
-			fs::path full_path;
-			for(fs::path scenDir : all_scen_dirs()){
-				full_path = scenDir / scen_file;
-				if (fs::exists(full_path))
-					break;
+			fs::path full_path = locate_scenario(scen_file, true);
+			if(full_path.empty()){
+				LOG("Scenario missing! " + scen_file);
 			}
 			if(load_scenario_header(full_path, scen_head)){
 				scen_headers.push_back(scen_head);

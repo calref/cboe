@@ -353,7 +353,7 @@ Number of town to place party in
 Skip dialog and always change level?
 Trigger Limitations
 Special to Call in New Town
-A dialog comes up text you supply (saying, perhaps, they've found a stairway). The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
+A dialog comes up with text you supply (saying, perhaps, they've found a stairway). The dialog buttons are Climb and Leave. If the Leave button is pressed, the Jump To special is used, and the party is not allowed to enter the space. If the Climb button is pushed, the party is moved to another town.
 --------------------
 Relocate Outdoors
 Unused

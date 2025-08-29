@@ -850,7 +850,7 @@ const cInvenSlot cPlayer::has_class_equip(unsigned int item_class) const {
 
 cInvenSlot cPlayer::has_class(unsigned int item_class, bool require_charges) {
 	return find_item_matching([item_class, require_charges](int, const cItem& item) {
-		return item.special_class == item_class && (!require_charges || item.charges > 0);
+		return item.special_class == item_class && (!require_charges || item.charges > 0 || item.max_charges == 0);
 	});
 }
 

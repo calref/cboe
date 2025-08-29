@@ -396,6 +396,16 @@ static void put_item_graphics(cDialog& me, size_t& first_item_shown, short& curr
 		me["down"].hide();
 	else me["down"].show();
 	
+	me["gold"].hide();
+	me["gold-label"].hide();
+	for(cItem* item : item_array){
+		if(item->variety == eItemType::GOLD && !item->property){
+			me["gold"].show();
+			me["gold-label"].show();
+			break;
+		}
+	}
+
 	for(short i = 0; i < ITEMS_IN_WINDOW; i++) {
 		std::ostringstream sout;
 		sout << "item" << i + 1;
@@ -459,7 +469,22 @@ static bool display_item_event_filter(cDialog& me, std::string id, size_t& first
 			first_item_shown += ITEMS_IN_WINDOW;
 			put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 		}
-	} else if(id.substr(0,2) == "pc") {
+	} else if(id == "gold"){
+		// Get all gold
+		for(int i = item_array.size() - 1; i >= 0; --i){
+			item = *item_array[i];
+			if(item.variety != eItemType::GOLD || item.property) continue;
+			if(item.item_level > 3000)
+				item.item_level = 3000;
+			set_item_flag(&item);
+			give_gold(item.item_level,false);
+			*item_array[i] = cItem();
+			item_array.erase(item_array.begin() + i);
+		}
+		play_sound(39); // formerly force_play_sound
+		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
+	}
+	else if(id.substr(0,2) == "pc") {
 		current_getting_pc = id[2] - '1';
 		put_item_graphics(me, first_item_shown, current_getting_pc, item_array);
 	} else {
@@ -560,7 +585,7 @@ bool show_get_items(std::string titleText, std::vector<cItem*>& itemRefs, short 
 	
 	cDialog itemDialog(*ResMgr::dialogs.get("get-items"));
 	auto handler = std::bind(display_item_event_filter, _1, _2, std::ref(first_item), std::ref(pc_getting), std::ref(itemRefs), overload);
-	itemDialog.attachClickHandlers(handler, {"done", "up", "down"});
+	itemDialog.attachClickHandlers(handler, {"done", "up", "down", "gold"});
 	itemDialog.attachClickHandlers(handler, {"pc1", "pc2", "pc3", "pc4", "pc5", "pc6"});
 	itemDialog.setResult(false);
 	cTextMsg& title = dynamic_cast<cTextMsg&>(itemDialog["title"]);

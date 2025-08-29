@@ -65,6 +65,9 @@ void cTerrainAction::showChangeSite() {
 	if(!((abs((short) (cen_x - area.where.x)) <=4) && (abs((short) (cen_y - area.where.y)) <= 4))){
 		cen_x = area.where.x;
 		cen_y = area.where.y;
+		size_t max_dim = area.is_town ? town->max_dim : current_terrain->max_dim;
+		cen_x = minmax(4, max_dim - 5, cen_x);
+		cen_y = minmax(4, max_dim - 5, cen_y);
 	}
 	redraw_screen();
 }
@@ -288,7 +291,7 @@ aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, size_t index, cTo
 {}
 
 aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, item_changes_t items)
-	: cTerrainAction(name, items.begin()->second.loc, !place)
+	: cTerrainAction(name, closest_to_view(items), !place)
 	, items(items)
 {}
 
@@ -1245,4 +1248,20 @@ bool aCreateAreaRect::undo_me() {
 bool aCreateAreaRect::redo_me() {
 	area->area_desc[which] = rect;
 	return true;
+}
+
+location closest_to_view(stroke_ter_changes_t changes) {
+	std::vector<location> locs;
+	for(auto& it : changes){
+		locs.push_back(it.first);
+	}
+	return closest_point(locs, loc(cen_x, cen_y));
+}
+
+location closest_to_view(item_changes_t changes) {
+	std::vector<location> locs;
+	for(auto& it : changes){
+		locs.push_back(it.second.loc);
+	}
+	return closest_point(locs, loc(cen_x, cen_y));
 }

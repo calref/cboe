@@ -45,6 +45,9 @@ typedef std::map<location,cOutdoors*,loc_compare> outdoor_sections_t;
 typedef std::map<location,std::vector<eFieldType>,loc_compare> clear_field_stroke_t;
 typedef std::set<location,loc_compare> field_stroke_t;
 
+location closest_to_view(stroke_ter_changes_t changes);
+location closest_to_view(item_changes_t changes);
+
 // Action that modified something in town or outdoor terrain, so we should show the modified area when undoing or redoing
 class cTerrainAction : public cAction {
 public:
@@ -100,7 +103,7 @@ public:
 class aDrawTerrain : public cTerrainAction {
 public:
 	aDrawTerrain(std::string name, stroke_ter_changes_t stroke_changes) :
-		cTerrainAction(name, stroke_changes.begin()->first), // Use arbitrary changed tile as site of change
+		cTerrainAction(name, closest_to_view(stroke_changes)),
 		changes(stroke_changes) {}
 	bool undo_me() override;
 	bool redo_me() override;

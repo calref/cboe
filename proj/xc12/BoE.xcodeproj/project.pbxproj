@@ -2516,7 +2516,7 @@
 					"-Wno-quoted-include-in-framework-header",
 					"-Wno-shorten-64-to-32",
 					"-Wno-comma",
-					"-Werror=implicit-fallthrough",
+					"-Wimplicit-fallthrough",
 				);
 			};
 			name = Debug;
@@ -2631,7 +2631,7 @@
 					"-Wno-quoted-include-in-framework-header",
 					"-Wno-shorten-64-to-32",
 					"-Wno-comma",
-					"-Werror=implicit-fallthrough",
+					"-Wimplicit-fallthrough",
 				);
 			};
 			name = Release;

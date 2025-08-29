@@ -52,6 +52,7 @@ public:
 	void import_legacy(unsigned char(& old_sfx)[64][64], unsigned char(& old_misc_i)[64][64]);
 	void import_legacy(legacy::big_tr_type& old);
 	
+	int door_diff_adjust();
 	cTown* operator -> ();
 	cTown& operator * ();
 	const cTown* operator -> () const;
