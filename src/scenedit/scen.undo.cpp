@@ -291,7 +291,7 @@ aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, size_t index, cTo
 {}
 
 aPlaceEraseItem::aPlaceEraseItem(std::string name, bool place, item_changes_t items)
-	: cTerrainAction(name, items.begin()->second.loc, !place)
+	: cTerrainAction(name, closest_to_view(items), !place)
 	, items(items)
 {}
 
@@ -1248,4 +1248,20 @@ bool aCreateAreaRect::undo_me() {
 bool aCreateAreaRect::redo_me() {
 	area->area_desc[which] = rect;
 	return true;
+}
+
+location closest_to_view(stroke_ter_changes_t changes) {
+	std::vector<location> locs;
+	for(auto& it : changes){
+		locs.push_back(it.first);
+	}
+	return closest_point(locs, loc(cen_x, cen_y));
+}
+
+location closest_to_view(item_changes_t changes) {
+	std::vector<location> locs;
+	for(auto& it : changes){
+		locs.push_back(it.second.loc);
+	}
+	return closest_point(locs, loc(cen_x, cen_y));
 }
