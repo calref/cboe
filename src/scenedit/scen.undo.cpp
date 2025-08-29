@@ -65,6 +65,9 @@ void cTerrainAction::showChangeSite() {
 	if(!((abs((short) (cen_x - area.where.x)) <=4) && (abs((short) (cen_y - area.where.y)) <= 4))){
 		cen_x = area.where.x;
 		cen_y = area.where.y;
+		size_t max_dim = area.is_town ? town->max_dim : current_terrain->max_dim;
+		cen_x = minmax(4, max_dim - 5, cen_x);
+		cen_y = minmax(4, max_dim - 5, cen_y);
 	}
 	redraw_screen();
 }
