@@ -2466,15 +2466,18 @@ void frill_up_terrain() {
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
 			terrain_type = cur_area->terrain(i,j);
+			bool changed = false;
 			
 			for(size_t k = 0; k < scenario.ter_types.size(); k++) {
 				if(terrain_type == k) continue;
 				cTerrain& ter = scenario.ter_types[k];
-				if(terrain_type == ter.frill_for && get_ran(1,1,100) < ter.frill_chance)
+				if(terrain_type == ter.frill_for && get_ran(1,1,100) < ter.frill_chance){
 					terrain_type = k;
+					changed = true;
+				}
 			}
 			
-			set_terrain(loc(i, j), terrain_type, changes);
+			if(changed) set_terrain(loc(i, j), terrain_type, changes);
 		}
 	undo_list.add(action_ptr(new aDrawTerrain("Frill Up Terrain", changes)));
 	update_edit_menu();
