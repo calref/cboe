@@ -560,6 +560,7 @@ void cTextField::handleInput(cKey key, bool record) {
 			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select)
 				selectionPoint = insertionPoint = std::min(selectionPoint,insertionPoint);
+			if(snippets.empty()) break;
 			if(snippets[ip_row].at.y == snippets[0].at.y) {
 				key.k = key_top;
 				if(select) key.mod += mod_shift;
@@ -574,6 +575,7 @@ void cTextField::handleInput(cKey key, bool record) {
 			if(current_action) history.add(current_action), current_action.reset();
 			if(haveSelection && !select)
 				selectionPoint = insertionPoint = std::max(selectionPoint,insertionPoint);
+			if(snippets.empty()) break;
 			if(snippets[ip_row].at.y == snippets.back().at.y) {
 				key.k = key_bottom;
 				if(select) key.mod += mod_shift;
