@@ -1937,7 +1937,6 @@ void special_increase_age(long length, bool queue) {
 							univ.party.age = j;
 							queue_special(eSpecCtx::TOWN_TIMER, eSpecCtxType::TOWN, univ.town->timers[i].node, trigger_loc);
 						} else run_special(eSpecCtx::TOWN_TIMER, eSpecCtxType::TOWN, univ.town->timers[i].node, trigger_loc, nullptr, nullptr, &need_redraw);
-						univ.town->timers[i].time = 0;
 					}
 				stat_area = true;
 				if(need_redraw)
@@ -1955,7 +1954,6 @@ void special_increase_age(long length, bool queue) {
 						univ.party.age = j;
 						queue_special(eSpecCtx::SCEN_TIMER, eSpecCtxType::SCEN, univ.scenario.scenario_timers[i].node, trigger_loc);
 					} else run_special(eSpecCtx::SCEN_TIMER, eSpecCtxType::SCEN, univ.scenario.scenario_timers[i].node, trigger_loc, nullptr, nullptr,&need_redraw);
-					univ.scenario.scenario_timers[i].time = 0;
 				}
 			stat_area = true;
 			if(need_redraw)
@@ -1971,6 +1969,7 @@ void special_increase_age(long length, bool queue) {
 			if(queue)
 				queue_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc);
 			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, nullptr, nullptr, &need_redraw);
+			// Party timers are triggered by special nodes and only run once!
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
