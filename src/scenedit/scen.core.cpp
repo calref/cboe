@@ -1897,6 +1897,7 @@ static bool edit_item_type_event_filter(cDialog& me, std::string hit, cItem& ite
 	}
 
 	if(commit_changes){
+		temp_item = item;
 		// We actually can't make the action undoable while the dialog is still open
 		if(is_new){
 			undo_list.add(action_ptr(new aCreateDeleteItem(true, temp_item)));
