@@ -1937,7 +1937,6 @@ void special_increase_age(long length, bool queue) {
 							univ.party.age = j;
 							queue_special(eSpecCtx::TOWN_TIMER, eSpecCtxType::TOWN, univ.town->timers[i].node, trigger_loc);
 						} else run_special(eSpecCtx::TOWN_TIMER, eSpecCtxType::TOWN, univ.town->timers[i].node, trigger_loc, nullptr, nullptr, &need_redraw);
-						univ.town->timers[i].time = 0;
 					}
 				stat_area = true;
 				if(need_redraw)
@@ -1955,7 +1954,6 @@ void special_increase_age(long length, bool queue) {
 						univ.party.age = j;
 						queue_special(eSpecCtx::SCEN_TIMER, eSpecCtxType::SCEN, univ.scenario.scenario_timers[i].node, trigger_loc);
 					} else run_special(eSpecCtx::SCEN_TIMER, eSpecCtxType::SCEN, univ.scenario.scenario_timers[i].node, trigger_loc, nullptr, nullptr,&need_redraw);
-					univ.scenario.scenario_timers[i].time = 0;
 				}
 			stat_area = true;
 			if(need_redraw)
@@ -1971,6 +1969,7 @@ void special_increase_age(long length, bool queue) {
 			if(queue)
 				queue_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc);
 			else run_special(eSpecCtx::PARTY_TIMER, which_type, party_timers[i].node, trigger_loc, nullptr, nullptr, &need_redraw);
+			// Party timers are triggered by special nodes and only run once!
 			univ.party.party_event_timers[i].time = 0;
 			univ.party.party_event_timers[i].node = -1;
 			stat_area = true;
@@ -1987,8 +1986,8 @@ void special_increase_age(long length, bool queue) {
 		draw_terrain(0);
 }
 
-void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
-	if(spec < 0) return;
+bool queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc) {
+	if(spec < 0) return false;
 	pending_special_type queued_special;
 	queued_special.spec = spec;
 	queued_special.where = spec_loc;
@@ -2000,6 +1999,7 @@ void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, loca
 		run_special(queued_special, nullptr, nullptr, nullptr);
 	else
 		special_queue.push(queued_special);
+	return true;
 }
 
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
@@ -2008,6 +2008,8 @@ void run_special(pending_special_type spec, short* a, short* b, bool* redraw) {
 	run_special(spec.mode, spec.type, spec.spec, spec.where, a, b, redraw);
 	univ.party.age = std::max(univ.party.age, store_time);
 }
+
+extern bool need_enter_town_autosave;
 
 // This is the big painful one, the main special engine entry point
 // which_mode - says when it was called
@@ -2166,6 +2168,10 @@ void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_
 		erase_out_specials();
 	else erase_town_specials();
 	special_in_progress = false;
+	if(which_mode == eSpecCtx::ENTER_TOWN && need_enter_town_autosave){
+		try_auto_save("EnterTown");
+		need_enter_town_autosave = false;
+	}
 	
 	// TODO: Should find a way to do this that doesn't risk stack overflow
 	if(ctx.next_spec == -1 && !special_queue.empty()) {

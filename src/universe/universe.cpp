@@ -116,6 +116,10 @@ const cTown& cCurTown::operator * () const {
 	return *record();
 }
 
+int cCurTown::door_diff_adjust() {
+	return univ.scenario.has_feature_flag("door-town-difficulty") ? arena->difficulty : 0;
+}
+
 void cCurTown::place_preset_fields() {
 	// Initialize barriers, etc. Note non-sfx gets forgotten if this is a town recently visited.
 	fields.resize(record()->max_dim, record()->max_dim);

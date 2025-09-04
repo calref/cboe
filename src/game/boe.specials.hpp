@@ -20,7 +20,7 @@ void teleport_party(short x,short y,short mode);
 bool run_stone_circle(short which);
 void change_level(short town_num,short x,short y);
 void push_things();
-void queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc);
+bool queue_special(eSpecCtx mode, eSpecCtxType which_type, spec_num_t spec, location spec_loc);
 void run_special(eSpecCtx which_mode, eSpecCtxType which_type, spec_num_t start_spec, location spec_loc, short* a = nullptr, short* b = nullptr, bool* redraw = nullptr);
 void run_special(pending_special_type spec, short* a, short* b, bool* redraw);
 

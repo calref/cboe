@@ -119,6 +119,7 @@ cScenario::cScenario(const cScenario& other)
 	, intro_strs(other.intro_strs)
 	, journal_strs(other.journal_strs)
 	, spec_strs(other.spec_strs)
+	, sdf_names(other.sdf_names)
 	, snd_names(other.snd_names)
 	, adjust_diff(other.adjust_diff)
 	, is_legacy(other.is_legacy)
@@ -231,7 +232,7 @@ cScenario::cItemStorage::cItemStorage() : ter_type(-1), property(0) {
 		item_odds[i] = 0;
 }
 
-void cScenario::import_legacy(legacy::scenario_data_type& old){
+void cScenario::import_legacy(legacy::scenario_data_type& old, bool header_only){
 	is_legacy = true;
 	// TODO eventually the absence of feature flags here will replace is_legacy altogether
 	feature_flags = {};
@@ -267,6 +268,9 @@ void cScenario::import_legacy(legacy::scenario_data_type& old){
 	rating = eContentRating(old.rating);
 	// TODO: Is this used anywhere?
 	uses_custom_graphics = old.uses_custom_graphics;
+
+	if(header_only) return;
+
 	boats.resize(30);
 	horses.resize(30);
 	for(short i = 0; i < 30; i++) {
@@ -640,15 +644,15 @@ std::string cScenario::get_feature_flag(std::string flag) {
 	return iter->second;
 }
 
-std::string cScenario::get_sdf_name(int row, int col) {
+std::string cScenario::get_sdf_name(int row, int col) const {
 	if(row < 0 || row >= SDF_ROWS || col < 0 || col >= SDF_COLUMNS){
 		throw "Tried to access SDF name for out-of-bounds flag (" + std::to_string(row) + ", " + std::to_string(col) + ")";
 	}
 	if(sdf_names.find(row) == sdf_names.end())
 		return "";
-	if(sdf_names[row].find(col) == sdf_names[row].end())
+	if(sdf_names.at(row).find(col) == sdf_names.at(row).end())
 		return "";
-	return sdf_names[row][col];
+	return sdf_names.at(row).at(col);
 }
 
 bool cScenario::cItemStorage::operator==(const cScenario::cItemStorage& other) const {

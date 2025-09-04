@@ -75,6 +75,7 @@
 	<button name='x' def-key='x' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>X</button>
 	<button name='y' def-key='y' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>Y</button>
 	<button name='z' def-key='z' type='tiny' relative='pos pos-in' rel-anchor='prev' top='0' left='4'>Z</button>
+	<button name='#' def-key='shift 3' type='tiny' relative='neg pos-in' anchor='j' top='0' left='32'>#</button>
 
 	<button name='cancel' type='regular' top='330' left='5'>Cancel</button>
 	<button name='prev' type='left' def-key='left' relative='pos pos-in' rel-anchor='prev' top='0' left='14'/>

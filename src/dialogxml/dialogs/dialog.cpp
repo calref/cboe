@@ -795,6 +795,8 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 			}
 			BOOST_FALLTHROUGH;
 		case sf::Event::MouseMoved:{
+			int x = currentEvent.mouseMove.x / get_ui_scale();
+			int y = currentEvent.mouseMove.y / get_ui_scale();
 			// Did the window move, potentially dirtying the canvas below it?
 			if(check_window_moved(win, winLastX, winLastY))
 				if (redraw_everything != NULL)
@@ -802,7 +804,7 @@ void cDialog::handle_one_event(const sf::Event& currentEvent, cFramerateLimiter&
 
 			bool inField = false;
 			for(auto& ctrl : controls) {
-				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(currentEvent.mouseMove.x, currentEvent.mouseMove.y)) {
+				if(ctrl.second->getType() == CTRL_FIELD && ctrl.second->getBounds().contains(x, y)) {
 					set_cursor(text_curs);
 					inField = true;
 					break;

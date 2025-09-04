@@ -341,7 +341,7 @@ bool monst_hate_spot(short which_m,location *good_loc) {
 			hate_spot = true;
 	}
 	if(hate_spot) {
-		prospect = find_clear_spot(loc,1);
+		prospect = find_clear_spot(loc,1,univ.town.monst[which_m].x_width,univ.town.monst[which_m].y_width);
 		if(prospect.x > 0) {
 			*good_loc = prospect;
 			return true;
@@ -708,10 +708,12 @@ bool try_move(short i,location start,short x,short y) {
 }
 
 bool combat_move_monster(short which,location destination) {
-	if(!monst_can_be_there(destination,which))
+	if(!monst_can_be_there(destination,which)){
 		return false;
-	else if(!monst_check_special_terrain(destination,2,which))
+	}
+	else if(!monst_check_special_terrain(destination,2,which)){
 		return false;
+	}
 	else {
 		univ.town.monst[which].direction = set_direction(univ.town.monst[which].cur_loc, destination);
 		univ.town.monst[which].cur_loc = destination;
@@ -728,12 +730,26 @@ bool combat_move_monster(short which,location destination) {
 // Looks at all spaces within 2, looking for a spot which is clear of nastiness and beings
 // returns {0,0} if none found
 // TODO: NO WAIT IT DOESN'T LOOK AT ALL SPACES!!!
-// TODO: THIS MAKES NO ADJUSTMENTS FOR BIG MONSTERS!!!
 //mode; // 0 - normal  1 - prefer adjacent space
-location find_clear_spot(location from_where,short mode) {
+location find_clear_spot(location from_where,short mode,short x_width,short y_width) {
 	location loc,store_loc;
 	short num_tries = 0,r1;
-	
+	auto is_clear = [from_where](location loc) -> bool {
+		return !loc_off_act_area(loc) && !is_blocked(loc)
+			&& can_see_light(from_where,loc,combat_obscurity) == 0
+			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
+			&& (!(is_town()) || (loc != univ.party.town_loc))
+			&& (!univ.town.is_summon_safe(loc.x, loc.y));
+	};
+	auto all_is_clear = [from_where, x_width, y_width, is_clear](location loc) -> bool {
+		for(int x = 0; x < x_width; ++x){
+			for(int y = 0; y < y_width; ++y){
+				if(!is_clear({loc.x + x, loc.y + y}))
+					return false;
+			}
+		}
+		return true;
+	};
 	while(num_tries < 75) {
 		num_tries++;
 		loc = from_where;
@@ -741,11 +757,7 @@ location find_clear_spot(location from_where,short mode) {
 		loc.x = loc.x + r1;
 		r1 = get_ran(1,-2,2);
 		loc.y = loc.y + r1;
-		if(!loc_off_act_area(loc) && !is_blocked(loc)
-			&& can_see_light(from_where,loc,combat_obscurity) == 0
-			&& (!is_combat() || univ.target_there(loc,TARG_PC) == nullptr)
-			&& (!(is_town()) || (loc != univ.party.town_loc))
-			&& (!univ.town.is_summon_safe(loc.x, loc.y))) {
+		if(all_is_clear(loc)) {
 			if((mode == 0) || ((mode == 1) && (adjacent(from_where,loc))))
 				return loc;
 			else store_loc = loc;
@@ -810,58 +822,65 @@ void monst_inflict_fields(short which_monst) {
 	which_m = &univ.town.monst[which_monst];
 	bool have_radiate = which_m->abil[eMonstAbil::RADIATE].active;
 	eFieldType which_radiate = which_m->abil[eMonstAbil::RADIATE].radiate.type;
+	// Judgment call: big monsters should only get damaged once per damage type if they're on
+	// multiple of the same field. (Except webs.)
+	bool quickfire = false;
+	bool blade_wall = false;
+	bool force_wall = false;
+	bool sleep_cloud = false;
+	bool ice_wall = false;
+	bool stink_cloud = false;
+	bool fire_wall = false;
 	for(short i = 0; i < univ.town.monst[which_monst].x_width; i++)
 		for(short j = 0; j < univ.town.monst[which_monst].y_width; j++)
 			if(univ.town.monst[which_monst].is_alive()) {
 				where_check.x = univ.town.monst[which_monst].cur_loc.x + i;
 				where_check.y = univ.town.monst[which_monst].cur_loc.y + j;
-				// TODO: If the goal is to damage the monster by any fields it's on, why all the break statements?
-				if(univ.town.is_quickfire(where_check.x,where_check.y)) {
+				if(!quickfire && univ.town.is_quickfire(where_check.x,where_check.y)) {
+					quickfire = true;
 					r1 = get_ran(2,1,8);
 					damage_monst(*which_m,7,r1,eDamageType::FIRE);
-					break;
 				}
-				if(univ.town.is_blade_wall(where_check.x,where_check.y)) {
+				if(!blade_wall && univ.town.is_blade_wall(where_check.x,where_check.y)) {
+					blade_wall = true;
 					r1 = get_ran(6,1,8);
-					if(have_radiate && which_radiate != eFieldType::WALL_BLADES)
+					if(!have_radiate || which_radiate != eFieldType::WALL_BLADES)
 						damage_monst(*which_m,7,r1,eDamageType::WEAPON);
-					break;
 				}
-				if(univ.town.is_force_wall(where_check.x,where_check.y)) {
+				if(!force_wall && univ.town.is_force_wall(where_check.x,where_check.y)) {
+					force_wall = true;
 					r1 = get_ran(3,1,6);
-					if(have_radiate && which_radiate != eFieldType::WALL_FORCE)
+					if(!have_radiate || which_radiate != eFieldType::WALL_FORCE)
 						damage_monst(*which_m,7,r1,eDamageType::MAGIC);
-					break;
 				}
-				if(univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
-					if(have_radiate && which_radiate != eFieldType::CLOUD_SLEEP)
+				if(!sleep_cloud && univ.town.is_sleep_cloud(where_check.x,where_check.y)) {
+					sleep_cloud = true;
+					if(!have_radiate || which_radiate != eFieldType::CLOUD_SLEEP)
 						which_m->sleep(eStatus::ASLEEP,3,0);
-					break;
 				}
-				if(univ.town.is_ice_wall(where_check.x,where_check.y)) {
+				if(!ice_wall && univ.town.is_ice_wall(where_check.x,where_check.y)) {
+					ice_wall = true;
 					r1 = get_ran(3,1,6);
-					if(have_radiate && which_radiate != eFieldType::WALL_ICE)
+					if(!have_radiate || which_radiate != eFieldType::WALL_ICE)
 						damage_monst(*which_m,7,r1,eDamageType::COLD);
-					break;
 				}
-				if(univ.town.is_scloud(where_check.x,where_check.y)) {
+				if(!stink_cloud && univ.town.is_scloud(where_check.x,where_check.y)) {
+					stink_cloud = true;
 					r1 = get_ran(1,2,3);
-					if(have_radiate && which_radiate != eFieldType::CLOUD_STINK)
+					if(!have_radiate || which_radiate != eFieldType::CLOUD_STINK)
 						which_m->curse(r1);
-					break;
 				}
 				if(univ.town.is_web(where_check.x,where_check.y) && which_m->m_type != eRace::BUG) {
 					which_m->spell_note(eSpellNote::WEBBED);
 					r1 = get_ran(1,2,3);
 					which_m->web(r1);
 					univ.town.set_web(where_check.x,where_check.y,false);
-					break;
 				}
-				if(univ.town.is_fire_wall(where_check.x,where_check.y)) {
+				if(!fire_wall && univ.town.is_fire_wall(where_check.x,where_check.y)) {
+					fire_wall = true;
 					r1 = get_ran(2,1,6);
-					if(have_radiate && which_radiate != eFieldType::WALL_FIRE)
+					if(!have_radiate || which_radiate != eFieldType::WALL_FIRE)
 						damage_monst(*which_m,7,r1,eDamageType::FIRE);
-					break;
 				}
 				if(univ.town.is_force_cage(where_check.x,where_check.y))
 					process_force_cage(where_check, univ.get_target_i(*which_m));
@@ -1193,7 +1212,7 @@ void activate_monsters(short code,short /*attitude*/) {
 	if(code == 0)
 		return;
 	for(short i = 0; i < univ.town->creatures.size(); i++)
-		if(univ.town->creatures[i].spec_enc_code == code) {
+		if(univ.town->creatures[i].number > 0 && univ.town->creatures[i].spec_enc_code == code) {
 			cTownperson& monst = univ.town->creatures[i];
 			univ.town.monst.assign(i, monst, univ.scenario.scen_monsters[monst.number], univ.party.easy_mode, univ.difficulty_adjust());
 			univ.town.monst[i].spec_enc_code = 0;

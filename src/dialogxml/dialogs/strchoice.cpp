@@ -143,6 +143,8 @@ bool cStringChoice::onLeft(){
 	if(page == 0) page = lastPage();
 	else page--;
 	fillPage();
+	clearHighlights();
+	highlightSearch();
 	return true;
 }
 
@@ -154,6 +156,8 @@ bool cStringChoice::onRight(){
 	if(page == lastPage()) page = 0;
 	else page++;
 	fillPage();
+	clearHighlights();
+	highlightSearch();
 	return true;
 }
 
@@ -244,6 +248,7 @@ void cStringChoice::clearHighlights() {
 
 bool cStringChoice::highlightSearch() {
 	bool match_on_page = false;
+	if(search_str.empty()) return false;
 
 	for(int offset = 0; offset < per_page; ++offset){
 		std::string led_id = "led" + std::to_string(offset + 1);

@@ -54,6 +54,17 @@ public:
 	bool is_on_map(location loc) const {
 		return loc.x < max_dim && loc.y < max_dim && loc.x >= 0 && loc.y >= 0;
 	}
+
+	std::string loc_str(location where) {
+		std::string str = name;
+		for(info_rect_t rect : area_desc){
+			if(!rect.empty() && rect.contains(where)){
+				str += ": " + rect.descr;
+				break;
+			}
+		}
+		return str;
+	}
 };
 
 #endif

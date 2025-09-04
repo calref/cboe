@@ -809,7 +809,7 @@ void commit_stroke() {
 	}else if(!current_creatures_placed.empty()){
 		undo_list.add(action_ptr(new aPlaceEraseCreature(current_creatures_placed.size() > 1 ? "Place Creatures" : "Place Creature", true, current_creatures_placed)));
 		update_edit_menu();
-		current_items_placed.clear();
+		current_creatures_placed.clear();
 	}else if(!current_fields_cleared.empty()){
 		undo_list.add(action_ptr(new aClearFields(current_fields_cleared)));
 		update_edit_menu();
@@ -2335,7 +2335,10 @@ void handle_editor_screen_shift(int dx, int dy) {
 		if(town_entrances.size() == 1){
 			town_entrance_t only_entrance = town_entrances[0];
 			cChoiceDlog shift_prompt("shift-town-entrance", {"yes", "no"});
-			shift_prompt->getControl("out-sec").setText(boost::lexical_cast<std::string>(only_entrance.out_sec));
+			cControl& text = shift_prompt->getControl("prompt");
+			text.replaceText("{sec}", boost::lexical_cast<std::string>(only_entrance.out_sec));
+			text.replaceText("{loc}", boost::lexical_cast<std::string>(only_entrance.loc));
+			text.replaceText("{loc_str}", scenario.outdoors[only_entrance.out_sec.x][only_entrance.out_sec.y]->loc_str(only_entrance.loc));
 
 			if(shift_prompt.show() == "yes"){
 				set_current_out(only_entrance.out_sec, true);
@@ -2350,9 +2353,9 @@ void handle_editor_screen_shift(int dx, int dy) {
 			std::vector<std::string> entrance_strings;
 			for(town_entrance_t entrance : town_entrances){
 				std::ostringstream sstr;
-				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc;
+				sstr << "Entrance in section " << entrance.out_sec << " at " <<  entrance.loc
+						<< " (" <<scenario.outdoors[entrance.out_sec.x][entrance.out_sec.y]->loc_str(entrance.loc) << ")";
 				entrance_strings.push_back(sstr.str());
-
 			}
 			cStringChoice dlog(entrance_strings, "Shift to one of this town's entrances in the outdoors?");
 			size_t choice = dlog.show(-1);
@@ -2463,15 +2466,18 @@ void frill_up_terrain() {
 	for(short i = 0; i < cur_area->max_dim; i++)
 		for(short j = 0; j < cur_area->max_dim; j++) {
 			terrain_type = cur_area->terrain(i,j);
+			bool changed = false;
 			
 			for(size_t k = 0; k < scenario.ter_types.size(); k++) {
 				if(terrain_type == k) continue;
 				cTerrain& ter = scenario.ter_types[k];
-				if(terrain_type == ter.frill_for && get_ran(1,1,100) < ter.frill_chance)
+				if(terrain_type == ter.frill_for && get_ran(1,1,100) < ter.frill_chance){
 					terrain_type = k;
+					changed = true;
+				}
 			}
 			
-			set_terrain(loc(i, j), terrain_type, changes);
+			if(changed) set_terrain(loc(i, j), terrain_type, changes);
 		}
 	undo_list.add(action_ptr(new aDrawTerrain("Frill Up Terrain", changes)));
 	update_edit_menu();
@@ -2888,10 +2894,11 @@ void place_edit_special(location loc) {
 		bool is_new = false;
 		if(i == specials.size()){
 			specials.emplace_back(-1,-1,-1);
+			get_current_area()->specials.emplace_back();
 			is_new = true;
 		}
 		if(specials[i].spec < 0) {
-			if(edit_spec_enc(i, editing_town ? 2: 1, nullptr, is_new)) {
+			if(edit_spec_enc(get_current_area()->specials.size()-1, editing_town ? 2: 1, nullptr, is_new)) {
 				specials[i] = loc;
 				specials[i].spec = i;
 				undo_list.add(action_ptr(new aPlaceEraseSpecial("Place Special Encounter", true, specials[i])));
