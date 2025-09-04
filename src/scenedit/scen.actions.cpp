@@ -809,7 +809,7 @@ void commit_stroke() {
 	}else if(!current_creatures_placed.empty()){
 		undo_list.add(action_ptr(new aPlaceEraseCreature(current_creatures_placed.size() > 1 ? "Place Creatures" : "Place Creature", true, current_creatures_placed)));
 		update_edit_menu();
-		current_items_placed.clear();
+		current_creatures_placed.clear();
 	}else if(!current_fields_cleared.empty()){
 		undo_list.add(action_ptr(new aClearFields(current_fields_cleared)));
 		update_edit_menu();
